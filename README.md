@@ -1,39 +1,109 @@
-# graphic_utils
+# Utils<a name="EN-US_TOPIC_0000001123083525"></a>
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+-   [Introduction](#section11660541593)
+-   [Directory Structure](#section161941989596)
+-   [Compilation and Building](#section137768191623)
+-   [Description](#section1312121216216)
+    -   [Usage](#section129654513264)
 
-#### 软件架构
-软件架构说明
+-   [Repositories Involved](#section1371113476307)
 
+## Introduction<a name="section11660541593"></a>
 
-#### 安装教程
+The Utils module defines the common data structure in the graphics subsystem and provides a lite OS adaptation layer, which includes the lock, thread, and file system.
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+**Figure  1**  Dependency between modules of the graphics subsystem<a name="fig717664212591"></a>  
+![](figures/dependency-between-modules-of-the-graphics-subsystem.png "dependency-between-modules-of-the-graphics-subsystem")
 
-#### 使用说明
+## Directory Structure<a name="section161941989596"></a>
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```
+/foundation/graphic/utils
+├── frameworks      # Framework code
+│   ├── hals        # Hardware adaptation layer
+│   ├── linux       # Linux platform adaptation layer
+│   ├── liteos      # LiteOS platform adaptation layer
+│   └── windows     # Windows platform adaptation layer
+├── interfaces      # APIs
+│   ├── innerkits   # APIs between modules
+│   │   └── hals    # APIs of the hardware adaptation layer
+│   └── kits        # External APIs
+└── test            # Unit testing
+```
 
-#### 参与贡献
+## Compilation and Building<a name="section137768191623"></a>
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+```
+# Generate the libgraphic_utils.so file in the out directory of the product folder through GN compilation.
+hb build lite_graphic_utils
+```
 
+## Description<a name="section1312121216216"></a>
 
-#### 特技
+### Usage<a name="section129654513264"></a>
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+-   Utils is used in UI, surface, and WMS modules. For details, see the related source code.
+-   The  **test**  folder provides unit testing for each utils API. Refer to it for the usage of utils.
+
+## Repositories Involved<a name="section1371113476307"></a>
+
+/hmf/graphic/surface
+
+/hmf/graphic/wms
+
+/hmf/graphic/ui
+
+# Hals<a name="EN-US_TOPIC_0000001124625243"></a>
+
+-   [Introduction](#section11660541593)
+-   [Directory Structure](#section161941989596)
+-   [Compilation and Building](#section137768191623)
+-   [Description](#section1312121216216)
+    -   [Usage](#section129654513264)
+
+-   [Repositories Involved](#section1371113476307)
+
+## Introduction<a name="section11660541593"></a>
+
+The Hals module adapts and encapsulates the functions related to the driver subsystem and platform, including FrameBuffer, graphics \(GFX\), and single instruction, multiple data \(SIMD\).
+
+**Figure  1**  Dependency between modules of the graphics subsystem and that between graphics modules and the driver subsystem<a name="fig717664212591"></a>  
+![](figures/dependency-between-modules-of-the-graphics-subsystem-and-that-between-graphics-modules-and-the-drive.png "dependency-between-modules-of-the-graphics-subsystem-and-that-between-graphics-modules-and-the-drive")
+
+## Directory Structure<a name="section161941989596"></a>
+
+```
+/foundation/graphic/utils
+├── frameworks      # Framework code
+│   ├── hals        # Hardware adaptation layer
+│   ├── linux       # Linux platform adaptation layer
+│   ├── liteos      # LiteOS platform adaptation layer
+│   └── windows     # Windows platform adaptation layer
+├── interfaces      # APIs
+│   ├── innerkits   # APIs between modules
+│   │   └── hals    # APIs of the hardware adaptation layer
+│   └── kits        # External APIs
+└── test            # Unit testing
+```
+
+## Compilation and Building<a name="section137768191623"></a>
+
+```
+# Generate the libgraphic_hals.so file in the out directory of the product folder through GN compilation.
+hb build lite_graphic_utils
+```
+
+## Description<a name="section1312121216216"></a>
+
+### Usage<a name="section129654513264"></a>
+
+-   Hals is used in UI, surface, and WMS modules. For details, see the related source code.
+
+## Repositories Involved<a name="section1371113476307"></a>
+
+/hmf/graphic/surface
+
+/hmf/graphic/wms
+
+/hmf/graphic/ui
+
