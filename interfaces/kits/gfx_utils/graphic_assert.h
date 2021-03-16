@@ -13,17 +13,37 @@
  * limitations under the License.
  */
 
-#include "gfx_utils/sys_info.h"
-#include "core/render_manager.h"
+/**
+ * @addtogroup UI_Utils
+ * @{
+ *
+ * @brief Defines basic UI utils.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_assert.h
+ *
+ * @brief Declares the assertion utility for the graphics module.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_LITE_GRAPHIC_ASSERT_H
+#define GRAPHIC_LITE_GRAPHIC_ASSERT_H
+
+#if ENABLE_DEBUG
+#include <assert.h>
+#endif
 
 namespace OHOS {
-float SysInfo::GetFPS()
-{
-    return RenderManager::GetInstance().GetFPS();
-}
-
-void SysInfo::RegisterFPSChangedListener(OnFPSChangedListener* onFPSChangedListener)
-{
-    RenderManager::GetInstance().RegisterFPSChangedListener(onFPSChangedListener);
-}
-}
+#if ENABLE_DEBUG
+#define ASSERT(cond) assert(cond)
+#else
+#define ASSERT(cond)
+#endif
+} // namespace OHOS
+#endif // GRAPHIC_LITE_GRAPHIC_ASSERT_H

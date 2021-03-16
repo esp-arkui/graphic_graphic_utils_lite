@@ -38,7 +38,7 @@
 #ifndef GRAPHIC_LITE_GRAPHIC_CONFIG_H
 #define GRAPHIC_LITE_GRAPHIC_CONFIG_H
 
-#include "graphic_types.h"
+#include "gfx_utils/graphic_types.h"
 
 namespace OHOS {
 /**

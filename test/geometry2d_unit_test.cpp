@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "geometry2d.h"
+#include "gfx_utils/geometry2d.h"
 
 #include <climits>
 #include <gtest/gtest.h>

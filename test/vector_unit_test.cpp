@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "vector.h"
+#include "gfx_utils/vector.h"
 
 #include <climits>
 #include <gtest/gtest.h>

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "version.h"
+#include "gfx_utils/version.h"
 
 namespace OHOS {
 constexpr char LIB_DSC[] = "OHOS lite graphic lib";
