@@ -15,11 +15,11 @@
 
 #include "hals/hi_fbdev.h"
 
-#include "color.h"
+#include "gfx_utils/color.h"
 #include "display_layer.h"
 #include "display_type.h"
 #include "graphic_config.h"
-#include "graphic_log.h"
+#include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
 struct DisplayDesc {

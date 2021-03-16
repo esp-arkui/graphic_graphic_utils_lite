@@ -37,7 +37,7 @@
 #define GRAPHIC_LITE_MEM_API_H
 
 #include "graphic_config.h"
-#include "image_info.h"
+#include "gfx_utils/image_info.h"
 
 #ifndef IMG_CACHE_MEMORY_CUSTOM
 #include <cstdlib>

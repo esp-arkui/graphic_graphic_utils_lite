@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "mem_api.h"
+#include "gfx_utils/mem_api.h"
 namespace OHOS {
 #ifndef IMG_CACHE_MEMORY_CUSTOM
 void* ImageCacheMalloc(ImageInfo& info)

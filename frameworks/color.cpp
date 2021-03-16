@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "color.h"
+#include "gfx_utils/color.h"
 
 namespace OHOS {
 uint32_t Color::ColorTo32(ColorType color)

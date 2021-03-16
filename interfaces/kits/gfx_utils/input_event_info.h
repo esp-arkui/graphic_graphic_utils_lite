@@ -17,7 +17,7 @@
 #define GRAPHIC_LITE_INPUT_EVENT_INFO_H
 
 #include <cstdint>
-#include "geometry2d.h"
+#include "gfx_utils/geometry2d.h"
 
 namespace OHOS {
 const static uint8_t MAX_EVENT_SIZE = 10;

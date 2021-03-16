@@ -16,11 +16,11 @@
 #ifndef GRAPHIC_LITE_GFX_ENGINES_H
 #define GRAPHIC_LITE_GFX_ENGINES_H
 
-#include "color.h"
+#include "gfx_utils/color.h"
 #include "lite_wm_type.h"
 #include "display_gfx.h"
 #include "display_type.h"
-#include "geometry2d.h"
+#include "gfx_utils/geometry2d.h"
 
 namespace OHOS {
 class GfxEngines {
