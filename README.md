@@ -110,3 +110,5 @@ hb build lite_graphic_utils
 [graphic_surface](https://gitee.com/openharmony/graphic_surface/blob/master/README.md)
 
 [graphic_ui](https://gitee.com/openharmony/graphic_ui/blob/master/README.md)
+
+**graphic_utils**
