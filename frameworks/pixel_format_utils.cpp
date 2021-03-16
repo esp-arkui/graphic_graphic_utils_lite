@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "pixel_format_utils.h"
+#include "gfx_utils/pixel_format_utils.h"
 
 namespace OHOS {
 static struct {

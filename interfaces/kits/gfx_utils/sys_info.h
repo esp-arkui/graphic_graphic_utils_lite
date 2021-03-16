@@ -37,7 +37,7 @@
 #define GRAPHIC_LITE_SYS_INFO_H
 
 #include "graphic_config.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 /**

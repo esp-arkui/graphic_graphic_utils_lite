@@ -36,7 +36,7 @@
 #define GRAPHIC_LITE_HEAP_BASE_H
 
 #include "graphic_config.h"
-#include "mem_api.h"
+#include "gfx_utils/mem_api.h"
 #include <stddef.h>
 namespace OHOS {
 /**

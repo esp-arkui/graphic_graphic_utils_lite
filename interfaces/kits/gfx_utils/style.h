@@ -35,7 +35,7 @@
 #ifndef GRAPHIC_LITE_STYLE_H
 #define GRAPHIC_LITE_STYLE_H
 
-#include "color.h"
+#include "gfx_utils/color.h"
 
 namespace OHOS {
 /**

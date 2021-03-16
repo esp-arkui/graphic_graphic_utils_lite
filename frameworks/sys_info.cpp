@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "sys_info.h"
+#include "gfx_utils/sys_info.h"
 #include "core/render_manager.h"
 
 namespace OHOS {

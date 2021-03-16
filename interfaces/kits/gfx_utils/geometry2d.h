@@ -36,11 +36,11 @@
 #ifndef GRAPHIC_LITE_GEOMETRY2D_H
 #define GRAPHIC_LITE_GEOMETRY2D_H
 
-#include "graphic_assert.h"
-#include "graphic_math.h"
-#include "graphic_types.h"
-#include "heap_base.h"
-#include "rect.h"
+#include "gfx_utils/graphic_assert.h"
+#include "gfx_utils/graphic_math.h"
+#include "gfx_utils/graphic_types.h"
+#include "gfx_utils/heap_base.h"
+#include "gfx_utils/rect.h"
 #include <string.h>
 
 namespace OHOS {

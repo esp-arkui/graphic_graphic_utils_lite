@@ -35,8 +35,8 @@
 #ifndef GRAPHIC_LITE_TRANSFORM_H
 #define GRAPHIC_LITE_TRANSFORM_H
 
-#include "geometry2d.h"
-#include "graphic_math.h"
+#include "gfx_utils/geometry2d.h"
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
 /**
  * @brief Transforms a rectangle, including rotation and scaling.

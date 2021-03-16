@@ -36,7 +36,7 @@
 #ifndef GRAPHIC_LITE_GRAPHIC_MATH_H
 #define GRAPHIC_LITE_GRAPHIC_MATH_H
 
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 #include <cstdint>
 
 namespace OHOS {

@@ -38,7 +38,7 @@
 #include <cstdint>
 
 #include "graphic_config.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 /**

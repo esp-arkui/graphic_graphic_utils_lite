@@ -15,7 +15,7 @@
 
 #include "hals/gfx_engines.h"
 
-#include "graphic_log.h"
+#include "gfx_utils/graphic_log.h"
 
 namespace OHOS {
 struct {
