@@ -201,6 +201,8 @@ namespace OHOS {
 
 #define ENABLE_MOTOR                      1
 
+#define ENABLE_FOCUS_MANAGER              1
+
 /**
  * @brief 开启或关闭局部渲染能力，默认使能
  */
