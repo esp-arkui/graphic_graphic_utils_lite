@@ -18,7 +18,7 @@
 
 #include <cstdint>
 
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 /** @brief Class for calculate the time. */

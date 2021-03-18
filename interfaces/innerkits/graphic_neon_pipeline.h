@@ -19,7 +19,7 @@
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
 #include <arm_neon.h>
-#include "color.h"
+#include "gfx_utils/color.h"
 #include "graphic_neon_utils.h"
 
 namespace OHOS {
