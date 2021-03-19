@@ -25,7 +25,7 @@
 #else
 #include "los_sem.h"
 #endif // WIN32
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 static constexpr int32_t MAX_SEM_COUNT = 1000; // 1000: max number of semaphore count

@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#include "transform.h"
-#include "graphic_math.h"
+#include "gfx_utils/transform.h"
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
 constexpr uint8_t VERTEX_NUM_MIN = 3;
 

@@ -13,17 +13,29 @@
  * limitations under the License.
  */
 
-#include "gfx_utils/sys_info.h"
-#include "core/render_manager.h"
+#ifndef GRAPHIC_LITE_FILE_H
+#define GRAPHIC_LITE_FILE_H
 
-namespace OHOS {
-float SysInfo::GetFPS()
-{
-    return RenderManager::GetInstance().GetFPS();
-}
+#ifdef _WIN32
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <io.h>
+#else
+#include "stdint.h"
+#include "fcntl.h"
+#include "unistd.h"
+#include "sys/mount.h"
+#include "sys/stat.h"
+#ifdef __APPLE__
+#include "sys/param.h"
+#else
+#include "sys/statfs.h"
+#endif
+#include "dirent.h"
+#include "stdio.h"
+#include "errno.h"
+#endif
 
-void SysInfo::RegisterFPSChangedListener(OnFPSChangedListener* onFPSChangedListener)
-{
-    RenderManager::GetInstance().RegisterFPSChangedListener(onFPSChangedListener);
-}
-}
+#define DEFAULT_FILE_PERMISSION 0666 // default file permission when creat file
+#endif // GRAPHIC_LITE_FILE_H

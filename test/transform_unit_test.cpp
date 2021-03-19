@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "transform.h"
+#include "gfx_utils/transform.h"
 
 #include <climits>
 #include <gtest/gtest.h>
