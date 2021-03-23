@@ -32,6 +32,7 @@
 #include <cstdint>
 
 namespace OHOS {
+namespace Graphic {
 template<typename T> class Vector : public HeapBase {
 public:
     Vector(uint16_t capacity = 1) : capacity_(capacity)
@@ -179,5 +180,6 @@ protected:
     uint16_t head = 0;
     uint16_t tail = 0;
 };
+} // namespace Graphic
 } // namespace OHOS
 #endif // GRAPHIC_LITE_VECTOR_H

@@ -19,6 +19,8 @@
 #include <gtest/gtest.h>
 
 using namespace testing::ext;
+using namespace OHOS::Graphic;
+
 namespace OHOS {
 namespace {
 const uint16_t FIRST_VALUE = 1;
