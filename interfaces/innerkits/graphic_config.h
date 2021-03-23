@@ -202,7 +202,7 @@ namespace OHOS {
 #define ENABLE_MOTOR                      1
 
 /**
- * @brief 开启或关闭局部渲染能力，默认使能
+ * @brief Graphics local rendering, which is disabled by default.
  */
 #define LOCAL_RENDER                      0
 
