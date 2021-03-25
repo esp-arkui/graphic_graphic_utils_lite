@@ -94,8 +94,21 @@ enum ColorMode : uint8_t {
     A4,
     /** A8 color mode */
     A8,
+    /** TSC color mode */
+    TSC,
     /** unknow color mode */
     UNKNOW,
+};
+
+enum LutColorMode : uint8_t {
+    /** RGB565 lut color mode */
+    LUT_RGB565 = 0,
+    /** RGB888 lut color mode */
+    LUT_RGB888,
+    /** ARGB8888 lut color mode */
+    LUT_ARGB8888,
+    /** unknow lut color mode */
+    LUT_UNKNOW,
 };
 
 enum FontWeight : uint8_t {
