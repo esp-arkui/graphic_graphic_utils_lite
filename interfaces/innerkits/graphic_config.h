@@ -116,15 +116,6 @@ namespace OHOS {
 #define ENABLE_ARM_NEON                   0
 #elif defined _WIN32 || defined __APPLE__
 /**
- * @brief Font shaping, which is enabled by default on WIN32.
- *        Cannot take effect without ENABLE_ICU.
- */
-#define ENABLE_SHAPING                    0
-/**
- * @brief Advanced algorithm for line breaks, which is enabled by default on WIN32.
- */
-#define ENABLE_ICU                        0
-/**
  * @brief Multi-Font type, which is enabled by default on WIN32.
  */
 #define ENABLE_MULTI_FONT                 0
@@ -136,14 +127,6 @@ namespace OHOS {
  * @brief Display buffer for rendering data refresh, which is disabled by default on WIN32.
  */
 #define ENABLE_FRAME_BUFFER               0
-/**
- * @brief Vector type font, which is enabled by default on WIN32.
- */
-#define ENABLE_VECTOR_FONT                1
-/**
- * @brief Bitmap type font, which is enabled by default on WIN32.
- */
-#define ENABLE_BITMAP_FONT                0
 /**
  * @brief Static Bitmap type font, enabled by default on WIN32.
  */
