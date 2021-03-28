@@ -184,6 +184,8 @@ namespace OHOS {
 
 #define ENABLE_MOTOR                      1
 
+#define ENABLE_SLIDER_KNOB                0
+
 /**
  * @brief Graphics local rendering, which is disabled by default.
  */
