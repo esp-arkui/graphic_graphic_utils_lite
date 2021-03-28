@@ -186,6 +186,8 @@ namespace OHOS {
 
 #define ENABLE_FOCUS_MANAGER              1
 
+#define ENABLE_SLIDER_KNOB                1
+
 /**
  * @brief Graphics local rendering, which is disabled by default.
  */
