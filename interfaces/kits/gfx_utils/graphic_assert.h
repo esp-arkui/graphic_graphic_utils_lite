@@ -35,6 +35,8 @@
 #ifndef GRAPHIC_LITE_GRAPHIC_ASSERT_H
 #define GRAPHIC_LITE_GRAPHIC_ASSERT_H
 
+#include "graphic_config.h"
+
 #if ENABLE_DEBUG
 #include <assert.h>
 #endif
