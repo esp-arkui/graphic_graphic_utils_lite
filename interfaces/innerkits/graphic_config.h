@@ -182,7 +182,7 @@ namespace OHOS {
 
 #define ENABLE_ROTATE_INPUT               1
 
-#define ENABLE_MOTOR                      1
+#define ENABLE_VIBRATOR                   1
 
 #define ENABLE_SLIDER_KNOB                0
 
