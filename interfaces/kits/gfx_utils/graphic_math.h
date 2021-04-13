@@ -557,5 +557,10 @@ inline int64_t FloatToInt64(float f)
     // 256.0: 2^8 left move 8 bit. 0.5: round up
     return static_cast<int64_t>(f * 256.0 + ((f < 0) ? -0.5 : 0.5));
 }
+
+inline bool FloatEqual(float lhs, float rhs, float precision = 0.00001f)
+{
+    return (MATH_ABS(lhs - rhs) < precision) ? true : false;
+}
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_MATH_H

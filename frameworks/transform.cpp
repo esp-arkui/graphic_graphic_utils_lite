@@ -14,6 +14,7 @@
  */
 
 #include "gfx_utils/transform.h"
+
 #include "gfx_utils/graphic_math.h"
 namespace OHOS {
 constexpr uint8_t VERTEX_NUM_MIN = 3;
@@ -107,7 +108,7 @@ bool TransformMap::IsInvalid() const
     if (isInvalid_) {
         return true;
     }
-    if (angle_ % CIRCLE_IN_DEGREE == 0 && scaleCoeff_.x_ == 1 && scaleCoeff_.y_ == 1) {
+    if ((angle_ % CIRCLE_IN_DEGREE == 0) && FloatEqual(scaleCoeff_.x_, 1.0f) && FloatEqual(scaleCoeff_.y_, 1.0f)) {
         return true;
     }
     for (uint8_t i = 0; i < polygon_.GetVertexNum(); i++) {
