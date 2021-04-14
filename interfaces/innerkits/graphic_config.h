@@ -283,7 +283,8 @@ namespace OHOS {
 #define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular.otf"
 /* Default font size. The default value is <b>18</b>. */
 static constexpr uint8_t DEFAULT_VECTOR_FONT_SIZE = 18;
-
+/* Defines the file name of default line break rule. */
+#define DEFAULT_LINE_BREAK_RULE_FILENAME   "line_cj.brk"
 /* Defines some configurations and their default values on Huawei LiteOS and other system platforms. */
 #ifdef _LITEOS
 /* Resolution width of a graphics display screen. The default value is <b>454</b>. */
