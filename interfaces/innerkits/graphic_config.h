@@ -194,6 +194,11 @@ namespace OHOS {
 #define LOCAL_RENDER                      0
 
 /**
+ * @brief Graphics default animation, which is enabled by default.
+ */
+#define DEFAULT_ANIMATION                 1
+
+/**
  * @brief Actually use ARM NEON optimization.
  *        __ARM_NEON__ and __ARM_NEON are set by the compiler according to the compilation option -mfpu=neon
  */
