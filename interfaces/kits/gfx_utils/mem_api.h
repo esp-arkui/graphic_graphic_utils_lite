@@ -81,5 +81,15 @@ void* UIMalloc(uint32_t size);
  * @version 1.0
  */
 void UIFree(void* buffer);
+
+/**
+ * @brief 重新调整之前调用UIMalloc所分配的内存指针所指向的内存块的大小
+ *
+ * @param bbuffer 指向内存区的指针
+ * @param size 分配的内存块大小
+ * @since 3.0
+ * @version 5.0
+ */
+void* UIRealloc(void* buffer, uint32_t size);
 } // namespace OHOS
 #endif

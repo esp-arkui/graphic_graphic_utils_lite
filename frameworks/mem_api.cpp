@@ -35,9 +35,15 @@ void* UIMalloc(uint32_t size)
 {
     return malloc(size);
 }
+
 void UIFree(void* buffer)
 {
     free(buffer);
+}
+
+void* UIRealloc(void* buffer, uint32_t size)
+{
+    return realloc(buffer, size);
 }
 #endif
 }
