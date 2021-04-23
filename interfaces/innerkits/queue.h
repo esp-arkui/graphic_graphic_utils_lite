@@ -325,6 +325,6 @@ static inline uint32_t QueueMultiConsumerDequeue(LockFreeQueue *queue, void **no
 #ifdef __cplusplus
 #if __cplusplus
 }
-#endif /* __cpluscplus */
-#endif /* __cpluscplus */
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 #endif // GRAPHIC_LITE_QUEUE_H
