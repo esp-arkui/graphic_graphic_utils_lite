@@ -49,6 +49,6 @@ uint32_t HalGetCpuCoreNum();
 #ifdef __cplusplus
 #if __cplusplus
 }
-#endif /* __cpluscplus */
-#endif /* __cpluscplus */
+#endif /* __cplusplus */
+#endif /* __cplusplus */
 #endif // GRAPHIC_LITE_HAL_CPU_H
