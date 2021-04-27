@@ -26,6 +26,7 @@
 namespace {
 constexpr int16_t MS_PER_SECOND = 1000;
 constexpr int32_t NS_PER_MS = 1000000;
+constexpr int32_t HUNDRED_NS_PER_MS = 10000;
 } // namespace
 
 namespace OHOS {
@@ -57,6 +58,21 @@ static void CALLBACK TimerCallback(LPVOID lpArg, DWORD dwTimerLowValue, DWORD dw
     }
 }
 
+static DWORD WINAPI WinAsyncThread(LPVOID lpParam)
+{
+    GraphicTimer* timer = (GraphicTimer*)lpParam;
+    LARGE_INTEGER liDueTime;
+    liDueTime.QuadPart = -(timer->GetPeriod() * HUNDRED_NS_PER_MS);
+
+    LONG period = (timer->IsPeriodic() ? timer->GetPeriod() : 0);
+    if (!SetWaitableTimer(timer->GetNativeTimer(), &liDueTime, period, TimerCallback, timer, FALSE)) {
+        GRAPHIC_LOGE("Timer start failed.(Error=%d)", GetLastError());
+        return 1;
+    }
+    SleepEx(INFINITE, TRUE);
+    return 0;
+}
+
 GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic)
     : cb_(cb), arg_(arg), isPeriodic_(isPeriodic)
 {
@@ -80,24 +96,27 @@ GraphicTimer::~GraphicTimer()
     }
 }
 
-bool GraphicTimer::Start(int32_t delayMs)
+bool GraphicTimer::Start()
 {
     if (timer_ == nullptr) {
         GRAPHIC_LOGE("Timer start failed, timer should be created first.");
         return false;
     }
-    if ((delayMs > MAX_PERIOD_MS) || (delayMs < 0)) {
-        GRAPHIC_LOGE("Timer start failed, delayMs should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
-        return false;
-    }
 
-    LARGE_INTEGER liDueTime;
-    liDueTime.QuadPart = (isPeriodic_) ? -delayMs : 0LL;
+    DWORD dwThreadId;
+    HANDLE hThread;
+    hThread = CreateThread(NULL,           // default security attributes
+                           0,              // use default stack size
+                           WinAsyncThread, // thread function name
+                           this,           // argument to thread function
+                           0,              // use default creation flags
+                           &dwThreadId);   // returns the thread identifier
 
-    if (!SetWaitableTimer(timer_, &liDueTime, periodMs_, TimerCallback, this, FALSE)) {
+    if (hThread == nullptr) {
         GRAPHIC_LOGE("Timer start failed.(Error=%d)", GetLastError());
         return false;
     }
+    return true;
 }
 
 void GraphicTimer::Stop()
@@ -152,26 +171,18 @@ GraphicTimer::~GraphicTimer()
     }
 }
 
-bool GraphicTimer::Start(int32_t delayMs)
+bool GraphicTimer::Start()
 {
     if (periodMs_ < 0) {
         GRAPHIC_LOGE("Timer start failed, timer should be created first.");
-        return false;
-    }
-    if ((delayMs > MAX_PERIOD_MS) || (delayMs < 0)) {
-        GRAPHIC_LOGE("Timer start failed, delayMs should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
         return false;
     }
 
     struct itimerspec its;
     its.it_interval.tv_nsec = periodMs_ % NS_PER_MS;
     its.it_interval.tv_sec = periodMs_ / MS_PER_SECOND;
-    if (delayMs == 0 || !isPeriodic_) {
-        its.it_value.tv_nsec = its.it_interval.tv_nsec;
-        its.it_value.tv_sec = its.it_interval.tv_sec;
-    }
-    its.it_value.tv_nsec = delayMs % NS_PER_MS;
-    its.it_value.tv_sec = delayMs / MS_PER_SECOND;
+    its.it_value.tv_nsec = its.it_interval.tv_nsec;
+    its.it_value.tv_sec = its.it_interval.tv_sec;
 
     if (timer_settime(timer_, 0, &its, nullptr) == -1) {
         GRAPHIC_LOGE("Timer start failed.(timerid=%d, err=%s)", timer_, strerror(errno));

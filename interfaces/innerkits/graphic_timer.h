@@ -28,9 +28,22 @@ public:
     GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic = false);
     ~GraphicTimer();
 
-    /* delayMs is ignored when timer is non-periodic */
-    bool Start(int32_t delayMs = 0);
+    bool Start();
     bool SetPeriod(int32_t periodMs);
+    int32_t GetPeriod()
+    {
+        return periodMs_;
+    }
+
+#ifdef _WIN32
+    void* GetNativeTimer()
+#else
+    timer_t GetNativeTimer()
+#endif
+    {
+        return timer_;
+    }
+
     void Stop();
     bool IsPeriodic()
     {
