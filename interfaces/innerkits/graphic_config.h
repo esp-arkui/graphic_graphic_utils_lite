@@ -321,7 +321,7 @@ static constexpr const char* MEDIA_IMAGE_MUTE = "/user/data/videoplayer_mute.png
 /* Default file path for DOM tree logs */
 static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = ".\\dump_dom_tree.json";
 /* Default file path for font */
-static constexpr const char* VECTOR_FONT_DIR = "..\\simulator\\font\\";
+static constexpr const char* VECTOR_FONT_DIR = "..\\..\\simulator\\font\\";
 #elif defined _WIN32
 /* Default file path for DOM tree logs */
 static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = ".\\dump_dom_tree.json";
