@@ -44,6 +44,7 @@ shared_library("graphic_utils") {
     "frameworks/color.cpp",
     "frameworks/geometry2d.cpp",
     "frameworks/graphic_math.cpp",
+    "frameworks/graphic_performance.cpp",
     "frameworks/hal_cpu.cpp",
     "frameworks/hal_tick.cpp",
     "frameworks/mem_api.cpp",

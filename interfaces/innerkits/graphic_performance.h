@@ -37,11 +37,7 @@ struct PerformanceItem {
 
 class Performance {
 public:
-    static Performance* GetInstance()
-    {
-        static Performance instance;
-        return &instance;
-    }
+    static Performance* GetInstance();
 
     static void SigUsr(int signo)
     {
