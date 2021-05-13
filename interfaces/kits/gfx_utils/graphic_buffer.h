@@ -40,9 +40,9 @@
 
 namespace OHOS {
 /**
- * @brief LCD屏幕内存信息.
- * @since 1.0
- * @version 1.0
+ * @brief buffer info for drawing.
+ * @since 6.0
+ * @version 6.0
  */
 struct BufferInfo {
     Rect rect;
