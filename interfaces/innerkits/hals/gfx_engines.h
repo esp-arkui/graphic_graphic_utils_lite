@@ -25,11 +25,7 @@
 namespace OHOS {
 class GfxEngines {
 public:
-    static GfxEngines* GetInstance()
-    {
-        static GfxEngines instance;
-        return &instance;
-    }
+    static GfxEngines* GetInstance();
 
     bool InitDriver();
     void CloseDriver();

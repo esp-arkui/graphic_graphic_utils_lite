@@ -70,6 +70,12 @@ static void Convert2IRect(const Rect& rect, IRect& iRect)
     iRect.h = rect.GetHeight();
 }
 
+GfxEngines* GfxEngines::GetInstance()
+{
+    static GfxEngines instance;
+    return &instance;
+}
+
 bool GfxEngines::InitDriver()
 {
     if (GfxInitialize(&gfxFuncs_) == DISPLAY_SUCCESS) {

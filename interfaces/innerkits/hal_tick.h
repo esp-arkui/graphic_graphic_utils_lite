@@ -29,11 +29,7 @@ public:
      *
      * @returns The instance.
      */
-    static HALTick& GetInstance()
-    {
-        static HALTick instance;
-        return instance;
-    }
+    static HALTick& GetInstance();
 
     /**
      * Gets the milliseconds since start up
