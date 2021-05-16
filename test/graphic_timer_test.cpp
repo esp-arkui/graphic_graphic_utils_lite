@@ -27,14 +27,21 @@ public:
     static void TearDownTestCase(void) {}
     void SetUp();
     void TearDown();
+    static void TimerCb(void* arg)
+    {
+        cbCnt_++;
+    }
+
+    static int32_t cbCnt_ = 0;
 };
 
 void GraphicTimerTest::SetUp() {}
 
 void GraphicTimerTest::TearDown() {}
 
-HWTEST_F(GraphicTimerTest, ListFront_001, TestSize.Level0)
+HWTEST_F(GraphicTimerTest, TimerArgCheck001, TestSize.Level0)
 {
-    EXPECT_EQ(list_->Front(), FIRST_VALUE);
+    GraphicTimer timer(MAX_PERIOD_MS + 1, GraphicTimerTest::TimerCb, nullptr, false);
+    EXPECT_EQ(timer.Start(), false);
 }
 } // namespace OHOS

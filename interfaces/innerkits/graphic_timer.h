@@ -22,7 +22,7 @@
 #endif
 
 namespace OHOS {
-class GraphicTimer final {
+class GraphicTimer {
 public:
     using GraphicTimerCb = void (*)(void*);
     GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic = false);
