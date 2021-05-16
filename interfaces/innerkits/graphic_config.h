@@ -285,7 +285,11 @@ namespace OHOS {
 /**
  * @brief Defines the file name of default vector font.
  */
+#if ENABLE_VECTOR_FONT
 #define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular.otf"
+#else
+#define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular"
+#endif
 /* Default font size. The default value is <b>18</b>. */
 static constexpr uint8_t DEFAULT_VECTOR_FONT_SIZE = 18;
 /* Defines the file name of default line break rule. */

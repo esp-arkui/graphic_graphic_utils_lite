@@ -26,6 +26,12 @@
 #endif
 
 namespace OHOS {
+HALTick& HALTick::GetInstance()
+{
+    static HALTick instance;
+    return instance;
+}
+
 uint32_t HALTick::GetTime()
 {
 #ifdef _WIN32
