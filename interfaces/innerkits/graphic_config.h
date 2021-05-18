@@ -194,9 +194,9 @@ namespace OHOS {
 #define LOCAL_RENDER                      0
 
 /**
- * @brief Graphics default animation, which is disabled by default.
+ * @brief Graphics default animation, which is enabled by default.
  */
-#define DEFAULT_ANIMATION                 0
+#define DEFAULT_ANIMATION                 1
 
 /**
  * @brief Actually use ARM NEON optimization.
