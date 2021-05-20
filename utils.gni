@@ -32,7 +32,7 @@ graphic_utils_sources = [
 
 graphic_hals_include_dirs = [
   "$GRAPHIC_UTILS_PATH/interfaces/innerkits",
-  "//drivers/peripheral/display/interfaces/include",
+  "//drivers/peripheral/display/interfaces_lite/include",	
 ]
 
 graphic_hals_sources = [
