@@ -92,6 +92,6 @@ shared_library("graphic_hals") {
 config("graphic_hals_public_config") {
   include_dirs = [
     "interfaces/innerkits",
-    "//drivers/peripheral/display/interfaces/include",
+    "//drivers/peripheral/display/interfaces_lite/include",
   ]
 }
