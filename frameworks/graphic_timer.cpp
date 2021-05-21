@@ -155,7 +155,7 @@ GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool 
     sev.sigev_notify = SIGEV_THREAD;
     sev.sigev_notify_function = TimerCallback;
     sev.sigev_value.sival_ptr = this;
-    if (timer_create(CLOCK_MONOTONIC, &sev, &timer_) == -1) {
+    if (timer_create(CLOCK_REALTIME, &sev, &timer_) == -1) {
         GRAPHIC_LOGE("Timer create failed.(err=%s)", strerror(errno));
         return;
     }
