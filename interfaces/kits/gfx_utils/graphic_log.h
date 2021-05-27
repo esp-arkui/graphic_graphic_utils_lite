@@ -19,9 +19,9 @@
 #include "graphic_config.h"
 #if ENABLE_GRAPHIC_LOG
 #ifdef __LITEOS__
-#include <cstring>
 #include "hilog/log.h"
-#elif defined _WIN32
+#include <cstring>
+#else
 #include <stdio.h>
 #endif
 #endif
@@ -49,43 +49,18 @@ do {                                                                            
     }                                                                                                       \
 } while (0)
 
-#define GRAPHIC_LOGF(fmt, args...)  GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_FATAL, HiviewDFX::HiLog::Fatal, fmt, ##args)
-#define GRAPHIC_LOGE(fmt, args...)  GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_ERROR, HiviewDFX::HiLog::Error, fmt, ##args)
-#define GRAPHIC_LOGW(fmt, args...)  GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_WARN, HiviewDFX::HiLog::Warn, fmt, ##args)
-#define GRAPHIC_LOGI(fmt, args...)  GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_INFO, HiviewDFX::HiLog::Info, fmt, ##args)
-#define GRAPHIC_LOGD(fmt, args...)  GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
+#define GRAPHIC_LOGF(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_FATAL, HiviewDFX::HiLog::Fatal, fmt, ##args)
+#define GRAPHIC_LOGE(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_ERROR, HiviewDFX::HiLog::Error, fmt, ##args)
+#define GRAPHIC_LOGW(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_WARN, HiviewDFX::HiLog::Warn, fmt, ##args)
+#define GRAPHIC_LOGI(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_INFO, HiviewDFX::HiLog::Info, fmt, ##args)
+#define GRAPHIC_LOGD(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
 
-#elif defined _WIN32
-#define GRAPHIC_LOGF(...)               \
-do {                                    \
-    printf("%s\n", __VA_ARGS__);        \
-} while (0)
-
-#define GRAPHIC_LOGE(...)               \
-do {                                    \
-    printf("%s\n", __VA_ARGS__);        \
-} while (0)
-
-#define GRAPHIC_LOGW(...)               \
-do {                                    \
-    printf("%s\n", __VA_ARGS__);        \
-} while (0)
-
-#define GRAPHIC_LOGI(...)               \
-do {                                    \
-    printf("%s\n", __VA_ARGS__);        \
-} while (0)
-
-#define GRAPHIC_LOGD(...)               \
-do {                                    \
-    printf("%s\n", __VA_ARGS__);        \
-} while (0)
 #else
-#define GRAPHIC_LOGF(...)
-#define GRAPHIC_LOGE(...)
-#define GRAPHIC_LOGW(...)
-#define GRAPHIC_LOGI(...)
-#define GRAPHIC_LOGD(...)
+#define GRAPHIC_LOGF(...) printf("[%d]" format "\n", __LINE__, ##__VA_ARGS__)
+#define GRAPHIC_LOGE(...) GRAPHIC_LOGF(__VA_ARGS__)
+#define GRAPHIC_LOGW(...) GRAPHIC_LOGF(__VA_ARGS__)
+#define GRAPHIC_LOGI(...) GRAPHIC_LOGF(__VA_ARGS__)
+#define GRAPHIC_LOGD(...) GRAPHIC_LOGF(__VA_ARGS__)
 #endif
 
 #else // ENABLE_GRAPHIC_LOG
