@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -138,9 +138,6 @@ static void TimerCallback(union sigval v)
     if (timer != nullptr) {
         timer->Callback();
     }
-    if (timer->IsPeriodic()) {
-        timer->Start();
-    }
 }
 
 GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic)
@@ -151,10 +148,11 @@ GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool 
         return;
     }
 
-    struct sigevent sev;
+    struct sigevent sev = {0};
     sev.sigev_notify = SIGEV_THREAD;
     sev.sigev_notify_function = TimerCallback;
     sev.sigev_value.sival_ptr = this;
+
     if (timer_create(CLOCK_REALTIME, &sev, &timer_) == -1) {
         GRAPHIC_LOGE("Timer create failed.(err=%s)", strerror(errno));
         return;
@@ -179,11 +177,15 @@ bool GraphicTimer::Start()
     }
 
     struct itimerspec its;
-    its.it_interval.tv_nsec = periodMs_ % NS_PER_MS;
-    its.it_interval.tv_sec = periodMs_ / MS_PER_SECOND;
-    its.it_value.tv_nsec = its.it_interval.tv_nsec;
-    its.it_value.tv_sec = its.it_interval.tv_sec;
-
+    its.it_value.tv_nsec = periodMs_ % NS_PER_MS;
+    its.it_value.tv_sec = periodMs_ / MS_PER_SECOND;
+    if (isPeriodic_) {
+        its.it_interval.tv_nsec = its.it_value.tv_nsec;
+        its.it_interval.tv_sec = its.it_value.tv_sec;
+    } else {
+        its.it_interval.tv_nsec = 0;
+        its.it_interval.tv_sec = 0;
+    }
     if (timer_settime(timer_, 0, &its, nullptr) == -1) {
         GRAPHIC_LOGE("Timer start failed.(timerid=%d, err=%s)", timer_, strerror(errno));
         return false;
