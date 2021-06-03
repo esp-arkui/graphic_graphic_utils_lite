@@ -116,6 +116,10 @@ namespace OHOS {
 #define ENABLE_ARM_NEON                   0
 #elif defined _WIN32 || defined __APPLE__
 /**
+ * @brief Multi-Font type, which is enabled by default on WIN32.
+ */
+#define ENABLE_MULTI_FONT                 0
+/**
  * @brief Multi-window, which is disabled by default on WIN32.
  */
 #define ENABLE_WINDOW                     0
@@ -123,6 +127,12 @@ namespace OHOS {
  * @brief Display buffer for rendering data refresh, which is disabled by default on WIN32.
  */
 #define ENABLE_FRAME_BUFFER               0
+/**
+ * @brief Static Bitmap type font, enabled by default on WIN32.
+ */
+#define ENABLE_STATIC_FONT                0
+
+#define HARMONYOS_CONFIG_LOG              0
 
 #define ENABLE_JPEG_AND_PNG               1
 /**
@@ -177,6 +187,8 @@ namespace OHOS {
 #define ENABLE_FOCUS_MANAGER              1
 
 #define ENABLE_SLIDER_KNOB                0
+
+#define RECTANGLE_SCREEN                  1
 
 /**
  * @brief Graphics local rendering, which is disabled by default.
