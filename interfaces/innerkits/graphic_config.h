@@ -188,6 +188,8 @@ namespace OHOS {
 
 #define ENABLE_SLIDER_KNOB                0
 
+#define RECTANGLE_SCREEN                  1
+
 /**
  * @brief Graphics local rendering, which is disabled by default.
  */
