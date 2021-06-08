@@ -132,5 +132,13 @@ enum ImageType : uint8_t {
     IMG_SRC_FILE_PATH,
     IMG_SRC_IMAGE_INFO,
 };
+
+/**
+ * @brief Enumerates screen shapes.
+ */
+enum ScreenShape {
+    RECTANGLE = 0, // rectangular screen
+    CIRCLE         // circular screen
+};
 } // namespace OHOS
 #endif // GRAPHIC_LITE_TYPES_H
