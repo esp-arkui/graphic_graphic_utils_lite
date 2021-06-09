@@ -338,7 +338,7 @@ HWTEST_F(StyleTest, StyleSetStyle_018, TestSize.Level0)
  * @tc.name: StyleSetStyle_018
  * @tc.desc: Verify SetStyle function, equal.
  * @tc.type: FUNC
- * @tc.require: AR000EEMQC
+ * @tc.require: SR000FQNF0
  */
 HWTEST_F(StyleTest, StyleSetStyle_019, TestSize.Level0)
 {
@@ -346,9 +346,9 @@ HWTEST_F(StyleTest, StyleSetStyle_019, TestSize.Level0)
         EXPECT_EQ(1, 0);
         return;
     }
-    const int16_t lineSpace = 1;
-    style_->SetStyle(STYLE_LINE_SPACE, lineSpace);
-    EXPECT_EQ(style_->GetStyle(STYLE_LINE_SPACE), lineSpace);
+    const int16_t lineHeight = 10;
+    style_->SetStyle(STYLE_LINE_SPACE, lineHeight);
+    EXPECT_EQ(style_->GetStyle(STYLE_LINE_HEIGHT), lineHeight);
 }
 
 /**
