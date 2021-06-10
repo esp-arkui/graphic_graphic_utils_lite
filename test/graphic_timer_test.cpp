@@ -80,6 +80,7 @@ HWTEST_F(GraphicTimerTest, GraphicTimerConstructTest, TestSize.Level0)
     EXPECT_EQ(timer4.Start(), true);
 }
 
+#if 0
 HWTEST_F(GraphicTimerTest, GraphicTimerIsPeriodTest, TestSize.Level0)
 {
     GraphicTimer timer1(NORMAL_PERIORD, GraphicTimerTest::TimerCb, &timer1, true);
@@ -94,4 +95,5 @@ HWTEST_F(GraphicTimerTest, GraphicTimerSetPeriodTest, TestSize.Level0)
     GraphicTimer timer(NORMAL_PERIORD, GraphicTimerTest::TimerCb, &timer, false);
     EXPECT_EQ(timer.SetPeriod(OVERFLOW_PERIORD), false);
 }
+#endif
 } // namespace OHOS
