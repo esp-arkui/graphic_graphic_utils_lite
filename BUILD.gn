@@ -62,6 +62,7 @@ shared_library("graphic_utils") {
       [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_shared" ]
   cflags = [ "-fPIC" ]
   cflags += [ "-Wall" ]
+  ldflags = ["lrt"]
   cflags_cc = cflags
 }
 
