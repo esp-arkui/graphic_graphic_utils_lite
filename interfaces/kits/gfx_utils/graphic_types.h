@@ -100,17 +100,6 @@ enum ColorMode : uint8_t {
     UNKNOW,
 };
 
-enum LutColorMode : uint8_t {
-    /** RGB565 lut color mode */
-    LUT_RGB565 = 0,
-    /** RGB888 lut color mode */
-    LUT_RGB888,
-    /** ARGB8888 lut color mode */
-    LUT_ARGB8888,
-    /** unknow lut color mode */
-    LUT_UNKNOW,
-};
-
 enum FontWeight : uint8_t {
     FONT_WEIGHT_1 = 1,
     FONT_WEIGHT_2 = 2,
