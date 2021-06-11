@@ -35,7 +35,6 @@ if (ohos_build_type == "debug") {
       "color_unit_test.cpp",
       "geometry2d_unit_test.cpp",
       "graphic_math_unit_test.cpp",
-      "graphic_timer_test.cpp",
       "list_unit_test.cpp",
       "rect_unit_test.cpp",
       "style_unit_test.cpp",
