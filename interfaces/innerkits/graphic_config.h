@@ -176,8 +176,6 @@ namespace OHOS {
 
 #define ENABLE_FOCUS_MANAGER              1
 
-#define ENABLE_SLIDER_KNOB                0
-
 #define RECTANGLE_SCREEN                  1
 
 /**
