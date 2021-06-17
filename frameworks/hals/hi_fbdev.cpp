@@ -101,10 +101,10 @@ static void OpenLayer(void)
     g_layerInfo.bpp = LAYER_BPP;
     g_layerInfo.pixFormat = HDI_LAYER_PIXEL_FORMAT;
     g_layerInfo.type = LAYER_TYPE_GRAPHIC;
-    if (g_display.layerFuncs->OpenLayer != nullptr) {
-        ret = g_display.layerFuncs->OpenLayer(g_display.devId, &g_layerInfo, &g_display.layerId);
+    if (g_display.layerFuncs->CreateLayer != nullptr) {
+        ret = g_display.layerFuncs->CreateLayer(g_display.devId, &g_layerInfo, &g_display.layerId);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("OpenLayer fail");
+            GRAPHIC_LOGE("CreateLayer fail");
             return;
         }
     }
