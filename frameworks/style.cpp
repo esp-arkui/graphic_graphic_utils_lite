@@ -29,6 +29,8 @@ Style StyleDefault::progressForegroundStyle_;
 Style StyleDefault::sliderKnobStyle_;
 Style StyleDefault::pickerBackgroundStyle_;
 Style StyleDefault::pickerHighlightStyle_;
+Style StyleDefault::scrollBarBackgroundStyle_;
+Style StyleDefault::scrollBarForegroundStyle_;
 
 Style::Style()
     : bgColor_(Color::Black()),
@@ -202,6 +204,7 @@ void StyleDefault::Init()
     InitBackgroundTransparentStyle();
     InitProgressStyle();
     InitPickerStyle();
+    InitScrollBarStyle();
 }
 
 void StyleDefault::InitStyle()
@@ -282,5 +285,22 @@ void StyleDefault::InitProgressStyle()
 
     sliderKnobStyle_ = brightColorStyle_;
     sliderKnobStyle_.SetStyle(STYLE_BORDER_WIDTH, 0);
+}
+
+void StyleDefault::InitScrollBarStyle()
+{
+    scrollBarBackgroundStyle_.SetStyle(STYLE_BACKGROUND_COLOR,
+        Color::GetColorFromRGB(0x7f, 0x7f, 0x7f).full); // 0x7f: default color
+    scrollBarBackgroundStyle_.SetStyle(STYLE_BACKGROUND_OPA, 128); // 128: default opa
+    scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_COLOR,
+        Color::GetColorFromRGB(0x7f, 0x7f, 0x7f).full); // 0x7f: default color
+    scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_OPA, 128); // 128: default opa
+    scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_WIDTH, 4); // 4: default width
+
+    scrollBarForegroundStyle_.SetStyle(STYLE_BACKGROUND_COLOR, Color::White().full);
+    scrollBarForegroundStyle_.SetStyle(STYLE_BACKGROUND_OPA, 168); // 168: default opa
+    scrollBarForegroundStyle_.SetStyle(STYLE_LINE_COLOR, Color::White().full);
+    scrollBarForegroundStyle_.SetStyle(STYLE_LINE_OPA, 168); // 168: default opa
+    scrollBarForegroundStyle_.SetStyle(STYLE_LINE_WIDTH, 3); // 3: default width
 }
 } // namespace OHOS

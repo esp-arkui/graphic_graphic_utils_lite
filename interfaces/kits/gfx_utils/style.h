@@ -367,6 +367,28 @@ public:
         return pickerHighlightStyle_;
     }
 
+    /**
+     * @brief Obtains the scroll bar backgound style.
+     *
+     * @return Returns the scroll bar backgound style.
+     * @since 6
+     */
+    static Style& GetScrollBarBackgroundStyle()
+    {
+        return scrollBarBackgroundStyle_;
+    }
+
+    /**
+     * @brief Obtains the scroll bar foregound style.
+     *
+     * @return Returns the scroll bar foregound style.
+     * @since 6
+     */
+    static Style& GetScrollBarForegroundStyle()
+    {
+        return scrollBarForegroundStyle_;
+    }
+
 private:
     static Style defaultStyle_;
     static Style brightStyle_;
@@ -384,12 +406,16 @@ private:
     static Style pickerBackgroundStyle_;
     static Style pickerHighlightStyle_;
 
+    static Style scrollBarBackgroundStyle_;
+    static Style scrollBarForegroundStyle_;
+
     static void InitStyle();
     static void InitButtonStyle();
     static void InitLabelStyle();
     static void InitBackgroundTransparentStyle();
     static void InitProgressStyle();
     static void InitPickerStyle();
+    static void InitScrollBarStyle();
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_STYLE_H
