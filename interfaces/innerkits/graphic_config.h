@@ -62,6 +62,9 @@ namespace OHOS {
 #endif
 
 /* Defines some configurations and their default values on Huawei LiteOS and other system platforms. */
+
+#define ENABLE_FIXED_POINT                    1
+
 #ifdef _LITEOS
 /**
  * @brief Font shaping, which is disabled by default on Huawei LiteOS.
