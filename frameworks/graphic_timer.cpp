@@ -33,12 +33,13 @@ namespace OHOS {
 bool GraphicTimer::SetPeriod(int32_t periodMs)
 {
     if (periodMs_ < 0) {
-        GRAPHIC_LOGE("Timer set period failed, timer should be created first.");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer set period failed, timer should be created first.");
         return false;
     }
 
     if ((periodMs > MAX_PERIOD_MS) || (periodMs <= 0)) {
-        GRAPHIC_LOGE("Timer set period failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC,
+            "Timer set period failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
         return false;
     }
 
@@ -66,7 +67,7 @@ static DWORD WINAPI WinAsyncThread(LPVOID lpParam)
 
     LONG period = (timer->IsPeriodic() ? timer->GetPeriod() : 0);
     if (!SetWaitableTimer(timer->GetNativeTimer(), &liDueTime, period, TimerCallback, timer, FALSE)) {
-        GRAPHIC_LOGE("Timer start failed.(Error=%d)", GetLastError());
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer start failed.(Error=%d)", GetLastError());
         return 1;
     }
     SleepEx(INFINITE, TRUE);
@@ -77,13 +78,14 @@ GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool 
     : cb_(cb), arg_(arg), isPeriodic_(isPeriodic)
 {
     if ((periodMs > MAX_PERIOD_MS) || (periodMs <= 0)) {
-        GRAPHIC_LOGE("Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC,
+            "Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
         return;
     }
 
     timer_ = CreateWaitableTimer(nullptr, TRUE, nullptr);
     if (timer_ == nullptr) {
-        GRAPHIC_LOGE("Timer create failed.(err=%s)", strerror(errno));
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer create failed.(err=%s)", strerror(errno));
         return;
     }
     periodMs_ = periodMs;
@@ -99,7 +101,7 @@ GraphicTimer::~GraphicTimer()
 bool GraphicTimer::Start()
 {
     if (timer_ == nullptr) {
-        GRAPHIC_LOGE("Timer start failed, timer should be created first.");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer start failed, timer should be created first.");
         return false;
     }
 
@@ -112,7 +114,7 @@ bool GraphicTimer::Start()
                            0,              // use default creation flags
                            &dwThreadId);   // returns the thread identifier
     if (hThread == nullptr) {
-        GRAPHIC_LOGE("Timer start failed.(Error=%d)", GetLastError());
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer start failed.(Error=%d)", GetLastError());
         return false;
     }
     return true;
@@ -121,11 +123,11 @@ bool GraphicTimer::Start()
 void GraphicTimer::Stop()
 {
     if (timer_ == nullptr) {
-        GRAPHIC_LOGE("Timer stop failed, timer should be created first.");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer stop failed, timer should be created first.");
         return;
     }
     if (CancelWaitableTimer(timer_) == 0) {
-        GRAPHIC_LOGE("Timer stop failed.(Error=%d)", GetLastError());
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer stop failed.(Error=%d)", GetLastError());
         return;
     }
 }
@@ -143,7 +145,8 @@ GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool 
     : cb_(cb), arg_(arg), isPeriodic_(isPeriodic)
 {
     if ((periodMs > MAX_PERIOD_MS) || (periodMs <= 0)) {
-        GRAPHIC_LOGE("Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC,
+            "Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
         return;
     }
 
@@ -153,7 +156,7 @@ GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool 
     sev.sigev_value.sival_ptr = this;
 
     if (timer_create(CLOCK_REALTIME, &sev, &timer_) == -1) {
-        GRAPHIC_LOGE("Timer create failed.(err=%s)", strerror(errno));
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer create failed.(err=%s)", strerror(errno));
         return;
     }
     periodMs_ = periodMs;
@@ -163,7 +166,7 @@ GraphicTimer::~GraphicTimer()
 {
     if (periodMs_ >= 0) {
         if (timer_delete(timer_) == -1) {
-            GRAPHIC_LOGE("Timer delete failed.(err=%s)", strerror(errno));
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer delete failed.(err=%s)", strerror(errno));
         }
     }
 }
@@ -171,7 +174,7 @@ GraphicTimer::~GraphicTimer()
 bool GraphicTimer::Start()
 {
     if (periodMs_ < 0) {
-        GRAPHIC_LOGE("Timer start failed, timer should be created first.");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer start failed, timer should be created first.");
         return false;
     }
 
@@ -186,7 +189,7 @@ bool GraphicTimer::Start()
         its.it_interval.tv_sec = 0;
     }
     if (timer_settime(timer_, 0, &its, nullptr) == -1) {
-        GRAPHIC_LOGE("Timer start failed.(timerid=%d, err=%s)", timer_, strerror(errno));
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer start failed.(timerid=%d, err=%s)", timer_, strerror(errno));
         return false;
     }
     return true;
@@ -201,7 +204,7 @@ void GraphicTimer::Stop()
     its.it_value.tv_nsec = 0;
     its.it_value.tv_sec = 0;
     if (timer_settime(timer_, 0, &its, nullptr) == -1) {
-        GRAPHIC_LOGE("Timer stop failed.(timerid=%d, err=%s)", timer_, strerror(errno));
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "Timer stop failed.(timerid=%d, err=%s)", timer_, strerror(errno));
         return;
     }
 }
