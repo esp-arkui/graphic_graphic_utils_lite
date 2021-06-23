@@ -174,8 +174,6 @@ namespace OHOS {
 
 #define ENABLE_VIBRATOR                   1
 
-#define ENABLE_SLIDER_KNOB                0
-
 /**
  * @brief Graphics local rendering, which is disabled by default.
  */
