@@ -104,13 +104,12 @@ bool GraphicTimer::Start()
     }
 
     DWORD dwThreadId;
-    HANDLE hThread;
-    hThread = CreateThread(NULL,           // default security attributes
-                           0,              // use default stack size
-                           WinAsyncThread, // thread function name
-                           this,           // argument to thread function
-                           0,              // use default creation flags
-                           &dwThreadId);   // returns the thread identifier
+    HANDLE hThread = CreateThread(NULL,           // default security attributes
+                                  0,              // use default stack size
+                                  WinAsyncThread, // thread function name
+                                  this,           // argument to thread function
+                                  0,              // use default creation flags
+                                  &dwThreadId);   // returns the thread identifier
     if (hThread == nullptr) {
         GRAPHIC_LOGE("Timer start failed.(Error=%d)", GetLastError());
         return false;
