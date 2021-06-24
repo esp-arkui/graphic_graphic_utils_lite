@@ -17,60 +17,68 @@
 #define GRAPHIC_LITE_GRAPHIC_LOG_H
 
 #include "graphic_config.h"
+
 #if ENABLE_GRAPHIC_LOG
-#ifdef __LITEOS__
-#include "hilog/log.h"
-#include <cstring>
+#ifdef __LITEOS_M__
+#include "log.h"
+#ifndef HILOG_DEBUG
+#define HILOG_DEBUG(mod, format, ...)
+#endif
+#ifndef HILOG_ERROR
+#define HILOG_ERROR(mod, format, ...)
+#endif
+#ifndef HILOG_FATAL
+#define HILOG_FATAL(mod, format, ...)
+#endif
+#ifndef HILOG_INFO
+#define HILOG_INFO(mod, format, ...)
+#endif
+#ifndef HILOG_WARN
+#define HILOG_WARN(mod, format, ...)
+#endif
+#elif __LITEOS_A__
+#undef LOG_TAG
+#undef LOG_DOMAIN
+#define LOG_DOMAIN 0xD001400
+#define LOG_TAG "GRAPHIC"
+#include "log.h"
 #else
 #include <stdio.h>
-#endif
-#endif
-
-namespace OHOS {
-#if ENABLE_GRAPHIC_LOG
-#ifdef __LITEOS__
-typedef enum {
-    LOG_LEVEL_FATAL = 0,
-    LOG_LEVEL_ERROR,
-    LOG_LEVEL_WARN,
-    LOG_LEVEL_INFO,
-    LOG_LEVEL_DEBUG,
-    LOG_LEVEL_MAX
-} LOG_LEVEL;
-
-static constexpr HiviewDFX::HiLogLabel GRPHIC_LABEL = {LOG_CORE, 0xD001400, "Graphic"};
-
-#define FILE_NAME(x) (strrchr(x, '/') ? (strrchr(x, '/') + 1) : x)
-
-#define GRAPHIC_DECORATOR_HILOG(level, op, fmt, args...)                                                    \
-do {                                                                                                        \
-    if ((level < GRAPHIC_LOG_LEVEL) && (level < LOG_LEVEL_MAX)) {                                           \
-        op(GRPHIC_LABEL, "{%s()-%s:%d} " fmt, __FUNCTION__, FILE_NAME(__FILE__), __LINE__, ##args);         \
-    }                                                                                                       \
+#define HILOG_FATAL(mod, ...)                                   \
+do {                                                            \
+    printf("[FATAL]: %s\n", __VA_ARGS__);                       \
+    fflush(stdout);                                             \
 } while (0)
 
-#define GRAPHIC_LOGF(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_FATAL, HiviewDFX::HiLog::Fatal, fmt, ##args)
-#define GRAPHIC_LOGE(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_ERROR, HiviewDFX::HiLog::Error, fmt, ##args)
-#define GRAPHIC_LOGW(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_WARN, HiviewDFX::HiLog::Warn, fmt, ##args)
-#define GRAPHIC_LOGI(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_INFO, HiviewDFX::HiLog::Info, fmt, ##args)
-#define GRAPHIC_LOGD(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
+#define HILOG_ERROR(mod, ...)                                   \
+do {                                                            \
+    printf("[ERROR]: %s\n", __VA_ARGS__);                       \
+    fflush(stdout);                                             \
+} while (0)
 
+#define HILOG_INFO(mod, ...)                                    \
+do {                                                            \
+    printf("[INFO]: %s\n", __VA_ARGS__);                        \
+    fflush(stdout);                                             \
+} while (0)
+
+#define HILOG_WARN(mod, ...)                                    \
+do {                                                            \
+    printf("[WARN]: %s\n", __VA_ARGS__);                        \
+    fflush(stdout);                                             \
+} while (0)
+
+#define HILOG_DEBUG(mod, ...)                                   \
+do {                                                            \
+    printf("[DEBUG]: %s\n", __VA_ARGS__);                       \
+    fflush(stdout);                                             \
+} while (0)
+#endif // __LITEOS_M__
 #else
-#define GRAPHIC_LOGF(...) printf("[%d]" format "\n", __LINE__, ##__VA_ARGS__)
-#define GRAPHIC_LOGE(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGW(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGI(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGD(...) GRAPHIC_LOGF(__VA_ARGS__)
-#endif
-
-#else // ENABLE_GRAPHIC_LOG
-
-#define GRAPHIC_LOGF(...)
-#define GRAPHIC_LOGE(...)
-#define GRAPHIC_LOGW(...)
-#define GRAPHIC_LOGI(...)
-#define GRAPHIC_LOGD(...)
-
+#define HILOG_FATAL(mod, ...)
+#define HILOG_ERROR(mod, ...)
+#define HILOG_INFO(mod, ...)
+#define HILOG_WARN(mod, ...)
+#define HILOG_DEBUG(mod, ...)
 #endif // ENABLE_GRAPHIC_LOG
-} // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_LOG_H

@@ -51,7 +51,7 @@ void LcdFlush()
         int32_t ret =
             g_display.layerFuncs->Flush(g_display.devId, g_display.layerId, &g_display.buffer);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("flush fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "flush fail");
             return;
         }
     }
@@ -71,13 +71,13 @@ static void DisplayInit(void)
 {
     int32_t ret = LayerInitialize(&g_display.layerFuncs);
     if (ret != DISPLAY_SUCCESS || g_display.layerFuncs == nullptr) {
-        GRAPHIC_LOGE("layer initialize failed");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "layer initialize failed");
         return;
     }
     if (g_display.layerFuncs->InitDisplay != nullptr) {
         ret = g_display.layerFuncs->InitDisplay(DISPALY_DEV_ID);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("InitDisplay fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "InitDisplay fail");
             return;
         }
     }
@@ -92,7 +92,7 @@ static void OpenLayer(void)
     DisplayInfo displayInfo = {};
     int32_t ret = g_display.layerFuncs->GetDisplayInfo(g_display.devId, &displayInfo);
     if (ret != DISPLAY_SUCCESS) {
-        GRAPHIC_LOGE("GetDisplayInfo fail");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "GetDisplayInfo fail");
         return;
     }
     g_display.rotateType = static_cast<LayerRotateType>(displayInfo.rotAngle);
@@ -104,7 +104,7 @@ static void OpenLayer(void)
     if (g_display.layerFuncs->CreateLayer != nullptr) {
         ret = g_display.layerFuncs->CreateLayer(g_display.devId, &g_layerInfo, &g_display.layerId);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("CreateLayer fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "CreateLayer fail");
             return;
         }
     }
@@ -115,7 +115,7 @@ static void SetLayerVisible(bool visibled)
     if (g_display.layerFuncs->SetLayerVisible != nullptr) {
         int32_t ret = g_display.layerFuncs->SetLayerVisible(g_display.devId, g_display.layerId, visibled);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("setLayerVisible fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "setLayerVisible fail");
             return;
         }
     }
@@ -127,7 +127,7 @@ static void SetLayerDirtyRegion(void)
     if (g_display.layerFuncs->SetLayerDirtyRegion != nullptr) {
         int32_t ret = g_display.layerFuncs->SetLayerDirtyRegion(g_display.devId, g_display.layerId, &rect);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("setLayerDirtyRegion fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "setLayerDirtyRegion fail");
             return;
         }
     }
@@ -139,7 +139,7 @@ static void AllocDisplayBuffer(void)
         int32_t ret =
             g_display.layerFuncs->GetLayerBuffer(g_display.devId, g_display.layerId, &g_display.buffer);
         if (ret != DISPLAY_SUCCESS) {
-            GRAPHIC_LOGE("getLayerBuffer fail");
+            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "getLayerBuffer fail");
             return;
         }
     }
@@ -172,17 +172,17 @@ void HiFbdevClose()
     }
     int32_t ret = g_display.layerFuncs->CloseLayer(g_display.devId, g_display.layerId);
     if (ret != DISPLAY_SUCCESS) {
-        GRAPHIC_LOGE("CloseLayer fail");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "CloseLayer fail");
         return;
     }
     ret = g_display.layerFuncs->DeinitDisplay(g_display.devId);
     if (ret != DISPLAY_SUCCESS) {
-        GRAPHIC_LOGE("DeinitDisplay fail");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "DeinitDisplay fail");
         return;
     }
     ret = LayerUninitialize(g_display.layerFuncs);
     if (ret != DISPLAY_SUCCESS) {
-        GRAPHIC_LOGE("LayerUninitialize fail");
+        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "LayerUninitialize fail");
     }
 }
 } // namespace OHOS
