@@ -23,20 +23,20 @@
 #include "log.h"
 #ifndef HILOG_DEBUG
 #define HILOG_DEBUG(mod, format, ...)
-#endif
+#endif // HILOG_DEBUG
 #ifndef HILOG_ERROR
 #define HILOG_ERROR(mod, format, ...)
-#endif
+#endif // HILOG_ERROR
 #ifndef HILOG_FATAL
 #define HILOG_FATAL(mod, format, ...)
-#endif
+#endif // HILOG_FATAL
 #ifndef HILOG_INFO
 #define HILOG_INFO(mod, format, ...)
-#endif
+#endif // HILOG_INFO
 #ifndef HILOG_WARN
 #define HILOG_WARN(mod, format, ...)
-#endif
-#elif __LITEOS_A__
+#endif // HILOG_WARN
+#elif defined __LITEOS_A__ || defined __linux__
 #undef LOG_TAG
 #undef LOG_DOMAIN
 #define LOG_DOMAIN 0xD001400
@@ -44,41 +44,57 @@
 #include "log.h"
 #else
 #include <stdio.h>
+#ifndef HILOG_FATAL
 #define HILOG_FATAL(mod, ...)                                   \
 do {                                                            \
     printf("[FATAL]: %s\n", __VA_ARGS__);                       \
     fflush(stdout);                                             \
 } while (0)
-
+#endif // HILOG_FATAL
+#ifndef HILOG_ERROR
 #define HILOG_ERROR(mod, ...)                                   \
 do {                                                            \
     printf("[ERROR]: %s\n", __VA_ARGS__);                       \
     fflush(stdout);                                             \
 } while (0)
-
+#endif // HILOG_ERROR
+#ifndef HILOG_INFO
 #define HILOG_INFO(mod, ...)                                    \
 do {                                                            \
     printf("[INFO]: %s\n", __VA_ARGS__);                        \
     fflush(stdout);                                             \
 } while (0)
-
+#endif // HILOG_INFO
+#ifndef HILOG_WARN
 #define HILOG_WARN(mod, ...)                                    \
 do {                                                            \
     printf("[WARN]: %s\n", __VA_ARGS__);                        \
     fflush(stdout);                                             \
 } while (0)
-
+#endif // HILOG_WARN
+#ifndef HILOG_DEBUG
 #define HILOG_DEBUG(mod, ...)                                   \
 do {                                                            \
     printf("[DEBUG]: %s\n", __VA_ARGS__);                       \
     fflush(stdout);                                             \
 } while (0)
+#endif // HILOG_DEBUG
 #endif // __LITEOS_M__
 #else
+#ifndef HILOG_FATAL
 #define HILOG_FATAL(mod, ...)
+#endif // HILOG_FATAL
+#ifndef HILOG_ERROR
 #define HILOG_ERROR(mod, ...)
+#endif // HILOG_ERROR
+#ifndef HILOG_INFO
 #define HILOG_INFO(mod, ...)
+#endif // HILOG_INFO
+#ifndef HILOG_WARN
 #define HILOG_WARN(mod, ...)
+#endif // HILOG_WARN
+#ifndef HILOG_DEBUG
 #define HILOG_DEBUG(mod, ...)
+#endif // HILOG_DEBUG
 #endif // ENABLE_GRAPHIC_LOG
 #endif // GRAPHIC_LITE_GRAPHIC_LOG_H
