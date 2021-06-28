@@ -24,8 +24,10 @@
 #endif
 
 namespace {
+#ifndef _WIN32
 constexpr int16_t MS_PER_SECOND = 1000;
 constexpr int32_t NS_PER_MS = 1000000;
+#endif
 constexpr int32_t HUNDRED_NS_PER_MS = 10000;
 } // namespace
 
