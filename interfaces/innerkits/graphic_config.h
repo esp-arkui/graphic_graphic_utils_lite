@@ -229,7 +229,7 @@ namespace OHOS {
 /**
  * @brief Log function of a graphics subsystem, which is disabled by default
  */
-#define ENABLE_GRAPHIC_LOG                1
+#define ENABLE_GRAPHIC_LOG                0
 /**
  * @brief Performance tracking for debugging, which is disabled by default.
  */
