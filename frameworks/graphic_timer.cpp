@@ -18,9 +18,9 @@
 #ifdef _WIN32
 #include "windows.h"
 #else
+#include <cerrno>
 #include <csignal>
 #include <cstring>
-#include <errno.h>
 #endif
 
 namespace {
