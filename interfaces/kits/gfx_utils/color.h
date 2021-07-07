@@ -126,21 +126,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType GetMixColor(ColorType c1, ColorType c2, uint8_t mix)
-    {
-        ColorType ret;
-        /* COLOR_DEPTH is 16 or 32 */
-        // 8: right move 8 bit. 255: 2^8-1
-        ret.red = (static_cast<uint16_t>(c1.red) * mix + (static_cast<uint16_t>(c2.red) * (255 ^ mix))) >> 8;
-        // 8: right move 8 bit. 255: 2^8-1
-        ret.green = (static_cast<uint16_t>(c1.green) * mix + (static_cast<uint16_t>(c2.green) * (255 ^ mix))) >> 8;
-        // 8: right move 8 bit. 255: 2^8-1
-        ret.blue = (static_cast<uint16_t>(c1.blue) * mix + (static_cast<uint16_t>(c2.blue) * (255 ^ mix))) >> 8;
-#if COLOR_DEPTH == 32
-        ret.alpha = 0xFF;
-#endif
-        return ret;
-    }
+    static ColorType GetMixColor(ColorType c1, ColorType c2, uint8_t mix);
 
     /**
      * @brief Obtains the color based on the RGB color value.
@@ -153,10 +139,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType GetColorFromRGB(uint8_t r8, uint8_t g8, uint8_t b8)
-    {
-        return GetColorFromRGBA(r8, g8, b8, 0xFF);
-    }
+    static ColorType GetColorFromRGB(uint8_t r8, uint8_t g8, uint8_t b8);
 
     /**
      * @brief Obtains the color based on the RGBA color value.
@@ -170,19 +153,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType GetColorFromRGBA(uint8_t r8, uint8_t g8, uint8_t b8, uint8_t alpha)
-    {
-        ColorType rColor;
-#if COLOR_DEPTH == 16
-        rColor.red = r8 >> 3;   // 3: shift right 3 places
-        rColor.blue = b8 >> 3;  // 3: shift right 3 places
-        rColor.green = g8 >> 2; // 2: shift right 2 places
-#elif COLOR_DEPTH == 32
-        // 24, 16, 8: shift right places
-        rColor.full = (alpha << 24) | (r8 << 16) | (g8 << 8) | (b8);
-#endif
-        return rColor;
-    }
+    static ColorType GetColorFromRGBA(uint8_t r8, uint8_t g8, uint8_t b8, uint8_t alpha);
 
     /**
      * @brief Converts color data into the RGBA8888 format.
@@ -224,10 +195,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType White()
-    {
-        return GetColorFromRGB(0xFF, 0xFF, 0xFF);
-    }
+    static ColorType White();
 
     /**
      * @brief Obtains the color data of silver.
@@ -236,10 +204,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Silver()
-    {
-        return GetColorFromRGB(0xC0, 0xC0, 0xC0);
-    }
+    static ColorType Silver();
 
     /**
      * @brief Obtains the color data of gray.
@@ -248,10 +213,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Gray()
-    {
-        return GetColorFromRGB(0x80, 0x80, 0x80);
-    }
+    static ColorType Gray();
 
     /**
      * @brief Obtains the color data of black.
@@ -260,10 +222,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Black()
-    {
-        return GetColorFromRGB(0x00, 0x00, 0x00);
-    }
+    static ColorType Black();
 
     /**
      * @brief Obtains the color data of red.
@@ -272,10 +231,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Red()
-    {
-        return GetColorFromRGB(0xFF, 0x00, 0x00);
-    }
+    static ColorType Red();
 
     /**
      * @brief Obtains the color data of maroon.
@@ -284,10 +240,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Maroon()
-    {
-        return GetColorFromRGB(0x80, 0x00, 0x00);
-    }
+    static ColorType Maroon();
 
     /**
      * @brief Obtains the color data of yellow.
@@ -296,10 +249,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Yellow()
-    {
-        return GetColorFromRGB(0xFF, 0xFF, 0x00);
-    }
+    static ColorType Yellow();
 
     /**
      * @brief Obtains the color data of olive.
@@ -308,10 +258,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Olive()
-    {
-        return GetColorFromRGB(0x80, 0x80, 0x00);
-    }
+    static ColorType Olive();
 
     /**
      * @brief Obtains the color data of lime.
@@ -320,10 +267,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Lime()
-    {
-        return GetColorFromRGB(0x00, 0xFF, 0x00);
-    }
+    static ColorType Lime();
 
     /**
      * @brief Obtains the color data of green.
@@ -332,10 +276,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Green()
-    {
-        return GetColorFromRGB(0x00, 0xFF, 0x00);
-    }
+    static ColorType Green();
 
     /**
      * @brief Obtains the color data of cyan.
@@ -344,10 +285,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Cyan()
-    {
-        return GetColorFromRGB(0x00, 0xFF, 0xFF);
-    }
+    static ColorType Cyan();
 
     /**
      * @brief Obtains the color data of aqua.
@@ -356,10 +294,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Aqua()
-    {
-        return GetColorFromRGB(0x00, 0xFF, 0xFF);
-    }
+    static ColorType Aqua();
 
     /**
      * @brief Obtains the color data of teal.
@@ -368,10 +303,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Teal()
-    {
-        return GetColorFromRGB(0x00, 0x80, 0x80);
-    }
+    static ColorType Teal();
 
     /**
      * @brief Obtains the color data of blue.
@@ -380,10 +312,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Blue()
-    {
-        return GetColorFromRGB(0x00, 0x00, 0xFF);
-    }
+    static ColorType Blue();
 
     /**
      * @brief Obtains the color data of navy.
@@ -392,10 +321,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Navy()
-    {
-        return GetColorFromRGB(0x00, 0x00, 0x80);
-    }
+    static ColorType Navy();
 
     /**
      * @brief Obtains the color data of magenta.
@@ -404,10 +330,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Magenta()
-    {
-        return GetColorFromRGB(0xFF, 0x00, 0xFF);
-    }
+    static ColorType Magenta();
 
     /**
      * @brief Obtains the color data of purple.
@@ -416,10 +339,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Purple()
-    {
-        return GetColorFromRGB(0x80, 0x00, 0x80);
-    }
+    static ColorType Purple();
 
     /**
      * @brief Obtains the color data of orange.
@@ -428,10 +348,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static ColorType Orange()
-    {
-        return GetColorFromRGB(0xFF, 0xA5, 0x00);
-    }
+    static ColorType Orange();
 };
 } // namespace OHOS
 #endif // GRAPHIC_LITE_COLOR_H
