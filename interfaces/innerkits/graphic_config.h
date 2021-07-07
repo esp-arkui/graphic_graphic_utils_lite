@@ -274,6 +274,13 @@ namespace OHOS {
 #endif
 
 /**
+ * @brief Defines whether the C library math function is supported.
+ * 0:    Unsupport
+ * 1:    Support
+  */
+#define ENABLE_CMATH              1
+
+/**
  * @brief Defines the file name of default vector font.
  */
 #if ENABLE_VECTOR_FONT

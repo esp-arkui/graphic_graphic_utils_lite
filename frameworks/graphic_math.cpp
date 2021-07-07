@@ -14,8 +14,12 @@
  */
 
 #include "gfx_utils/graphic_math.h"
+#if ENABLE_CMATH
+#include <cmath>
+#endif
 
 namespace OHOS {
+#if !ENABLE_CMATH
 static float g_sinValues[] = {
     0.000000, 0.017452, 0.034899, 0.052336, 0.069756, 0.087156, 0.104528, 0.121869, 0.139173, 0.156434, 0.173648,
     0.190809, 0.207912, 0.224951, 0.241922, 0.258819, 0.275637, 0.292372, 0.309017, 0.325568, 0.342020, 0.358368,
@@ -27,23 +31,30 @@ static float g_sinValues[] = {
     0.974370, 0.978148, 0.981627, 0.984808, 0.987688, 0.990268, 0.992546, 0.994522, 0.996195, 0.997564, 0.998630,
     0.999391, 0.999848, 1.000000
 };
+#endif
 
-float Sin(int16_t angle)
+float Sin(float angle)
 {
-    angle = angle % CIRCLE_IN_DEGREE;
-    if (angle < 0) {
-        angle = CIRCLE_IN_DEGREE + angle;
+#if ENABLE_CMATH
+    float radian =  angle / RADIAN_TO_ANGLE;
+    return sin(radian);
+#else
+    int16_t degree = static_cast<int16_t>(MATH_ROUND(angle));
+    degree = degree % CIRCLE_IN_DEGREE;
+    if (degree < 0) {
+        degree = CIRCLE_IN_DEGREE + degree;
     }
 
-    if (angle <= QUARTER_IN_DEGREE) {
-        return g_sinValues[angle];
-    } else if (angle <= SEMICIRCLE_IN_DEGREE) {
-        return g_sinValues[SEMICIRCLE_IN_DEGREE - angle];
-    } else if (angle <= THREE_QUARTER_IN_DEGREE) {
-        return -g_sinValues[angle - SEMICIRCLE_IN_DEGREE];
+    if (degree <= QUARTER_IN_DEGREE) {
+        return g_sinValues[degree];
+    } else if (degree <= SEMICIRCLE_IN_DEGREE) {
+        return g_sinValues[SEMICIRCLE_IN_DEGREE - degree];
+    } else if (degree <= THREE_QUARTER_IN_DEGREE) {
+        return -g_sinValues[degree - SEMICIRCLE_IN_DEGREE];
     } else {
-        return -g_sinValues[CIRCLE_IN_DEGREE - angle];
+        return -g_sinValues[CIRCLE_IN_DEGREE - degree];
     }
+#endif
 }
 
 /* arctan(x) = x - p3 * x^3 + p5 * x^5 - p7 * x^7 */

@@ -77,7 +77,7 @@ static constexpr float ATAN2_P7 = -0.0443360;
 static constexpr float RADIAN_TO_ANGLE = 57.295779513;
 static constexpr float UI_FLT_EPSILON = 1E-5;
 
-float Sin(int16_t angle);
+float Sin(float angle);
 uint16_t FastAtan2(int16_t x, int16_t y);
 float Sqrt(float x);
 
