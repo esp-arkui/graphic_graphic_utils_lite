@@ -43,7 +43,7 @@ HWTEST_F(MathTest, MathSin_001, TestSize.Level0)
 {
     EXPECT_EQ(Sin(0), 0);
     EXPECT_EQ(Sin(QUARTER_IN_DEGREE), 1);
-    EXPECT_EQ(Sin(SEMICIRCLE_IN_DEGREE), 0);
+    EXPECT_EQ(Sin(THREE_QUARTER_IN_DEGREE), -1);
 }
 
 /**
