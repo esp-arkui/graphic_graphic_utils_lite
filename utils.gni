@@ -21,7 +21,6 @@ graphic_utils_sources = [
   "$GRAPHIC_UTILS_PATH/frameworks/geometry2d.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/graphic_math.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/graphic_performance.cpp",
-  "$GRAPHIC_UTILS_PATH/frameworks/graphic_timer.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/hal_cpu.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/hal_tick.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/mem_api.cpp",
