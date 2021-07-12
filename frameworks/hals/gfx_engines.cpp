@@ -44,7 +44,7 @@ static bool ConvertFormat(const ImagePixelFormat& srcColorFmt, PixelFormat& dstC
 static bool Convert2ISurface(const LiteSurfaceData& liteSurfaceData, ISurface& iSurface)
 {
     if (ConvertFormat(liteSurfaceData.pixelFormat, iSurface.enColorFmt) == false) {
-        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "unsupport color format!");
+        GRAPHIC_LOGE("unsupport color format!");
         return false;
     }
 
@@ -80,15 +80,15 @@ bool GfxEngines::InitDriver()
 {
     if (GfxInitialize(&gfxFuncs_) == DISPLAY_SUCCESS) {
         if (gfxFuncs_ == nullptr) {
-            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "gfxFuncs_ is null!");
+            GRAPHIC_LOGE("gfxFuncs_ is null!");
             return false;
         }
         if (gfxFuncs_->InitGfx == nullptr) {
-            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "InitGfx is null!");
+            GRAPHIC_LOGE("InitGfx is null!");
             return false;
         }
         if (gfxFuncs_->InitGfx() != DISPLAY_SUCCESS) {
-            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "InitGfx failed!");
+            GRAPHIC_LOGE("InitGfx failed!");
             return false;
         }
         return true;
@@ -99,12 +99,12 @@ bool GfxEngines::InitDriver()
 void GfxEngines::CloseDriver()
 {
     if (gfxFuncs_ == nullptr) {
-        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "gfxFuncs_ is null!");
+        GRAPHIC_LOGE("gfxFuncs_ is null!");
         return;
     }
     if (gfxFuncs_->DeinitGfx != nullptr) {
         if (gfxFuncs_->DeinitGfx() != DISPLAY_SUCCESS) {
-            HILOG_ERROR(HILOG_MODULE_GRAPHIC, "DeinitGfx failed!");
+            GRAPHIC_LOGE("DeinitGfx failed!");
         }
     }
     GfxUninitialize(gfxFuncs_);
@@ -129,7 +129,7 @@ bool GfxEngines::GfxFillArea(const LiteSurfaceData& dstSurfaceData,
     opt.enGlobalAlpha = true;
     opt.globalAlpha = opa;
     if (gfxFuncs_->FillRect(&surface, &rect, color.full, &opt) == DISPLAY_FAILURE) {
-        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "fill rect failed!");
+        GRAPHIC_LOGE("fill rect failed!");
         return false;
     }
     return true;
@@ -156,7 +156,7 @@ bool GfxEngines::GfxBlit(const LiteSurfaceData& srcSurfaceData,
     Convert2IRect(srcRect, srcIRect);
     IRect dstIRect = {x, y, srcRect.GetWidth(), srcRect.GetHeight()};
     if (gfxFuncs_->Blit(&srcSurface, &srcIRect, &dstSurface, &dstIRect, NULL) == DISPLAY_FAILURE) {
-        HILOG_ERROR(HILOG_MODULE_GRAPHIC, "blit failed!");
+        GRAPHIC_LOGE("blit failed!");
         return false;
     }
     return true;
