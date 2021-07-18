@@ -104,4 +104,19 @@ float Sqrt(float x)
     y = y * (1.5f - (xhalf * y * y));
     return x * y;
 }
+
+bool IsIdentity(Matrix3<float>& matrix)
+{
+    // check m00 m11 m22
+    if (!FloatEqual(matrix[0][0], 1) || !FloatEqual(matrix[1][1], 1) || !FloatEqual(matrix[2][2], 1)) {
+        return false;
+    }
+    // check others
+    if (!FloatEqual(matrix[0][1], 0) || !FloatEqual(matrix[0][2], 0) ||
+        !FloatEqual(matrix[2][0], 0) || !FloatEqual(matrix[2][1], 0) ||
+        !FloatEqual(matrix[1][0], 0) || !FloatEqual(matrix[1][2], 0)) {
+        return false;
+    }
+    return true;
+}
 } // namespace OHOS
