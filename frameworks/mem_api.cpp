@@ -14,6 +14,7 @@
  */
 
 #include "gfx_utils/mem_api.h"
+#include "securec.h"
 namespace OHOS {
 #ifndef IMG_CACHE_MEMORY_CUSTOM
 void* ImageCacheMalloc(ImageInfo& info)
@@ -43,7 +44,16 @@ void UIFree(void* buffer)
 
 void* UIRealloc(void* buffer, uint32_t size)
 {
-    return realloc(buffer, size);
+    void* newBuffer = malloc(size);
+    if (newBuffer == nullptr) {
+        return nullptr;
+    }
+    if (memcpy_s(newBuffer, size, buffer, size) != EOK) {
+        free(newBuffer);
+        return nullptr;
+    }
+    free(buffer);
+    return newBuffer;
 }
 #endif
 }
