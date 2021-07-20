@@ -62,12 +62,27 @@ static inline ThreadId ThreadCreate(Runnable entry, void* arg, const ThreadAttr*
     return NULL;
 #endif
 }
+
 static inline void ThreadYield(void)
 {
 #ifdef _WIN32
     SwitchToThread();
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
     sched_yield();
+#endif
+}
+
+static inline void ThreadSuspend(ThreadId threadId)
+{
+#ifdef _WIN32
+    SuspendThread(threadId);
+#endif
+}
+
+static inline void ThreadResume(ThreadId threadId)
+{
+#ifdef _WIN32
+    ResumeThread(threadId);
 #endif
 }
 #endif // GRAPHIC_LITE_THREAD_H
