@@ -562,5 +562,7 @@ inline bool FloatEqual(float lhs, float rhs, float precision = 0.00001f)
 {
     return (MATH_ABS(lhs - rhs) < precision) ? true : false;
 }
+
+bool IsIdentity(Matrix3<float>& matrix);
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_MATH_H

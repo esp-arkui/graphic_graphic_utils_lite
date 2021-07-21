@@ -177,6 +177,8 @@ public:
 
     bool operator==(const TransformMap& other) const;
 
+    void SetMatrix(const Matrix3<float>& matrix);
+
     Matrix3<float> invMatrix_;
 
 private:
@@ -204,6 +206,7 @@ private:
     Matrix3<float> matrix_;
     Rect rect_;       /* orig rect */
     Polygon polygon_; /* transformed from rect and 'rotate_' 'translate_' 'scale_' */
+    bool isIdentity_ = false;
 };
 
 /**

@@ -105,12 +105,10 @@ void TransformMap::Scale(const Vector2<float> scale, const Vector2<float>& pivot
 
 bool TransformMap::IsInvalid() const
 {
-    if (isInvalid_) {
+    if (isInvalid_ || isIdentity_) {
         return true;
     }
-    if ((angle_ % CIRCLE_IN_DEGREE == 0) && FloatEqual(scaleCoeff_.x_, 1.0f) && FloatEqual(scaleCoeff_.y_, 1.0f)) {
-        return true;
-    }
+
     for (uint8_t i = 0; i < polygon_.GetVertexNum(); i++) {
         if (polygon_[i].x_ != 0 || polygon_[i].y_ != 0) {
             return false;
@@ -147,18 +145,23 @@ void TransformMap::UpdateMap()
     trans_[ROTATE] = &rotate_;
     trans_[SCALE] = &scale_;
     trans_[TRANSLATE] = &translate_;
-    polygon_ = rect_;
     rotate_ =
         Matrix3<float>::Rotate(angle_, Vector2<float>(rotatePivot_.x_ + rect_.GetX(), rotatePivot_.y_ + rect_.GetY()));
     scale_ = Matrix3<float>::Scale(scaleCoeff_,
                                    Vector2<float>(scalePivot_.x_ + rect_.GetX(), scalePivot_.y_ + rect_.GetY()));
 
     matrix_ = (*trans_[opOrder_[TRANSLATE]]) * (*trans_[opOrder_[SCALE]]) * (*trans_[opOrder_[ROTATE]]);
+    SetMatrix(matrix_);
+}
+
+void TransformMap::SetMatrix(const Matrix3<float>& matrix)
+{
+    polygon_ = rect_;
     uint8_t vertexNum = polygon_.GetVertexNum();
     Vector3<float> imgPoint3;
     for (uint8_t i = 0; i < vertexNum; i++) {
         Vector3<float> point(polygon_[i].x_, polygon_[i].y_, 1);
-        imgPoint3 = matrix_ * point;
+        imgPoint3 = matrix * point;
         if (imgPoint3.x_ < COORD_MIN) {
             polygon_[i].x_ = COORD_MIN;
         } else if (imgPoint3.x_ > COORD_MAX) {
@@ -175,8 +178,9 @@ void TransformMap::UpdateMap()
             polygon_[i].y_ = imgPoint3.y_;
         }
     }
+    isIdentity_ = IsIdentity(const_cast<Matrix3<float>&>(matrix));
     Matrix3<float> translate = Matrix3<float>::Translate(Vector2<float>(rect_.GetX(), rect_.GetY()));
-    matrix_ = matrix_ * translate;
+    matrix_ = matrix * translate;
     invMatrix_ = matrix_.Inverse();
 }
 
