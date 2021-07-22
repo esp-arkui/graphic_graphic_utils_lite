@@ -198,6 +198,21 @@ void TransformMap::AddOp(uint8_t op)
     }
 }
 
+void TransformMap::Resize(int16_t width, int16_t height)
+{
+    int16_t rectWidth = rect_.GetWidth();
+    int16_t rectHeight = rect_.GetHeight();
+    int16_t offsetX = (width - rectWidth) / 2; // 2 : half
+    int16_t offsetY  = (height - rectWidth) / 2; // 2 : half
+    scalePivot_.x_ += offsetX;
+    scalePivot_.y_ += offsetY;
+    rotatePivot_.x_ += offsetX;
+    rotatePivot_.y_ += offsetY;
+    rect_.SetPosition(rect_.GetX() - offsetX, rect_.GetY() - offsetY);
+    rect_.Resize(width, height);
+    UpdateMap();
+}
+
 void Rotate(const Vector2<int16_t>& point, int16_t angle, const Vector2<int16_t>& pivot, Vector2<int16_t>& out)
 {
     float sinma = Sin(angle);

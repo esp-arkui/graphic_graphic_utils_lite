@@ -181,6 +181,8 @@ public:
 
     Matrix3<float> invMatrix_;
 
+    void Resize(int16_t width, int16_t height);
+
 private:
     void UpdateMap();
     void AddOp(uint8_t op);
