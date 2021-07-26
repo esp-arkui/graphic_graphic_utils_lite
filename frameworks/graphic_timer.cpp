@@ -17,6 +17,7 @@
 #include "gfx_utils/graphic_log.h"
 #ifdef _WIN32
 #include "windows.h"
+#elif defined(_LITEOS)
 #else
 #include <cerrno>
 #include <csignal>
@@ -127,6 +128,69 @@ void GraphicTimer::Stop()
     }
     if (CancelWaitableTimer(timer_) == 0) {
         GRAPHIC_LOGE("Timer stop failed.(Error=%d)", GetLastError());
+        return;
+    }
+}
+
+#elif defined(_LITEOS)
+static void TimerCallback(void* args)
+{
+    GraphicTimer* timer = reinterpret_cast<GraphicTimer*>(args);
+    if (timer != nullptr) {
+        timer->Callback();
+    }
+}
+
+GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic)
+    : cb_(cb), arg_(arg), isPeriodic_(isPeriodic)
+{
+    if ((periodMs > MAX_PERIOD_MS) || (periodMs <= 0)) {
+        GRAPHIC_LOGE("Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
+        return;
+    }
+
+    osTimerType_t timerType = isPeriodic ? osTimerPeriodic : osTimerOnce;
+    timer_ = osTimerNew(reinterpret_cast<osTimerFunc_t>(TimerCallback), timerType, this, nullptr);
+    if (timer_ == nullptr) {
+        GRAPHIC_LOGE("Timer create failed");
+        return;
+    }
+    periodMs_ = periodMs;
+}
+
+GraphicTimer::~GraphicTimer()
+{   
+    if (periodMs_ >= 0) {
+        osStatus_t ret = osTimerDelete(timer_);
+        if (ret != osStatus_t::osOK) {
+            GRAPHIC_LOGE("Timer delete failed.");
+        }
+    }
+}
+
+bool GraphicTimer::Start()
+{
+    if (periodMs_ < 0) {
+        GRAPHIC_LOGE("Timer start failed, timer should be created first.");
+        return false;
+    }
+    osStatus_t ret = osTimerStart(timer_, periodMs_);
+    if (ret != osStatus_t::osOK) {
+        GRAPHIC_LOGE("Timer start failed.");
+        return false;
+    }
+    return true;
+}
+
+void GraphicTimer::Stop()
+{
+    if (periodMs_ < 0) {
+        return;
+    }
+    osStatus_t ret = osTimerStop(timer_);
+    bool isRunning = osTimerIsRunning(timer_);
+    if ((ret != osStatus_t::osOK) || (isRunning)) {
+        GRAPHIC_LOGE("Timer stop failed.");
         return;
     }
 }
