@@ -17,7 +17,10 @@
 #define GRAPHIC_LITE_TIMER_H
 
 #include <cstdint>
-#ifndef _WIN32
+#ifdef _WIN32
+#elif defined(_LITEOS)
+#include "cmsis_os2.h"
+#else
 #include <ctime>
 #endif
 
@@ -37,6 +40,8 @@ public:
 
 #ifdef _WIN32
     void* GetNativeTimer()
+#elif defined(_LITEOS)
+    osTimerId_t GetNativeTimer()
 #else
     timer_t GetNativeTimer()
 #endif
@@ -67,6 +72,8 @@ private:
 
 #ifdef _WIN32
     void* timer_ = nullptr;
+#elif defined(_LITEOS)
+    osTimerId_t timer_;
 #else
     timer_t timer_;
 #endif
