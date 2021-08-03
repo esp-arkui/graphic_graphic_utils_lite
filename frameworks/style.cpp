@@ -50,6 +50,7 @@ Style::Style()
       imageOpa_(OPA_OPAQUE),
       textOpa_(OPA_OPAQUE),
       font_(16), // 16 : default font size
+      lineSpace_(2), // 2 : default line space
       letterSpace_(0),
       lineHeight_(0),
       textColor_(Color::White()),
@@ -97,6 +98,8 @@ int64_t Style::GetStyle(uint8_t key) const
             return textColor_.full;
         case STYLE_TEXT_FONT:
             return font_;
+        case STYLE_LINE_SPACE:
+            return lineSpace_;
         case STYLE_LETTER_SPACE:
             return letterSpace_;
         case STYLE_LINE_HEIGHT:
@@ -169,6 +172,9 @@ void Style::SetStyle(uint8_t key, int64_t value)
             break;
         case STYLE_TEXT_FONT:
             font_ = value;
+            break;
+        case STYLE_LINE_SPACE:
+            lineSpace_ = value;
             break;
         case STYLE_LETTER_SPACE:
             letterSpace_ = value;
