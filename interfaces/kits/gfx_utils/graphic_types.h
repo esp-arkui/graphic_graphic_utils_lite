@@ -140,5 +140,10 @@ enum ScreenShape {
     RECTANGLE = 0, // rectangular screen
     CIRCLE         // circular screen
 };
+
+enum ScrollBarSide : uint8_t {
+    SCROLL_BAR_RIGHT_SIDE = 0,
+    SCROLL_BAR_LEFT_SIDE
+};
 } // namespace OHOS
 #endif // GRAPHIC_LITE_TYPES_H
