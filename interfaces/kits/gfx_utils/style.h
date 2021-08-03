@@ -79,6 +79,8 @@ enum : uint8_t {
     STYLE_TEXT_COLOR,
     /** Text font */
     STYLE_TEXT_FONT,
+    /** line space */
+    STYLE_LINE_SPACE,
     /** Letter spacing */
     STYLE_LETTER_SPACE,
     /** Line height */
@@ -175,6 +177,7 @@ public:
     /* text style */
     uint8_t textOpa_;
     uint8_t font_;
+    int8_t lineSpace_;
     int16_t letterSpace_;
     int16_t lineHeight_;
     ColorType textColor_;
