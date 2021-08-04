@@ -154,6 +154,16 @@ public:
         return matrix_;
     }
 
+    const Vector2<float>& GetRotatePivot() const
+    {
+        return rotatePivot_;
+    }
+
+    int16_t GetRotateAngle() const
+    {
+        return angle_;
+    }
+
     /**
      * @brief Rotates the rectangle.
      * @param angle Indicates the angle to rotate.
