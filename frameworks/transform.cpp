@@ -164,7 +164,7 @@ void TransformMap::UpdateMap()
         } else if (imgPoint3.x_ > COORD_MAX) {
             polygon_[i].x_ = COORD_MAX;
         } else {
-            polygon_[i].x_ = imgPoint3.x_;
+            polygon_[i].x_ = MATH_ROUND(imgPoint3.x_);
         }
 
         if (imgPoint3.y_ < COORD_MIN) {
@@ -172,7 +172,7 @@ void TransformMap::UpdateMap()
         } else if (imgPoint3.y_ > COORD_MAX) {
             polygon_[i].y_ = COORD_MAX;
         } else {
-            polygon_[i].y_ = imgPoint3.y_;
+            polygon_[i].y_ = MATH_ROUND(imgPoint3.y_);
         }
     }
     Matrix3<float> translate = Matrix3<float>::Translate(Vector2<float>(rect_.GetX(), rect_.GetY()));
