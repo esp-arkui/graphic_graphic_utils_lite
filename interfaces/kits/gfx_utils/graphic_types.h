@@ -96,6 +96,8 @@ enum ColorMode : uint8_t {
     A8,
     /** TSC6 color mode */
     TSC6,
+    /** TSC6A color mode */
+    TSC6A,
     /** unknow color mode */
     UNKNOW,
 };
