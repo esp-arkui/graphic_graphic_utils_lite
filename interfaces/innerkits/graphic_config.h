@@ -361,7 +361,18 @@ static constexpr uint32_t HARFBUZ_CACHE_LENGTH = 0x19000; // 500K
 static constexpr uint16_t MAX_LINE_WIDTH = 128;
 /* Maximum length of a QR code string. The default value is <b>256</b>. */
 static constexpr uint32_t QRCODE_VAL_MAX = 256;
-/* Rotate sensitivity factor. The default value is <b>1<b> time. */
-static constexpr int16_t ROTATE_SENSITIVITY = 1;
+/* Rotate sensitivity factor. The default value is <b>1.0<b> time. */
+static constexpr float ROTATE_SENSITIVITY = 1.0;
+
+static constexpr float DEFAULT_SWIPE_VIEW_ROTATE_FACTOR = 1.4;
+static constexpr float DEFAULT_LIST_ROTATE_FACTOR = 0.6;
+static constexpr float DEFAULT_PICKER_ROTATE_FACTOR = 0.6;
+static constexpr float DEFAULT_SCROLL_VIEW_ROTATE_FACTOR = 1.0;
+#ifdef _WIN32
+static constexpr float DEFAULT_SLIDER_ROTATE_FACTOR = -1;
+#else
+static constexpr float DEFAULT_SLIDER_ROTATE_FACTOR = -0.05;
+#endif
+static constexpr uint8_t DEFAULT_SCROLL_VIEW_VIBRATION_LEN = 30;
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_CONFIG_H
