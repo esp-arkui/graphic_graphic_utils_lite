@@ -302,11 +302,17 @@ void StyleDefault::InitScrollBarStyle()
         Color::GetColorFromRGB(0x7f, 0x7f, 0x7f).full); // 0x7f: default color
     scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_OPA, 128); // 128: default opa
     scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_WIDTH, 8); // 8: default width
+#ifdef _LITEOS
+    scrollBarBackgroundStyle_.SetStyle(STYLE_LINE_CAP, CAP_ROUND);
+#endif
 
     scrollBarForegroundStyle_.SetStyle(STYLE_BACKGROUND_COLOR, Color::White().full);
     scrollBarForegroundStyle_.SetStyle(STYLE_BACKGROUND_OPA, 168); // 168: default opa
     scrollBarForegroundStyle_.SetStyle(STYLE_LINE_COLOR, Color::White().full);
     scrollBarForegroundStyle_.SetStyle(STYLE_LINE_OPA, 168); // 168: default opa
     scrollBarForegroundStyle_.SetStyle(STYLE_LINE_WIDTH, 6); // 6: default width
+#ifdef _LITEOS
+    scrollBarForegroundStyle_.SetStyle(STYLE_LINE_CAP, CAP_ROUND);
+#endif
 }
 } // namespace OHOS
