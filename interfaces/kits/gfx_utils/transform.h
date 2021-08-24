@@ -105,7 +105,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    const Vector2<float>& GetPivot() const
+    const Vector3<float>& GetPivot() const
     {
         return scalePivot_;
     }
@@ -149,14 +149,34 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    const Matrix3<float>& GetTransformMatrix() const
+    const Matrix4<float>& GetTransformMatrix() const
     {
         return matrix_;
     }
 
-    const Vector2<float>& GetRotatePivot() const
+    const Matrix4<float>& GetOrigTransformMatrix() const
     {
-        return rotatePivot_;
+        return matrixOrig_;
+    }
+
+    const Matrix4<float>& GetRotateMatrix() const
+    {
+        return rotate_;
+    }
+
+    const Matrix4<float>& GetScaleMatrix() const
+    {
+        return scale_;
+    }
+
+    const Matrix4<float>& GetTranslateMatrix() const
+    {
+        return translate_;
+    }
+
+    const Matrix4<float>& GetShearMatrix() const
+    {
+        return shear_;
     }
 
     int16_t GetRotateAngle() const
@@ -173,6 +193,8 @@ public:
      */
     void Rotate(int16_t angle, const Vector2<float>& pivot);
 
+    void Rotate(int16_t angle, const Vector3<float>& rotatePivotStart, const Vector3<float>& rotatePivotEnd);
+
     /**
      * @brief Scales the rectangle.
      *
@@ -181,16 +203,27 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void Scale(const Vector2<float> scale, const Vector2<float>& pivot);
+    void Scale(const Vector2<float>& scale, const Vector2<float>& pivot);
+
+    void Scale(const Vector3<float>& scale, const Vector3<float>& pivot);
 
     void Translate(const Vector2<int16_t>& trans);
 
+    void Translate(const Vector3<int16_t>& trans);
+
+    void Shear(const Vector2<float>& shearX, const Vector2<float>& shearY, const Vector2<float>& shearZ);
+
     bool operator==(const TransformMap& other) const;
 
-    void SetMatrix(const Matrix3<float>& matrix);
+    void SetMatrix(const Matrix4<float>& matrix, bool isInternalMatrix = false);
+
+    void SetCameraDistance(int16_t distance);
+
+    void SetCameraPosition(const Vector2<float>& position);
 
     Matrix3<float> invMatrix_;
 
+    bool Is3DTransform() const;
 private:
     void UpdateMap();
     void AddOp(uint8_t op);
@@ -198,25 +231,35 @@ private:
     enum : uint8_t {
         ROTATE = 0,
         SCALE,
+        SHEAR,
         TRANSLATE,
         TRANS_NUM,
     };
-    int16_t angle_;
-    bool isInvalid_;
-    Vector2<float> scaleCoeff_;
-    Vector2<float> scalePivot_;
-    Vector2<float> rotatePivot_;
-    Matrix3<float> rotate_;
-    Matrix3<float> scale_;
-    Matrix3<float> translate_;
-
-    Matrix3<float>* trans_[TRANS_NUM];
-    uint8_t opOrder_[TRANS_NUM];
-
-    Matrix3<float> matrix_;
-    Rect rect_;       /* orig rect */
-    Polygon polygon_; /* transformed from rect and 'rotate_' 'translate_' 'scale_' */
+    Rect rect_ = {0, 0, 0, 0};       /* orig rect */
+    Polygon polygon_ = Polygon(Rect(0, 0, 0, 0)); /* transformed from rect and 'rotate_' 'translate_' 'scale_' */
+    int16_t angle_ = 0;
+    int16_t cameraDistance_ = 1000;  // 1000 : default distance
+    bool isInvalid_ = false;
     bool isIdentity_ = false;
+    bool is3d_ = false;
+    bool isInternalMatrix_ = true;
+    Vector2<float> cameraPosition_ = {0, 0};
+    Vector3<float> scaleCoeff_ = {1.0f, 1.0f, 1.0f};
+    Vector3<float> scalePivot_ = {0, 0, 0};
+    Vector3<float> rotatePivotStart_ = {0, 0, 0};
+    Vector3<float> rotatePivotEnd_ = {0, 0, 0};
+    Vector2<float> shearX_ = {0, 0};
+    Vector2<float> shearY_ = {0, 0};
+    Vector2<float> shearZ_ = {0, 0};
+
+    Matrix4<float> scale_;
+    Matrix4<float> rotate_;
+    Matrix4<float> shear_;
+    Matrix4<float> translate_;
+    Matrix4<float>* trans_[TRANS_NUM];
+    uint8_t opOrder_[TRANS_NUM];
+    Matrix4<float> matrix_;
+    Matrix4<float> matrixOrig_;
 };
 
 /**
