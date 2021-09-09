@@ -104,4 +104,37 @@ float Sqrt(float x)
     y = y * (1.5f - (xhalf * y * y));
     return x * y;
 }
+
+bool IsIdentity(Matrix3<float>& matrix)
+{
+    // check m00 m11 m22
+    if (!FloatEqual(matrix[0][0], 1) || !FloatEqual(matrix[1][1], 1) || !FloatEqual(matrix[2][2], 1)) {
+        return false;
+    }
+    // check others
+    if (!FloatEqual(matrix[0][1], 0) || !FloatEqual(matrix[0][2], 0) ||
+        !FloatEqual(matrix[2][0], 0) || !FloatEqual(matrix[2][1], 0) ||
+        !FloatEqual(matrix[1][0], 0) || !FloatEqual(matrix[1][2], 0)) {
+        return false;
+    }
+    return true;
+}
+
+bool IsIdentity(Matrix4<float>& matrix)
+{
+    for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
+        for (int16_t col = 0; col < ORDER_MATRIX_4; col++) {
+            if ((row == col)) {
+                if (matrix[row][col] != 1) {
+                    return false;
+                }
+            } else {
+                if (matrix[row][col] != 0) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
 } // namespace OHOS
