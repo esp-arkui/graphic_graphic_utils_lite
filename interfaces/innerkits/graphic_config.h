@@ -361,18 +361,29 @@ static constexpr uint32_t HARFBUZ_CACHE_LENGTH = 0x19000; // 500K
 static constexpr uint16_t MAX_LINE_WIDTH = 128;
 /* Maximum length of a QR code string. The default value is <b>256</b>. */
 static constexpr uint32_t QRCODE_VAL_MAX = 256;
+
 /* Rotate sensitivity factor. The default value is <b>1.0<b> time. */
 static constexpr float ROTATE_SENSITIVITY = 1.0;
-
-static constexpr float DEFAULT_SWIPE_VIEW_ROTATE_FACTOR = 1.4;
-static constexpr float DEFAULT_LIST_ROTATE_FACTOR = 0.6;
-static constexpr float DEFAULT_PICKER_ROTATE_FACTOR = 0.6;
-static constexpr float DEFAULT_SCROLL_VIEW_ROTATE_FACTOR = 1.0;
+/* Rotate sensitivity factor of UISwipeView. The default value is <b>2.8<b> time. */
+static constexpr float DEFAULT_SWIPE_VIEW_ROTATE_FACTOR = 2.8;
+/* Rotate sensitivity factor of UIList. The default value is <b>1.2<b> time. */
+static constexpr float DEFAULT_LIST_ROTATE_FACTOR = 1.2;
+/* Rotate sensitivity factor of UIPicker. The default value is <b>1.2<b> time. */
+static constexpr float DEFAULT_PICKER_ROTATE_FACTOR = 1.2;
+/* Rotate sensitivity factor of UIScrollView. The default value is <b>2.0<b> time. */
+static constexpr float DEFAULT_SCROLL_VIEW_ROTATE_FACTOR = 2.0;
 #ifdef _WIN32
+/* Rotate sensitivity factor of UISlider. The default value is <b>-1<b> time. */
 static constexpr float DEFAULT_SLIDER_ROTATE_FACTOR = -1;
 #else
+/* Rotate sensitivity factor of UISlider. The default value is <b>-0.05<b> time. */
 static constexpr float DEFAULT_SLIDER_ROTATE_FACTOR = -0.05;
 #endif
+/* When rotating the crown, a vibration is triggered every 30 pixels. */
 static constexpr uint8_t DEFAULT_SCROLL_VIEW_VIBRATION_LEN = 30;
+/* calculate drag throw distance when rotating, last rotate distance * ROTATE_DISTANCE_COEFFICIENT */
+static constexpr uint8_t ROTATE_DISTANCE_COEFFICIENT = 20;
+/* calculate rotate throw threshold when rotating the crown, width or height / DEFAULT_ROTATE_THROW_THRESHOLD */
+static constexpr uint8_t DEFAULT_ROTATE_THROW_THRESHOLD = 4;
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_CONFIG_H
