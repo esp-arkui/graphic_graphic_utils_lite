@@ -357,10 +357,10 @@ static constexpr uint16_t MAX_TEXT_LENGTH = 4096;
 static constexpr int32_t COORD_MAX = 16383;
 /* Minimum value of the graphic display range. The default value is <b>-16384px</b>. */
 static constexpr int32_t COORD_MIN = -16384;
-static constexpr uint32_t HARFBUZ_CACHE_LENGTH = 0x19000; // 500K
+static constexpr uint32_t HARFBUZ_CACHE_LENGTH = 0x19000; // 100K
 static constexpr uint16_t MAX_LINE_WIDTH = 128;
-/* Maximum length of a QR code string. The default value is <b>256</b>. */
-static constexpr uint32_t QRCODE_VAL_MAX = 256;
+/* Maximum length of a QR code string. The default value is <b>2048</b>. */
+static constexpr uint32_t QRCODE_VAL_MAX = 2048;
 
 /* Rotate sensitivity factor. The default value is <b>1.0<b> time. */
 static constexpr float ROTATE_SENSITIVITY = 1.0;
