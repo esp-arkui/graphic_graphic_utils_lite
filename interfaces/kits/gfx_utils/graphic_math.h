@@ -76,6 +76,7 @@ static constexpr float ATAN2_P5 = 0.1556117;
 static constexpr float ATAN2_P7 = -0.0443360;
 static constexpr float RADIAN_TO_ANGLE = 57.295779513;
 static constexpr float UI_FLT_EPSILON = 1E-5;
+static constexpr int16_t ORDER_MATRIX_4 = 4;
 
 float Sin(float angle);
 uint16_t FastAtan2(int16_t x, int16_t y);
@@ -256,6 +257,63 @@ public:
     bool operator==(const Vector3& other) const
     {
         return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_);
+    }
+};
+
+/**
+ * @brief Defines the 4-dimensional vector, and provides basic operators such as [] and ==.
+ *
+ * @since 5.0
+ * @version 3.0
+ */
+template<typename T>
+class Vector4 : public HeapBase {
+public:
+    union {
+        struct {
+            T x_;
+            T y_;
+            T z_;
+            T w_;
+        };
+        T data_[4]; // 4: size for x,y,z,w
+    };
+
+    /**
+     * @brief A constructor used to create a <b>Vector4</b> instance.
+     * @since 5.0
+     * @version 3.0
+     */
+    Vector4() : x_(0), y_(0), z_(0), w_(1) {}
+
+    Vector4(T x, T y, T z, T w)
+    {
+        data_[0] = x;
+        data_[1] = y;
+        data_[2] = z; // 2: index of z
+        data_[3] = w; // 3: index of w
+    }
+
+    /**
+     * @brief A destructor used to delete the <b>Vector4</b> instance.
+     * @since 5.0
+     * @version 3.0
+     */
+    ~Vector4() {}
+
+    T operator[](uint8_t index) const
+    {
+        return data_[index];
+    }
+
+    T& operator[](uint8_t index)
+    {
+        return data_[index];
+    }
+
+    bool operator==(const Vector4& other) const
+    {
+        return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_) && (w_ == other.w_);
     }
 };
 
@@ -544,6 +602,339 @@ Matrix3<T> Matrix3<T>::Translate(const Vector2<T>& trans)
     return transMat3;
 }
 
+/**
+ * @brief Defines a 4 x 4 matrix.
+ *
+ * @since 5.0
+ * @version 3.0
+ */
+template<typename T>
+class Matrix4 : public HeapBase {
+public:
+    /**
+     * @brief Defines a <b>Matrix4</b> instance and initializes the 4 x 4 matrix data.
+     *
+     * @since 5.0
+     * @version 3.0
+     */
+    Matrix4();
+
+    Matrix4(T m00, T m01, T m02, T m03, T m10, T m11, T m12, T m13,
+            T m20, T m21, T m22, T m23, T m30, T m31, T m32, T m33);
+
+    /**
+     * @brief A destructor used to delete the <b>Matrix3</b> instance.
+     * @since 5.0
+     * @version 3.0
+     */
+    ~Matrix4() {}
+
+    /**
+     * @brief Obtains the 4 x 4 matrix data.
+     * @return Returns the 4 x 4 matrix data.
+     * @since 5.0
+     * @version 3.0
+     */
+    const T* GetData() const
+    {
+        return data_;
+    }
+
+    /**
+     * @brief Obtains the determinant of the matrix.
+     * @return Returns the determinant.
+     * @since 5.0
+     * @version 3.0
+     */
+    T Determinant() const;
+
+    /**
+     * @brief Obtains the inverse matrix.
+     * @return Returns the inverse matrix.
+     * @since 5.0
+     * @version 3.0
+     */
+    Matrix4<T> Inverse() const;
+
+    /**
+     * @brief Obtains a rotation matrix.
+     *
+     * @param angle Indicates the angle to rotate.
+     * @param pivot1 Indicates the rotation pivot.
+     * @param pivot2 Indicates the rotation pivot.
+     * @return Returns the matrix after rotation.
+     * @since 5.0
+     * @version 3.0
+     */
+    static Matrix4<T> Rotate(T angle, const Vector3<T>& pivot1, const Vector3<T>& pivot2);
+
+    /**
+     * @brief Obtains the scaling matrix.
+     *
+     * @param scale Indicates the scaling factors of the x-axis and y-axis.
+     * @param fixed Indicates the fixed scaling point.
+     * @return Returns the matrix after scaling.
+     * @since 5.0
+     * @version 3.0
+     */
+    static Matrix4<T> Scale(const Vector3<T>& scale, const Vector3<T>& fixed);
+
+    /**
+     * @brief Obtains a matrix translation.
+     *
+     * @param trans Indicates the distances to translate along the x-axis and y-axis and z-axis.
+     * @return Returns the matrix after translation.
+     * @since 5.0
+     * @version 3.0
+     */
+    static Matrix4<T> Translate(const Vector3<T>& trans);
+
+    static Matrix4<T> Shear(const Vector2<T>& shearX, const Vector2<T>& shearY, const Vector2<T>& shearZ);
+
+    Matrix4 operator*(const Matrix4& other) const;
+
+    Vector4<T> operator*(const Vector4<T>& other) const;
+
+    T* operator[](uint8_t col)
+    {
+        return &data_[col * 4]; // 4: size of point
+    }
+
+    Matrix4& operator=(const Matrix4& other)
+    {
+        // 16: data_ value number
+        for (int16_t i = 0; i < 16; i++) {
+            data_[i] = other.data_[i];
+        }
+        return *this;
+    }
+
+    bool operator==(const Matrix4& other) const;
+
+protected:
+    Matrix3<T> ConomialMatrix(int16_t row, int16_t col) const;
+    T data_[16]; // 16: 4 point with x,y,z,w
+};
+
+template<typename T>
+Matrix4<T>::Matrix4()
+{
+    for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
+        for (int16_t col = 0; col < ORDER_MATRIX_4; col++) {
+            data_[row * ORDER_MATRIX_4 + col] = (row == col) ? 1 : 0;
+        }
+    }
+}
+
+template<typename T>
+Matrix4<T>::Matrix4(T m00, T m01, T m02, T m03, T m10, T m11, T m12, T m13,
+                    T m20, T m21, T m22, T m23, T m30, T m31, T m32, T m33)
+{
+    data_[0] = m00; // 0 : index
+    data_[1] = m01; // 1 : index
+    data_[2] = m02; // 2 : index
+    data_[3] = m03; // 3 : index
+
+    data_[4] = m10; // 4 : index
+    data_[5] = m11; // 5 : index
+    data_[6] = m12; // 6 : index
+    data_[7] = m13; // 7 : index
+
+    data_[8] = m20; // 8 : index
+    data_[9] = m21; // 9 : index
+    data_[10] = m22; // 10 : index
+    data_[11] = m23; // 11 : index
+
+    data_[12] = m30; // 12 : index
+    data_[13] = m31; // 13 : index
+    data_[14] = m32; // 14 : index
+    data_[15] = m33; // 15 : index
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::operator*(const Matrix4& other) const
+{
+    Matrix4<T> rMulti;
+    T* rData = rMulti.data_;
+    const T* oData  = other.data_;
+    for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
+        for (int16_t col = 0; col < ORDER_MATRIX_4; col++) {
+            /* 1 2 3 4 8 12 : offset */
+            rData[row * 4 + col] = oData[row * 4] * data_[col] + oData[row * 4 + 1] * data_[4 + col] +
+                                   oData[row * 4 + 2] * data_[8 + col] + oData[row * 4 + 3] * data_[12 + col];
+        }
+    }
+    return rMulti;
+}
+
+template<typename T>
+Vector4<T> Matrix4<T>::operator*(const Vector4<T>& other) const
+{
+    Vector4<T> rMulti;
+    T* rData = rMulti.data_;
+    const T* oData = other.data_;
+    for (int16_t i = 0; i < ORDER_MATRIX_4; i++) {
+        /* 1 2 3 4 8 12 : offset */
+        rData[i] = data_[i] * oData[0] + data_[i + 4] * oData[1] + data_[i + 8] * oData[2] + data_[i + 12] * oData[3];
+    }
+    return rMulti;
+}
+
+template<typename T>
+Matrix3<T> Matrix4<T>::ConomialMatrix(int16_t row, int16_t col) const
+{
+    T tmpData[9]; // 9: 3 * 3
+    int index = 0;
+    for (int16_t i = 0; i < ORDER_MATRIX_4; i++) {
+        if (row == i) {
+            continue;
+        }
+        for (int16_t j = 0; j < ORDER_MATRIX_4; j++) {
+            if (col != j) {
+                tmpData[index++] = data_[i  * ORDER_MATRIX_4 + j];
+            }
+        }
+    }
+    /* 0 1 2 3 4 5 6 7 8 : index */
+    return Matrix3<T>(tmpData[0], tmpData[1], tmpData[2],
+                      tmpData[3], tmpData[4], tmpData[5],
+                      tmpData[6], tmpData[7], tmpData[8]);
+}
+
+template<typename T>
+T Matrix4<T>::Determinant() const
+{
+    T tmpData[ORDER_MATRIX_4];
+    for (int16_t i = 0; i < ORDER_MATRIX_4; i++) {
+        tmpData[i] = ConomialMatrix(0, i).Determinant() * data_[i];
+    }
+    // 0  1 2 3 : index
+    return tmpData[0] - tmpData[1] + tmpData[2] - tmpData[3];
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::Inverse() const
+{
+    T det = this->Determinant();
+    if (det == 0) {
+        return Matrix4<T>(*this);
+    }
+    T invDet = 1.0f / det;
+    // algebraic conomial matrix;
+    Matrix4<T> matrix;
+    T* tmpData = matrix.data_;
+    int16_t negative = 1;
+    for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
+        for (int16_t col = 0; col < ORDER_MATRIX_4; col++) {
+            if ((row + col) % 2 == 0) { // 2 : half
+                negative = 1;
+            } else {
+                negative = -1;
+            }
+            tmpData[row * ORDER_MATRIX_4 + col] = ConomialMatrix(row, col).Determinant() * negative * invDet;
+        }
+    }
+    // transpose matrix
+    for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
+        for (int16_t col = row + 1; col < ORDER_MATRIX_4; col++) {
+            T tmp = tmpData[row * ORDER_MATRIX_4 + col];
+            tmpData[row * ORDER_MATRIX_4 + col] = tmpData[row +  col * ORDER_MATRIX_4];
+            tmpData[row + col * ORDER_MATRIX_4] = tmp;
+        }
+    }
+    return matrix;
+}
+
+template<typename T>
+bool Matrix4<T>::operator==(const Matrix4& other) const
+{
+    const T* oData = other.data_;
+    // 16 : 4 * 4 points
+    for (int16_t i =  0; i < 16; i++) {
+        if (data_[i] != oData[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::Rotate(T angle, const Vector3<T>& pivot1, const Vector3<T>& pivot2)
+{
+    Matrix4<T> rotateMat4;
+    T* rData = rotateMat4.data_;
+    T length = Sqrt((pivot2.x_ - pivot1.x_) * (pivot2.x_ - pivot1.x_) +
+                    (pivot2.y_ - pivot1.y_) * (pivot2.y_ - pivot1.y_) +
+                    (pivot2.z_ - pivot1.z_) * (pivot2.z_ - pivot1.z_));
+    if (length == 0) {
+        return rotateMat4;
+    }
+    T cosA = static_cast<T>(Sin(angle + QUARTER_IN_DEGREE));
+    T sinA = static_cast<T>(Sin(angle));
+    T diff = 1 - cosA;
+    T ux = (pivot2.x_ - pivot1.x_) / length;
+    T uy = (pivot2.y_ - pivot1.y_) / length;
+    T uz = (pivot2.z_ - pivot1.z_) / length;
+    Matrix4<T> transToOrigin = Matrix4<T>::Translate(Vector3<T> { -pivot1.x_, -pivot1.y_, -pivot1.z_ });
+
+    rData[0] = ux * ux * diff + cosA; // 0 : index
+    rData[1] = uy  * ux * diff + uz * sinA; // 1 : index
+    rData[2] = uz * ux * diff - uy * sinA; // 2 : index
+
+    rData[4] = ux * uy * diff - uz * sinA; // 4 : index
+    rData[5] = uy * uy * diff + cosA; // 5 : index
+    rData[6] = uz * uy * diff + ux * sinA; // 6 : index
+
+    rData[8] = ux * uz * diff + uy * sinA; // 8 : index
+    rData[9] = uy * uz * diff - ux * sinA; // 9 : index
+    rData[10] = uz * uz * diff + cosA; // 10 : index
+
+    Matrix4<T> transToPivot = Matrix4<T>::Translate(pivot1);
+    return transToPivot * (rotateMat4 * transToOrigin);
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::Scale(const Vector3<T>& scale, const Vector3<T>& fixed)
+{
+    Matrix4<T> scaleMat4;
+    T* sData = scaleMat4.data_;
+
+    sData[0] = scale.x_; // 0 : index
+    sData[5] = scale.y_; // 5 : index
+    sData[10] = scale.z_; // 10 : index
+    sData[12] = (1 - scale.x_) * fixed.x_; // 12 : index
+    sData[13] = (1 - scale.y_) * fixed.y_; // 13 : index
+    sData[14] = (1 - scale.z_) * fixed.z_; // 14 : index
+
+    return scaleMat4;
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::Translate(const Vector3<T>& trans)
+{
+    Matrix4<T> rotateMat4;
+    T* rData = rotateMat4.data_;
+
+    rData[12] = trans.x_; // 12 : index
+    rData[13] = trans.y_; // 13 : index
+    rData[14] = trans.z_; // 14 : index
+
+    return rotateMat4;
+}
+
+template<typename T>
+Matrix4<T> Matrix4<T>::Shear(const Vector2<T>& shearX, const Vector2<T>& shearY, const Vector2<T>& shearZ)
+{
+    Matrix4<T> shearMat4;
+    shearMat4[1][0] = shearX.x_; // 1 0 : index
+    shearMat4[2][0] = shearX.y_; // 2 0 : index
+    shearMat4[0][1] = shearY.x_; // 0 1 : index
+    shearMat4[2][1] = shearY.y_; // 2 1 : index
+    shearMat4[0][2] = shearZ.x_; // 0 2 : index
+    shearMat4[1][2] = shearZ.y_; // 1 2 : index
+    return shearMat4;
+}
+
 inline int64_t FloatToInt64(float f)
 {
     if (f > 127.0) { // 127.0: 2^7
@@ -564,5 +955,7 @@ inline bool FloatEqual(float lhs, float rhs, float precision = 0.00001f)
 }
 
 bool IsIdentity(Matrix3<float>& matrix);
+
+bool IsIdentity(Matrix4<float>& matrix);
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_MATH_H
