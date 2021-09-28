@@ -124,14 +124,9 @@ bool IsIdentity(Matrix4<float>& matrix)
 {
     for (int16_t row = 0; row < ORDER_MATRIX_4; row++) {
         for (int16_t col = 0; col < ORDER_MATRIX_4; col++) {
-            if ((row == col)) {
-                if (matrix[row][col] != 1) {
-                    return false;
-                }
-            } else {
-                if (matrix[row][col] != 0) {
-                    return false;
-                }
+            bool flag = (row == col) ? FloatEqual(matrix[row][col], 1) : FloatEqual(matrix[row][col], 0);
+            if (!flag) {
+                return false;
             }
         }
     }
