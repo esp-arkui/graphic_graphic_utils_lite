@@ -218,9 +218,8 @@ void TransformMap::UpdateMap()
     if (!FloatEqual(cameraDistance_, 0)) {
         perspectiveMatrix[2][3] = -1.0f / cameraDistance_; // 2 3 : index
     }
-    perspectiveMatrix = perspectiveMatrix * translateFromCamera;
-    perspectiveMatrix = translateToCamera * perspectiveMatrix;
-    matrix_ = perspectiveMatrix * matrix_;
+    perspectiveMatrix_ = translateToCamera * (perspectiveMatrix * translateFromCamera);
+    matrix_ = perspectiveMatrix_ * matrix_;
     SetMatrix(matrix_, true);
 }
 
