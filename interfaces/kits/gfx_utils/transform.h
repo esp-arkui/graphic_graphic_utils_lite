@@ -179,6 +179,11 @@ public:
         return shear_;
     }
 
+    const Matrix4<float>& GetPerspectiveMatrix() const
+    {
+        return perspectiveMatrix_;
+    }
+
     int16_t GetRotateAngle() const
     {
         return angle_;
@@ -259,6 +264,7 @@ private:
     Matrix4<float>* trans_[TRANS_NUM];
     uint8_t opOrder_[TRANS_NUM];
     Matrix4<float> matrix_;
+    Matrix4<float> perspectiveMatrix_;
     Matrix4<float> matrixOrig_;
 };
 
