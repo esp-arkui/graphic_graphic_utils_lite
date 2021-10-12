@@ -18,8 +18,8 @@
 
 #include "graphic_config.h"
 #if ENABLE_GRAPHIC_LOG
-#ifdef __LITEOS__
-#include "hilog/log.h"
+#if defined(__LITEOS__) || defined(_LITEOS)
+#include "log.h"
 #include <cstring>
 #else
 #include <stdio.h>
@@ -55,16 +55,22 @@ do {                                                                            
 #define GRAPHIC_LOGI(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_INFO, HiviewDFX::HiLog::Info, fmt, ##args)
 #define GRAPHIC_LOGD(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
 
+#elif defined(_LITEOS)
+#define GRAPHIC_LOGF(fmt, args...) HILOG_FATAL(HILOG_MODULE_GRAPHIC, fmt, ##args)
+#define GRAPHIC_LOGE(fmt, args...) HILOG_ERROR(HILOG_MODULE_GRAPHIC, fmt, ##args)
+#define GRAPHIC_LOGW(fmt, args...) HILOG_WARN(HILOG_MODULE_GRAPHIC, fmt, ##args)
+#define GRAPHIC_LOGI(fmt, args...) HILOG_INFO(HILOG_MODULE_GRAPHIC, fmt, ##args)
+#define GRAPHIC_LOGD(fmt, args...) HILOG_DEBUG(HILOG_MODULE_GRAPHIC, fmt, ##args)
+
 #else
-#define GRAPHIC_LOGF(...) printf("[%d]" format "\n", __LINE__, ##__VA_ARGS__)
-#define GRAPHIC_LOGE(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGW(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGI(...) GRAPHIC_LOGF(__VA_ARGS__)
-#define GRAPHIC_LOGD(...) GRAPHIC_LOGF(__VA_ARGS__)
-#endif
+#define GRAPHIC_LOGF(fmt, ...) printf("[%d]" fmt "\n", __LINE__, ##__VA_ARGS__)
+#define GRAPHIC_LOGE(fmt, ...) GRAPHIC_LOGF(fmt, __VA_ARGS__)
+#define GRAPHIC_LOGW(fmt, ...) GRAPHIC_LOGF(fmt, __VA_ARGS__)
+#define GRAPHIC_LOGI(fmt, ...) GRAPHIC_LOGF(fmt, __VA_ARGS__)
+#define GRAPHIC_LOGD(fmt, ...) GRAPHIC_LOGF(fmt, __VA_ARGS__)
+#endif // __LITEOS__
 
 #else // ENABLE_GRAPHIC_LOG
-
 #define GRAPHIC_LOGF(...)
 #define GRAPHIC_LOGE(...)
 #define GRAPHIC_LOGW(...)
