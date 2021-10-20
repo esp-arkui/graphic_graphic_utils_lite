@@ -382,8 +382,14 @@ static constexpr float DEFAULT_SLIDER_ROTATE_FACTOR = -0.05;
 /* When rotating the crown, a vibration is triggered every 30 pixels. */
 static constexpr uint8_t DEFAULT_SCROLL_VIEW_VIBRATION_LEN = 30;
 /* calculate drag throw distance when rotating, last rotate distance * ROTATE_DISTANCE_COEFFICIENT */
-static constexpr uint8_t ROTATE_DISTANCE_COEFFICIENT = 20;
+static constexpr uint8_t ABSTRACT_ROTATE_DISTANCE_COEFF = 20;
+static constexpr uint8_t SCROLLVIEW_ROTATE_DISTANCE_COEFF = 20;
+static constexpr uint8_t PICKERVIEW_ROTATE_DISTANCE_COEFF = 20;
+static constexpr uint8_t LIST_ROTATE_DISTANCE_COEFF = 20;
 /* calculate rotate throw threshold when rotating the crown, width or height / DEFAULT_ROTATE_THROW_THRESHOLD */
-static constexpr uint8_t DEFAULT_ROTATE_THROW_THRESHOLD = 4;
+static constexpr uint8_t ABSTRACT_ROTATE_THROW_THRESHOLD = 4;
+static constexpr uint8_t SCROLLVIEW_ROTATE_THROW_THRESHOLD = 4;
+static constexpr uint8_t PICKERVIEW_ROTATE_THROW_THRESHOLD = 4;
+static constexpr uint8_t LIST_ROTATE_THROW_THRESHOLD = 4;
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_CONFIG_H
