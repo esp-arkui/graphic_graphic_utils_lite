@@ -56,11 +56,11 @@ do {                                                                            
 #define GRAPHIC_LOGD(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
 
 #elif defined(_LITEOS)
-#define GRAPHIC_LOGF(fmt, args...) HILOG_FATAL(HILOG_MODULE_GRAPHIC, fmt, ##args)
-#define GRAPHIC_LOGE(fmt, args...) HILOG_ERROR(HILOG_MODULE_GRAPHIC, fmt, ##args)
-#define GRAPHIC_LOGW(fmt, args...) HILOG_WARN(HILOG_MODULE_GRAPHIC, fmt, ##args)
-#define GRAPHIC_LOGI(fmt, args...) HILOG_INFO(HILOG_MODULE_GRAPHIC, fmt, ##args)
-#define GRAPHIC_LOGD(fmt, args...) HILOG_DEBUG(HILOG_MODULE_GRAPHIC, fmt, ##args)
+#define GRAPHIC_LOGF(fmt, args...) HILOG_FATAL(HILOG_MODULE_UIKIT, fmt, ##args)
+#define GRAPHIC_LOGE(fmt, args...) HILOG_ERROR(HILOG_MODULE_UIKIT, fmt, ##args)
+#define GRAPHIC_LOGW(fmt, args...) HILOG_WARN(HILOG_MODULE_UIKIT, fmt, ##args)
+#define GRAPHIC_LOGI(fmt, args...) HILOG_INFO(HILOG_MODULE_UIKIT, fmt, ##args)
+#define GRAPHIC_LOGD(fmt, args...) HILOG_DEBUG(HILOG_MODULE_UIKIT, fmt, ##args)
 
 #else
 #define GRAPHIC_LOGF(fmt, ...) printf("[%d]" fmt "\n", __LINE__, ##__VA_ARGS__)
