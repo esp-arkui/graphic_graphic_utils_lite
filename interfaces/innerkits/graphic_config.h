@@ -53,7 +53,7 @@ namespace OHOS {
  * VERSION_STANDARD    | Standard version
  * VERSION_EXTENDED    | Extended version
  */
-#ifdef _LITEOS
+#ifdef __LITEOS_M__
 #define VERSION_LITE
 #elif defined _WIN32 || defined __APPLE__
 #define VERSION_LITE
@@ -65,7 +65,7 @@ namespace OHOS {
 
 #define ENABLE_FIXED_POINT                    1
 
-#ifdef _LITEOS
+#ifdef __LITEOS_M__
 /**
  * @brief Font shaping, which is disabled by default on Huawei LiteOS.
  *        Cannot take effect without ENABLE_ICU.
@@ -86,7 +86,7 @@ namespace OHOS {
 /**
  * @brief Display buffer for rendering data refresh, which is disabled by default on Huawei LiteOS.
  */
-#define ENABLE_FRAME_BUFFER               0
+#define ENABLE_FRAME_BUFFER               1
 /**
  * @brief Vector type font, which is enabled by default on Huawei LiteOS.
  */
@@ -100,11 +100,13 @@ namespace OHOS {
  */
 #define ENABLE_STATIC_FONT                0
 
-#define ENABLE_JPEG_AND_PNG               0
+#define ENABLE_JPEG_AND_PNG               1
+
+#define ENABLE_GIF                        1
 /**
  * @brief Graphics rendering hardware acceleration, which is enabled by default on Huawei LiteOS.
  */
-#define ENABLE_HARDWARE_ACCELERATION      1
+#define ENABLE_HARDWARE_ACCELERATION      0
 /**
  * @brief Graphics rendering hardware acceleration for text, which is disabled by default on Huawei LiteOS.
  */
@@ -207,7 +209,7 @@ namespace OHOS {
 /**
  * @brief Function for monitoring the image refresh frame rate, which is disabled by default.
  */
-#define ENABLE_FPS_SUPPORT                0
+#define ENABLE_FPS_SUPPORT                1
 /**
  * @brief Anti-aliasing, which is enabled by default.
  */
@@ -279,7 +281,7 @@ namespace OHOS {
  * @brief Defines the file name of default vector font.
  */
 #if ENABLE_VECTOR_FONT
-#define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular.otf"
+#define DEFAULT_VECTOR_FONT_FILENAME      "font.ttf" //"SourceHanSansSC-Regular.otf"
 #else
 #define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular"
 #endif
@@ -288,11 +290,19 @@ static constexpr uint8_t DEFAULT_VECTOR_FONT_SIZE = 18;
 /* Defines the file name of default line break rule. */
 #define DEFAULT_LINE_BREAK_RULE_FILENAME   "line_cj.brk"
 /* Defines some configurations and their default values on Huawei LiteOS and other system platforms. */
-#ifdef _LITEOS
+#ifdef __LITEOS_M__
+#ifdef CONFIG_DISPLAY_RM69330
 /* Resolution width of a graphics display screen. The default value is <b>454</b>. */
 static constexpr int16_t HORIZONTAL_RESOLUTION = 454;
 /* Resolution height of a graphics display screen. The default value is <b>454</b>. */
 static constexpr int16_t VERTICAL_RESOLUTION = 454;
+#elif defined(CONFIG_DISPLAY_ICNA3311)
+static constexpr int16_t HORIZONTAL_RESOLUTION = 280;
+static constexpr int16_t VERTICAL_RESOLUTION = 456;
+#elif defined(CONFIG_DISPLAY_A064)
+static constexpr int16_t HORIZONTAL_RESOLUTION = 480;
+static constexpr int16_t VERTICAL_RESOLUTION = 480;
+#endif
 #elif defined _WIN32 || defined __APPLE__
 /* Resolution width of a graphics display screen. The default value is <b>454</b>. */
 static constexpr int16_t HORIZONTAL_RESOLUTION = 960;
@@ -324,11 +334,13 @@ static constexpr const char* VECTOR_FONT_DIR = "..\\..\\simulator\\font\\";
 static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = ".\\dump_dom_tree.json";
 /* Default file path for font */
 static constexpr const char* VECTOR_FONT_DIR = "..\\..\\tools\\font\\font_tool\\font_tool\\font\\";
-#elif defined _LITEOS
+#elif defined __LITEOS_M__
 /* Default file path for screenshots */
 static constexpr const char* DEFAULT_SCREENSHOT_PATH = "user/log/screenshot.bin";
 /* Default file path for DOM tree logs */
 static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = "user/log/dump_dom_tree.json";
+/* Default file path for font */
+static constexpr const char* VECTOR_FONT_DIR = "/data/"; // It must end with '/'.
 #else
 /* Default file path for screenshots */
 static constexpr const char* DEFAULT_SCREENSHOT_PATH = "/storage/screenshot.bin";
@@ -341,7 +353,7 @@ static constexpr const char* VECTOR_FONT_DIR = "/user/data/";
 static constexpr uint8_t DEFAULT_TASK_PERIOD = 16;
 /* Window manager execution period. The default value is <b>16</b> ms. */
 static constexpr uint8_t WMS_MAIN_TASK_PERIOD = 16;
-static constexpr uint8_t IMG_CACHE_SIZE = 5; /* Maximum number of cached images. The default value is <b>5</b>. */
+static constexpr uint8_t IMG_CACHE_SIZE = 8; /* Maximum number of cached images. The default value is <b>5</b>. */
 static constexpr uint8_t INDEV_READ_PERIOD = 10; /* Input event read cycle. The default value is <b>10</b> ms. */
 /* Drag distance threshold of a drag event. The default value is <b>10px</b>. */
 static constexpr uint8_t INDEV_DRAG_LIMIT = 10;
