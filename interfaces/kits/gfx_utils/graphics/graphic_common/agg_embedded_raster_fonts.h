@@ -16,7 +16,7 @@
 #ifndef GRAPHIC_GEOMETRY_EMBEDDED_RASTER_FONTS_INCLUDED
 #define GRAPHIC_GEOMETRY_EMBEDDED_RASTER_FONTS_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

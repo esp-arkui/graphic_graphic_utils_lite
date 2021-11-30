@@ -20,8 +20,8 @@
 #ifndef AGG_CONV_CURVE_INCLUDED
 #define AGG_CONV_CURVE_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_curves.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_curves.h"
 
 namespace agg
 {

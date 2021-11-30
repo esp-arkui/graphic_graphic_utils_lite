@@ -16,7 +16,7 @@
 #define AGG_LINE_AA_BASICS_INCLUDED
 
 #include <cstdlib>
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

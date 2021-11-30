@@ -25,7 +25,7 @@
 #define AGG_SCANLINE_U_INCLUDED
 
 #include <cstring>
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 namespace agg
 {

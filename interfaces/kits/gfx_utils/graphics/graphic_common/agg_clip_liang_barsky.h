@@ -1,35 +1,38 @@
-/*
- * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+//----------------------------------------------------------------------------
+// Anti-Grain Geometry - Version 2.4
+// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
+//
+// Permission to copy, use, modify, sell and distribute this software 
+// is granted provided this copyright notice appears in all copies. 
+// This software is provided "as is" without express or implied
+// warranty, and with no claim as to its suitability for any purpose.
+//
+//----------------------------------------------------------------------------
+// Contact: mcseem@antigrain.com
+//          mcseemagg@yahoo.com
+//          http://www.antigrain.com
+//----------------------------------------------------------------------------
+//
+// Liang-Barsky clipping 
+//
+//----------------------------------------------------------------------------
+#ifndef AGG_CLIP_LIANG_BARSKY_INCLUDED
+#define AGG_CLIP_LIANG_BARSKY_INCLUDED
 
-#ifndef GRAPHIC_GEOMETRY_CLIP_LIANG_BARSKY_INCLUDED
-#define GRAPHIC_GEOMETRY_CLIP_LIANG_BARSKY_INCLUDED
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-#include "graphic_geometry_basics.h"
-
-namespace OHOS
+namespace agg
 {
 
     //------------------------------------------------------------------------
-    enum ClippingFlagsE
+    enum clipping_flags_e
     {
-        CLIPPING_FLAGS_X1_CLIPPED = 4,
-        CLIPPING_FLAGS_X2_CLIPPED = 1,
-        CLIPPING_FLAGS_Y1_CLIPPED = 8,
-        CLIPPING_FLAGS_Y2_CLIPPED = 2,
-        CLIPPING_FLAGS_X_CLIPPED = CLIPPING_FLAGS_X1_CLIPPED | CLIPPING_FLAGS_X2_CLIPPED,
-        CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
+        clipping_flags_x1_clipped = 4,
+        clipping_flags_x2_clipped = 1,
+        clipping_flags_y1_clipped = 8,
+        clipping_flags_y2_clipped = 2,
+        clipping_flags_x_clipped = clipping_flags_x1_clipped | clipping_flags_x2_clipped,
+        clipping_flags_y_clipped = clipping_flags_y1_clipped | clipping_flags_y2_clipped
     };
 
     //----------------------------------------------------------clipping_flags
@@ -47,31 +50,38 @@ namespace OHOS
     //        |        |
     //  1100  |  1000  | 1001
     //        |        |
-    //  clipBox.x1  clipBox.x2
+    //  clip_box.x1  clip_box.x2
     //
     // 
     template<class T>
-    inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
+    inline unsigned clipping_flags(T x, T y, const rect_base<T>& clip_box)
     {
-        return  (x > clipBox.x2) | ((y > clipBox.y2) << 1) | ((x < clipBox.x1) << 2) | ((y < clipBox.y1) << 3);
+        return  (x > clip_box.x2) |
+               ((y > clip_box.y2) << 1) |
+               ((x < clip_box.x1) << 2) |
+               ((y < clip_box.y1) << 3);
     }
 
-    //--------------------------------------------------------ClippingFlagsX
-    template <class T> inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
+    //--------------------------------------------------------clipping_flags_x
+    template<class T>
+    inline unsigned clipping_flags_x(T x, const rect_base<T>& clip_box)
     {
-        return (x > clipBox.x2) | ((x < clipBox.x1) << 2);
-    }
-
-
-    //--------------------------------------------------------ClippingFlagsY
-    template <class T> inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
-    {
-        return ((y > clipBox.y2) << 1) | ((y < clipBox.y1) << 3);
+        return  (x > clip_box.x2) | ((x < clip_box.x1) << 2);
     }
 
 
-    //-------------------------------------------------------ClipLiangBarsky
-    template<class T> inline unsigned ClipLiangBarsky(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox,
+    //--------------------------------------------------------clipping_flags_y
+    template<class T>
+    inline unsigned clipping_flags_y(T y, const rect_base<T>& clip_box)
+    {
+        return ((y > clip_box.y2) << 1) | ((y < clip_box.y1) << 3);
+    }
+
+
+    //-------------------------------------------------------clip_liang_barsky
+    template<class T>
+    inline unsigned clip_liang_barsky(T x1, T y1, T x2, T y2,
+                                      const rect_base<T>& clip_box,
                                       T* x, T* y)
     {
         const double nearzero = 1e-30;
@@ -94,37 +104,37 @@ namespace OHOS
         if(deltax == 0.0) 
         {   
             // bump off of the vertical
-            deltax = (x1 > clipBox.x1) ? -nearzero : nearzero;
+            deltax = (x1 > clip_box.x1) ? -nearzero : nearzero;
         }
 
         if(deltay == 0.0) 
         { 
             // bump off of the horizontal 
-            deltay = (y1 > clipBox.y1) ? -nearzero : nearzero;
+            deltay = (y1 > clip_box.y1) ? -nearzero : nearzero;
         }
         
         if(deltax > 0.0) 
         {                
             // points to right
-            xin = clipBox.x1;
-            xout = clipBox.x2;
+            xin  = clip_box.x1;
+            xout = clip_box.x2;
         }
         else 
         {
-            xin = clipBox.x2;
-            xout = clipBox.x1;
+            xin  = clip_box.x2;
+            xout = clip_box.x1;
         }
 
         if(deltay > 0.0) 
         {
             // points up
-            yin = clipBox.y1;
-            yout = clipBox.y2;
+            yin  = clip_box.y1;
+            yout = clip_box.y2;
         }
         else 
         {
-            yin = clipBox.y2;
-            yout = clipBox.y1;
+            yin  = clip_box.y2;
+            yout = clip_box.y1;
         }
         
         tinx = (xin - x1) / deltax;
@@ -219,49 +229,50 @@ namespace OHOS
     }
 
 
-    //----------------------------------------------------------------------------ClipMovePoint
+    //----------------------------------------------------------------------------
     template<class T>
-    bool ClipMovePoint(T x1, T y1, T x2, T y2, 
-                         const RectBase<T>& clipBox, 
+    bool clip_move_point(T x1, T y1, T x2, T y2, 
+                         const rect_base<T>& clip_box, 
                          T* x, T* y, unsigned flags)
     {
        T bound;
 
-       if(flags & CLIPPING_FLAGS_X_CLIPPED)
+       if(flags & clipping_flags_x_clipped)
        {
            if(x1 == x2)
            {
                return false;
            }
-           bound = (flags & CLIPPING_FLAGS_X1_CLIPPED) ? clipBox.x1 : clipBox.x2;
+           bound = (flags & clipping_flags_x1_clipped) ? clip_box.x1 : clip_box.x2;
            *y = (T)(double(bound - x1) * (y2 - y1) / (x2 - x1) + y1);
            *x = bound;
        }
 
-       flags = ClippingFlagsY(*y, clipBox);
-       if(flags & CLIPPING_FLAGS_Y_CLIPPED)
+       flags = clipping_flags_y(*y, clip_box);
+       if(flags & clipping_flags_y_clipped)
        {
            if(y1 == y2)
            {
                return false;
            }
-           bound = (flags & CLIPPING_FLAGS_Y1_CLIPPED) ? clipBox.y1 : clipBox.y2;
+           bound = (flags & clipping_flags_y1_clipped) ? clip_box.y1 : clip_box.y2;
            *x = (T)(double(bound - y1) * (x2 - x1) / (y2 - y1) + x1);
            *y = bound;
        }
        return true;
     }
 
-    //-------------------------------------------------------ClipLineSegment
+    //-------------------------------------------------------clip_line_segment
     // Returns: ret >= 4        - Fully clipped
     //          (ret & 1) != 0  - First point has been moved
     //          (ret & 2) != 0  - Second point has been moved
     //
     template<class T>
-    unsigned ClipLineSegment(T* x1, T* y1, T* x2, T* y2, const RectBase<T>& clipBox)
+    unsigned clip_line_segment(T* x1, T* y1, T* x2, T* y2,
+                               const rect_base<T>& clip_box)
     {
-        unsigned f1 = ClippingFlags(*x1, *y1, clipBox);
-        unsigned f2 = ClippingFlags(*x2, *y2, clipBox);
+        unsigned f1 = clipping_flags(*x1, *y1, clip_box);
+        unsigned f2 = clipping_flags(*x2, *y2, clip_box);
         unsigned ret = 0;
 
         if((f2 | f1) == 0)
@@ -270,15 +281,15 @@ namespace OHOS
             return 0;
         }
 
-        if((f1 & CLIPPING_FLAGS_X_CLIPPED) != 0 && 
-           (f1 & CLIPPING_FLAGS_X_CLIPPED) == (f2 & CLIPPING_FLAGS_X_CLIPPED))
+        if((f1 & clipping_flags_x_clipped) != 0 && 
+           (f1 & clipping_flags_x_clipped) == (f2 & clipping_flags_x_clipped))
         {
             // Fully clipped
             return 4;
         }
 
-        if((f1 & CLIPPING_FLAGS_Y_CLIPPED) != 0 && 
-           (f1 & CLIPPING_FLAGS_Y_CLIPPED) == (f2 & CLIPPING_FLAGS_Y_CLIPPED))
+        if((f1 & clipping_flags_y_clipped) != 0 && 
+           (f1 & clipping_flags_y_clipped) == (f2 & clipping_flags_y_clipped))
         {
             // Fully clipped
             return 4;
@@ -290,7 +301,7 @@ namespace OHOS
         T ty2 = *y2;
         if(f1) 
         {   
-            if(!ClipMovePoint(tx1, ty1, tx2, ty2, clipBox, x1, y1, f1)) 
+            if(!clip_move_point(tx1, ty1, tx2, ty2, clip_box, x1, y1, f1)) 
             {
                 return 4;
             }
@@ -302,7 +313,7 @@ namespace OHOS
         }
         if(f2) 
         {
-            if (!ClipMovePoint(tx1, ty1, tx2, ty2, clipBox, x2, y2, f2))
+            if(!clip_move_point(tx1, ty1, tx2, ty2, clip_box, x2, y2, f2))
             {
                 return 4;
             }

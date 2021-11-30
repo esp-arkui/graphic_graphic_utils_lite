@@ -20,7 +20,7 @@
 #ifndef AGG_ROUNDED_RECT_INCLUDED
 #define AGG_ROUNDED_RECT_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_arc.h"
 
 namespace agg

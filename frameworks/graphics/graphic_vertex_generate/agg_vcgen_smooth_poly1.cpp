@@ -17,7 +17,7 @@
 //
 //----------------------------------------------------------------------------
 
-#include "agg_vcgen_smooth_poly1.h"
+#include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_smooth_poly1.h"
 
 namespace agg
 {

@@ -20,8 +20,8 @@
 #ifndef AGG_STROKE_MATH_INCLUDED
 #define AGG_STROKE_MATH_INCLUDED
 
-#include "agg_math.h"
-#include "agg_vertex_sequence.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
 namespace agg
 {

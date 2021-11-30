@@ -18,9 +18,9 @@
 
 #include <cmath>
 #include <cstdlib>
-#include "agg_basics.h"
-#include "agg_math.h"
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 
 namespace agg

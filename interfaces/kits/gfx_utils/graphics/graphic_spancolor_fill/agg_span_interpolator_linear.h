@@ -16,9 +16,9 @@
 #ifndef AGG_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define AGG_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_dda_line.h"
-#include "agg_trans_affine.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
+#include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
 namespace agg
 {

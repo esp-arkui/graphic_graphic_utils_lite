@@ -18,7 +18,7 @@
 //----------------------------------------------------------------------------
 
 
-#include "agg_image_filters.h"
+#include "gfx_utils/graphics/graphic_filter/agg_image_filters.h"
 
 
 namespace agg
