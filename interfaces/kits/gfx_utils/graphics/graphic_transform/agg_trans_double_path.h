@@ -16,8 +16,9 @@
 #ifndef AGG_TRANS_DOUBLE_PATH_INCLUDED
 #define AGG_TRANS_DOUBLE_PATH_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_vertex_sequence.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+
+#include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
 namespace agg
 {

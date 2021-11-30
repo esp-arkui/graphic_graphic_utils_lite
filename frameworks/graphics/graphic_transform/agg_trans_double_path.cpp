@@ -13,8 +13,8 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include "agg_math.h"
-#include "agg_trans_double_path.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include <gfx_utils/graphics/graphic_transform/agg_trans_double_path.h>
 
 namespace agg
 {

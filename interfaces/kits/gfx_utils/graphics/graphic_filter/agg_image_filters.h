@@ -20,8 +20,8 @@
 #ifndef AGG_IMAGE_FILTERS_INCLUDED
 #define AGG_IMAGE_FILTERS_INCLUDED
 
-#include "agg_array.h"
-#include "agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
 
 namespace agg
 {

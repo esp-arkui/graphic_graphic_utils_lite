@@ -21,7 +21,8 @@
 #ifndef AGG_BEZIER_ARC_INCLUDED
 #define AGG_BEZIER_ARC_INCLUDED
 
-#include "agg_conv_transform.h"
+#include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
+#include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
 
 namespace agg
 {

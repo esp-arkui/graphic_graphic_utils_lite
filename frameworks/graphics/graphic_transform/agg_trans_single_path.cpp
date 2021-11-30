@@ -13,9 +13,9 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#include "agg_math.h"
-#include "agg_vertex_sequence.h"
-#include "agg_trans_single_path.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
+#include <gfx_utils/graphics/graphic_transform/agg_trans_single_path.h>
 
 namespace agg
 {

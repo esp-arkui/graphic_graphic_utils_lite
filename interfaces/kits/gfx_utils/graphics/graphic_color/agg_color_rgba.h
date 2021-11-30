@@ -25,9 +25,8 @@
 #define AGG_COLOR_RGBA_INCLUDED
 
 #include <cmath>
-#include "agg_basics.h"
-#include "agg_gamma_lut.h"
-
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_gamma_lut.h"
 namespace agg
 {
     // Supported component orders for RGB and RGBA pixel formats

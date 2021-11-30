@@ -32,8 +32,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <limits>
-#include "agg_math.h"
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 
 namespace agg

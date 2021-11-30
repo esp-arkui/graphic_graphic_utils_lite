@@ -21,7 +21,7 @@
 #define AGG_DDA_LINE_INCLUDED
 
 #include <cstdlib>
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

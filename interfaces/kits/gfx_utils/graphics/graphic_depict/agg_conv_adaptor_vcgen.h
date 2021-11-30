@@ -16,7 +16,7 @@
 #ifndef AGG_CONV_ADAPTOR_VCGEN_INCLUDED
 #define AGG_CONV_ADAPTOR_VCGEN_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {
