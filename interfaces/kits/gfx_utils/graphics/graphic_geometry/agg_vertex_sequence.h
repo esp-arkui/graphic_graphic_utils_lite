@@ -19,9 +19,9 @@
 #ifndef AGG_VERTEX_SEQUENCE_INCLUDED
 #define AGG_VERTEX_SEQUENCE_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_array.h"
-#include "agg_math.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
 
 namespace agg
 {

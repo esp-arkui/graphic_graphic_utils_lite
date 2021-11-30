@@ -16,7 +16,7 @@
 #ifndef AGG_VPGEN_SEGMENTATOR_INCLUDED
 #define AGG_VPGEN_SEGMENTATOR_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

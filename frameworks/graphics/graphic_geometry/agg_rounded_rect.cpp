@@ -18,7 +18,7 @@
 //----------------------------------------------------------------------------
 
 #include <cmath>
-#include "agg_rounded_rect.h"
+#include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
 
 
 namespace agg

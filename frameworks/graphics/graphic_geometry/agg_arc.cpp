@@ -18,7 +18,8 @@
 //----------------------------------------------------------------------------
 
 #include <cmath>
-#include "agg_arc.h"
+
+#include <gfx_utils/graphics/graphic_geometry/agg_arc.h>
 
 
 namespace agg

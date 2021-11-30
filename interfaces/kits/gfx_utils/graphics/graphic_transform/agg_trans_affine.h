@@ -20,7 +20,7 @@
 #define AGG_TRANS_AFFINE_INCLUDED
 
 #include <cmath>
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

@@ -16,7 +16,7 @@
 #ifndef AGG_VCGEN_STROKE_INCLUDED
 #define AGG_VCGEN_STROKE_INCLUDED
 
-#include "agg_math_stroke.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_math_stroke.h"
 
 
 namespace agg

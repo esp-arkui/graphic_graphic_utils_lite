@@ -17,7 +17,9 @@
 //
 //----------------------------------------------------------------------------
 
-#include "agg_vcgen_contour.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+
+#include <gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h>
 
 namespace agg
 {

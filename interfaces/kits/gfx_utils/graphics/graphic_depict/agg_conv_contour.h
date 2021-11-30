@@ -19,8 +19,7 @@
 #ifndef AGG_CONV_CONTOUR_INCLUDED
 #define AGG_CONV_CONTOUR_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_vcgen_contour.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_conv_adaptor_vcgen.h"
 
 namespace agg
