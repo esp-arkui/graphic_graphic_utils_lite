@@ -16,7 +16,7 @@
 #ifndef AGG_SPAN_ALLOCATOR_INCLUDED
 #define AGG_SPAN_ALLOCATOR_INCLUDED
 
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 namespace agg
 {

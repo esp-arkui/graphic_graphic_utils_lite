@@ -16,10 +16,10 @@
 #ifndef AGG_GRADIENT_LUT_INCLUDED
 #define AGG_GRADIENT_LUT_INCLUDED
 
-#include "agg_array.h"
-#include "agg_dda_line.h"
-#include "agg_color_rgba.h"
-#include "agg_color_gray.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
+#include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
+#include "gfx_utils/graphics/graphic_color/agg_color_gray.h"
 
 namespace agg
 {

@@ -33,7 +33,7 @@
 #ifndef AGG_COLOR_CONV_RGB8_INCLUDED
 #define AGG_COLOR_CONV_RGB8_INCLUDED
 
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_color_conv.h"
 
 namespace agg

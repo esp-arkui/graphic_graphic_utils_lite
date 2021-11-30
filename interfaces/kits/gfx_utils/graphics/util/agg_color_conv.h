@@ -17,8 +17,8 @@
 #define AGG_COLOR_CONV_INCLUDED
 
 #include <cstring>
-#include "agg_basics.h"
-#include "agg_rendering_buffer.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "render/agg_rendering_buffer.h"
 
 
 namespace agg

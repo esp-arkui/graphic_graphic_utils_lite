@@ -14,7 +14,8 @@
 //----------------------------------------------------------------------------
 
 #include <cmath>
-#include "agg_line_aa_basics.h"
+
+#include <gfx_utils/graphics/graphic_geometry/agg_line_aa_basics.h>
 
 namespace agg
 {

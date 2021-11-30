@@ -17,8 +17,8 @@
 #define AGG_PATH_STORAGE_INCLUDED
 
 #include <cstring>
-#include "agg_math.h"
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_common/agg_math.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "agg_bezier_arc.h"
 
 namespace agg

@@ -17,7 +17,7 @@
 #ifndef AGG_CURVES_INCLUDED
 #define AGG_CURVES_INCLUDED
 
-#include "agg_array.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
 namespace agg
 {

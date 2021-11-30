@@ -17,7 +17,7 @@
 
 #include <cstddef>
 #include <cstring>
-#include "agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {

@@ -15,7 +15,7 @@
 #ifndef AGG_RASTERIZER_SL_CLIP_INCLUDED
 #define AGG_RASTERIZER_SL_CLIP_INCLUDED
 
-#include "agg_clip_liang_barsky.h"
+#include "gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h"
 
 namespace agg
 {

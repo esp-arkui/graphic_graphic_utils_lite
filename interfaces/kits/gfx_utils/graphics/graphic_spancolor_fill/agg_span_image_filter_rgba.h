@@ -23,8 +23,8 @@
 #ifndef AGG_SPAN_IMAGE_FILTER_RGBA_INCLUDED
 #define AGG_SPAN_IMAGE_FILTER_RGBA_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_color_rgba.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 #include "agg_span_image_filter.h"
 
 

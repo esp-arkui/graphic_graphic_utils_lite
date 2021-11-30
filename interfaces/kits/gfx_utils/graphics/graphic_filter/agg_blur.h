@@ -30,10 +30,10 @@
 
 #include <cstring>
 #include <cmath>
-#include "graphic_geometry/agg_array.h"
-#include "graphic_pixfmt/agg_pixfmt_base.h"
-#include "graphic_pixfmt/agg_pixfmt_transposer.h"
-#include "graphic_renderer/agg_renderer_base.h"
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+#include "render/agg_pixfmt_base.h"
+#include "render/agg_pixfmt_transposer.h"
+#include "render/agg_renderer_base.h"
 
 namespace agg
 {

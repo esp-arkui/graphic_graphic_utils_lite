@@ -19,8 +19,8 @@
 #ifndef AGG_SPAN_IMAGE_FILTER_INCLUDED
 #define AGG_SPAN_IMAGE_FILTER_INCLUDED
 
-#include "agg_basics.h"
-#include "agg_image_filters.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_filter/agg_image_filters.h"
 #include "agg_span_interpolator_linear.h"
 
 namespace agg
