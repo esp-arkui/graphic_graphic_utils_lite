@@ -13,8 +13,8 @@
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
 
-#ifndef AGG_EMBEDDED_RASTER_FONTS_INCLUDED
-#define AGG_EMBEDDED_RASTER_FONTS_INCLUDED
+#ifndef GRAPHIC_GEOMETRY_EMBEDDED_RASTER_FONTS_INCLUDED
+#define GRAPHIC_GEOMETRY_EMBEDDED_RASTER_FONTS_INCLUDED
 
 #include "agg_basics.h"
 

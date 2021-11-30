@@ -1,28 +1,29 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_BASICS_INCLUDED
-#define AGG_BASICS_INCLUDED
+
+#ifndef GRAPHIC_GEOMETRY_BASICS_INCLUDED
+#define GRAPHIC_GEOMETRY_BASICS_INCLUDED
 
 #include <cmath>
 
-//---------------------------------------------------------AGG_CUSTOM_ALLOCATOR
-#ifdef AGG_CUSTOM_ALLOCATOR
-#include "agg_allocator.h"
+//---------------------------------------------------------GRAPHIC_GEOMETRY_CUSTOM_ALLOCATOR
+#ifdef GRAPHIC_GEOMETRY_CUSTOM_ALLOCATOR
+#include "graphic_geometry_allocator.h"
 #else
-namespace agg
+namespace OHOS
 {
     // The policy of all AGG containers and memory allocation strategy 
     // in general is that no allocated data requires explicit construction.
@@ -32,10 +33,17 @@ namespace agg
     // The second argument of deallocate() is the size of the allocated 
     // block. You can use this information if you wish.
     //------------------------------------------------------------pod_allocator
-    template<class T> struct pod_allocator
+    template<class T> 
+    struct PodAllocator
     {
-        static T*   allocate(unsigned num)       { return new T [num]; }
-        static void deallocate(T* ptr, unsigned) { delete [] ptr;      }
+        static T*   Allocate(unsigned num)       
+        { 
+            return new T [num]; 
+        }
+        static void Deallocate(T* ptr, unsigned) 
+        { 
+            delete [] ptr;      
+        }
     };
 
     // Single object allocator. It's also can be replaced with your custom
@@ -46,10 +54,17 @@ namespace agg
     // replace these new/delete to malloc/free make sure that the in-place
     // new is called and take care of calling the destructor too.
     //------------------------------------------------------------obj_allocator
-    template<class T> struct obj_allocator
+    template<class T> 
+    struct ObjAllocator
     {
-        static T*   allocate()         { return new T; }
-        static void deallocate(T* ptr) { delete ptr;   }
+        static T*   Allocate()        
+        {
+            return new T;
+        }
+        static void Deallocate(T* ptr)
+        {
+            delete ptr; 
+        }
     };
 }
 #endif
@@ -112,7 +127,7 @@ namespace agg
 #define AGG_INLINE inline
 #endif
 
-namespace agg
+namespace OHOS
 {
     //-------------------------------------------------------------------------
     typedef AGG_INT8   int8;         //----int8
@@ -127,14 +142,14 @@ namespace agg
 #if defined(AGG_FISTP)
 #pragma warning(push)
 #pragma warning(disable : 4035) //Disable warning "no return value"
-    AGG_INLINE int iround(double v)              //-------iround
+    AGG_INLINE int Iround(double v)              //-------iround
     {
         int t;
         __asm fld   qword ptr [v]
         __asm fistp dword ptr [t]
         __asm mov eax, dword ptr [t]
     }
-    AGG_INLINE unsigned uround(double v)         //-------uround
+    AGG_INLINE unsigned Uround(double v)         //-------uround
     {
         unsigned t;
         __asm fld   qword ptr [v]
@@ -142,90 +157,92 @@ namespace agg
         __asm mov eax, dword ptr [t]
     }
 #pragma warning(pop)
-    AGG_INLINE int ifloor(double v)
+    AGG_INLINE int Ifloor(double v)
     {
-        return int(floor(v));
+        return int(Floor(v));
     }
-    AGG_INLINE unsigned ufloor(double v)         //-------ufloor
+    AGG_INLINE unsigned Ufloor(double v)         //-------ufloor
     {
-        return unsigned(floor(v));
+        return unsigned(Floor(v));
     }
-    AGG_INLINE int iceil(double v)
+    AGG_INLINE int Iceil(double v)
     {
-        return int(ceil(v));
+        return int(Ceil(v));
     }
-    AGG_INLINE unsigned uceil(double v)          //--------uceil
+    AGG_INLINE unsigned Uceil(double v)          //--------uceil
     {
-        return unsigned(ceil(v));
+        return unsigned(Ceil(v));
     }
 #elif defined(AGG_QIFIST)
-    AGG_INLINE int iround(double v)
+    AGG_INLINE int Iround(double v)
     {
         return int(v);
     }
-    AGG_INLINE int uround(double v)
+    AGG_INLINE int Uround(double v)
     {
         return unsigned(v);
     }
-    AGG_INLINE int ifloor(double v)
+    AGG_INLINE int Ifloor(double v)
     {
         return int(std::floor(v));
     }
-    AGG_INLINE unsigned ufloor(double v)
+    AGG_INLINE unsigned Ufloor(double v)
     {
         return unsigned(std::floor(v));
     }
-    AGG_INLINE int iceil(double v)
+    AGG_INLINE int Iceil(double v)
     {
         return int(std::ceil(v));
     }
-    AGG_INLINE unsigned uceil(double v)
+    AGG_INLINE unsigned Uceil(double v)
     {
         return unsigned(std::ceil(v));
     }
 #else
-    AGG_INLINE int iround(double v)
+    AGG_INLINE int Iround(double v)
     {
         return int((v < 0.0) ? v - 0.5 : v + 0.5);
     }
-    AGG_INLINE int uround(double v)
+    AGG_INLINE int Uround(double v)
     {
         return unsigned(v + 0.5);
     }
-    AGG_INLINE int ifloor(double v)
+    AGG_INLINE int Ifloor(double v)
     {
         int i = int(v);
         return i - (i > v);
     }
-    AGG_INLINE unsigned ufloor(double v)
+    AGG_INLINE unsigned Ufloor(double v)
     {
         return unsigned(v);
     }
-    AGG_INLINE int iceil(double v)
+    AGG_INLINE int Iceil(double v)
     {
         return int(std::ceil(v));
     }
-    AGG_INLINE unsigned uceil(double v)
+    AGG_INLINE unsigned Uceil(double v)
     {
         return unsigned(std::ceil(v));
     }
 #endif
 
-    //---------------------------------------------------------------saturation
-    template<int Limit> struct saturation
+    //---------------------------------------------------------------Saturation
+    template<int Limit>
+    struct Saturation
     {
-        AGG_INLINE static int iround(double v)
+        AGG_INLINE static int Iround(double v)
         {
             if(v < double(-Limit)) return -Limit;
             if(v > double( Limit)) return  Limit;
-            return agg::iround(v);
+            return OHOS::Iround(v);
         }
     };
 
-    //------------------------------------------------------------------mul_one
-    template<unsigned Shift> struct mul_one
+    //------------------------------------------------------------------MulOne
+    template<unsigned Shift> 
+    struct MulOne
     {
-        AGG_INLINE static unsigned mul(unsigned a, unsigned b)
+        AGG_INLINE static unsigned Mul(unsigned a, unsigned b)
         {
             unsigned q = a * b + (1 << (Shift-1));
             return (q + (q >> Shift)) >> Shift;
@@ -233,68 +250,74 @@ namespace agg
     };
 
     //-------------------------------------------------------------------------
-    typedef unsigned char cover_type;    //----cover_type
-    enum cover_scale_e
+    typedef unsigned char CoverType;    //----CoverType
+    enum CoverScaleE
     {
-        cover_shift = 8,                 //----cover_shift
-        cover_size  = 1 << cover_shift,  //----cover_size 
-        cover_mask  = cover_size - 1,    //----cover_mask 
-        cover_none  = 0,                 //----cover_none 
-        cover_full  = cover_mask         //----cover_full 
+        COVER_SHIFT = 8,                 //----cover_shift
+        COVER_SIZE = 1 << COVER_SHIFT ,  //----cover_size 
+        COVER_MASK = COVER_SIZE  - 1,    //----cover_mask 
+        COVER_NONE = 0,                 //----cover_none 
+        COVER_FULL = COVER_MASK        //----cover_full 
     };
 
-    //----------------------------------------------------poly_subpixel_scale_e
+    //----------------------------------------------------PolySubpixelScaleE
     // These constants determine the subpixel accuracy, to be more precise, 
     // the number of bits of the fractional part of the coordinates. 
     // The possible coordinate capacity in bits can be calculated by formula:
     // sizeof(int) * 8 - poly_subpixel_shift, i.e, for 32-bit integers and
     // 8-bits fractional part the capacity is 24 bits.
-    enum poly_subpixel_scale_e
+    enum PolySubpixelScaleE
     {
-        poly_subpixel_shift = 8,                      //----poly_subpixel_shift
-        poly_subpixel_scale = 1<<poly_subpixel_shift, //----poly_subpixel_scale 
-        poly_subpixel_mask  = poly_subpixel_scale-1   //----poly_subpixel_mask 
+        //poly_subpixel_shift = 8,                      //----poly_subpixel_shift
+        //poly_subpixel_scale = 1<<poly_subpixel_shift, //----poly_subpixel_scale 
+        //poly_subpixel_mask  = poly_subpixel_scale-1   //----poly_subpixel_mask 
+        POLY_SUBPIXEL_SHIFT = 8,                        //----poly_subpixel_shift
+        POLY_SUBPIXEL_SCALE = 1 << POLY_SUBPIXEL_SHIFT, //----poly_subpixel_scale
+        POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE - 1   //----poly_subpixel_mask 
     };
 
-    //----------------------------------------------------------filling_rule_e
-    enum filling_rule_e
+    //----------------------------------------------------------FillingRuleE
+    enum FillingRuleE
     {
-        fill_non_zero,
-        fill_even_odd
+        /*fill_non_zero,
+        fill_even_odd*/
+        FILL_NON_ZERO,
+        FILL_EVEN_ODD
     };
 
     //-----------------------------------------------------------------------pi
     const double pi = 3.14159265358979323846;
 
-    //------------------------------------------------------------------deg2rad
-    inline double deg2rad(double deg)
+    //------------------------------------------------------------------Deg2Rad
+    inline double Deg2Rad(double deg)
     {
         return deg * pi / 180.0;
     }
 
-    //------------------------------------------------------------------rad2deg
-    inline double rad2deg(double rad)
+    //------------------------------------------------------------------Rad2Deg
+    inline double Rad2Deg(double rad)
     {
         return rad * 180.0 / pi;
     }
  
-    //----------------------------------------------------------------rect_base
-    template<class T> struct rect_base
+    //----------------------------------------------------------------RectBase
+    template<class T> 
+    struct RectBase
     {
-        typedef T            value_type;
-        typedef rect_base<T> self_type;
+        typedef T            ValueType;
+        typedef RectBase<T> SelfType;
         T x1, y1, x2, y2;
 
-        rect_base() {}
-        rect_base(T x1_, T y1_, T x2_, T y2_) :
+        RectBase() {}
+        RectBase(T x1_, T y1_, T x2_, T y2_) :
             x1(x1_), y1(y1_), x2(x2_), y2(y2_) {}
 
-        void init(T x1_, T y1_, T x2_, T y2_) 
+        void Init(T x1_, T y1_, T x2_, T y2_) 
         {
             x1 = x1_; y1 = y1_; x2 = x2_; y2 = y2_; 
         }
 
-        const self_type& normalize()
+        const SelfType& Normalize()
         {
             T t;
             if(x1 > x2) { t = x1; x1 = x2; x2 = t; }
@@ -302,7 +325,7 @@ namespace agg
             return *this;
         }
 
-        bool clip(const self_type& r)
+        bool Clip(const SelfType& r)
         {
             if(x2 > r.x2) x2 = r.x2;
             if(y2 > r.y2) y2 = r.y2;
@@ -311,26 +334,26 @@ namespace agg
             return x1 <= x2 && y1 <= y2;
         }
 
-        bool is_valid() const
+        bool IsValid() const
         {
             return x1 <= x2 && y1 <= y2;
         }
 
-        bool hit_test(T x, T y) const
+        bool HitTest(T x, T y) const
         {
             return (x >= x1 && x <= x2 && y >= y1 && y <= y2);
         }
         
-        bool overlaps(const self_type& r) const
+        bool Overlaps(const SelfType& r) const
         {
             return !(r.x1 > x2 || r.x2 < x1
                   || r.y1 > y2 || r.y2 < y1);
         }
     };
 
-    //-----------------------------------------------------intersect_rectangles
+    //-----------------------------------------------------IntersectRectangles
     template<class Rect> 
-    inline Rect intersect_rectangles(const Rect& r1, const Rect& r2)
+    inline Rect IntersectRectangles(const Rect& r1, const Rect& r2)
     {
         Rect r = r1;
 
@@ -347,9 +370,9 @@ namespace agg
     }
 
 
-    //---------------------------------------------------------unite_rectangles
+    //---------------------------------------------------------UniteRectangles
     template<class Rect> 
-    inline Rect unite_rectangles(const Rect& r1, const Rect& r2)
+    inline Rect UniteRectangles(const Rect& r1, const Rect& r2)
     {
         Rect r = r1;
         if(r.x2 < r2.x2) r.x2 = r2.x2;
@@ -359,212 +382,232 @@ namespace agg
         return r;
     }
 
-    typedef rect_base<int>    rect_i; //----rect_i
-    typedef rect_base<float>  rect_f; //----rect_f
-    typedef rect_base<double> rect_d; //----rect_d
+    typedef RectBase<int>    RectI; //----rect_i
+    typedef RectBase<float>  RectF;   //----rect_f
+    typedef RectBase<double> RectD; //----rect_d
 
-    //---------------------------------------------------------path_commands_e
-    enum path_commands_e
+    //---------------------------------------------------------PathCommandsE
+    enum PathCommandsE
     {
-        path_cmd_stop     = 0,        //----path_cmd_stop    
-        path_cmd_move_to  = 1,        //----path_cmd_move_to 
-        path_cmd_line_to  = 2,        //----path_cmd_line_to 
-        path_cmd_curve3   = 3,        //----path_cmd_curve3  
-        path_cmd_curve4   = 4,        //----path_cmd_curve4  
-        path_cmd_curveN   = 5,        //----path_cmd_curveN
-        path_cmd_catrom   = 6,        //----path_cmd_catrom
-        path_cmd_ubspline = 7,        //----path_cmd_ubspline
-        path_cmd_end_poly = 0x0F,     //----path_cmd_end_poly
-        path_cmd_mask     = 0x0F      //----path_cmd_mask    
+        //path_cmd_stop     = 0,        //----path_cmd_stop    
+        //path_cmd_move_to  = 1,        //----path_cmd_move_to 
+        //path_cmd_line_to  = 2,        //----path_cmd_line_to 
+        //path_cmd_curve3   = 3,        //----path_cmd_curve3  
+        //path_cmd_curve4   = 4,        //----path_cmd_curve4  
+        //path_cmd_curveN   = 5,        //----path_cmd_curveN
+        //path_cmd_catrom   = 6,        //----path_cmd_catrom
+        //path_cmd_ubspline = 7,        //----path_cmd_ubspline
+        //path_cmd_end_poly = 0x0F,     //----path_cmd_end_poly
+        //path_cmd_mask     = 0x0F      //----path_cmd_mask    
+        PATH_CMD_STOP = 0,        //----path_cmd_stop
+        PATH_CMD_MOVE_TO = 1,     //----path_cmd_move_to
+        PATH_CMD_LINE_TO = 2,     //----path_cmd_line_to
+        PATH_CMD_CURVE3 = 3,      //----path_cmd_curve3
+        PATH_CMD_CURVE4 = 4,      //----path_cmd_curve4
+        PATH_CMD_CURVEN = 5,      //----path_cmd_curveN
+        PATH_CMD_CARROM = 6,      //----path_cmd_catrom
+        PATH_CMD_UBSPLINE = 7,    //----path_cmd_ubspline
+        PATH_CMD_END_POLY = 0x0F, //----path_cmd_end_poly
+        PATH_CMD_MASK = 0x0F      //----path_cmd_mask  
     };
 
-    //------------------------------------------------------------path_flags_e
-    enum path_flags_e
+    //------------------------------------------------------------PathFlagsE
+    enum PathFlagsE
     {
-        path_flags_none  = 0,         //----path_flags_none 
-        path_flags_ccw   = 0x10,      //----path_flags_ccw  
-        path_flags_cw    = 0x20,      //----path_flags_cw   
-        path_flags_close = 0x40,      //----path_flags_close
-        path_flags_mask  = 0xF0       //----path_flags_mask 
+        //path_flags_none  = 0,         //----path_flags_none 
+        //path_flags_ccw   = 0x10,      //----path_flags_ccw  
+        //path_flags_cw    = 0x20,      //----path_flags_cw   
+        //path_flags_close = 0x40,      //----path_flags_close
+        //path_flags_mask  = 0xF0       //----path_flags_mask 
+        PATH_FLAGS_NONE = 0,     //----PATH_FLAGS_NONE
+        PATH_FLAGS_CCW = 0x10,   //----PATH_FLAGS_CCW
+        PATH_FLAGS_CW = 0x20,    //----PATH_FLAGS_CW
+        PATH_FLAGS_CLOSE = 0x40, //----PATH_FLAGS_CLOSE
+        PATH_FLAGS_MASK = 0xF0   //----PATH_FLAGS_MASK 
     };
 
-    //---------------------------------------------------------------is_vertex
-    inline bool is_vertex(unsigned c)
+    //---------------------------------------------------------------IsVertex
+    inline bool IsVertex(unsigned c)
     {
-        return c >= path_cmd_move_to && c < path_cmd_end_poly;
+        return c >= PATH_CMD_MOVE_TO && c < PATH_CMD_END_POLY;
     }
 
-    //--------------------------------------------------------------is_drawing
-    inline bool is_drawing(unsigned c)
+    //--------------------------------------------------------------IsDrawing
+    inline bool IsDrawing(unsigned c)
     {
-        return c >= path_cmd_line_to && c < path_cmd_end_poly;
+        return c >= PATH_CMD_LINE_TO && c < PATH_CMD_END_POLY;
     }
 
-    //-----------------------------------------------------------------is_stop
-    inline bool is_stop(unsigned c)
+    //-----------------------------------------------------------------IsStop
+    inline bool IsStop(unsigned c)
     { 
-        return c == path_cmd_stop;
+        return c == PATH_CMD_STOP;
     }
 
-    //--------------------------------------------------------------is_move_to
-    inline bool is_move_to(unsigned c)
+    //--------------------------------------------------------------iIsMoveTo
+    inline bool iIsMoveTo(unsigned c)
     {
-        return c == path_cmd_move_to;
+        return c == PATH_CMD_MOVE_TO;
     }
 
-    //--------------------------------------------------------------is_line_to
-    inline bool is_line_to(unsigned c)
+    //--------------------------------------------------------------IsLineTo
+    inline bool IsLineTo(unsigned c)
     {
-        return c == path_cmd_line_to;
+        return c == PATH_CMD_LINE_TO;
     }
 
-    //----------------------------------------------------------------is_curve
-    inline bool is_curve(unsigned c)
+    //----------------------------------------------------------------IsCurve
+    inline bool IsCurve(unsigned c)
     {
-        return c == path_cmd_curve3 || c == path_cmd_curve4;
+        return c == PATH_CMD_CURVE3 || c == PATH_CMD_CURVE4;
     }
 
-    //---------------------------------------------------------------is_curve3
-    inline bool is_curve3(unsigned c)
+    //---------------------------------------------------------------IsCurve3
+    inline bool IsCurve3(unsigned c)
     {
-        return c == path_cmd_curve3;
+        return c == PATH_CMD_CURVE3;
     }
 
-    //---------------------------------------------------------------is_curve4
-    inline bool is_curve4(unsigned c)
+    //---------------------------------------------------------------IsCurve4
+    inline bool IsCurve4(unsigned c)
     {
-        return c == path_cmd_curve4;
+        return c == PATH_CMD_CURVE4;
     }
 
-    //-------------------------------------------------------------is_end_poly
-    inline bool is_end_poly(unsigned c)
+    //-------------------------------------------------------------IsEnd_poly
+    inline bool IsEnd_poly(unsigned c)
     {
-        return (c & path_cmd_mask) == path_cmd_end_poly;
+        return (c & PATH_CMD_MASK) == PATH_CMD_END_POLY;
     }
 
-    //----------------------------------------------------------------is_close
-    inline bool is_close(unsigned c)
+    //----------------------------------------------------------------IsClose
+    inline bool IsClose(unsigned c)
     {
-        return (c & ~(path_flags_cw | path_flags_ccw)) ==
-               (path_cmd_end_poly | path_flags_close); 
+        return (c & ~(PATH_FLAGS_CW | PATH_FLAGS_CCW)) ==
+               (PATH_CMD_END_POLY | PATH_FLAGS_CLOSE); 
     }
 
-    //------------------------------------------------------------is_next_poly
-    inline bool is_next_poly(unsigned c)
+    //------------------------------------------------------------IsNextPoly
+    inline bool IsNextPoly(unsigned c)
     {
-        return is_stop(c) || is_move_to(c) || is_end_poly(c);
+        return IsStop(c) || IsMoveTo(c) || IsEndPoly(c);
     }
 
-    //-------------------------------------------------------------------is_cw
-    inline bool is_cw(unsigned c)
+    //-------------------------------------------------------------------IsCw
+    inline bool IsCw(unsigned c)
     {
-        return (c & path_flags_cw) != 0;
+        return (c & PATH_FLAGS_CW) != 0;
     }
 
-    //------------------------------------------------------------------is_ccw
-    inline bool is_ccw(unsigned c)
+    //------------------------------------------------------------------IsCcw
+    inline bool IsCcw(unsigned c)
     {
-        return (c & path_flags_ccw) != 0;
+        return (c & PATH_FLAGS_CCW) != 0;
     }
 
-    //-------------------------------------------------------------is_oriented
-    inline bool is_oriented(unsigned c)
+    //-------------------------------------------------------------IsOriented
+    inline bool IsOriented(unsigned c)
     {
-        return (c & (path_flags_cw | path_flags_ccw)) != 0; 
+        return (c & (PATH_FLAGS_CW | PATH_FLAGS_CCW)) != 0; 
     }
 
-    //---------------------------------------------------------------is_closed
-    inline bool is_closed(unsigned c)
+    //---------------------------------------------------------------IsClosed
+    inline bool IsClosed(unsigned c)
     {
-        return (c & path_flags_close) != 0; 
+        return (c & PATH_FLAGS_CLOSE) != 0; 
     }
 
-    //----------------------------------------------------------get_close_flag
-    inline unsigned get_close_flag(unsigned c)
+    //----------------------------------------------------------GetCloseFlag
+    inline unsigned GetCloseFlag(unsigned c)
     {
-        return c & path_flags_close; 
+        return c & PATH_FLAGS_CLOSE; 
     }
 
-    //-------------------------------------------------------clear_orientation
-    inline unsigned clear_orientation(unsigned c)
+    //-------------------------------------------------------ClearOrientation
+    inline unsigned ClearOrientation(unsigned c)
     {
-        return c & ~(path_flags_cw | path_flags_ccw);
+        return c & ~(PATH_FLAGS_CW | PATH_FLAGS_CCW);
     }
 
-    //---------------------------------------------------------get_orientation
-    inline unsigned get_orientation(unsigned c)
+    //---------------------------------------------------------GetOrientation
+    inline unsigned GetOrientation(unsigned c)
     {
-        return c & (path_flags_cw | path_flags_ccw);
+        return c & (PATH_FLAGS_CW | PATH_FLAGS_CCW);
     }
 
-    //---------------------------------------------------------set_orientation
-    inline unsigned set_orientation(unsigned c, unsigned o)
+    //---------------------------------------------------------SetOrientation
+    inline unsigned SetOrientation(unsigned c, unsigned o)
     {
-        return clear_orientation(c) | o;
+        return ClearOrientation(c) | o;
     }
 
-    //--------------------------------------------------------------point_base
-    template<class T> struct point_base
+    //--------------------------------------------------------------PointBase
+    template<class T> 
+    struct PointBase
     {
-        typedef T value_type;
+        typedef T ValueType;
         T x,y;
-        point_base() {}
-        point_base(T x_, T y_) : x(x_), y(y_) {}
+        PointBase() {}
+        PointBase(T x_, T y_) : x(x_), y(y_) {}
     };
-    typedef point_base<int>    point_i; //-----point_i
-    typedef point_base<float>  point_f; //-----point_f
-    typedef point_base<double> point_d; //-----point_d
+    typedef PointBase<int> PointI;     //-----PointI
+    typedef PointBase<float> PointF;   //-----PointF
+    typedef PointBase<double> PointD;  //-----PointD
 
-    //-------------------------------------------------------------vertex_base
-    template<class T> struct vertex_base
+    //-------------------------------------------------------------VertexBase
+    template<class T> 
+    struct VertexBase
     {
         typedef T value_type;
         T x,y;
         unsigned cmd;
-        vertex_base() {}
-        vertex_base(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_) {}
+        VertexBase() {}
+        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_) {}
     };
-    typedef vertex_base<int>    vertex_i; //-----vertex_i
-    typedef vertex_base<float>  vertex_f; //-----vertex_f
-    typedef vertex_base<double> vertex_d; //-----vertex_d
+    typedef VertexBase<int>    VertexI; //-----VertexI
+    typedef VertexBase<float>  VertexF; //-----VertexF
+    typedef VertexBase<double> VertexD; //-----VertexD
 
-    //----------------------------------------------------------------row_info
-    template<class T> struct row_info
+    //----------------------------------------------------------------RowInfo
+    template<class T>
+    struct RowInfo
     {
         int x1, x2;
         T* ptr;
-        row_info() {}
-        row_info(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_) {}
+        RowInfo() {}
+        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_) {}
     };
 
     //----------------------------------------------------------const_row_info
-    template<class T> struct const_row_info
+    template<class T> 
+    struct ConstRowInfo
     {
         int x1, x2;
         const T* ptr;
-        const_row_info() {}
-        const_row_info(int x1_, int x2_, const T* ptr_) : 
+        ConstRowInfo() {}
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) : 
             x1(x1_), x2(x2_), ptr(ptr_) {}
     };
 
     //------------------------------------------------------------is_equal_eps
-    template<class T> inline bool is_equal_eps(T v1, T v2, T epsilon)
+    template<class T> inline 
+    bool IsEqualEps(T v1, T v2, T epsilon)
     {
-	bool neg1 = v1 < 0.0;
-	bool neg2 = v2 < 0.0;
+	    bool neg1 = v1 < 0.0;
+	    bool neg2 = v2 < 0.0;
 
-	if (neg1 != neg2)
-	    return std::fabs(v1) < epsilon && std::fabs(v2) < epsilon;
+	    if (neg1 != neg2)
+	        return std::fabs(v1) < epsilon && std::fabs(v2) < epsilon;
 
-        int int1, int2;
-	std::frexp(v1, &int1);
-	std::frexp(v2, &int2);
-	int min12 = int1 < int2 ? int1 : int2;
+            int int1, int2;
+	    std::frexp(v1, &int1);
+	    std::frexp(v2, &int2);
+	    int min12 = int1 < int2 ? int1 : int2;
 
-	v1 = std::ldexp(v1, -min12);
-	v2 = std::ldexp(v2, -min12);
+	    v1 = std::ldexp(v1, -min12);
+	    v2 = std::ldexp(v2, -min12);
 
-	return std::fabs(v1 - v2) < epsilon;
+	    return std::fabs(v1 - v2) < epsilon;
     }
 }
 
