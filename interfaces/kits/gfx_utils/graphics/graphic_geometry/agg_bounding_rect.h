@@ -21,7 +21,7 @@
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-----------------------------------------------------------bounding_rect

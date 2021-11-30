@@ -17,7 +17,7 @@
 #define AGG_WARP_MAGNIFIER_INCLUDED
 
 
-namespace agg
+namespace OHOS
 {
 
     //----------------------------------------------------trans_warp_magnifier

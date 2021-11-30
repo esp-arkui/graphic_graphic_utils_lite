@@ -20,7 +20,7 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
 
-namespace agg
+namespace OHOS
 {
 
     //======================================================vcgen_smooth_poly1

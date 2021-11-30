@@ -23,7 +23,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_arc.h"
 
-namespace agg
+namespace OHOS
 {
     //------------------------------------------------------------rounded_rect
     //

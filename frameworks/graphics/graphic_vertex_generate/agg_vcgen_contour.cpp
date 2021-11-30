@@ -21,7 +21,7 @@
 
 #include <gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_contour.h>
 
-namespace agg
+namespace OHOS
 {
 
     //------------------------------------------------------------------------

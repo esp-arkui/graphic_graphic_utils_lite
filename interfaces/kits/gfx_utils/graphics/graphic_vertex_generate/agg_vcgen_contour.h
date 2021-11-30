@@ -18,7 +18,7 @@
 
 #include "gfx_utils/graphics/graphic_geometry/agg_math_stroke.h"
 
-namespace agg
+namespace OHOS
 {
 
     //----------------------------------------------------------vcgen_contour

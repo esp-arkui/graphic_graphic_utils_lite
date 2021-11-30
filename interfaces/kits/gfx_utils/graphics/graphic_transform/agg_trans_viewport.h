@@ -26,7 +26,7 @@
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
 
-namespace agg
+namespace OHOS
 {
 
     enum aspect_ratio_e

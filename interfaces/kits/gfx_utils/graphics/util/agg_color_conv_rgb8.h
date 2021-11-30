@@ -17,7 +17,7 @@
  * These functors can convert images with up to 8 bits per component.
  * Use convertors in the following way:
  *
- * agg::color_conv(dst, src, agg::color_conv_XXXX_to_YYYY());
+ * OHOS::color_conv(dst, src, OHOS::color_conv_XXXX_to_YYYY());
  * whare XXXX and YYYY can be any of:
  *  rgb24
  *  bgr24
@@ -36,7 +36,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_color_conv.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-----------------------------------------------------color_conv_rgb24

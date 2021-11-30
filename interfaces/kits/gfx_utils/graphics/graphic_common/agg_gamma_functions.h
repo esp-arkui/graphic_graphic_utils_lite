@@ -18,7 +18,7 @@
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS
 {
     //===============================================================gamma_none
     struct gamma_none

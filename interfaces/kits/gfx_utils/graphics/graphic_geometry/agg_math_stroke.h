@@ -23,7 +23,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_math.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace agg
+namespace OHOS
 {
     //-------------------------------------------------------------line_cap_e
     enum line_cap_e

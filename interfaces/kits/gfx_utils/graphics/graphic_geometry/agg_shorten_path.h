@@ -19,7 +19,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace agg
+namespace OHOS
 {
 
     //===========================================================shorten_path
