@@ -141,21 +141,21 @@ namespace agg
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = x_hr * (image_subpixel_scale - y_hr);
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_y();
+                fg_ptr = (const value_type*)base_type::source().NextY();
                 weight = (image_subpixel_scale - x_hr) * y_hr;
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = x_hr * y_hr;
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;
@@ -470,7 +470,7 @@ namespace agg
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = (weight_array[x_hr] * 
                           weight_array[y_hr + image_subpixel_scale] + 
                           image_filter_scale / 2) >> 
@@ -480,7 +480,7 @@ namespace agg
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_y();
+                fg_ptr = (const value_type*)base_type::source().NextY();
                 weight = (weight_array[x_hr + image_subpixel_scale] * 
                           weight_array[y_hr] + 
                           image_filter_scale / 2) >> 
@@ -490,7 +490,7 @@ namespace agg
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = (weight_array[x_hr] * 
                           weight_array[y_hr] + 
                           image_filter_scale / 2) >> 
@@ -602,12 +602,12 @@ namespace agg
 
                         if(--x_count == 0) break;
                         x_hr  += image_subpixel_scale;
-                        fg_ptr = (const value_type*)base_type::source().next_x();
+                        fg_ptr = (const value_type*)base_type::source().NextX();
                     }
 
                     if(--y_count == 0) break;
                     y_hr  += image_subpixel_scale;
-                    fg_ptr = (const value_type*)base_type::source().next_y();
+                    fg_ptr = (const value_type*)base_type::source().NextY();
                 }
 
                 fg[0] = color_type::downshift(fg[0], image_filter_shift);
@@ -722,11 +722,11 @@ namespace agg
                         total_weight += weight;
                         x_hr  += base_type::m_rx_inv;
                         if(x_hr >= filter_scale) break;
-                        fg_ptr = (const value_type*)base_type::source().next_x();
+                        fg_ptr = (const value_type*)base_type::source().NextX();
                     }
                     y_hr += base_type::m_ry_inv;
                     if(y_hr >= filter_scale) break;
-                    fg_ptr = (const value_type*)base_type::source().next_y();
+                    fg_ptr = (const value_type*)base_type::source().NextY();
                 }
 
                 fg[0] /= total_weight;
@@ -847,11 +847,11 @@ namespace agg
                         total_weight += weight;
                         x_hr  += rx_inv;
                         if(x_hr >= filter_scale) break;
-                        fg_ptr = (const value_type*)base_type::source().next_x();
+                        fg_ptr = (const value_type*)base_type::source().NextX();
                     }
                     y_hr += ry_inv;
                     if(y_hr >= filter_scale) break;
-                    fg_ptr = (const value_type*)base_type::source().next_y();
+                    fg_ptr = (const value_type*)base_type::source().NextY();
                 }
 
                 fg[0] /= total_weight;

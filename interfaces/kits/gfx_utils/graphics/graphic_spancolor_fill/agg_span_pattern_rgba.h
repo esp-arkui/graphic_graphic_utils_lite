@@ -83,7 +83,7 @@ namespace agg
                     span->b = 0;
                     span->a = 255;
                 }
-                p = (const value_type*)m_src->next_x();
+                p = (const value_type*)m_src->NextX();
                 ++span;
             }
             while(--len);
