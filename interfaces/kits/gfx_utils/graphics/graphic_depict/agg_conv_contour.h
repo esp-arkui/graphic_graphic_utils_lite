@@ -22,7 +22,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_conv_adaptor_vcgen.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-----------------------------------------------------------conv_contour

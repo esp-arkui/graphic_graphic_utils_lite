@@ -17,7 +17,7 @@
 
 #include <gfx_utils/graphics/graphic_geometry/agg_line_aa_basics.h>
 
-namespace agg
+namespace OHOS
 {
     //-------------------------------------------------------------------------
     // The number of the octant is determined as a 3-bit value as follows:

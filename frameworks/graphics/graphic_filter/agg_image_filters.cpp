@@ -21,7 +21,7 @@
 #include "gfx_utils/graphics/graphic_filter/agg_image_filters.h"
 
 
-namespace agg
+namespace OHOS
 {
     //--------------------------------------------------------------------
     void image_filter_lut::realloc_lut(double radius)

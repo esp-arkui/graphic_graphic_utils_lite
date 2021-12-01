@@ -21,7 +21,7 @@
 #include "render/agg_rendering_buffer.h"
 
 
-namespace agg
+namespace OHOS
 {
 
     //--------------------------------------------------------------color_conv

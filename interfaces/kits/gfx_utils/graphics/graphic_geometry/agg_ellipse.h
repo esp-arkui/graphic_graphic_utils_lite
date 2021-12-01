@@ -23,7 +23,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include <cmath>
 
-namespace agg
+namespace OHOS
 {
 
     //----------------------------------------------------------------ellipse

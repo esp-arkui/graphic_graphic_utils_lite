@@ -23,7 +23,7 @@
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h"
 #include "agg_conv_adaptor_vcgen.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-------------------------------------------------------------conv_stroke

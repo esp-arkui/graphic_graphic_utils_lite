@@ -24,7 +24,7 @@
 #include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
 #include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-----------------------------------------------------------------------

@@ -19,7 +19,7 @@
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_shorten_path.h"
 
-namespace agg
+namespace OHOS
 {
 
     //------------------------------------------------------------------------

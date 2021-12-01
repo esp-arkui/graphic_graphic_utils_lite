@@ -22,7 +22,7 @@
 #include <gfx_utils/graphics/graphic_geometry/agg_arc.h>
 
 
-namespace agg
+namespace OHOS
 {
     //------------------------------------------------------------------------
     arc::arc(double x,  double y, 
