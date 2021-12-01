@@ -216,7 +216,7 @@ namespace agg
                                 m_blur_y = uround(v * double(image_subpixel_scale)); }
 
     protected:
-        AGG_INLINE void adjust_scale(int* rx, int* ry)
+        GRAPTHIC_INLINE void adjust_scale(int* rx, int* ry)
         {
             if(*rx < image_subpixel_scale) *rx = image_subpixel_scale;
             if(*ry < image_subpixel_scale) *ry = image_subpixel_scale;

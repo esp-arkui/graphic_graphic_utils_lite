@@ -212,12 +212,12 @@ namespace agg
         typedef T value_type;
         value_type r,g,b,a;
 
-        AGG_INLINE void clear() 
+        GRAPTHIC_INLINE void clear() 
         { 
             r = g = b = a = 0; 
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& v)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& v)
         {
             r += v.r;
             g += v.g;
@@ -225,7 +225,7 @@ namespace agg
             a += v.a;
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& v, unsigned k)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& v, unsigned k)
         {
             r += v.r * k;
             g += v.g * k;
@@ -233,7 +233,7 @@ namespace agg
             a += v.a * k;
         }
 
-        template<class ArgT> AGG_INLINE void sub(const ArgT& v)
+        template<class ArgT> GRAPTHIC_INLINE void sub(const ArgT& v)
         {
             r -= v.r;
             g -= v.g;
@@ -241,7 +241,7 @@ namespace agg
             a -= v.a;
         }
 
-        template<class ArgT> AGG_INLINE void calc_pix(ArgT& v, unsigned div)
+        template<class ArgT> GRAPTHIC_INLINE void calc_pix(ArgT& v, unsigned div)
         {
             typedef typename ArgT::value_type value_type;
             v.r = value_type(r / div);
@@ -251,7 +251,7 @@ namespace agg
         }
 
         template<class ArgT> 
-        AGG_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
+        GRAPTHIC_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
             v.r = value_type((r * mul) >> shr);
@@ -268,33 +268,33 @@ namespace agg
         typedef T value_type;
         value_type r,g,b;
 
-        AGG_INLINE void clear() 
+        GRAPTHIC_INLINE void clear() 
         { 
             r = g = b = 0; 
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& v)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& v)
         {
             r += v.r;
             g += v.g;
             b += v.b;
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& v, unsigned k)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& v, unsigned k)
         {
             r += v.r * k;
             g += v.g * k;
             b += v.b * k;
         }
 
-        template<class ArgT> AGG_INLINE void sub(const ArgT& v)
+        template<class ArgT> GRAPTHIC_INLINE void sub(const ArgT& v)
         {
             r -= v.r;
             g -= v.g;
             b -= v.b;
         }
 
-        template<class ArgT> AGG_INLINE void calc_pix(ArgT& v, unsigned div)
+        template<class ArgT> GRAPTHIC_INLINE void calc_pix(ArgT& v, unsigned div)
         {
             typedef typename ArgT::value_type value_type;
             v.r = value_type(r / div);
@@ -303,7 +303,7 @@ namespace agg
         }
 
         template<class ArgT> 
-        AGG_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
+        GRAPTHIC_INLINE void calc_pix(ArgT& v, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
             v.r = value_type((r * mul) >> shr);
@@ -319,34 +319,34 @@ namespace agg
         typedef T value_type;
         value_type v;
 
-        AGG_INLINE void clear() 
+        GRAPTHIC_INLINE void clear() 
         { 
             v = 0; 
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& a)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& a)
         {
             v += a.v;
         }
 
-        template<class ArgT> AGG_INLINE void add(const ArgT& a, unsigned k)
+        template<class ArgT> GRAPTHIC_INLINE void add(const ArgT& a, unsigned k)
         {
             v += a.v * k;
         }
 
-        template<class ArgT> AGG_INLINE void sub(const ArgT& a)
+        template<class ArgT> GRAPTHIC_INLINE void sub(const ArgT& a)
         {
             v -= a.v;
         }
 
-        template<class ArgT> AGG_INLINE void calc_pix(ArgT& a, unsigned div)
+        template<class ArgT> GRAPTHIC_INLINE void calc_pix(ArgT& a, unsigned div)
         {
             typedef typename ArgT::value_type value_type;
             a.v = value_type(v / div);
         }
 
         template<class ArgT> 
-        AGG_INLINE void calc_pix(ArgT& a, unsigned mul, unsigned shr)
+        GRAPTHIC_INLINE void calc_pix(ArgT& a, unsigned mul, unsigned shr)
         {
             typedef typename ArgT::value_type value_type;
             a.v = value_type((v * mul) >> shr);
@@ -1181,7 +1181,7 @@ namespace agg
         value_type r,g,b,a;
 
         template<class ColorT> 
-        AGG_INLINE void from_pix(const ColorT& c)
+        GRAPTHIC_INLINE void from_pix(const ColorT& c)
         {
             r = c.r;
             g = c.g;
@@ -1189,7 +1189,7 @@ namespace agg
             a = c.a;
         }
 
-        AGG_INLINE void calc(value_type b1, 
+        GRAPTHIC_INLINE void calc(value_type b1, 
                              value_type b2, 
                              value_type b3, 
                              value_type b4,
@@ -1205,7 +1205,7 @@ namespace agg
         }
 
         template<class ColorT> 
-        AGG_INLINE void to_pix(ColorT& c) const
+        GRAPTHIC_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;
             c.r = cv_type(r);
@@ -1225,14 +1225,14 @@ namespace agg
         value_type r,g,b;
 
         template<class ColorT> 
-        AGG_INLINE void from_pix(const ColorT& c)
+        GRAPTHIC_INLINE void from_pix(const ColorT& c)
         {
             r = c.r;
             g = c.g;
             b = c.b;
         }
 
-        AGG_INLINE void calc(value_type b1, 
+        GRAPTHIC_INLINE void calc(value_type b1, 
                              value_type b2, 
                              value_type b3, 
                              value_type b4,
@@ -1247,7 +1247,7 @@ namespace agg
         }
 
         template<class ColorT> 
-        AGG_INLINE void to_pix(ColorT& c) const
+        GRAPTHIC_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;
             c.r = cv_type(r);
@@ -1266,12 +1266,12 @@ namespace agg
         value_type v;
 
         template<class ColorT> 
-        AGG_INLINE void from_pix(const ColorT& c)
+        GRAPTHIC_INLINE void from_pix(const ColorT& c)
         {
             v = c.v;
         }
 
-        AGG_INLINE void calc(value_type b1, 
+        GRAPTHIC_INLINE void calc(value_type b1, 
                              value_type b2, 
                              value_type b3, 
                              value_type b4,
@@ -1284,7 +1284,7 @@ namespace agg
         }
 
         template<class ColorT> 
-        AGG_INLINE void to_pix(ColorT& c) const
+        GRAPTHIC_INLINE void to_pix(ColorT& c) const
         {
             typedef typename ColorT::value_type cv_type;
             c.v = cv_type(v);

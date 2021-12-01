@@ -27,7 +27,7 @@ namespace agg
         typedef ColorT color_type;
 
         //--------------------------------------------------------------------
-        AGG_INLINE color_type* allocate(unsigned span_len)
+        GRAPTHIC_INLINE color_type* allocate(unsigned span_len)
         {
             if(span_len > m_span.size())
             {
@@ -40,8 +40,8 @@ namespace agg
             return &m_span[0];
         }
 
-        AGG_INLINE color_type* span()               { return &m_span[0]; }
-        AGG_INLINE unsigned    max_span_len() const { return m_span.size(); }
+        GRAPTHIC_INLINE color_type* span()               { return &m_span[0]; }
+        GRAPTHIC_INLINE unsigned    max_span_len() const { return m_span.size(); }
 
     private:
         pod_array<color_type> m_span;

@@ -167,7 +167,7 @@ namespace agg
     {
         // Actually the same as radial. Just for compatibility
     public:
-        static AGG_INLINE int calculate(int x, int y, int)
+        static GRAPTHIC_INLINE int calculate(int x, int y, int)
         {
             return int(fast_sqrt(x*x + y*y));
         }
@@ -178,7 +178,7 @@ namespace agg
     class gradient_radial
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int)
+        static GRAPTHIC_INLINE int calculate(int x, int y, int)
         {
             return int(fast_sqrt(x*x + y*y));
         }
@@ -188,7 +188,7 @@ namespace agg
     class gradient_radial_d
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int)
+        static GRAPTHIC_INLINE int calculate(int x, int y, int)
         {
             return uround(std::sqrt(double(x)*double(x) + double(y)*double(y)));
         }
@@ -294,7 +294,7 @@ namespace agg
     class gradient_diamond
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int) 
+        static GRAPTHIC_INLINE int calculate(int x, int y, int) 
         { 
             int ax = std::abs(x);
             int ay = std::abs(y);
@@ -306,7 +306,7 @@ namespace agg
     class gradient_xy
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int d) 
+        static GRAPTHIC_INLINE int calculate(int x, int y, int d) 
         { 
             return std::abs(x) * std::abs(y) / d; 
         }
@@ -316,7 +316,7 @@ namespace agg
     class gradient_sqrt_xy
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int) 
+        static GRAPTHIC_INLINE int calculate(int x, int y, int) 
         { 
             return fast_sqrt(std::abs(x) * std::abs(y)); 
         }
@@ -326,7 +326,7 @@ namespace agg
     class gradient_conic
     {
     public:
-        static AGG_INLINE int calculate(int x, int y, int d) 
+        static GRAPTHIC_INLINE int calculate(int x, int y, int d) 
         { 
             return uround(std::fabs(std::atan2(double(y), double(x))) * double(d) / pi);
         }
@@ -339,7 +339,7 @@ namespace agg
         gradient_repeat_adaptor(const GradientF& gradient) : 
             m_gradient(&gradient) {}
 
-        AGG_INLINE int calculate(int x, int y, int d) const
+        GRAPTHIC_INLINE int calculate(int x, int y, int d) const
         {
             int ret = m_gradient->calculate(x, y, d) % d;
             if(ret < 0) ret += d;
@@ -357,7 +357,7 @@ namespace agg
         gradient_reflect_adaptor(const GradientF& gradient) : 
             m_gradient(&gradient) {}
 
-        AGG_INLINE int calculate(int x, int y, int d) const
+        GRAPTHIC_INLINE int calculate(int x, int y, int d) const
         {
             int d2 = d << 1;
             int ret = m_gradient->calculate(x, y, d) % d2;

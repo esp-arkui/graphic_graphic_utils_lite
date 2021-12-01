@@ -42,19 +42,19 @@ namespace agg
     };
 
     //------------------------------------------------------------------line_mr
-    AGG_INLINE int line_mr(int x) 
+    GRAPTHIC_INLINE int line_mr(int x) 
     { 
         return x >> (line_subpixel_shift - line_mr_subpixel_shift); 
     }
 
     //-------------------------------------------------------------------line_hr
-    AGG_INLINE int line_hr(int x) 
+    GRAPTHIC_INLINE int line_hr(int x) 
     { 
         return x << (line_subpixel_shift - line_mr_subpixel_shift); 
     }
 
     //---------------------------------------------------------------line_dbl_hr
-    AGG_INLINE int line_dbl_hr(int x) 
+    GRAPTHIC_INLINE int line_dbl_hr(int x) 
     { 
         return x << line_subpixel_shift;
     }
@@ -62,7 +62,7 @@ namespace agg
     //---------------------------------------------------------------line_coord
     struct line_coord
     {
-        AGG_INLINE static int conv(double x)
+        GRAPTHIC_INLINE static int conv(double x)
         {
             return iround(x * line_subpixel_scale);
         }
@@ -71,7 +71,7 @@ namespace agg
     //-----------------------------------------------------------line_coord_sat
     struct line_coord_sat
     {
-        AGG_INLINE static int conv(double x)
+        GRAPTHIC_INLINE static int conv(double x)
         {
             return saturation<line_max_coord>::iround(x * line_subpixel_scale);
         }

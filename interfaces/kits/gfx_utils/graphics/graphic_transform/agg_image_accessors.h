@@ -1,379 +1,377 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-
-#ifndef AGG_IMAGE_ACCESSORS_INCLUDED
-#define AGG_IMAGE_ACCESSORS_INCLUDED
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#ifndef GRAPHIC_IMAGE_ACCESSORS_INCLUDED
+#define GRAPHIC_IMAGE_ACCESSORS_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace agg
 {
 
-    //----------------------------------------------------ImageAccessorClone
     template<class PixelFormat> class ImageAccessorClone
     {
     public:
         typedef PixelFormat   PixelFormatType;
-        typedef typename PixelFormatType::color_type color_type;
-        typedef typename PixelFormatType::order_type order_type;
-        typedef typename PixelFormatType::value_type value_type;
-        enum pix_width_e { pix_width = PixelFormatType::pix_width };
+        typedef typename PixelFormatType::colorType colorType;
+        typedef typename PixelFormatType::orderType orderType;
+        typedef typename PixelFormatType::valueType valueType;
+        enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
 
         ImageAccessorClone() {}
-        explicit ImageAccessorClone(PixelFormatType& pixf) : 
-            m_pixf(&pixf) 
+        explicit ImageAccessorClone(PixelFormatType& pixFormat) : 
+            pixFormat_(&pixFormat) 
         {}
 
-        void Attach(PixelFormatType& pixf)
+        void Attach(PixelFormatType& pixFormat)
         {
-            m_pixf = &pixf;
+            pixFormat_ = &pixFormat;
         }
 
     private:
-        AGG_INLINE const int8u* Pixel() const
+        GRAPTHIC_INLINE const int8u* Pixel() const
         {
-            int x = m_x;
-            int y = m_y;
-            if(x < 0) x = 0;
-            if(y < 0) y = 0;
-
-            if (x >= (int)m_pixf->width()) {
-                x = m_pixf->width() - 1;
+            int x = x_;
+            int y = y_;
+            if(x < 0) {
+                x = 0;
             }
-            if (y >= (int)m_pixf->height()) {
-                y = m_pixf->height() - 1;
+            if (x >= (int)pixFormat_->Width()) {
+                x = pixFormat_->Width() - 1;
             }
-
-            return m_pixf->pix_ptr(x, y);
+            if(y < 0) {
+                y = 0;
+            }
+            if (y >= (int)pixFormat_->Height()) {
+                y = pixFormat_->Height() - 1;
+            }
+            return pixFormat_->pixPtr(x, y);
         }
 
     public:
-        AGG_INLINE const int8u* Span(int x, int y, unsigned len)
+        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
         {
-            m_x = m_x0 = x;
-            m_y = y;
-            if(y >= 0 && y < (int)m_pixf->height() &&
-               x >= 0 && x+len <= (int)m_pixf->width())
-            {
-                return m_pix_ptr = m_pixf->pix_ptr(x, y);
+            x_ = x0_ = x;
+            y_ = y;
+            if(x >= 0 && x+len <= (int)pixFormat_->Width() &&
+               y >= 0 && y < (int)pixFormat_->Height() ) {
+                return pixPtr_ = pixFormat_->pixPtr(x, y);
             }
-            m_pix_ptr = 0;
+            pixPtr_ = 0;
             return Pixel();
         }
 
-        AGG_INLINE const int8u* NextX()
+        GRAPTHIC_INLINE const int8u* NextX()
         {
-            if(m_pix_ptr) return m_pix_ptr += pix_width;
-            ++m_x;
+            if(pixPtr_) {
+                return pixPtr_ += PIXWIDTH;
+            }
+            ++x_;
             return Pixel();
         }
 
-        AGG_INLINE const int8u* NextY()
+        GRAPTHIC_INLINE const int8u* NextY()
         {
-            ++m_y;
-            m_x = m_x0;
-            if(m_pix_ptr && 
-               m_y >= 0 && m_y < (int)m_pixf->height())
-            {
-                return m_pix_ptr = m_pixf->pix_ptr(m_x, m_y);
+            ++y_;
+            x_ = x0_;
+            if(pixPtr_ != 0 && 
+               y_ >= 0 && y_ < (int)pixFormat_->Height()){
+                return pixPtr_ = pixFormat_->pixPtr(x_, y_);
             }
-            m_pix_ptr = 0;
+            pixPtr_ = 0;
             return Pixel();
         }
 
     private:
-        const PixelFormatType* m_pixf;
-        int                m_x, m_x0, m_y;
-        const int8u*       m_pix_ptr;
+        const PixelFormatType* pixFormat_;
+        int                x_, x0_, y_;
+        const int8u*       pixPtr_;
     };
 
-
-
-//----------------------------------------------------ImageAccessorClone
-template<class PixelFormat> class image_accessor_norepeat
+template<class PixelFormat> class ImageAccessorNoRepeat
 {
 public:
     typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::color_type color_type;
-    typedef typename PixelFormatType::order_type order_type;
-    typedef typename PixelFormatType::value_type value_type;
-    enum pix_width_e { pix_width = PixelFormatType::pix_width };
+    typedef typename PixelFormatType::colorType colorType;
+    typedef typename PixelFormatType::orderType orderType;
+    typedef typename PixelFormatType::valueType valueType;
+    enum PixWidth { 
+        PIXWIDTH = PixelFormatType::pixWidth 
+    };
 
-    image_accessor_norepeat() {}
-    explicit image_accessor_norepeat(PixelFormatType& pixf) :
-        m_pixf(&pixf)
+    ImageAccessorNoRepeat() {}
+    explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat) :
+        pixFormat_(&pixFormat)
     {}
 
-    void Attach(PixelFormatType& pixf)
+    void Attach(PixelFormatType& pixFormat)
     {
-        m_pixf = &pixf;
+        pixFormat_ = &pixFormat;
     }
 
 private:
-    AGG_INLINE const int8u* Pixel() const
+    GRAPTHIC_INLINE const int8u* Pixel() const
     {
-        int x = m_x;
-        int y = m_y;
-        if(x < 0) x = 0;
-        if(y < 0) y = 0;
-
-        if (x >= (int)m_pixf->width()) {
-            x = m_pixf->width() - 1;
+        int x = x_;
+        int y = y_;
+        if(x < 0) {
+            x = 0;
+        }
+        if (x >= (int)pixFormat_->Width()) {
+            x = pixFormat_->Width() - 1;
             return NULL;
         }
-        if (y >= (int)m_pixf->height()) {
-            y = m_pixf->height() - 1;
+        if(y < 0) {
+            y = 0;
+        }
+        if (y >= (int)pixFormat_->Height()) {
+            y = pixFormat_->Height() - 1;
             return NULL;
         }
 
-        return m_pixf->pix_ptr(x, y);
+        return pixFormat_->pixPtr(x, y);
     }
 
 public:
-    AGG_INLINE const int8u* Span(int x, int y, unsigned len)
+    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
     {
-        m_x = m_x0 = x;
-        m_y = y;
-        if(y >= 0 && y < (int)m_pixf->height() &&
-           x >= 0 && x+len <= (int)m_pixf->width())
-        {
-            return m_pix_ptr = m_pixf->pix_ptr(x, y);
+        x_ = x0_ = x;
+        y_ = y;
+        if(x >= 0 && x+len <= (int)pixFormat_->Width() &&
+           y >= 0 && y < (int)pixFormat_->Height()) {
+            return pixPtr_ = pixFormat_->pixPtr(x, y);
         }
-        m_pix_ptr = 0;
+        pixPtr_ = 0;
         return Pixel();
     }
 
-    AGG_INLINE const int8u* NextX()
+    GRAPTHIC_INLINE const int8u* NextX()
     {
-        if(m_pix_ptr) return m_pix_ptr += pix_width;
-        ++m_x;
+        if(pixPtr_ != 0) {
+            return pixPtr_ += PIXWIDTH;
+        }
+        ++x_;
         return Pixel();
     }
 
-    AGG_INLINE const int8u* NextY()
+    GRAPTHIC_INLINE const int8u* NextY()
     {
-        ++m_y;
-        m_x = m_x0;
-        if(m_pix_ptr &&
-           m_y >= 0 && m_y < (int)m_pixf->height())
-        {
-            return m_pix_ptr = m_pixf->pix_ptr(m_x, m_y);
+        ++y_;
+        x_ = x0_;
+        if(pixPtr_ != 0 &&
+           y_ >= 0 && y_ < (int)pixFormat_->Height()) {
+            return pixPtr_ = pixFormat_->pixPtr(x_, y_);
         }
-        m_pix_ptr = 0;
+        pixPtr_ = 0;
         return Pixel();
     }
 
 private:
-    const PixelFormatType* m_pixf;
-    int                m_x, m_x0, m_y;
-    const int8u*       m_pix_ptr;
+    const PixelFormatType* pixFormat_;
+    int                x_, x0_, y_;
+    const int8u*       pixPtr_;
 };
 
 
-
-    //-----------------------------------------------------image_accessor_wrap
-    template<class PixelFormat, class WrapX, class WrapY> class image_accessor_wrap
+    template<class PixelFormat, class WrapX, class WrapY> class ImageAccessorWrap
     {
     public:
         typedef PixelFormat   PixelFormatType;
-        typedef typename PixelFormatType::color_type color_type;
-        typedef typename PixelFormatType::order_type order_type;
-        typedef typename PixelFormatType::value_type value_type;
-        enum pix_width_e { pix_width = PixelFormatType::pix_width };
+        typedef typename PixelFormatType::colorType colorType;
+        typedef typename PixelFormatType::orderType orderType;
+        typedef typename PixelFormatType::valueType valueType;
+        enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
 
-        image_accessor_wrap() {}
-        explicit image_accessor_wrap(PixelFormatType& pixf) : 
-            m_pixf(&pixf), 
-            m_wrap_x(pixf.width()), 
-            m_wrap_y(pixf.height())
+        ImageAccessorWrap() {}
+        explicit ImageAccessorWrap(PixelFormatType& pixFormat) : 
+            pixFormat_(&pixFormat), 
+            wrapX_(pixFormat.Width()), 
+            wrapY_(pixFormat.Height())
         {}
 
-        void Attach(PixelFormatType& pixf)
+        void Attach(PixelFormatType& pixFormat)
         {
-            m_pixf = &pixf;
+            pixFormat_ = &pixFormat;
         }
 
-        AGG_INLINE const int8u* Span(int x, int y, unsigned)
+        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
         {
-            m_x = x;
-            m_row_ptr = m_pixf->pix_ptr(0, m_wrap_y(y));
-            return m_row_ptr + m_wrap_x(x) * pix_width;
+            x_ = x;
+            rowPtr_ = pixFormat_->pixPtr(0, wrapY_(y));
+            return rowPtr_ + wrapX_(x) * PIXWIDTH;
         }
 
-        AGG_INLINE const int8u* NextX()
+        GRAPTHIC_INLINE const int8u* NextX()
         {
-            int x = ++m_wrap_x;
-            return m_row_ptr + x * pix_width;
+            int x = ++wrapX_;
+            return rowPtr_ + x * PIXWIDTH;
         }
 
-        AGG_INLINE const int8u* NextY()
+        GRAPTHIC_INLINE const int8u* NextY()
         {
-            m_row_ptr = m_pixf->pix_ptr(0, ++m_wrap_y);
-            return m_row_ptr + m_wrap_x(m_x) * pix_width;
+            rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
+            return rowPtr_ + wrapX_(x_) * PIXWIDTH;
         }
 
     private:
-        const PixelFormatType* m_pixf;
-        const int8u*       m_row_ptr;
-        int                m_x;
-        WrapX              m_wrap_x;
-        WrapY              m_wrap_y;
+        const PixelFormatType* pixFormat_;
+        const int8u*       rowPtr_;
+        int                x_;
+        WrapX              wrapX_;
+        WrapY              wrapY_;
     };
 
 
 
-
-//----------------------------------------------------image_accessor_repeat_x
-template<class PixelFormat, class WrapX> class image_accessor_repeat_x
+template<class PixelFormat, class WrapX> class ImageAccessorRepeatX
 {
 public:
     typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::color_type color_type;
-    typedef typename PixelFormatType::order_type order_type;
-    typedef typename PixelFormatType::value_type value_type;
-    enum pix_width_e { pix_width = PixelFormatType::pix_width };
+    typedef typename PixelFormatType::colorType colorType;
+    typedef typename PixelFormatType::orderType orderType;
+    typedef typename PixelFormatType::valueType valueType;
+    enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
 
-    image_accessor_repeat_x() {}
-    explicit image_accessor_repeat_x(PixelFormatType& pixf) :
-        m_pixf(&pixf),
-        m_wrap_x(pixf.width())
+    ImageAccessorRepeatX() {}
+    explicit ImageAccessorRepeatX(PixelFormatType& pixFormat) :
+        pixFormat_(&pixFormat),
+        wrapX_(pixFormat.Width())
     {}
 
-    void Attach(PixelFormatType& pixf)
+    void Attach(PixelFormatType& pixFormat)
     {
-        m_pixf = &pixf;
+        pixFormat_ = &pixFormat;
     }
 
-    AGG_INLINE const int8u* Span(int x, int y, unsigned len)
+    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
     {
-        m_x = x;
-        m_y = y;
-        if (y >= (int)m_pixf->height()){
-            y = m_pixf->height() - 1;
+        x_ = x;
+        y_ = y;
+        if (y >= (int)pixFormat_->Height()){
+            y = pixFormat_->Height() - 1;
             return NULL;
         }
-        m_row_ptr = m_pixf->pix_ptr(0, y);
-        return m_row_ptr + m_wrap_x(x) * pix_width;
+        rowPtr_ = pixFormat_->pixPtr(0, y);
+        return rowPtr_ + wrapX_(x) * PIXWIDTH;
     }
 
-    AGG_INLINE const int8u* NextX()
+    GRAPTHIC_INLINE const int8u* NextX()
     {
-        if (m_y >= (int)m_pixf->height()) {
+        if (y_ >= (int)pixFormat_->Height()) {
            return NULL;
        }
-        int x = ++m_wrap_x;
-        return m_row_ptr + x * pix_width;
+        int x = ++wrapX_;
+        return rowPtr_ + x * PIXWIDTH;
     }
 
-    AGG_INLINE const int8u* NextY()
+    GRAPTHIC_INLINE const int8u* NextY()
     {
-        m_row_ptr = m_pixf->pix_ptr(0, m_y);
-        return m_row_ptr + m_wrap_x(m_x) * pix_width;
+        rowPtr_ = pixFormat_->pixPtr(0, y_);
+        return rowPtr_ + wrapX_(x_) * PIXWIDTH;
 
     }
 
 private:
-    const PixelFormatType* m_pixf;
-    const int8u* m_row_ptr;
-    int                m_x;
-    int                m_y;
-    WrapX              m_wrap_x;
+    const PixelFormatType*  pixFormat_;
+    const int8u*            rowPtr_;
+    int                     x_;
+    int                     y_;
+    WrapX                   wrapX_;
 };
 
-////-----------------------------------------------------image_accessor_wrap_y
-template<class PixelFormat, class WrapY> class image_accessor_repeat_y
+template<class PixelFormat, class WrapY> class ImageAccessorRepeatY
 {
 public:
     typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::color_type color_type;
-    typedef typename PixelFormatType::order_type order_type;
-    typedef typename PixelFormatType::value_type value_type;
-    enum pix_width_e { pix_width = PixelFormatType::pix_width };
+    typedef typename PixelFormatType::colorType colorType;
+    typedef typename PixelFormatType::orderType orderType;
+    typedef typename PixelFormatType::valueType valueType;
+    enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
 
-    image_accessor_repeat_y() {}
-    explicit image_accessor_repeat_y(PixelFormatType& pixf) :
-        m_pixf(&pixf),
-        m_wrap_y(pixf.height())
+    ImageAccessorRepeatY() {}
+    explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
+        pixFormat_(&pixFormat),
+        wrapY_(pixFormat.Height())
     {}
 
-    void Attach(PixelFormatType& pixf)
+    void Attach(PixelFormatType& pixFormat)
     {
-        m_pixf = &pixf;
+        pixFormat_ = &pixFormat;
     }
 
-    AGG_INLINE const int8u* Span(int x, int y, unsigned)
+    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
     {
-        m_x = x;
-        if (x >= (int)m_pixf->width()){
-            x = m_pixf->width() - 1;
+        x_ = x;
+        if (x >= (int)pixFormat_->Width()){
+            x = pixFormat_->Width() - 1;
         return NULL;
         }
-        m_row_ptr = m_pixf->pix_ptr(0, m_wrap_y(y));
-        return m_row_ptr + x * pix_width;
+        rowPtr_ = pixFormat_->pixPtr(0, wrapY_(y));
+        return rowPtr_ + x * PIXWIDTH;
     }
 
-    AGG_INLINE const int8u* NextX()
+    GRAPTHIC_INLINE const int8u* NextX()
     {
-        int x = ++m_x;
-        if (x >= (int)m_pixf->width()) {
-            x = m_pixf->width() - 1;
+        int x = ++x_;
+        if (x >= (int)pixFormat_->Width()) {
+            x = pixFormat_->Width() - 1;
             return NULL;
         }
-        return m_row_ptr + x * pix_width;
+        return rowPtr_ + x * PIXWIDTH;
     }
 
-    AGG_INLINE const int8u* NextY()
+    GRAPTHIC_INLINE const int8u* NextY()
     {
-        m_row_ptr = m_pixf->pix_ptr(0, ++m_wrap_y);
-        return m_row_ptr + m_x * pix_width;
+        rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
+        return rowPtr_ + x_ * PIXWIDTH;
     }
 
 private:
-    const PixelFormatType* m_pixf;
-    const int8u* m_row_ptr;
-    int                m_x;
-    WrapY              m_wrap_y;
+    const PixelFormatType*  pixFormat_;
+    const int8u*            rowPtr_;
+    int                     x_;
+    WrapY                   wrapY_;
 };
 
 
-    //--------------------------------------------------------wrap_mode_repeat
-    class wrap_mode_repeat
+    class WrapModeRepeat
     {
     public:
-        wrap_mode_repeat() {}
-        wrap_mode_repeat(unsigned size) : 
-            m_size(size), 
-            m_add(size * (0x3FFFFFFF / size)),
-            m_value(0)
+        WrapModeRepeat() {}
+        WrapModeRepeat(unsigned size) : 
+            size_(size), 
+            add_(size * (0x3FFFFFFF / size)),
+            value_(0)
         {}
 
-        AGG_INLINE unsigned operator() (int v)
+        GRAPTHIC_INLINE unsigned operator() (int v)
         { 
-            return m_value = (unsigned(v) + m_add) % m_size; 
+            return value_ = (unsigned(v) + add_) % size_; 
         }
 
-        AGG_INLINE unsigned operator++ ()
+        GRAPTHIC_INLINE unsigned operator++ ()
         {
-            ++m_value;
-            if(m_value >= m_size) m_value = 0;
-            return m_value;
+            ++value_;
+            if(value_ >= size_) {
+                value_ = 0;
+            }
+            return value_;
         }
     private:
-        unsigned m_size;
-        unsigned m_add;
-        unsigned m_value;
+        unsigned size_;
+        unsigned add_;
+        unsigned value_;
     };
 
 

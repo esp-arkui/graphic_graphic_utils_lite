@@ -93,7 +93,7 @@ namespace agg
                        double len2);
 
     private:
-        AGG_INLINE void add_vertex(VertexConsumer& vc, double x, double y)
+        GRAPTHIC_INLINE void add_vertex(VertexConsumer& vc, double x, double y)
         {
             vc.add(coord_type(x, y));
         }
