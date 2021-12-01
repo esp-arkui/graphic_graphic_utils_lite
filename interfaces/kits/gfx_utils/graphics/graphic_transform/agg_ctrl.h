@@ -51,7 +51,7 @@ namespace agg
         virtual bool on_arrow_keys(bool left, bool right, bool down, bool up) = 0;
 
         //--------------------------------------------------------------------
-        void transform(const trans_affine& mtx) { m_mtx = &mtx; }
+        void transform(const TransAffine& mtx) { m_mtx = &mtx; }
         void no_transform() { m_mtx = 0; }
 
         //--------------------------------------------------------------------
@@ -83,7 +83,7 @@ namespace agg
 
     private:
         bool m_flip_y;
-        const trans_affine* m_mtx;
+        const TransAffine* m_mtx;
     };
 
 

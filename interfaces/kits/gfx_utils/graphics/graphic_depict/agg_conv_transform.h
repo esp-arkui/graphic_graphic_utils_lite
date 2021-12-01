@@ -26,7 +26,7 @@ namespace agg
 {
 
     //----------------------------------------------------------conv_transform
-    template<class VertexSource, class Transformer=trans_affine> class conv_transform
+    template<class VertexSource, class Transformer=TransAffine> class conv_transform
     {
     public:
         conv_transform(VertexSource& source, Transformer& tr) :

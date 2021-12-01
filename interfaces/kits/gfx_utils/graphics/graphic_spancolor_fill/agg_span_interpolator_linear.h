@@ -24,7 +24,7 @@ namespace agg
 {
 
     //================================================span_interpolator_linear
-    template<class Transformer = trans_affine, unsigned SubpixelShift = 8> 
+    template<class Transformer = TransAffine, unsigned SubpixelShift = 8> 
     class span_interpolator_linear
     {
     public:
@@ -106,7 +106,7 @@ namespace agg
 
 
     //=====================================span_interpolator_linear_subdiv
-    template<class Transformer = trans_affine, unsigned SubpixelShift = 8> 
+    template<class Transformer = TransAffine, unsigned SubpixelShift = 8> 
     class span_interpolator_linear_subdiv
     {
     public:

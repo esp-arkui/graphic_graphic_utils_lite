@@ -1,21 +1,17 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Affine transformation classes.
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef AGG_TRANS_AFFINE_INCLUDED
 #define AGG_TRANS_AFFINE_INCLUDED
 
@@ -24,9 +20,9 @@
 
 namespace agg
 {
-    const double affine_epsilon = 1e-14; 
+    const double affineEpsilon = 1e-14; 
 
-    //============================================================trans_affine
+    //============================================================TransAffine
     //
     // See Implementation agg_trans_affine.cpp
     //
@@ -70,7 +66,7 @@ namespace agg
     // So, how to use it? Very easy - literally as it's shown above. Not quite,
     // let us write a correct example:
     //
-    // agg::trans_affine m;
+    // agg::TransAffine m;
     // m *= agg::trans_affine_rotation(30.0 * 3.1415926 / 180.0);
     // m *= agg::trans_affine_scaling(2.0, 1.5);
     // m *= agg::trans_affine_translation(100.0, 100.0);
@@ -84,45 +80,45 @@ namespace agg
     // m *= agg::trans_affine_rotation(30.0 * 3.1415926 / 180.0);  // rotate
     // m *= agg::trans_affine_translation(100.0, 100.0);           // move back to (100,100)
     //----------------------------------------------------------------------
-    struct trans_affine
+    struct TransAffine
     {
         double sx, shy, shx, sy, tx, ty;
 
         //------------------------------------------ Construction
         // Identity matrix
-        trans_affine() :
+        TransAffine() :
             sx(1.0), shy(0.0), shx(0.0), sy(1.0), tx(0.0), ty(0.0)
         {}
 
         // Custom matrix. Usually used in derived classes
-        trans_affine(double v0, double v1, double v2, 
+        TransAffine(double v0, double v1, double v2, 
                      double v3, double v4, double v5) :
             sx(v0), shy(v1), shx(v2), sy(v3), tx(v4), ty(v5)
         {}
 
         // Custom matrix from m[6]
-        explicit trans_affine(const double* m) :
+        explicit TransAffine(const double* m) :
             sx(m[0]), shy(m[1]), shx(m[2]), sy(m[3]), tx(m[4]), ty(m[5])
         {}
 
         // Rectangle to a parallelogram.
-        trans_affine(double x1, double y1, double x2, double y2, 
+        TransAffine(double x1, double y1, double x2, double y2, 
                      const double* parl)
         {
-            rect_to_parl(x1, y1, x2, y2, parl);
+            RectToParl(x1, y1, x2, y2, parl);
         }
 
         // Parallelogram to a rectangle.
-        trans_affine(const double* parl, 
+        TransAffine(const double* parl, 
                      double x1, double y1, double x2, double y2)
         {
             parl_to_rect(parl, x1, y1, x2, y2);
         }
 
         // Arbitrary parallelogram transformation.
-        trans_affine(const double* src, const double* dst)
+        TransAffine(const double* src, const double* dst)
         {
-            parl_to_parl(src, dst);
+            ParlToParl(src, dst);
         }
 
         //---------------------------------- Parellelogram transformations
@@ -136,50 +132,50 @@ namespace agg
         //      /                 /
         //     /(x1,y1)   (x2,y2)/
         //    *-----------------*
-        const trans_affine& parl_to_parl(const double* src, 
+        const TransAffine& ParlToParl(const double* src, 
                                          const double* dst);
 
-        const trans_affine& rect_to_parl(double x1, double y1, 
+        const TransAffine& RectToParl(double x1, double y1, 
                                          double x2, double y2, 
                                          const double* parl);
 
-        const trans_affine& parl_to_rect(const double* parl, 
+        const TransAffine& parl_to_rect(const double* parl, 
                                          double x1, double y1, 
                                          double x2, double y2);
 
 
         //------------------------------------------ Operations
         // Reset - load an identity matrix
-        const trans_affine& reset();
+        const TransAffine& reset();
 
         // Direct transformations operations
-        const trans_affine& translate(double x, double y);
-        const trans_affine& rotate(double a);
-        const trans_affine& scale(double s);
-        const trans_affine& scale(double x, double y);
+        const TransAffine& translate(double x, double y);
+        const TransAffine& rotate(double a);
+        const TransAffine& scale(double s);
+        const TransAffine& scale(double x, double y);
 
         // Multiply matrix to another one
-        const trans_affine& multiply(const trans_affine& m);
+        const TransAffine& multiply(const TransAffine& m);
 
         // Multiply "m" to "this" and assign the result to "this"
-        const trans_affine& premultiply(const trans_affine& m);
+        const TransAffine& premultiply(const TransAffine& m);
 
         // Multiply matrix to inverse of another one
-        const trans_affine& multiply_inv(const trans_affine& m);
+        const TransAffine& multiply_inv(const TransAffine& m);
 
         // Multiply inverse of "m" to "this" and assign the result to "this"
-        const trans_affine& premultiply_inv(const trans_affine& m);
+        const TransAffine& premultiply_inv(const TransAffine& m);
 
         // Invert matrix. Do not try to invert degenerate matrices, 
         // there's no check for validity. If you set scale to 0 and 
         // then try to invert matrix, expect unpredictable result.
-        const trans_affine& invert();
+        const TransAffine& invert();
 
         // Mirroring around X
-        const trans_affine& flip_x();
+        const TransAffine& flip_x();
 
         // Mirroring around Y
-        const trans_affine& flip_y();
+        const TransAffine& flip_y();
 
         //------------------------------------------- Load/Store
         // Store matrix to an array [6] of double
@@ -189,7 +185,7 @@ namespace agg
         }
 
         // Load matrix from an array [6] of double
-        const trans_affine& load_from(const double* m)
+        const TransAffine& load_from(const double* m)
         {
             sx = *m++; shy = *m++; shx = *m++; sy = *m++; tx = *m++;  ty = *m++;
             return *this;
@@ -198,48 +194,48 @@ namespace agg
         //------------------------------------------- Operators
         
         // Multiply the matrix by another one
-        const trans_affine& operator *= (const trans_affine& m)
+        const TransAffine& operator *= (const TransAffine& m)
         {
             return multiply(m);
         }
 
         // Multiply the matrix by inverse of another one
-        const trans_affine& operator /= (const trans_affine& m)
+        const TransAffine& operator /= (const TransAffine& m)
         {
             return multiply_inv(m);
         }
 
         // Multiply the matrix by another one and return
         // the result in a separete matrix.
-        trans_affine operator * (const trans_affine& m) const
+        TransAffine operator * (const TransAffine& m) const
         {
-            return trans_affine(*this).multiply(m);
+            return TransAffine(*this).multiply(m);
         }
 
         // Multiply the matrix by inverse of another one 
         // and return the result in a separete matrix.
-        trans_affine operator / (const trans_affine& m) const
+        TransAffine operator / (const TransAffine& m) const
         {
-            return trans_affine(*this).multiply_inv(m);
+            return TransAffine(*this).multiply_inv(m);
         }
 
         // Calculate and return the inverse matrix
-        trans_affine operator ~ () const
+        TransAffine operator ~ () const
         {
-            trans_affine ret = *this;
+            TransAffine ret = *this;
             return ret.invert();
         }
 
         // Equal operator with default epsilon
-        bool operator == (const trans_affine& m) const
+        bool operator == (const TransAffine& m) const
         {
-            return is_equal(m, affine_epsilon);
+            return is_equal(m, affineEpsilon);
         }
 
         // Not Equal operator with default epsilon
-        bool operator != (const trans_affine& m) const
+        bool operator != (const TransAffine& m) const
         {
-            return !is_equal(m, affine_epsilon);
+            return !is_equal(m, affineEpsilon);
         }
 
         //-------------------------------------------- Transformations
@@ -273,13 +269,13 @@ namespace agg
         double scale() const;
 
         // Check to see if the matrix is not degenerate
-        bool is_valid(double epsilon = affine_epsilon) const;
+        bool is_valid(double epsilon = affineEpsilon) const;
 
         // Check to see if it's an identity matrix
-        bool is_identity(double epsilon = affine_epsilon) const;
+        bool is_identity(double epsilon = affineEpsilon) const;
 
         // Check to see if two matrices are equal
-        bool is_equal(const trans_affine& m, double epsilon = affine_epsilon) const;
+        bool is_equal(const TransAffine& m, double epsilon = affineEpsilon) const;
 
         // Determine the major parameters. Use with caution considering 
         // possible degenerate cases.
@@ -290,7 +286,7 @@ namespace agg
     };
 
     //------------------------------------------------------------------------
-    inline void trans_affine::transform(double* x, double* y) const
+    inline void TransAffine::transform(double* x, double* y) const
     {
         double tmp = *x;
         *x = tmp * sx  + *y * shx + tx;
@@ -298,7 +294,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline void trans_affine::transform_2x2(double* x, double* y) const
+    inline void TransAffine::transform_2x2(double* x, double* y) const
     {
         double tmp = *x;
         *x = tmp * sx  + *y * shx;
@@ -306,7 +302,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline void trans_affine::inverse_transform(double* x, double* y) const
+    inline void TransAffine::inverse_transform(double* x, double* y) const
     {
         double d = determinant_reciprocal();
         double a = (*x - tx) * d;
@@ -316,7 +312,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline double trans_affine::scale() const
+    inline double TransAffine::scale() const
     {
         double x = 0.707106781 * sx  + 0.707106781 * shx;
         double y = 0.707106781 * shy + 0.707106781 * sy;
@@ -324,7 +320,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::translate(double x, double y) 
+    inline const TransAffine& TransAffine::translate(double x, double y) 
     { 
         tx += x;
         ty += y; 
@@ -332,7 +328,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::rotate(double a) 
+    inline const TransAffine& TransAffine::rotate(double a) 
     {
         double ca = std::cos(a); 
         double sa = std::sin(a);
@@ -349,7 +345,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::scale(double x, double y) 
+    inline const TransAffine& TransAffine::scale(double x, double y) 
     {
         double mm0 = x; // Possible hint for the optimizer
         double mm3 = y; 
@@ -363,7 +359,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::scale(double s) 
+    inline const TransAffine& TransAffine::scale(double s) 
     {
         double m = s; // Possible hint for the optimizer
         sx  *= m;
@@ -376,30 +372,30 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::premultiply(const trans_affine& m)
+    inline const TransAffine& TransAffine::premultiply(const TransAffine& m)
     {
-        trans_affine t = m;
+        TransAffine t = m;
         return *this = t.multiply(*this);
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::multiply_inv(const trans_affine& m)
+    inline const TransAffine& TransAffine::multiply_inv(const TransAffine& m)
     {
-        trans_affine t = m;
+        TransAffine t = m;
         t.invert();
         return multiply(t);
     }
 
     //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::premultiply_inv(const trans_affine& m)
+    inline const TransAffine& TransAffine::premultiply_inv(const TransAffine& m)
     {
-        trans_affine t = m;
+        TransAffine t = m;
         t.invert();
         return *this = t.multiply(*this);
     }
 
     //------------------------------------------------------------------------
-    inline void trans_affine::scaling_abs(double* x, double* y) const
+    inline void TransAffine::scaling_abs(double* x, double* y) const
     {
         // Used to calculate scaling coefficients in image resampling. 
         // When there is considerable shear this method gives us much
@@ -413,45 +409,45 @@ namespace agg
     // There's no harm because the performance of sin()/cos() is very good on all
     // modern processors. Besides, this operation is not going to be invoked too 
     // often.
-    class trans_affine_rotation : public trans_affine
+    class trans_affine_rotation : public TransAffine
     {
     public:
         trans_affine_rotation(double a) : 
-          trans_affine(std::cos(a), std::sin(a), -std::sin(a), std::cos(a), 0.0, 0.0)
+          TransAffine(std::cos(a), std::sin(a), -std::sin(a), std::cos(a), 0.0, 0.0)
         {}
     };
 
     //====================================================trans_affine_scaling
     // Scaling matrix. x, y - scale coefficients by X and Y respectively
-    class trans_affine_scaling : public trans_affine
+    class trans_affine_scaling : public TransAffine
     {
     public:
         trans_affine_scaling(double x, double y) : 
-          trans_affine(x, 0.0, 0.0, y, 0.0, 0.0)
+          TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
         {}
 
         trans_affine_scaling(double s) : 
-          trans_affine(s, 0.0, 0.0, s, 0.0, 0.0)
+          TransAffine(s, 0.0, 0.0, s, 0.0, 0.0)
         {}
     };
 
     //================================================trans_affine_translation
     // Translation matrix
-    class trans_affine_translation : public trans_affine
+    class trans_affine_translation : public TransAffine
     {
     public:
         trans_affine_translation(double x, double y) : 
-          trans_affine(1.0, 0.0, 0.0, 1.0, x, y)
+          TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
         {}
     };
 
     //====================================================trans_affine_skewing
     // Sckewing (shear) matrix
-    class trans_affine_skewing : public trans_affine
+    class trans_affine_skewing : public TransAffine
     {
     public:
         trans_affine_skewing(double x, double y) : 
-          trans_affine(1.0, std::tan(y), std::tan(x), 1.0, 0.0, 0.0)
+          TransAffine(1.0, std::tan(y), std::tan(x), 1.0, 0.0, 0.0)
         {}
     };
 
@@ -459,7 +455,7 @@ namespace agg
     //===============================================trans_affine_line_segment
     // Rotate, Scale and Translate, associating 0...dist with line segment 
     // x1,y1,x2,y2
-    class trans_affine_line_segment : public trans_affine
+    class trans_affine_line_segment : public TransAffine
     {
     public:
         trans_affine_line_segment(double x1, double y1, double x2, double y2, 
@@ -481,11 +477,11 @@ namespace agg
     // Reflection matrix. Reflect coordinates across the line through 
     // the origin containing the unit vector (ux, uy).
     // Contributed by John Horigan
-    class trans_affine_reflection_unit : public trans_affine
+    class trans_affine_reflection_unit : public TransAffine
     {
     public:
         trans_affine_reflection_unit(double ux, double uy) :
-          trans_affine(2.0 * ux * ux - 1.0, 
+          TransAffine(2.0 * ux * ux - 1.0, 
                        2.0 * ux * uy, 
                        2.0 * ux * uy, 
                        2.0 * uy * uy - 1.0, 

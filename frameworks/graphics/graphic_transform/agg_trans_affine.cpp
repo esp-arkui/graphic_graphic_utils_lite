@@ -1,21 +1,17 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Affine transformations
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
 
@@ -24,7 +20,7 @@ namespace agg
 {
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::parl_to_parl(const double* src, 
+    const TransAffine& TransAffine::ParlToParl(const double* src, 
                                                    const double* dst)
     {
         sx  = src[2] - src[0];
@@ -34,14 +30,14 @@ namespace agg
         tx  = src[0];
         ty  = src[1];
         invert();
-        multiply(trans_affine(dst[2] - dst[0], dst[3] - dst[1], 
+        multiply(TransAffine(dst[2] - dst[0], dst[3] - dst[1], 
                               dst[4] - dst[0], dst[5] - dst[1],
                               dst[0], dst[1]));
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::rect_to_parl(double x1, double y1, 
+    const TransAffine& TransAffine::RectToParl(double x1, double y1, 
                                                    double x2, double y2, 
                                                    const double* parl)
     {
@@ -49,12 +45,12 @@ namespace agg
         src[0] = x1; src[1] = y1;
         src[2] = x2; src[3] = y1;
         src[4] = x2; src[5] = y2;
-        parl_to_parl(src, parl);
+        ParlToParl(src, parl);
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::parl_to_rect(const double* parl, 
+    const TransAffine& TransAffine::parl_to_rect(const double* parl, 
                                                    double x1, double y1, 
                                                    double x2, double y2)
     {
@@ -62,12 +58,12 @@ namespace agg
         dst[0] = x1; dst[1] = y1;
         dst[2] = x2; dst[3] = y1;
         dst[4] = x2; dst[5] = y2;
-        parl_to_parl(parl, dst);
+        ParlToParl(parl, dst);
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::multiply(const trans_affine& m)
+    const TransAffine& TransAffine::multiply(const TransAffine& m)
     {
         double t0 = sx  * m.sx + shy * m.shx;
         double t2 = shx * m.sx + sy  * m.shx;
@@ -83,7 +79,7 @@ namespace agg
 
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::invert()
+    const TransAffine& TransAffine::invert()
     {
         double d  = determinant_reciprocal();
 
@@ -102,7 +98,7 @@ namespace agg
 
 
    //------------------------------------------------------------------------
-    const trans_affine& trans_affine::flip_x()
+    const TransAffine& TransAffine::flip_x()
     {
         sx  = -sx;
         shy = -shy;
@@ -111,7 +107,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::flip_y()
+    const TransAffine& TransAffine::flip_y()
     {
         shx = -shx;
         sy  = -sy;
@@ -120,7 +116,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::reset()
+    const TransAffine& TransAffine::reset()
     {
         sx  = sy  = 1.0; 
         shy = shx = tx = ty = 0.0;
@@ -128,7 +124,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    bool trans_affine::is_identity(double epsilon) const
+    bool TransAffine::is_identity(double epsilon) const
     {
         return is_equal_eps(sx,  1.0, epsilon) &&
                is_equal_eps(shy, 0.0, epsilon) &&
@@ -139,13 +135,13 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    bool trans_affine::is_valid(double epsilon) const
+    bool TransAffine::is_valid(double epsilon) const
     {
         return std::fabs(sx) > epsilon && std::fabs(sy) > epsilon;
     }
 
     //------------------------------------------------------------------------
-    bool trans_affine::is_equal(const trans_affine& m, double epsilon) const
+    bool TransAffine::is_equal(const TransAffine& m, double epsilon) const
     {
         return is_equal_eps(sx,  m.sx,  epsilon) &&
                is_equal_eps(shy, m.shy, epsilon) &&
@@ -156,7 +152,7 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    double trans_affine::rotation() const
+    double TransAffine::rotation() const
     {
         double x1 = 0.0;
         double y1 = 0.0;
@@ -168,20 +164,20 @@ namespace agg
     }
 
     //------------------------------------------------------------------------
-    void trans_affine::translation(double* dx, double* dy) const
+    void TransAffine::translation(double* dx, double* dy) const
     {
         *dx = tx;
         *dy = ty;
     }
 
     //------------------------------------------------------------------------
-    void trans_affine::scaling(double* x, double* y) const
+    void TransAffine::scaling(double* x, double* y) const
     {
         double x1 = 0.0;
         double y1 = 0.0;
         double x2 = 1.0;
         double y2 = 1.0;
-        trans_affine t(*this);
+        TransAffine t(*this);
         t *= trans_affine_rotation(-rotation());
         t.transform(&x1, &y1);
         t.transform(&x2, &y2);

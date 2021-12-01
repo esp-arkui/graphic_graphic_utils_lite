@@ -181,16 +181,16 @@ namespace agg
         }
 
         //-------------------------------------------------------------------
-        trans_affine to_affine() const
+        TransAffine to_affine() const
         {
-            trans_affine mtx = trans_affine_translation(-m_wx1, -m_wy1);
+            TransAffine mtx = trans_affine_translation(-m_wx1, -m_wy1);
             mtx *= trans_affine_scaling(m_kx, m_ky);
             mtx *= trans_affine_translation(m_dx1, m_dy1);
             return mtx;
         }
 
         //-------------------------------------------------------------------
-        trans_affine to_affine_scale_only() const
+        TransAffine to_affine_scale_only() const
         {
             return trans_affine_scaling(m_kx, m_ky);
         }

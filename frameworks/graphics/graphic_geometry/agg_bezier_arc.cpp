@@ -235,7 +235,7 @@ namespace agg
         // We can now build and transform the resulting arc
         //------------------------
         m_arc.init(0.0, 0.0, rx, ry, start_angle, sweep_angle);
-        trans_affine mtx = trans_affine_rotation(angle);
+        TransAffine mtx = trans_affine_rotation(angle);
         mtx *= trans_affine_translation(cx, cy);
         
         for(unsigned i = 2; i < m_arc.num_vertices()-2; i += 2)

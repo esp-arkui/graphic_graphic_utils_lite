@@ -92,11 +92,11 @@ namespace agg
     //==============================================span_image_resample_affine
     template<class Source> 
     class span_image_resample_affine : 
-    public span_image_filter<Source, span_interpolator_linear<trans_affine> >
+    public span_image_filter<Source, span_interpolator_linear<TransAffine> >
     {
     public:
         typedef Source source_type;
-        typedef span_interpolator_linear<trans_affine> interpolator_type;
+        typedef span_interpolator_linear<TransAffine> interpolator_type;
         typedef span_image_filter<source_type, interpolator_type> base_type;
 
         //--------------------------------------------------------------------
