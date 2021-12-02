@@ -22,7 +22,7 @@
 #ifdef AGG_CUSTOM_ALLOCATOR
 #include "agg_allocator.h"
 #else
-namespace agg
+namespace OHOS
 {
     // The policy of all AGG containers and memory allocation strategy 
     // in general is that no allocated data requires explicit construction.
@@ -112,7 +112,7 @@ namespace agg
 #define GRAPTHIC_INLINE inline
 #endif
 
-namespace agg
+namespace OHOS
 {
     //-------------------------------------------------------------------------
     typedef AGG_INT8   int8;         //----int8
@@ -218,7 +218,7 @@ namespace agg
         {
             if(v < double(-Limit)) return -Limit;
             if(v > double( Limit)) return  Limit;
-            return agg::iround(v);
+            return OHOS::iround(v);
         }
     };
 

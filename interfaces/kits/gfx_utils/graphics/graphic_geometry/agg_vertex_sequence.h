@@ -23,11 +23,11 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "gfx_utils/graphics/graphic_common/agg_math.h"
 
-namespace agg
+namespace OHOS
 {
 
     //----------------------------------------------------------vertex_sequence
-    // Modified agg::pod_bvector. The data is interpreted as a sequence 
+    // Modified OHOS::pod_bvector. The data is interpreted as a sequence 
     // of vertices. It means that the type T must expose:
     //
     // bool T::operator() (const T& val)

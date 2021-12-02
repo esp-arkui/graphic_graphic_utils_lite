@@ -21,7 +21,7 @@
 #include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
 
 
-namespace agg
+namespace OHOS
 {
     //------------------------------------------------------------------------
     rounded_rect::rounded_rect(double x1, double y1, double x2, double y2, double r) :

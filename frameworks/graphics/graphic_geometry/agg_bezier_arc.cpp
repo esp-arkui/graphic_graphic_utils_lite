@@ -23,7 +23,7 @@
 #include <gfx_utils/graphics/graphic_geometry/agg_bezier_arc.h>
 
 
-namespace agg
+namespace OHOS
 {
 
     // This epsilon is used to prevent us from adding degenerate curves 

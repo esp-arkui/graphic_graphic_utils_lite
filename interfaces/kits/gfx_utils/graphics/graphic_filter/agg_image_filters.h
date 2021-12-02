@@ -23,7 +23,7 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "gfx_utils/graphics/graphic_common/agg_math.h"
 
-namespace agg
+namespace OHOS
 {
 
     // See Implementation agg_image_filters.cpp 

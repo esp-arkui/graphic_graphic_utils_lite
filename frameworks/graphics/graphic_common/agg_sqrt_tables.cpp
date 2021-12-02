@@ -19,7 +19,7 @@
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS
 {
     int16u g_sqrt_table[1024] =                       //----------g_sqrt_table
     {

@@ -27,7 +27,7 @@
 
 #include "agg_trans_affine.h"
 
-namespace agg
+namespace OHOS
 {
 
     //--------------------------------------------------------------------ctrl

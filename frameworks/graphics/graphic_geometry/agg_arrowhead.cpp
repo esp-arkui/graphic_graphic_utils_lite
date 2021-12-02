@@ -19,7 +19,7 @@
 
 #include <gfx_utils/graphics/graphic_geometry/agg_arrowhead.h>
 
-namespace agg
+namespace OHOS
 {
 
     //------------------------------------------------------------------------

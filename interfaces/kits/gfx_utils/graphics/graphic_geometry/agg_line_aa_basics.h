@@ -18,7 +18,7 @@
 #include <cstdlib>
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS
 {
 
     // See Implementation agg_line_aa_basics.cpp 

@@ -26,7 +26,7 @@
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
 
-namespace agg
+namespace OHOS
 {
 
     enum aspect_ratio_e
@@ -114,15 +114,7 @@ namespace agg
             *y2 = m_world_y2;
         }
 
-        //-------------------------------------------------------------------
-        void world_viewport_actual(double* x1, double* y1, 
-                                   double* x2, double* y2) const
-        {
-            *x1 = m_wx1;
-            *y1 = m_wy1;
-            *x2 = m_wx2;
-            *y2 = m_wy2;
-        }
+
 
         //-------------------------------------------------------------------
         bool   is_valid()             const { return m_is_valid; }
@@ -130,58 +122,10 @@ namespace agg
         double align_y()              const { return m_align_y; }
         aspect_ratio_e aspect_ratio() const { return m_aspect; }
 
-        //-------------------------------------------------------------------
-        void transform(double* x, double* y) const
-        {
-            *x = (*x - m_wx1) * m_kx + m_dx1;
-            *y = (*y - m_wy1) * m_ky + m_dy1;
-        }
+  
 
-        //-------------------------------------------------------------------
-        void transform_scale_only(double* x, double* y) const
-        {
-            *x *= m_kx;
-            *y *= m_ky;
-        }
-
-        //-------------------------------------------------------------------
-        void inverse_transform(double* x, double* y) const
-        {
-            *x = (*x - m_dx1) / m_kx + m_wx1;
-            *y = (*y - m_dy1) / m_ky + m_wy1;
-        }
-
-        //-------------------------------------------------------------------
-        void inverse_transform_scale_only(double* x, double* y) const
-        {
-            *x /= m_kx;
-            *y /= m_ky;
-        }
-
-        //-------------------------------------------------------------------
-        double device_dx() const { return m_dx1 - m_wx1 * m_kx; }
-        double device_dy() const { return m_dy1 - m_wy1 * m_ky; }
-
-        //-------------------------------------------------------------------
-        double scale_x() const
-        {
-            return m_kx;
-        }
-
-        //-------------------------------------------------------------------
-        double scale_y() const
-        {
-            return m_ky;
-        }
-
-        //-------------------------------------------------------------------
-        double scale() const
-        {
-            return (m_kx + m_ky) * 0.5;
-        }
-
-        //-------------------------------------------------------------------
-        TransAffine to_affine() const
+        // //-------------------------------------------------------------------
+        trans_affine to_affine() const
         {
             TransAffine mtx = trans_affine_translation(-m_wx1, -m_wy1);
             mtx *= trans_affine_scaling(m_kx, m_ky);
@@ -189,27 +133,6 @@ namespace agg
             return mtx;
         }
 
-        //-------------------------------------------------------------------
-        TransAffine to_affine_scale_only() const
-        {
-            return trans_affine_scaling(m_kx, m_ky);
-        }
-
-        //-------------------------------------------------------------------
-        unsigned byte_size() const
-        {
-            return sizeof(*this);
-        }
-
-        void serialize(int8u* ptr) const
-        {
-            std::memcpy(ptr, this, sizeof(*this)); 
-        }
-
-        void deserialize(const int8u* ptr)
-        {
-            std::memcpy(this,  ptr, sizeof(*this));
-        }
 
     private:
         void update();

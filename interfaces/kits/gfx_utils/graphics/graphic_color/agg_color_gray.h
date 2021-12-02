@@ -31,7 +31,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 
-namespace agg
+namespace OHOS
 {
 
     //===================================================================gray8

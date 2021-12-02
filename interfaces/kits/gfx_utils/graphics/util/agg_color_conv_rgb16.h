@@ -23,7 +23,7 @@
  A set of functors used with color_conv(). See file agg_color_conv.h
  These functors can convert images with up to 8 bits per component.
  Use convertors in the following way:
- agg::color_conv(dst, src, agg::color_conv_XXXX_to_YYYY());
+ OHOS::color_conv(dst, src, OHOS::color_conv_XXXX_to_YYYY());
 */
 
 #ifndef AGG_COLOR_CONV_RGB16_INCLUDED
@@ -32,7 +32,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_color_conv.h"
 
-namespace agg
+namespace OHOS
 {
 
     //-------------------------------------------------color_conv_gray16_to_gray8

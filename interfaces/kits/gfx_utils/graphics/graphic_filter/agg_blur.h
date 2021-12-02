@@ -35,7 +35,7 @@
 #include "render/agg_pixfmt_transposer.h"
 #include "render/agg_renderer_base.h"
 
-namespace agg
+namespace OHOS
 {
 
     template<class T> struct stack_blur_tables
@@ -1166,9 +1166,9 @@ namespace agg
         }
 
     private:
-        agg::pod_vector<calculator_type> m_sum1;
-        agg::pod_vector<calculator_type> m_sum2;
-        agg::pod_vector<color_type>      m_buf;
+        OHOS::pod_vector<calculator_type> m_sum1;
+        OHOS::pod_vector<calculator_type> m_sum2;
+        OHOS::pod_vector<color_type>      m_buf;
     };
 
 

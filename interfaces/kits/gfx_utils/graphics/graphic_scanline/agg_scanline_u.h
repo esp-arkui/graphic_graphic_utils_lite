@@ -27,7 +27,7 @@
 #include <cstring>
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
-namespace agg
+namespace OHOS
 {
     //=============================================================scanline_u8
     //
