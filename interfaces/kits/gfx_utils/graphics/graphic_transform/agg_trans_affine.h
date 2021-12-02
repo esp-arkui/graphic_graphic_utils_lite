@@ -100,11 +100,6 @@ namespace OHOS
             sx(v0), shy(v1), shx(v2), sy(v3), tx(v4), ty(v5)
         {}
 
-        // Custom matrix from m[6]
-        explicit trans_affine(const double* m) :
-            sx(m[0]), shy(m[1]), shx(m[2]), sy(m[3]), tx(m[4]), ty(m[5])
-        {}
-
         // Rectangle to a parallelogram.
         trans_affine(double x1, double y1, double x2, double y2, 
                      const double* parl)
@@ -112,18 +107,6 @@ namespace OHOS
             rect_to_parl(x1, y1, x2, y2, parl);
         }
 
-        // Parallelogram to a rectangle.
-        trans_affine(const double* parl, 
-                     double x1, double y1, double x2, double y2)
-        {
-            parl_to_rect(parl, x1, y1, x2, y2);
-        }
-
-        // Arbitrary parallelogram transformation.
-        trans_affine(const double* src, const double* dst)
-        {
-            parl_to_parl(src, dst);
-        }
 
         //---------------------------------- Parellelogram transformations
         // transform a parallelogram to another one. Src and dst are 
@@ -143,10 +126,7 @@ namespace OHOS
                                          double x2, double y2, 
                                          const double* parl);
 
-        const trans_affine& parl_to_rect(const double* parl, 
-                                         double x1, double y1, 
-                                         double x2, double y2);
-
+ 
 
         //------------------------------------------ Operations
         // Reset - load an identity matrix
@@ -161,39 +141,13 @@ namespace OHOS
         // Multiply matrix to another one
         const trans_affine& multiply(const trans_affine& m);
 
-        // Multiply "m" to "this" and assign the result to "this"
-        const trans_affine& premultiply(const trans_affine& m);
-
-        // Multiply matrix to inverse of another one
-        const trans_affine& multiply_inv(const trans_affine& m);
-
-        // Multiply inverse of "m" to "this" and assign the result to "this"
-        const trans_affine& premultiply_inv(const trans_affine& m);
 
         // Invert matrix. Do not try to invert degenerate matrices, 
         // there's no check for validity. If you set scale to 0 and 
         // then try to invert matrix, expect unpredictable result.
         const trans_affine& invert();
 
-        // Mirroring around X
-        const trans_affine& flip_x();
-
-        // Mirroring around Y
-        const trans_affine& flip_y();
-
-        //------------------------------------------- Load/Store
-        // Store matrix to an array [6] of double
-        void store_to(double* m) const
-        {
-            *m++ = sx; *m++ = shy; *m++ = shx; *m++ = sy; *m++ = tx; *m++ = ty;
-        }
-
-        // Load matrix from an array [6] of double
-        const trans_affine& load_from(const double* m)
-        {
-            sx = *m++; shy = *m++; shx = *m++; sy = *m++; tx = *m++;  ty = *m++;
-            return *this;
-        }
+ 
 
         //------------------------------------------- Operators
         
@@ -203,63 +157,19 @@ namespace OHOS
             return multiply(m);
         }
 
-        // Multiply the matrix by inverse of another one
-        const trans_affine& operator /= (const trans_affine& m)
-        {
-            return multiply_inv(m);
-        }
 
-        // Multiply the matrix by another one and return
-        // the result in a separete matrix.
-        trans_affine operator * (const trans_affine& m) const
-        {
-            return trans_affine(*this).multiply(m);
-        }
-
-        // Multiply the matrix by inverse of another one 
-        // and return the result in a separete matrix.
-        trans_affine operator / (const trans_affine& m) const
-        {
-            return trans_affine(*this).multiply_inv(m);
-        }
-
-        // Calculate and return the inverse matrix
-        trans_affine operator ~ () const
-        {
-            trans_affine ret = *this;
-            return ret.invert();
-        }
-
-        // Equal operator with default epsilon
-        bool operator == (const trans_affine& m) const
-        {
-            return is_equal(m, affine_epsilon);
-        }
-
-        // Not Equal operator with default epsilon
-        bool operator != (const trans_affine& m) const
-        {
-            return !is_equal(m, affine_epsilon);
-        }
 
         //-------------------------------------------- Transformations
         // Direct transformation of x and y
         void transform(double* x, double* y) const;
 
-        // Direct transformation of x and y, 2x2 matrix only, no translation
-        void transform_2x2(double* x, double* y) const;
-
+ 
         // Inverse transformation of x and y. It works slower than the 
         // direct transformation. For massive operations it's better to 
         // invert() the matrix and then use direct transformations. 
         void inverse_transform(double* x, double* y) const;
 
-        //-------------------------------------------- Auxiliary
-        // Calculate the determinant of matrix
-        double determinant() const
-        {
-            return sx * sy - shy * shx;
-        }
+
 
         // Calculate the reciprocal of the determinant
         double determinant_reciprocal() const
@@ -278,14 +188,6 @@ namespace OHOS
         // Check to see if it's an identity matrix
         bool is_identity(double epsilon = affine_epsilon) const;
 
-        // Check to see if two matrices are equal
-        bool is_equal(const trans_affine& m, double epsilon = affine_epsilon) const;
-
-        // Determine the major parameters. Use with caution considering 
-        // possible degenerate cases.
-        double rotation() const;
-        void   translation(double* dx, double* dy) const;
-        void   scaling(double* x, double* y) const;
         void   scaling_abs(double* x, double* y) const;
     };
 
@@ -297,13 +199,6 @@ namespace OHOS
         *y = tmp * shy + *y * sy  + ty;
     }
 
-    //------------------------------------------------------------------------
-    inline void trans_affine::transform_2x2(double* x, double* y) const
-    {
-        double tmp = *x;
-        *x = tmp * sx  + *y * shx;
-        *y = tmp * shy + *y * sy;
-    }
 
     //------------------------------------------------------------------------
     inline void trans_affine::inverse_transform(double* x, double* y) const
@@ -375,28 +270,6 @@ namespace OHOS
         return *this;
     }
 
-    //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::premultiply(const trans_affine& m)
-    {
-        trans_affine t = m;
-        return *this = t.multiply(*this);
-    }
-
-    //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::multiply_inv(const trans_affine& m)
-    {
-        trans_affine t = m;
-        t.invert();
-        return multiply(t);
-    }
-
-    //------------------------------------------------------------------------
-    inline const trans_affine& trans_affine::premultiply_inv(const trans_affine& m)
-    {
-        trans_affine t = m;
-        t.invert();
-        return *this = t.multiply(*this);
-    }
 
     //------------------------------------------------------------------------
     inline void trans_affine::scaling_abs(double* x, double* y) const
@@ -442,72 +315,6 @@ namespace OHOS
     public:
         trans_affine_translation(double x, double y) : 
           trans_affine(1.0, 0.0, 0.0, 1.0, x, y)
-        {}
-    };
-
-    //====================================================trans_affine_skewing
-    // Sckewing (shear) matrix
-    class trans_affine_skewing : public trans_affine
-    {
-    public:
-        trans_affine_skewing(double x, double y) : 
-          trans_affine(1.0, std::tan(y), std::tan(x), 1.0, 0.0, 0.0)
-        {}
-    };
-
-
-    //===============================================trans_affine_line_segment
-    // Rotate, Scale and Translate, associating 0...dist with line segment 
-    // x1,y1,x2,y2
-    class trans_affine_line_segment : public trans_affine
-    {
-    public:
-        trans_affine_line_segment(double x1, double y1, double x2, double y2, 
-                                  double dist)
-        {
-            double dx = x2 - x1;
-            double dy = y2 - y1;
-            if(dist > 0.0)
-            {
-                multiply(trans_affine_scaling(std::sqrt(dx * dx + dy * dy) / dist));
-            }
-            multiply(trans_affine_rotation(std::atan2(dy, dx)));
-            multiply(trans_affine_translation(x1, y1));
-        }
-    };
-
-
-    //============================================trans_affine_reflection_unit
-    // Reflection matrix. Reflect coordinates across the line through 
-    // the origin containing the unit vector (ux, uy).
-    // Contributed by John Horigan
-    class trans_affine_reflection_unit : public trans_affine
-    {
-    public:
-        trans_affine_reflection_unit(double ux, double uy) :
-          trans_affine(2.0 * ux * ux - 1.0, 
-                       2.0 * ux * uy, 
-                       2.0 * ux * uy, 
-                       2.0 * uy * uy - 1.0, 
-                       0.0, 0.0)
-        {}
-    };
-
-
-    //=================================================trans_affine_reflection
-    // Reflection matrix. Reflect coordinates across the line through 
-    // the origin at the angle a or containing the non-unit vector (x, y).
-    // Contributed by John Horigan
-    class trans_affine_reflection : public trans_affine_reflection_unit
-    {
-    public:
-        trans_affine_reflection(double a) :
-          trans_affine_reflection_unit(std::cos(a), std::sin(a))
-        {}
-
-
-        trans_affine_reflection(double x, double y) :
-          trans_affine_reflection_unit(x / std::sqrt(x * x + y * y), y / std::sqrt(x * x + y * y))
         {}
     };
 
