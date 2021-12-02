@@ -13,9 +13,20 @@
  * limitations under the License.
  */
 
+
+/**
+* @file agg_rasterizer_sl_clip.h
+*
+* @brief Defines
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
 //----------------------------------------------------------------------------
-#ifndef AGG_RASTERIZER_SL_CLIP_INCLUDED
-#define AGG_RASTERIZER_SL_CLIP_INCLUDED
+#ifndef GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
+#define GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h"
 

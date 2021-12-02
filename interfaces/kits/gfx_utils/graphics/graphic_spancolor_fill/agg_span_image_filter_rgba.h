@@ -13,9 +13,19 @@
  * limitations under the License.
  */
 
+/**
+* @file agg_span_image_filter_rgba.h
+*
+* @brief Defines 扫描线图像过滤器
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
 //----------------------------------------------------------------------------
-#ifndef AGG_SPAN_IMAGE_FILTER_RGBA_INCLUDED
-#define AGG_SPAN_IMAGE_FILTER_RGBA_INCLUDED
+#ifndef GRAPHIC_SPAN_IMAGE_FILTER_RGBA_INCLUDED
+#define GRAPHIC_SPAN_IMAGE_FILTER_RGBA_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"

@@ -13,13 +13,23 @@
  * limitations under the License.
  */
 
+/**
+* @file agg_span_image_filter.h
+*
+* @brief Defines 扫描线图像过滤器
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
 //----------------------------------------------------------------------------
-#ifndef AGG_SPAN_IMAGE_FILTER_INCLUDED
-#define AGG_SPAN_IMAGE_FILTER_INCLUDED
+#ifndef GRAPHIC_SPAN_IMAGE_FILTER_INCLUDED
+#define GRAPHIC_SPAN_IMAGE_FILTER_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_filter/agg_image_filters.h"
-#include "agg_span_interpolator_linear.h"
+#include "span_interpolator.h"
 
 namespace OHOS
 {

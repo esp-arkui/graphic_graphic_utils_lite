@@ -13,9 +13,19 @@
  * limitations under the License.
  */
 
+/**
+* @file agg_rasterizer_cells_aa.h
+*
+* @brief Defines 光栅细胞（防走样）
+*
+* @since 1.0
+* @version 1.0
+*/
+
+
 //----------------------------------------------------------------------------
-#ifndef AGG_RASTERIZER_CELLS_AA_INCLUDED
-#define AGG_RASTERIZER_CELLS_AA_INCLUDED
+#ifndef GRAPHIC_RASTERIZER_CELLS_AA_INCLUDED
+#define GRAPHIC_RASTERIZER_CELLS_AA_INCLUDED
 
 #include <cstring>
 #include <cstdlib>
@@ -27,10 +37,33 @@
 namespace OHOS
 {
 
-    //-----------------------------------------------------rasterizer_cells_aa
-    // An internal class that implements the main rasterization algorithm.
-    // Used in the rasterizer. Should not be used direcly.
-    template<class Cell> class rasterizer_cells_aa
+    //-----------------------------------------------------------------cell_aa
+    //像素单元格。没有定义构造函数，这是为了避免分配单元格数组时的额外开销。
+    struct cell_aa
+    {
+        int x;
+        int y;
+        int cover;
+        int area;
+
+        void initial()
+        {
+            x = (std::numeric_limits<int>::max)();
+            y = (std::numeric_limits<int>::max)();
+            cover = 0;
+            area  = 0;
+        }
+
+        void style(const cell_aa&) {}
+
+        int not_equal(int ex, int ey, const cell_aa&) const
+        {
+            return ((unsigned)ex - (unsigned)x) | ((unsigned)ey - (unsigned)y);
+        }
+    };
+
+    template<class Cell>
+    class rasterizer_cells_aa
     {
         enum cell_block_scale_e
         {
@@ -108,9 +141,6 @@ namespace OHOS
         int                     m_max_y;
         bool                    m_sorted;
     };
-
-
-
 
     //------------------------------------------------------------------------
     template<class Cell> 
@@ -348,10 +378,6 @@ namespace OHOS
             return;
         }
 
-        //Vertical line - we have to calculate start and end cells,
-        //and then - the common values of the area and coverage for
-        //all cells of the line. We know exactly there's only one 
-        //cell, so, we don't have to call render_hline().
         incr  = 1;
         if(dx == 0)
         {
@@ -624,18 +650,6 @@ namespace OHOS
 
         if(m_num_cells == 0) return;
 
-// DBG: Check to see if min/max works well.
-//for(unsigned nc = 0; nc < m_num_cells; nc++)
-//{
-//    cell_type* cell = m_cells[nc >> cell_block_shift] + (nc & cell_block_mask);
-//    if(cell->x < m_min_x || 
-//       cell->y < m_min_y || 
-//       cell->x > m_max_x || 
-//       cell->y > m_max_y)
-//    {
-//        cell = cell; // Breakpoint here
-//    }
-//}
         // Allocate the array of cell pointers
         m_sorted_cells.allocate(m_num_cells, 16);
 

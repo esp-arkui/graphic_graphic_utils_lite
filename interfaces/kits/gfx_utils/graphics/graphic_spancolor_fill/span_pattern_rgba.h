@@ -13,15 +13,20 @@
  * limitations under the License.
  */
 
-#ifndef AGG_SPAN_PATTERN_RGBA_INCLUDED
-#define AGG_SPAN_PATTERN_RGBA_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+/**
+* @file span_pattern_rgba.h
+* @brief Defines pattern的扫描线
+* @since 1.0
+* @version 1.0
+*/
+
+
+#ifndef GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
+#define GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
 
 namespace OHOS
 {
-
-    //======================================================span_pattern_rgba
     template<class Source> class span_pattern_rgba
     {
     public:
@@ -29,7 +34,6 @@ namespace OHOS
         typedef typename source_type::color_type color_type;
         typedef typename source_type::order_type order_type;
         typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
 
         //--------------------------------------------------------------------
         span_pattern_rgba() {}
@@ -40,44 +44,40 @@ namespace OHOS
             m_offset_y(offset_y)
         {}
 
-        //--------------------------------------------------------------------
-        void   attach(source_type& v)      { m_src = &v; }
-               source_type& source()       { return *m_src; }
-        const  source_type& source() const { return *m_src; }
-
-        //--------------------------------------------------------------------
-        void       offset_x(unsigned v) { m_offset_x = v; }
-        void       offset_y(unsigned v) { m_offset_y = v; }
-        unsigned   offset_x() const { return m_offset_x; }
-        unsigned   offset_y() const { return m_offset_y; }
-        void       alpha(value_type) {}
-        value_type alpha() const { return 0; }
-
-        //--------------------------------------------------------------------
+        /**
+         * @brief prepare 预备用给render_scanlines_aa中的
+         */
         void prepare() {}
+        /**
+         * @brief generate 从m_src取出rgba赋予span中的rgba
+         * @param span 扫描线
+         * @param x 坐标-x
+         * @param y 坐标-y
+         * @param len 扫描线长度
+         */
         void generate(color_type* span, int x, int y, unsigned len)
         {   
+            //z坐标加上x，y的偏移量
             x += m_offset_x;
             y += m_offset_y;
+            //从对应的image_accessors模板中取出对应像素
             const value_type* p = (const value_type*)m_src->span(x, y, len);
-            do
+            for(;len;--len,p = (const value_type*)m_src->next_x(),++span)
             {
                 if (p) {
+                    //从source_type取出相应像素。
                     span->r = p[order_type::R];
                     span->g = p[order_type::G];
                     span->b = p[order_type::B];
                     span->a = p[order_type::A];
-                }
-                else {
+                } else {
+                    //默认的颜色黑色不透明
                     span->r = 0;
                     span->g = 0;
                     span->b = 0;
-                    span->a = 255;
+                    span->a = 255;//0-透明255-不透明
                 }
-                p = (const value_type*)m_src->next_x();
-                ++span;
             }
-            while(--len);
         }
 
     private:
