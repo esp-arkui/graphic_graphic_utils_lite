@@ -13,6 +13,16 @@ import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/config/subsystem/graphic/config.gni")
 import("//build/lite/ndk/ndk.gni")
 
+defines = []
+
+declare_args() {
+  enable_ohos_graphic_utils_product_config = false
+}
+
+if (enable_ohos_graphic_utils_product_config) {
+  defines += [ "ENABLE_OHOS_GRAPHIC_UTILS_PRODUCT_CONFIG=1" ]
+}
+
 lite_component("lite_graphic_utils") {
   features = [ ":graphic_utils" ]
   public_deps = features
@@ -24,28 +34,23 @@ ndk_lib("lite_graphic_utils_ndk") {
   head_files = [ "interfaces/kits" ]
 }
 
-lite_component("lite_graphic_hals") {
-  features = [ ":graphic_hals" ]
-  public_deps = features
-}
+lite_library("graphic_utils") {
+  if (ohos_kernel_type == "liteos_m") {
+    target_type = "static_library"
+  } else {
+    target_type = "shared_library"
+  }
 
-ndk_lib("lite_graphic_hals_ndk") {
-  lib_extension = ".so"
-  deps = [ ":graphic_hals" ]
-  head_files = []
-}
-
-shared_library("graphic_utils") {
   if (enable_graphic_dualcore == true) {
-    defines = [ "HAL_CPU_NUM = 2" ]
+    defines += [ "HAL_CPU_NUM = 2" ]
   }
 
   sources = [
     "frameworks/color.cpp",
     "frameworks/geometry2d.cpp",
     "frameworks/graphic_math.cpp",
-    "frameworks/graphic_timer.cpp",
     "frameworks/graphic_performance.cpp",
+    "frameworks/graphic_timer.cpp",
     "frameworks/hal_cpu.cpp",
     "frameworks/hal_tick.cpp",
     "frameworks/mem_api.cpp",
@@ -57,11 +62,16 @@ shared_library("graphic_utils") {
   ]
   include_dirs = [ "frameworks" ]
   public_configs = [ ":graphic_utils_public_config" ]
-  deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
-  public_deps =
-      [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_shared" ]
-  cflags = [ "-fPIC" ]
-  cflags += [ "-Wall" ]
+  if (ohos_kernel_type == "liteos_m") {
+    deps = [ "//third_party/bounds_checking_function:libsec_static" ]
+    public_deps =
+        [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_static" ]
+  } else {
+    deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
+    public_deps =
+        [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_shared" ]
+  }
+  cflags = [ "-Wall" ]
   cflags_cc = cflags
 }
 
@@ -69,25 +79,39 @@ config("graphic_utils_public_config") {
   include_dirs = [
     "interfaces/innerkits",
     "interfaces/kits",
+    "$product_path/graphic_config",
   ]
 }
 
-shared_library("graphic_hals") {
-  sources = [
-    "frameworks/hals/gfx_engines.cpp",
-    "frameworks/hals/hi_fbdev.cpp",
-  ]
-  include_dirs = [ "//foundation/graphic/wms/interfaces/innerkits" ]
-  deps = [
-    ":lite_graphic_utils",
-    "//drivers/peripheral/display/hal:hdi_display",
-  ]
-  public_configs = [ ":graphic_hals_public_config" ]
-  ldflags = [
-    "-ldisplay_gfx",
-    "-ldisplay_gralloc",
-    "-ldisplay_layer",
-  ]
+if (ohos_kernel_type != "liteos_m") {
+  lite_component("lite_graphic_hals") {
+    features = [ ":graphic_hals" ]
+    public_deps = features
+  }
+
+  ndk_lib("lite_graphic_hals_ndk") {
+    lib_extension = ".so"
+    deps = [ ":graphic_hals" ]
+    head_files = []
+  }
+
+  shared_library("graphic_hals") {
+    sources = [
+      "frameworks/hals/gfx_engines.cpp",
+      "frameworks/hals/hi_fbdev.cpp",
+    ]
+    include_dirs = [ "//foundation/graphic/wms/interfaces/innerkits" ]
+    deps = [
+      ":lite_graphic_utils",
+      "//drivers/peripheral/display/hal:hdi_display",
+    ]
+    public_configs = [ ":graphic_hals_public_config" ]
+    ldflags = [
+      "-ldisplay_gfx",
+      "-ldisplay_gralloc",
+      "-ldisplay_layer",
+    ]
+  }
 }
 
 config("graphic_hals_public_config") {
@@ -95,5 +119,6 @@ config("graphic_hals_public_config") {
     "interfaces/innerkits",
     "//drivers/peripheral/base",
     "//drivers/peripheral/display/interfaces/include",
+    "$product_path/graphic_config",
   ]
 }
