@@ -243,12 +243,6 @@ namespace OHOS
         cover_full  = cover_mask         //----cover_full 
     };
 
-    //----------------------------------------------------poly_subpixel_scale_e
-    // These constants determine the subpixel accuracy, to be more precise, 
-    // the number of bits of the fractional part of the coordinates. 
-    // The possible coordinate capacity in bits can be calculated by formula:
-    // sizeof(int) * 8 - poly_subpixel_shift, i.e, for 32-bit integers and
-    // 8-bits fractional part the capacity is 24 bits.
     enum poly_subpixel_scale_e
     {
         poly_subpixel_shift = 8,                      //----poly_subpixel_shift
@@ -256,6 +250,12 @@ namespace OHOS
         poly_subpixel_mask  = poly_subpixel_scale-1   //----poly_subpixel_mask 
     };
 
+    enum gradient_subpixel_scale_e
+    {
+        gradient_subpixel_shift = 4,
+        gradient_subpixel_scale = 1 << gradient_subpixel_shift,
+        gradient_subpixel_mask  = gradient_subpixel_scale - 1
+    };
     //----------------------------------------------------------filling_rule_e
     enum filling_rule_e
     {

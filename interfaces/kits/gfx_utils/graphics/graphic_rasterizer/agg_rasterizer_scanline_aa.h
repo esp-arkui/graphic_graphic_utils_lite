@@ -15,9 +15,7 @@
 
 /**
 * @file agg_rasterizer_scanline_aa.h
-*
 * @brief Defines 光栅扫描线（防走样）
-*
 * @since 1.0
 * @version 1.0
 */

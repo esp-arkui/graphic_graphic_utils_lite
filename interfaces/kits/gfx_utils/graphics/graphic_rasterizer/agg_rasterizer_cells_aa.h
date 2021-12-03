@@ -38,7 +38,7 @@ namespace OHOS
 {
 
     //-----------------------------------------------------------------cell_aa
-    //像素单元格。没有定义构造函数，这是为了避免分配单元格数组时的额外开销。
+    //像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
     struct cell_aa
     {
         int x;
@@ -241,14 +241,12 @@ namespace OHOS
         long long dx;
         int incr, lift, mod, rem;
 
-        //trivial case. Happens often
         if(y1 == y2)
         {
             set_curr_cell(ex2, ey);
             return;
         }
 
-        //everything is located in a single cell.  That is easy!
         if(ex1 == ex2)
         {
             delta = y2 - y1;
@@ -257,8 +255,6 @@ namespace OHOS
             return;
         }
 
-        //ok, we'll have to render a run of adjacent cells on the same
-        //hline...
         p     = (poly_subpixel_scale - fx1) * (y2 - y1);
         first = poly_subpixel_scale;
         incr  = 1;

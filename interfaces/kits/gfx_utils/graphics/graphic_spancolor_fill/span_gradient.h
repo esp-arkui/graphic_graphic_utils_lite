@@ -32,14 +32,6 @@
 
 namespace OHOS
 {
-
-    enum gradient_subpixel_scale_e
-    {
-        gradient_subpixel_shift = 4,
-        gradient_subpixel_scale = 1 << gradient_subpixel_shift,
-        gradient_subpixel_mask  = gradient_subpixel_scale - 1
-    };
-
     /**
      *渐变的扫描线填色模板
      */

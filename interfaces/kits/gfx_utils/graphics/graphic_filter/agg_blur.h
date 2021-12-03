@@ -1497,7 +1497,7 @@ namespace OHOS
     template<class PixFmt>
     void apply_slight_blur(RendererBase<PixFmt>& img, double r = 1)
     {
-        if (r > 0) slight_blur<PixFmt>(r).blur(img.ren(), img.clip_box());
+        if (r > 0) slight_blur<PixFmt>(r).blur(img.ren(), img.GetClipBox());
     }
 }
 
