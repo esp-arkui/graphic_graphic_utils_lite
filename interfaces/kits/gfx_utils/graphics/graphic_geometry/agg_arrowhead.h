@@ -1,81 +1,87 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Simple arrowhead/arrowtail generator 
-//
-//----------------------------------------------------------------------------
-#ifndef AGG_ARROWHEAD_INCLUDED
-#define AGG_ARROWHEAD_INCLUDED
+/*
+* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+#ifndef GRAPHIC_GEOMETRY_ARROWHEAD_INCLUDED
+#define GRAPHIC_GEOMETRY_ARROWHEAD_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace agg
+namespace OHOS {
+class Arrowhead : public HeapBase
 {
+public:
+    Arrowhead();
 
-    //===============================================================arrowhead
-    //
-    // See implementation agg_arrowhead.cpp 
-    //
-    class arrowhead
+    void NoHead()
     {
-    public:
-        arrowhead();
+        headFlag_ = false;
+    }
 
-        void head(double d1, double d2, double d3, double d4)
-        {
-            m_head_d1 = d1;
-            m_head_d2 = d2;
-            m_head_d3 = d3;
-            m_head_d4 = d4;
-            m_head_flag = true;
-        }
+    void Head(double d1, double d2, double d3, double d4)
+    {
+        headD1_ = d1;
+        headD2_ = d2;
+        headD3_ = d3;
+        headD4_ = d4;
+        headFlag_ = true;
+    }
 
-        void head()    { m_head_flag = true; }
-        void no_head() { m_head_flag = false; }
+    void Head()
+    {
+        headFlag_ = true;
+    }
 
-        void tail(double d1, double d2, double d3, double d4)
-        {
-            m_tail_d1 = d1;
-            m_tail_d2 = d2;
-            m_tail_d3 = d3;
-            m_tail_d4 = d4;
-            m_tail_flag = true;
-        }
+    void Tail(double d1, double d2, double d3, double d4)
+    {
+        tailD1_ = d1;
+        tailD2_ = d2;
+        tailD3_ = d3;
+        tailD4_ = d4;
+        tailFlag_ = true;
+    }
 
-        void tail()    { m_tail_flag = true;  }
-        void no_tail() { m_tail_flag = false; }
+    void Tail()    
+    { 
+        tailFlag_ = true; 
+    }
 
-        void rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+    void NoTail() 
+    {
+        tailFlag_ = false;
+    }
 
-    private:
-        double   m_head_d1;
-        double   m_head_d2;
-        double   m_head_d3;
-        double   m_head_d4;
-        double   m_tail_d1;
-        double   m_tail_d2;
-        double   m_tail_d3;
-        double   m_tail_d4;
-        bool     m_head_flag;
-        bool     m_tail_flag;
-        double   m_coord[16];
-        unsigned m_cmd[8];
-        unsigned m_curr_id;
-        unsigned m_curr_coord;
-    };
+    void Rewind(unsigned pathId);
+
+    unsigned Vertex(double* x, double* y);
+
+private:
+    double   headD1_;
+    double   headD2_;
+    double   headD3_;
+    double   headD4_;
+    double   tailD1_;
+    double   tailD2_;
+    double   tailD3_;
+    double   tailD4_;
+    bool     headFlag_;
+    bool     tailFlag_;
+    double   coord_[16];
+    unsigned cmd_[8];
+    unsigned currId_;
+    unsigned currCoord_;
+};
 
 }
 
