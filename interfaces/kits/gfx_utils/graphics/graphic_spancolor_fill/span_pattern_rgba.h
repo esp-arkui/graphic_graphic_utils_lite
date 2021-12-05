@@ -30,18 +30,18 @@ namespace OHOS
     template<class Source> class span_pattern_rgba
     {
     public:
-        typedef Source source_type;
-        typedef typename source_type::color_type color_type;
-        typedef typename source_type::order_type order_type;
-        typedef typename color_type::value_type value_type;
+        typedef Source PatternSource;
+        typedef typename PatternSource::color_type colorType;
+        typedef typename PatternSource::order_type orderType;
+        typedef typename colorType::value_type valueType;
 
         //--------------------------------------------------------------------
         span_pattern_rgba() {}
-        span_pattern_rgba(source_type& src, 
+        span_pattern_rgba(PatternSource& source,
                           unsigned offset_x, unsigned offset_y) :
-            m_src(&src),
-            m_offset_x(offset_x),
-            m_offset_y(offset_y)
+            patternSource(&source),
+            offset_x(offset_x),
+            offset_y(offset_y)
         {}
 
         /**
@@ -55,21 +55,21 @@ namespace OHOS
          * @param y 坐标-y
          * @param len 扫描线长度
          */
-        void generate(color_type* span, int x, int y, unsigned len)
+        void generate(colorType* span, int x, int y, unsigned len)
         {   
             //z坐标加上x，y的偏移量
-            x += m_offset_x;
-            y += m_offset_y;
+            x += offset_x;
+            y += offset_y;
             //从对应的image_accessors模板中取出对应像素
-            const value_type* p = (const value_type*)m_src->span(x, y, len);
-            for(;len;--len,p = (const value_type*)m_src->next_x(),++span)
+            const valueType* p = (const valueType*)patternSource->span(x, y, len);
+            for(;len;--len,p = (const valueType*)patternSource->next_x(),++span)
             {
                 if (p) {
                     //从source_type取出相应像素。
-                    span->r = p[order_type::R];
-                    span->g = p[order_type::G];
-                    span->b = p[order_type::B];
-                    span->a = p[order_type::A];
+                    span->r = p[orderType::R];
+                    span->g = p[orderType::G];
+                    span->b = p[orderType::B];
+                    span->a = p[orderType::A];
                 } else {
                     //默认的颜色黑色不透明
                     span->r = 0;
@@ -81,9 +81,9 @@ namespace OHOS
         }
 
     private:
-        source_type* m_src;
-        unsigned     m_offset_x;
-        unsigned     m_offset_y;
+        PatternSource* patternSource;
+        unsigned     offset_x;
+        unsigned     offset_y;
 
     };
 

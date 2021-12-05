@@ -112,20 +112,20 @@ namespace OHOS
          * @brief calculate 计算放射渐变时当前(x,y)的color_function 数组下标
          * @param x 坐标x
          * @param y 坐标y
-         * @param d1 开始圆半径
-         * @param d2 结束圆半径
+         * @param startRadius 开始圆半径
+         * @param endRadius 结束圆半径
          * @param size color_function的size
          * @return
          */
-        int calculate(int x, int y, int d1,int d2,int size) const
+        int calculate(int x, int y, int startRadius,int endRadius,int size) const
         {
             double dx = x - m_fx;
             double dy = y - m_fy;
             double m_d2 = dx * m_fy - dy * m_fx;
             double m_d3 = m_r2 * (dx * dx + dy * dy) - m_d2 * m_d2;
-            int dd = d2 - d1;
+            int dd = endRadius - startRadius;
             if(dd < 1) dd = 1;
-            int index = ((iround((dx * m_fx + dy * m_fy + std::sqrt(std::fabs(m_d3))) * m_mul) - d1) * size) / dd;
+            int index = ((iround((dx * m_fx + dy * m_fy + std::sqrt(std::fabs(m_d3))) * m_mul) - startRadius) * size) / dd;
             if(index < 0) index = 0;
             if(index >= size) index = size - 1;
             return index;
@@ -170,14 +170,14 @@ namespace OHOS
         /**
          * @brief calculate 计算线性渐变时当前(x,y)的color_function 数组下标
          * @param x 坐标x
-         * @param d2 线性渐变起止点的距离
+         * @param distance 线性渐变起止点的距离
          * @param size color_function的size
          * @return
          */
-        static int calculate(int x, int , int ,int d2,int size)
+        static int calculate(int x, int , int ,int distance,int size)
         {
-            if(d2 < 1) d2 = 1;
-            int index = ( x  * size) / d2;
+            if(distance < 1) distance = 1;
+            int index = ( x  * size) / distance;
             if(index < 0) index = 0;
             if(index >= size) index = size - 1;
             return index;
