@@ -15,9 +15,7 @@
 
 /**
 * @file agg_rasterizer_cells_aa.h
-*
 * @brief Defines 光栅细胞（防走样）
-*
 * @since 1.0
 * @version 1.0
 */

@@ -33,7 +33,7 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/agg_pixfmt_transposer.h"
-#include "render/agg_renderer_base.h"
+#include "render/renderer_base.h"
 
 namespace OHOS
 {

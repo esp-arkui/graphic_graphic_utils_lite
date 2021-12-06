@@ -34,8 +34,6 @@ namespace OHOS
         typedef typename PatternSource::color_type colorType;
         typedef typename PatternSource::order_type orderType;
         typedef typename colorType::value_type valueType;
-
-        //--------------------------------------------------------------------
         span_pattern_rgba() {}
         span_pattern_rgba(PatternSource& source,
                           unsigned offset_x, unsigned offset_y) :
@@ -43,7 +41,6 @@ namespace OHOS
             offset_x(offset_x),
             offset_y(offset_y)
         {}
-
         /**
          * @brief prepare 预备用给render_scanlines_aa中的
          */
@@ -86,7 +83,6 @@ namespace OHOS
         unsigned     offset_y;
 
     };
-
 }
 
 #endif
