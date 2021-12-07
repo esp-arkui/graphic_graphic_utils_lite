@@ -39,35 +39,38 @@ namespace OHOS
     public:
         typedef ColorT color_type;
 
-        color_interpolator(const color_type& c1,
-                           const color_type& c2,
-                           unsigned len) :
-            m_c1(c1),
-            m_c2(c2),
-            m_len(len),
-            m_count(0)
+        color_interpolator(const color_type& color1,
+                           const color_type& color2,
+                           unsigned distance) :
+            colorStart(color1),
+            colorEnd(color2),
+            len(distance),
+            place(0)
         {
-        }
-
-        void operator++()
-        {
-            ++m_count;
         }
 
         /**
-         * @brief 返回m_c1渐变到m_c2过程中处于m_count的颜色
+         * @brief 重写++
+         */
+        void operator++()
+        {
+            ++place;
+        }
+
+        /**
+         * @brief 返回colorStart渐变到colorEnd过程中处于count的颜色
          * @return
          */
         color_type color() const
         {
-            return m_c1.gradient(m_c2, double(m_count) / m_len);
+            return colorStart.gradient(colorEnd, double(place) / len);
         }
 
     private:
-        color_type m_c1;
-        color_type m_c2;
-        unsigned m_len;
-        unsigned m_count;
+        color_type colorStart;
+        color_type colorEnd;
+        unsigned len;
+        unsigned place;
     };
 
     /**
@@ -125,6 +128,9 @@ namespace OHOS
             m_li_x = dda2_line_interpolator(x1, x2, len);
             m_li_y = dda2_line_interpolator(y1, y2, len);
         }
+        /**
+         * @brief  同步
+         */
         void resynchronize(double xe, double ye, unsigned len)
         {
             m_trans->transform(&xe, &ye);
@@ -132,6 +138,9 @@ namespace OHOS
             m_li_y = dda2_line_interpolator(m_li_y.y(), iround(ye * subpixel_scale), len);
         }
 
+        /**
+         * @brief 重写++
+         */
         void operator++()
         {
             ++m_li_x;
