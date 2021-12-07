@@ -33,7 +33,7 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/agg_pixfmt_transposer.h"
-#include "render/agg_renderer_base.h"
+#include "render/renderer_base.h"
 
 namespace OHOS
 {
@@ -1489,15 +1489,15 @@ namespace OHOS
     }
 
     template<class PixFmt>
-    void apply_slight_blur(renderer_base<PixFmt>& img, const rect_i& bounds, double r = 1)
+    void apply_slight_blur(RendererBase<PixFmt>& img, const rect_i& bounds, double r = 1)
     {
         if (r > 0) slight_blur<PixFmt>(r).blur(img.ren(), bounds);
     }
 
     template<class PixFmt>
-    void apply_slight_blur(renderer_base<PixFmt>& img, double r = 1)
+    void apply_slight_blur(RendererBase<PixFmt>& img, double r = 1)
     {
-        if (r > 0) slight_blur<PixFmt>(r).blur(img.ren(), img.clip_box());
+        if (r > 0) slight_blur<PixFmt>(r).blur(img.ren(), img.GetClipBox());
     }
 }
 

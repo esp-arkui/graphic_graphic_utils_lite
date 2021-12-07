@@ -16,7 +16,7 @@
 #ifndef AGG_VCGEN_CONTOUR_INCLUDED
 #define AGG_VCGEN_CONTOUR_INCLUDED
 
-#include "gfx_utils/graphics/graphic_geometry/agg_math_stroke.h"
+#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h"
 
 namespace OHOS
 {
@@ -43,24 +43,19 @@ namespace OHOS
 
         vcgen_contour();
 
-        void line_cap(line_cap_e lc)     { m_stroker.line_cap(lc); }
-        void line_join(line_join_e lj)   { m_stroker.line_join(lj); }
-        void inner_join(inner_join_e ij) { m_stroker.inner_join(ij); }
+        void line_cap(LineCap lc)     { m_stroker.line_cap(lc); }
+        void line_join(LineJoin lj)   { m_stroker.line_join(lj); }
+        void inner_join(InnerJoin ij) { m_stroker.inner_join(ij); }
 
-        line_cap_e   line_cap()   const { return m_stroker.line_cap(); }
-        line_join_e  line_join()  const { return m_stroker.line_join(); }
-        inner_join_e inner_join() const { return m_stroker.inner_join(); }
+        LineCap   line_cap()   const { return m_stroker.line_cap(); }
+        LineJoin  line_join()  const { return m_stroker.line_join(); }
+        InnerJoin inner_join() const { return m_stroker.inner_join(); }
 
         void width(double w) { m_stroker.width(m_width = w); }
         void miter_limit(double ml) { m_stroker.miter_limit(ml); }
-        void miter_limit_theta(double t) { m_stroker.miter_limit_theta(t); }
-        void inner_miter_limit(double ml) { m_stroker.inner_miter_limit(ml); }
-        void approximation_scale(double as) { m_stroker.approximation_scale(as); }
 
         double width() const { return m_width; }
         double miter_limit() const { return m_stroker.miter_limit(); }
-        double inner_miter_limit() const { return m_stroker.inner_miter_limit(); }
-        double approximation_scale() const { return m_stroker.approximation_scale(); }
 
         void auto_detect_orientation(bool v) { m_auto_detect = v; }
         bool auto_detect_orientation() const { return m_auto_detect; }
