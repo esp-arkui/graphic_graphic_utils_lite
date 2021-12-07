@@ -20,40 +20,44 @@
 * @version 1.0
 */
 
-
 #ifndef GRAPHIC_SPAN_GRADIENT_INCLUDED
 #define GRAPHIC_SPAN_GRADIENT_INCLUDED
 
 #include <cmath>
 #include <cstdlib>
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
-
 
 namespace OHOS
 {
     /**
      *渐变的扫描线填色模板
      */
-    template<class ColorT,class Interpolator,class GradientF,class ColorF>
+    template <class ColorT, class Interpolator, class GradientF, class ColorF>
     class span_gradient
     {
     public:
         typedef Interpolator interpolator_type;
         typedef ColorT color_type;
-        span_gradient() {}
+        span_gradient()
+        {
+        }
         span_gradient(interpolator_type& inter,
                       GradientF& gradient_function,
                       ColorF& color_function,
-                      double d1, double d2) : 
+                      double d1, double d2) :
             m_interpolator(&inter),
             m_gradient_function(&gradient_function),
             m_color_function(&color_function),
             m_d1(iround(d1 * gradient_subpixel_scale)),
             m_d2(iround(d2 * gradient_subpixel_scale))
-        {}
+        {
+        }
 
-        void prepare() {}
+        void prepare()
+        {
+        }
 
         /**
          * @brief generate 从color_function取出rgba赋予span中的rgba
@@ -63,10 +67,11 @@ namespace OHOS
          * @param len 扫描线长度
          */
         void generate(color_type* span, int x, int y, unsigned len)
-        {   
+        {
             int downscaleShift = interpolator_type::subpixel_shift - gradient_subpixel_shift;
-            m_interpolator->begin(x+0.5, y+0.5, len);
-            for(;len;--len,++(*m_interpolator)){
+            m_interpolator->begin(x + 0.5, y + 0.5, len);
+            for (; len; --len, ++(*m_interpolator))
+            {
                 m_interpolator->coordinates(&x, &y);
                 int index = m_gradient_function->calculate(x >> downscaleShift,
                                                            y >> downscaleShift,
@@ -79,10 +84,10 @@ namespace OHOS
 
     private:
         interpolator_type* m_interpolator;
-        GradientF*         m_gradient_function;
-        ColorF*            m_color_function;
-        int                m_d1;
-        int                m_d2;
+        GradientF* m_gradient_function;
+        ColorF* m_color_function;
+        int m_d1;
+        int m_d2;
     };
 
     /**
@@ -92,17 +97,16 @@ namespace OHOS
     {
     public:
         GradientRadialCalculate() :
-            m_r(100 * gradient_subpixel_scale), 
-            m_fx(0), 
+            m_r(100 * gradient_subpixel_scale),
+            m_fx(0),
             m_fy(0)
         {
             update_values();
         }
 
-        //---------------------------------------------------------------------
         GradientRadialCalculate(double r, double fx, double fy) :
-            m_r (iround(r  * gradient_subpixel_scale)), 
-            m_fx(iround(fx * gradient_subpixel_scale)), 
+            m_r(iround(r * gradient_subpixel_scale)),
+            m_fx(iround(fx * gradient_subpixel_scale)),
             m_fy(iround(fy * gradient_subpixel_scale))
         {
             update_values();
@@ -117,32 +121,46 @@ namespace OHOS
          * @param size color_function的size
          * @return
          */
-        int calculate(int x, int y, int startRadius,int endRadius,int size) const
+        int calculate(int x, int y, int startRadius, int endRadius, int size) const
         {
             double dx = x - m_fx;
             double dy = y - m_fy;
             double m_d2 = dx * m_fy - dy * m_fx;
             double m_d3 = m_r2 * (dx * dx + dy * dy) - m_d2 * m_d2;
             int dd = endRadius - startRadius;
-            if(dd < 1) dd = 1;
+            if (dd < 1)
+                dd = 1;
             int index = ((iround((dx * m_fx + dy * m_fy + std::sqrt(std::fabs(m_d3))) * m_mul) - startRadius) * size) / dd;
-            if(index < 0) index = 0;
-            if(index >= size) index = size - 1;
+            if (index < 0)
+                index = 0;
+            if (index >= size)
+                index = size - 1;
             return index;
         }
 
     private:
-        //---------------------------------------------------------------------
         void update_values()
         {
-            m_r2  = double(m_r)  * double(m_r);
+            m_r2 = double(m_r) * double(m_r);
             m_fx2 = double(m_fx) * double(m_fx);
             m_fy2 = double(m_fy) * double(m_fy);
             double d = (m_r2 - (m_fx2 + m_fy2));
-            if(d == 0)
+            if (d == 0)
             {
-                if(m_fx) { if(m_fx < 0) ++m_fx; else --m_fx; }
-                if(m_fy) { if(m_fy < 0) ++m_fy; else --m_fy; }
+                if (m_fx)
+                {
+                    if (m_fx < 0)
+                        ++m_fx;
+                    else
+                        --m_fx;
+                }
+                if (m_fy)
+                {
+                    if (m_fy < 0)
+                        ++m_fy;
+                    else
+                        --m_fy;
+                }
                 m_fx2 = double(m_fx) * double(m_fx);
                 m_fy2 = double(m_fy) * double(m_fy);
                 d = (m_r2 - (m_fx2 + m_fy2));
@@ -150,15 +168,14 @@ namespace OHOS
             m_mul = m_r / d;
         }
 
-        int    m_r;
-        int    m_fx;
-        int    m_fy;
+        int m_r;
+        int m_fx;
+        int m_fy;
         double m_r2;
         double m_fx2;
         double m_fy2;
         double m_mul;
     };
-
 
     /**
      * @brief 计算线性渐变时当前(x,y)的color_function 数组下标
@@ -166,7 +183,6 @@ namespace OHOS
     class GradientLinearCalculate
     {
     public:
-
         /**
          * @brief calculate 计算线性渐变时当前(x,y)的color_function 数组下标
          * @param x 坐标x
@@ -174,15 +190,18 @@ namespace OHOS
          * @param size color_function的size
          * @return
          */
-        static int calculate(int x, int , int ,int distance,int size)
+        static int calculate(int x, int, int, int distance, int size)
         {
-            if(distance < 1) distance = 1;
-            int index = ( x  * size) / distance;
-            if(index < 0) index = 0;
-            if(index >= size) index = size - 1;
+            if (distance < 1)
+                distance = 1;
+            int index = (x * size) / distance;
+            if (index < 0)
+                index = 0;
+            if (index >= size)
+                index = size - 1;
             return index;
         }
     };
-}
+} // namespace OHOS
 
 #endif

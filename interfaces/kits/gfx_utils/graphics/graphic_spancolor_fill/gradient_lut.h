@@ -20,7 +20,6 @@
 * @version 1.0
 */
 
-
 #ifndef GRAPHIC_GRADIENT_LUT_INCLUDED
 #define GRAPHIC_GRADIENT_LUT_INCLUDED
 
@@ -29,18 +28,23 @@
 
 namespace OHOS
 {
-
     /**
      *根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
      */
-    template<class ColorInterpolator,unsigned ColorLutSize=256>
+    template <class ColorInterpolator, unsigned ColorLutSize = 256>
     class gradient_lut
     {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
-        enum { color_lut_size = ColorLutSize };
-        gradient_lut() : m_color_lut(color_lut_size) {}
+        enum
+        {
+            color_lut_size = ColorLutSize
+        };
+        gradient_lut() :
+            m_color_lut(color_lut_size)
+        {
+        }
 
         /**
          *删除所有颜色
@@ -67,23 +71,23 @@ namespace OHOS
         {
             quick_sort(m_color_profile, offset_less);
             m_color_profile.cut_at(remove_duplicates(m_color_profile, offset_equal));
-            if(m_color_profile.size() > 1)
+            if (m_color_profile.size() > 1)
             {
                 unsigned i;
                 unsigned start = uround(m_color_profile[0].offset * color_lut_size);
                 unsigned end;
                 color_type c = m_color_profile[0].color;
-                for(i = 0; i < start; i++)
+                for (i = 0; i < start; i++)
                 {
                     m_color_lut[i] = c;
                 }
-                for(i = 1; i < m_color_profile.size(); i++)
+                for (i = 1; i < m_color_profile.size(); i++)
                 {
-                    end  = uround(m_color_profile[i].offset * color_lut_size);
-                    interpolator_type ci(m_color_profile[i-1].color,
+                    end = uround(m_color_profile[i].offset * color_lut_size);
+                    interpolator_type ci(m_color_profile[i - 1].color,
                                          m_color_profile[i].color,
                                          end - start + 1);
-                    while(start < end)
+                    while (start < end)
                     {
                         m_color_lut[start] = ci.color();
                         ++ci;
@@ -91,7 +95,7 @@ namespace OHOS
                     }
                 }
                 c = m_color_profile.last().color;
-                for(; end < m_color_lut.size(); end++)
+                for (; end < m_color_lut.size(); end++)
                 {
                     m_color_lut[end] = c;
                 }
@@ -105,28 +109,31 @@ namespace OHOS
         {
             return color_lut_size;
         }
-        const color_type& operator [] (unsigned i) const
+        const color_type& operator[](unsigned i) const
         {
             return m_color_lut[i];
         }
 
     private:
-
         struct color_point
         {
-            double     offset;
+            double offset;
             color_type color;
 
-            color_point() {}
+            color_point()
+            {
+            }
             color_point(double off, const color_type& c) :
                 offset(off), color(c)
             {
-                if(offset < 0.0) offset = 0.0;
-                if(offset > 1.0) offset = 1.0;
+                if (offset < 0.0)
+                    offset = 0.0;
+                if (offset > 1.0)
+                    offset = 1.0;
             }
         };
         typedef OHOS::pod_bvector<color_point, 4> color_profile_type;
-        typedef OHOS::pod_array<color_type>       color_lut_type;
+        typedef OHOS::pod_array<color_type> color_lut_type;
 
         static bool offset_less(const color_point& a, const color_point& b)
         {
@@ -137,9 +144,9 @@ namespace OHOS
             return a.offset == b.offset;
         }
 
-        color_profile_type  m_color_profile;
-        color_lut_type      m_color_lut;
+        color_profile_type m_color_profile;
+        color_lut_type m_color_lut;
     };
-}
+} // namespace OHOS
 
 #endif

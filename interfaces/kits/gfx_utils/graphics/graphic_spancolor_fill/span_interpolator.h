@@ -20,22 +20,21 @@
 * @version 1.0
 */
 
-
 #ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 
+#include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
-#include "gfx_utils/graphics/graphic_color/agg_color_rgba.h"
 
 namespace OHOS
 {
-
     /**
      *渐变的颜色插入器
      */
-    template<class ColorT> struct color_interpolator
+    template <class ColorT>
+    struct color_interpolator
     {
     public:
         typedef ColorT color_type;
@@ -47,9 +46,10 @@ namespace OHOS
             m_c2(c2),
             m_len(len),
             m_count(0)
-        {}
+        {
+        }
 
-        void operator ++ ()
+        void operator++()
         {
             ++m_count;
         }
@@ -66,15 +66,14 @@ namespace OHOS
     private:
         color_type m_c1;
         color_type m_c2;
-        unsigned   m_len;
-        unsigned   m_count;
+        unsigned m_len;
+        unsigned m_count;
     };
-
 
     /**
      *线性的扫描线插入器
      */
-    template<class Transformer = trans_affine, unsigned SubpixelShift = 8> 
+    template <class Transformer = trans_affine, unsigned SubpixelShift = 8>
     class span_interpolator_linear
     {
     public:
@@ -83,24 +82,29 @@ namespace OHOS
         enum subpixel_scale_e
         {
             subpixel_shift = SubpixelShift,
-            subpixel_scale  = 1 << subpixel_shift
+            subpixel_scale = 1 << subpixel_shift
         };
-
-        //--------------------------------------------------------------------
-        span_interpolator_linear() {}
-        span_interpolator_linear(trans_type& trans) : m_trans(&trans) {}
+        span_interpolator_linear()
+        {
+        }
+        span_interpolator_linear(trans_type& trans) :
+            m_trans(&trans)
+        {
+        }
         span_interpolator_linear(trans_type& trans,
                                  double x, double y, unsigned len) :
             m_trans(&trans)
         {
             begin(x, y, len);
         }
-
-        //----------------------------------------------------------------
-        const trans_type& transformer() const { return *m_trans; }
-        void transformer(trans_type& trans) { m_trans = &trans; }
-
-        //----------------------------------------------------------------
+        const trans_type& transformer() const
+        {
+            return *m_trans;
+        }
+        void transformer(trans_type& trans)
+        {
+            m_trans = &trans;
+        }
         void begin(double x, double y, unsigned len)
         {
             double tx;
@@ -121,23 +125,19 @@ namespace OHOS
             m_li_x = dda2_line_interpolator(x1, x2, len);
             m_li_y = dda2_line_interpolator(y1, y2, len);
         }
-
-        //----------------------------------------------------------------
         void resynchronize(double xe, double ye, unsigned len)
         {
             m_trans->transform(&xe, &ye);
             m_li_x = dda2_line_interpolator(m_li_x.y(), iround(xe * subpixel_scale), len);
             m_li_y = dda2_line_interpolator(m_li_y.y(), iround(ye * subpixel_scale), len);
         }
-    
-        //----------------------------------------------------------------
+
         void operator++()
         {
             ++m_li_x;
             ++m_li_y;
         }
 
-        //----------------------------------------------------------------
         void coordinates(int* x, int* y) const
         {
             *x = m_li_x.y();
@@ -149,8 +149,6 @@ namespace OHOS
         dda2_line_interpolator m_li_x;
         dda2_line_interpolator m_li_y;
     };
-}
+} // namespace OHOS
 
 #endif
-
-
