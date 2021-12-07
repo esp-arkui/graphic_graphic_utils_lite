@@ -59,7 +59,7 @@ namespace OHOS
         {   
             x += m_offset_x;
             y += m_offset_y;
-            const value_type* p = (const value_type*)m_src->span(x, y, len);
+            const value_type* p = (const value_type*)m_src->Span(x, y, len);
             do
             {
                 if (p) {

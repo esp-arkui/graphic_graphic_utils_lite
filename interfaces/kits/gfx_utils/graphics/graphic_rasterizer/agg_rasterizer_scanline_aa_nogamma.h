@@ -117,7 +117,7 @@ namespace OHOS
             m_auto_close(true),
             m_start_x(0),
             m_start_y(0),
-            m_status(status_initial)
+            status_(status_initial)
         {
         }
 
@@ -266,7 +266,7 @@ namespace OHOS
         bool           m_auto_close;
         coord_type     m_start_x;
         coord_type     m_start_y;
-        unsigned       m_status;
+        unsigned       status_;
         int            m_scan_y;
     };
 
@@ -286,7 +286,7 @@ namespace OHOS
     void rasterizer_scanline_aa_nogamma<Clip>::reset() 
     { 
         m_outline.reset(); 
-        m_status = status_initial;
+        status_ = status_initial;
     }
 
     //------------------------------------------------------------------------
@@ -318,10 +318,10 @@ namespace OHOS
     template<class Clip> 
     void rasterizer_scanline_aa_nogamma<Clip>::close_polygon()
     {
-        if(m_status == status_line_to)
+        if(status_ == status_line_to)
         {
             m_clipper.line_to(m_outline, m_start_x, m_start_y);
-            m_status = status_closed;
+            status_ = status_closed;
         }
     }
 
@@ -333,7 +333,7 @@ namespace OHOS
         if(m_auto_close) close_polygon();
         m_clipper.move_to(m_start_x = conv_type::downscale(x), 
                           m_start_y = conv_type::downscale(y));
-        m_status = status_move_to;
+        status_ = status_move_to;
     }
 
     //------------------------------------------------------------------------
@@ -343,7 +343,7 @@ namespace OHOS
         m_clipper.line_to(m_outline, 
                           conv_type::downscale(x), 
                           conv_type::downscale(y));
-        m_status = status_line_to;
+        status_ = status_line_to;
     }
 
     //------------------------------------------------------------------------
@@ -354,7 +354,7 @@ namespace OHOS
         if(m_auto_close) close_polygon();
         m_clipper.move_to(m_start_x = conv_type::upscale(x), 
                           m_start_y = conv_type::upscale(y)); 
-        m_status = status_move_to;
+        status_ = status_move_to;
     }
 
     //------------------------------------------------------------------------
@@ -364,7 +364,7 @@ namespace OHOS
         m_clipper.line_to(m_outline, 
                           conv_type::upscale(x), 
                           conv_type::upscale(y)); 
-        m_status = status_line_to;
+        status_ = status_line_to;
     }
 
     //------------------------------------------------------------------------
@@ -396,7 +396,7 @@ namespace OHOS
         m_clipper.line_to(m_outline, 
                           conv_type::downscale(x2), 
                           conv_type::downscale(y2));
-        m_status = status_move_to;
+        status_ = status_move_to;
     }
     
     //------------------------------------------------------------------------
@@ -409,7 +409,7 @@ namespace OHOS
         m_clipper.line_to(m_outline, 
                           conv_type::upscale(x2), 
                           conv_type::upscale(y2)); 
-        m_status = status_move_to;
+        status_ = status_move_to;
     }
 
     //------------------------------------------------------------------------

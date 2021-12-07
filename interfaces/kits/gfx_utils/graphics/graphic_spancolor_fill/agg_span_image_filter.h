@@ -132,7 +132,7 @@ namespace OHOS
             double scale_x;
             double scale_y;
 
-            base_type::interpolator().transformer().scaling_abs(&scale_x, &scale_y);
+            base_type::interpolator().transformer().ScalingAbs(&scale_x, &scale_y);
 
 			double scale_xy = scale_x * scale_y;
 			if (scale_xy > m_scale_limit)

@@ -43,7 +43,7 @@ namespace OHOS
             unsigned cmd = m_source->vertex(x, y);
             if(is_vertex(cmd))
             {
-                m_trans->transform(x, y);
+                m_trans->Transform(x, y);
             }
             return cmd;
         }

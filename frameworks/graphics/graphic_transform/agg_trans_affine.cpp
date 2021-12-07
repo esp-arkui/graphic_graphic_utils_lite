@@ -23,14 +23,14 @@ namespace OHOS
     const TransAffine& TransAffine::ParlToParl(const double* src, 
                                                    const double* dst)
     {
-        sx  = src[2] - src[0];
-        shy = src[3] - src[1];
-        shx = src[4] - src[0];
-        sy  = src[5] - src[1];
-        tx  = src[0];
-        ty  = src[1];
-        invert();
-        multiply(TransAffine(dst[2] - dst[0], dst[3] - dst[1], 
+        scaleX  = src[2] - src[0];
+        shearY = src[3] - src[1];
+        shearX = src[4] - src[0];
+        scaleY  = src[5] - src[1];
+        translateX  = src[0];
+        translateY  = src[1];
+        Invert();
+        Multiply(TransAffine(dst[2] - dst[0], dst[3] - dst[1], 
                               dst[4] - dst[0], dst[5] - dst[1],
                               dst[0], dst[1]));
         return *this;
@@ -51,63 +51,63 @@ namespace OHOS
 
 
     //------------------------------------------------------------------------
-    const TransAffine& TransAffine::multiply(const TransAffine& m)
+    const TransAffine& TransAffine::Multiply(const TransAffine& m)
     {
-        double t0 = sx  * m.sx + shy * m.shx;
-        double t2 = shx * m.sx + sy  * m.shx;
-        double t4 = tx  * m.sx + ty  * m.shx + m.tx;
-        shy = sx  * m.shy + shy * m.sy;
-        sy  = shx * m.shy + sy  * m.sy;
-        ty  = tx  * m.shy + ty  * m.sy + m.ty;
-        sx  = t0;
-        shx = t2;
-        tx  = t4;
+        double t0 = scaleX  * m.scaleX + shearY * m.shearX;
+        double t2 = shearX * m.scaleX + scaleY  * m.shearX;
+        double t4 = translateX  * m.scaleX + translateY  * m.shearX + m.translateX;
+        shearY = scaleX  * m.shearY + shearY * m.scaleY;
+        scaleY  = shearX * m.shearY + scaleY  * m.scaleY;
+        translateY  = translateX  * m.shearY + translateY  * m.scaleY + m.translateY;
+        scaleX  = t0;
+        shearX = t2;
+        translateX  = t4;
         return *this;
     }
 
 
     //------------------------------------------------------------------------
-    const TransAffine& TransAffine::invert()
+    const TransAffine& TransAffine::Invert()
     {
-        double d  = determinant_reciprocal();
+        double d  = DeterminantReciprocal();
 
-        double t0  =  sy  * d;
-               sy  =  sx  * d;
-               shy = -shy * d;
-               shx = -shx * d;
+        double t0  =  scaleY  * d;
+               scaleY  =  scaleX  * d;
+               shearY = -shearY * d;
+               shearX = -shearX * d;
 
-        double t4 = -tx * t0  - ty * shx;
-               ty = -tx * shy - ty * sy;
+        double t4 = -translateX * t0  - translateY * shearX;
+               translateY = -translateX * shearY - translateY * scaleY;
 
-        sx = t0;
-        tx = t4;
+        scaleX = t0;
+        translateX = t4;
         return *this;
     }
 
 
     //------------------------------------------------------------------------
-    const TransAffine& TransAffine::reset()
+    const TransAffine& TransAffine::Reset()
     {
-        sx  = sy  = 1.0; 
-        shy = shx = tx = ty = 0.0;
+        scaleX  = scaleY  = 1.0; 
+        shearY = shearX = translateX = translateY = 0.0;
         return *this;
     }
 
     //------------------------------------------------------------------------
-    bool TransAffine::is_identity(double epsilon) const
+    bool TransAffine::IsIdentity(double epsilon) const
     {
-        return is_equal_eps(sx,  1.0, epsilon) &&
-               is_equal_eps(shy, 0.0, epsilon) &&
-               is_equal_eps(shx, 0.0, epsilon) && 
-               is_equal_eps(sy,  1.0, epsilon) &&
-               is_equal_eps(tx,  0.0, epsilon) &&
-               is_equal_eps(ty,  0.0, epsilon);
+        return is_equal_eps(scaleX,  1.0, epsilon) &&
+               is_equal_eps(shearY, 0.0, epsilon) &&
+               is_equal_eps(shearX, 0.0, epsilon) && 
+               is_equal_eps(scaleY,  1.0, epsilon) &&
+               is_equal_eps(translateX,  0.0, epsilon) &&
+               is_equal_eps(translateY,  0.0, epsilon);
     }
 
     //------------------------------------------------------------------------
-    bool TransAffine::is_valid(double epsilon) const
+    bool TransAffine::IsValid(double epsilon) const
     {
-        return std::fabs(sx) > epsilon && std::fabs(sy) > epsilon;
+        return std::fabs(scaleX) > epsilon && std::fabs(scaleY) > epsilon;
     }
 
 

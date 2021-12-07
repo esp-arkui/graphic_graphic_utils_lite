@@ -20,26 +20,42 @@
 namespace OHOS
 {
 
-    template<class PixelFormat> class ImageAccessorClone
+    template<class PixelFormatType> class ImageAccessorClone
     {
     public:
-        typedef PixelFormat   PixelFormatType;
-        typedef typename PixelFormatType::colorType colorType;
-        typedef typename PixelFormatType::orderType orderType;
-        typedef typename PixelFormatType::valueType valueType;
-        enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
+        typedef typename PixelFormatType::color_type color_type;
+        typedef typename PixelFormatType::order_type order_type;
+        typedef typename PixelFormatType::value_type value_type;
+        enum PixWidth { 
+            PIX_WIDTH = PixelFormatType::pix_width 
+        };
 
         ImageAccessorClone() {}
         explicit ImageAccessorClone(PixelFormatType& pixFormat) : 
             pixFormat_(&pixFormat) 
         {}
-
+        /**
+         * @brief 关联像素集
+         * 
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
         void Attach(PixelFormatType& pixFormat)
         {
             pixFormat_ = &pixFormat;
         }
 
     private:
+
+
+        /**
+         * @brief 获取坐标为(x_,y_)的像素地址
+         * 
+         * @return 坐标为(x_,y_)的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPTHIC_INLINE const int8u* Pixel() const
         {
             int x = x_;
@@ -47,47 +63,69 @@ namespace OHOS
             if(x < 0) {
                 x = 0;
             }
-            if (x >= (int)pixFormat_->Width()) {
-                x = pixFormat_->Width() - 1;
+            if (x >= (int)pixFormat_->width()) {
+                x = pixFormat_->width() - 1;
             }
             if(y < 0) {
                 y = 0;
             }
-            if (y >= (int)pixFormat_->Height()) {
-                y = pixFormat_->Height() - 1;
+            if (y >= (int)pixFormat_->height()) {
+                y = pixFormat_->height() - 1;
             }
-            return pixFormat_->pixPtr(x, y);
+            return pixFormat_->pix_ptr(x, y);
         }
 
     public:
+        /**
+         * @brief 获取像素地址
+         * 
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @param len 线段长度
+         * @return 坐标像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
         {
             x_ = x0_ = x;
             y_ = y;
-            if(x >= 0 && x+len <= (int)pixFormat_->Width() &&
-               y >= 0 && y < (int)pixFormat_->Height() ) {
-                return pixPtr_ = pixFormat_->pixPtr(x, y);
+            if(x >= 0 && x+len <= (int)pixFormat_->width() &&
+               y >= 0 && y < (int)pixFormat_->height() ) {
+                return pixPtr_ = pixFormat_->pix_ptr(x, y);
             }
             pixPtr_ = 0;
             return Pixel();
         }
-
+        /**
+         * @brief 像素地址增加一个像素宽度
+         * 
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPTHIC_INLINE const int8u* NextX()
         {
             if(pixPtr_) {
-                return pixPtr_ += PIXWIDTH;
+                return pixPtr_ += PIX_WIDTH;
             }
             ++x_;
             return Pixel();
         }
-
+        /**
+         * @brief 像素地址增加一个像素高度
+         * 
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPTHIC_INLINE const int8u* NextY()
         {
             ++y_;
             x_ = x0_;
             if(pixPtr_ != 0 && 
-               y_ >= 0 && y_ < (int)pixFormat_->Height()){
-                return pixPtr_ = pixFormat_->pixPtr(x_, y_);
+               y_ >= 0 && y_ < (int)pixFormat_->height()){
+                return pixPtr_ = pixFormat_->pix_ptr(x_, y_);
             }
             pixPtr_ = 0;
             return Pixel();
@@ -99,28 +137,41 @@ namespace OHOS
         const int8u*       pixPtr_;
     };
 
-template<class PixelFormat> class ImageAccessorNoRepeat
+template<class PixelFormatType> class ImageAccessorNoRepeat
 {
 public:
-    typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::colorType colorType;
-    typedef typename PixelFormatType::orderType orderType;
-    typedef typename PixelFormatType::valueType valueType;
+    typedef typename PixelFormatType::color_type color_type;
+    typedef typename PixelFormatType::order_type order_type;
+    typedef typename PixelFormatType::value_type value_type;
     enum PixWidth { 
-        PIXWIDTH = PixelFormatType::pixWidth 
+        PIX_WIDTH = PixelFormatType::pix_width 
     };
 
     ImageAccessorNoRepeat() {}
     explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat) :
         pixFormat_(&pixFormat)
     {}
-
+    /**
+     * @brief 关联像素集
+     * 
+     * @param pixFormat 需要关联的像素集
+     * @since 1.0
+     * @version 1.0
+     */
     void Attach(PixelFormatType& pixFormat)
     {
         pixFormat_ = &pixFormat;
     }
 
 private:
+
+    /**
+     * @brief 获取坐标为(x_,y_)的像素地址
+     * 
+     * @return 坐标为(x_,y_)的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* Pixel() const
     {
         int x = x_;
@@ -128,49 +179,71 @@ private:
         if(x < 0) {
             x = 0;
         }
-        if (x >= (int)pixFormat_->Width()) {
-            x = pixFormat_->Width() - 1;
+        if (x >= (int)pixFormat_->width()) {
+            x = pixFormat_->width() - 1;
             return NULL;
         }
         if(y < 0) {
             y = 0;
         }
-        if (y >= (int)pixFormat_->Height()) {
-            y = pixFormat_->Height() - 1;
+        if (y >= (int)pixFormat_->height()) {
+            y = pixFormat_->height() - 1;
             return NULL;
         }
 
-        return pixFormat_->pixPtr(x, y);
+        return pixFormat_->pix_ptr(x, y);
     }
 
 public:
+    /**
+     * @brief 获取像素地址
+     * 
+     * @param x x轴坐标
+     * @param y y轴坐标
+     * @param len 线段长度
+     * @return 坐标像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
     {
         x_ = x0_ = x;
         y_ = y;
-        if(x >= 0 && x+len <= (int)pixFormat_->Width() &&
-           y >= 0 && y < (int)pixFormat_->Height()) {
-            return pixPtr_ = pixFormat_->pixPtr(x, y);
+        if(x >= 0 && x+len <= (int)pixFormat_->width() &&
+           y >= 0 && y < (int)pixFormat_->height()) {
+            return pixPtr_ = pixFormat_->pix_ptr(x, y);
         }
         pixPtr_ = 0;
         return Pixel();
     }
-
+    /**
+     * @brief 像素地址增加一个像素宽度
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* NextX()
     {
         if(pixPtr_ != 0) {
-            return pixPtr_ += PIXWIDTH;
+            return pixPtr_ += PIX_WIDTH;
         }
         ++x_;
         return Pixel();
     }
-
+    /**
+     * @brief 像素地址增加一个像素高度
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* NextY()
     {
         ++y_;
         x_ = x0_;
         if(pixPtr_ != 0 &&
-           y_ >= 0 && y_ < (int)pixFormat_->Height()) {
+           y_ >= 0 && y_ < (int)pixFormat_->height()) {
             return pixPtr_ = pixFormat_->pixPtr(x_, y_);
         }
         pixPtr_ = 0;
@@ -184,53 +257,83 @@ private:
 };
 
 
-    template<class PixelFormat, class WrapX, class WrapY> class ImageAccessorWrap
-    {
-    public:
-        typedef PixelFormat   PixelFormatType;
-        typedef typename PixelFormatType::colorType colorType;
-        typedef typename PixelFormatType::orderType orderType;
-        typedef typename PixelFormatType::valueType valueType;
-        enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
-
-        ImageAccessorWrap() {}
-        explicit ImageAccessorWrap(PixelFormatType& pixFormat) : 
-            pixFormat_(&pixFormat), 
-            wrapX_(pixFormat.Width()), 
-            wrapY_(pixFormat.Height())
-        {}
-
-        void Attach(PixelFormatType& pixFormat)
-        {
-            pixFormat_ = &pixFormat;
-        }
-
-        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
-        {
-            x_ = x;
-            rowPtr_ = pixFormat_->pixPtr(0, wrapY_(y));
-            return rowPtr_ + wrapX_(x) * PIXWIDTH;
-        }
-
-        GRAPTHIC_INLINE const int8u* NextX()
-        {
-            int x = ++wrapX_;
-            return rowPtr_ + x * PIXWIDTH;
-        }
-
-        GRAPTHIC_INLINE const int8u* NextY()
-        {
-            rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
-            return rowPtr_ + wrapX_(x_) * PIXWIDTH;
-        }
-
-    private:
-        const PixelFormatType* pixFormat_;
-        const int8u*       rowPtr_;
-        int                x_;
-        WrapX              wrapX_;
-        WrapY              wrapY_;
+template<class PixelFormat, class WrapX, class WrapY> class ImageAccessorWrap
+{
+public:
+    typedef PixelFormat   PixelFormatType;
+    typedef typename PixelFormatType::color_type color_type;
+    typedef typename PixelFormatType::order_type order_type;
+    typedef typename PixelFormatType::value_type value_type;
+    enum PixWidth { 
+        PIX_WIDTH = PixelFormatType::pix_width 
     };
+
+    ImageAccessorWrap() {}
+    explicit ImageAccessorWrap(PixelFormatType& pixFormat) : 
+        pixFormat_(&pixFormat), 
+        wrapX_(pixFormat.width()), 
+        wrapY_(pixFormat.height())
+    {}
+
+    /**
+     * @brief 关联像素集
+     * 
+     * @param pixFormat 需要关联的像素集
+     * @since 1.0
+     * @version 1.0
+     */
+    void Attach(PixelFormatType& pixFormat)
+    {
+        pixFormat_ = &pixFormat;
+    }
+    /**
+     * @brief 获取像素地址带换行
+     * 
+     * @param x x轴坐标
+     * @param y y轴坐标
+     * @return 坐标像素地址
+     * @since 1.0
+     * @version 1.0
+     */
+    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
+    {
+        x_ = x;
+        rowPtr_ = pixFormat_->pix_ptr(0, wrapY_(y));
+        return rowPtr_ + wrapX_(x) * PIX_WIDTH;
+    }
+    /**
+     * @brief 像素地址增加一个像素宽度附带换行功能
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
+    GRAPTHIC_INLINE const int8u* NextX()
+    {
+        int x = ++wrapX_;
+        return rowPtr_ + x * PIX_WIDTH;
+    }
+
+    /**
+     * @brief 像素地址增加一个像素高度附带换行功能
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
+    GRAPTHIC_INLINE const int8u* NextY()
+    {
+        rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
+        return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
+    }
+
+private:
+    const PixelFormatType* pixFormat_;
+    const int8u*       rowPtr_;
+    int                x_;
+    WrapX              wrapX_;
+    WrapY              wrapY_;
+};
 
 
 
@@ -238,47 +341,76 @@ template<class PixelFormat, class WrapX> class ImageAccessorRepeatX
 {
 public:
     typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::colorType colorType;
-    typedef typename PixelFormatType::orderType orderType;
-    typedef typename PixelFormatType::valueType valueType;
-    enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
+    typedef typename PixelFormatType::color_type color_type;
+    typedef typename PixelFormatType::order_type order_type;
+    typedef typename PixelFormatType::value_type value_type;
+    enum PixWidth { 
+        PIX_WIDTH = PixelFormatType::pix_width 
+    };
 
     ImageAccessorRepeatX() {}
     explicit ImageAccessorRepeatX(PixelFormatType& pixFormat) :
         pixFormat_(&pixFormat),
-        wrapX_(pixFormat.Width())
+        wrapX_(pixFormat.width())
     {}
-
+    /**
+     * @brief 关联像素集
+     * 
+     * @param pixFormat 需要关联的像素集
+     * @since 1.0
+     * @version 1.0
+     */
     void Attach(PixelFormatType& pixFormat)
     {
         pixFormat_ = &pixFormat;
     }
-
+    /**
+     * @brief 获取像素地址
+     * 
+     * @param x x轴坐标
+     * @param y y轴坐标
+     * @param len 线段长度
+     * @return 坐标像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
     {
         x_ = x;
         y_ = y;
-        if (y >= (int)pixFormat_->Height()){
-            y = pixFormat_->Height() - 1;
+        if (y >= (int)pixFormat_->height()){
+            y = pixFormat_->height() - 1;
             return NULL;
         }
-        rowPtr_ = pixFormat_->pixPtr(0, y);
-        return rowPtr_ + wrapX_(x) * PIXWIDTH;
+        rowPtr_ = pixFormat_->pix_ptr(0, y);
+        return rowPtr_ + wrapX_(x) * PIX_WIDTH;
     }
-
+    /**
+     * @brief 像素地址增加一个像素宽度
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* NextX()
     {
-        if (y_ >= (int)pixFormat_->Height()) {
+        if (y_ >= (int)pixFormat_->height()) {
            return NULL;
        }
         int x = ++wrapX_;
-        return rowPtr_ + x * PIXWIDTH;
+        return rowPtr_ + x * PIX_WIDTH;
     }
-
+    /**
+     * @brief 像素地址增加一个像素高度
+     * 
+     * @return 坐标为改变后的像素地址
+     * @since 1.0
+     * @version 1.0
+     */
     GRAPTHIC_INLINE const int8u* NextY()
     {
         rowPtr_ = pixFormat_->pixPtr(0, y_);
-        return rowPtr_ + wrapX_(x_) * PIXWIDTH;
+        return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
 
     }
 
@@ -290,59 +422,86 @@ private:
     WrapX                   wrapX_;
 };
 
-template<class PixelFormat, class WrapY> class ImageAccessorRepeatY
-{
-public:
-    typedef PixelFormat   PixelFormatType;
-    typedef typename PixelFormatType::colorType colorType;
-    typedef typename PixelFormatType::orderType orderType;
-    typedef typename PixelFormatType::valueType valueType;
-    enum PixWidth { PIXWIDTH = PixelFormatType::pixWidth };
-
-    ImageAccessorRepeatY() {}
-    explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
-        pixFormat_(&pixFormat),
-        wrapY_(pixFormat.Height())
-    {}
-
-    void Attach(PixelFormatType& pixFormat)
+    template<class PixelFormatType, class WrapY> class ImageAccessorRepeatY
     {
-        pixFormat_ = &pixFormat;
-    }
+    public:
+        typedef typename PixelFormatType::color_type color_type;
+        typedef typename PixelFormatType::order_type order_type;
+        typedef typename PixelFormatType::value_type value_type;
+        enum PixWidth { 
+            PIX_WIDTH = PixelFormatType::pix_width 
+        };
 
-    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
-    {
-        x_ = x;
-        if (x >= (int)pixFormat_->Width()){
-            x = pixFormat_->Width() - 1;
-        return NULL;
+        ImageAccessorRepeatY() {}
+        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
+            pixFormat_(&pixFormat),
+            wrapY_(pixFormat.height())
+        {}
+        /**
+         * @brief 关联像素集
+         * 
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
+        void Attach(PixelFormatType& pixFormat)
+        {
+            pixFormat_ = &pixFormat;
         }
-        rowPtr_ = pixFormat_->pixPtr(0, wrapY_(y));
-        return rowPtr_ + x * PIXWIDTH;
-    }
-
-    GRAPTHIC_INLINE const int8u* NextX()
-    {
-        int x = ++x_;
-        if (x >= (int)pixFormat_->Width()) {
-            x = pixFormat_->Width() - 1;
+        /**
+         * @brief 获取像素地址
+         * 
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @return 坐标像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
+        {
+            x_ = x;
+            if (x >= (int)pixFormat_->width()){
+                x = pixFormat_->width() - 1;
             return NULL;
+            }
+            rowPtr_ = pixFormat_->pix_ptr(0, wrapY_(y));
+            return rowPtr_ + x * PIX_WIDTH;
         }
-        return rowPtr_ + x * PIXWIDTH;
-    }
+        /**
+         * @brief 像素地址增加一个像素宽度
+         * 
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPTHIC_INLINE const int8u* NextX()
+        {
+            int x = ++x_;
+            if (x >= (int)pixFormat_->width()) {
+                x = pixFormat_->width() - 1;
+                return NULL;
+            }
+            return rowPtr_ + x * PIX_WIDTH;
+        }
+        /**
+         * @brief 像素地址增加一个像素高度
+         * 
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPTHIC_INLINE const int8u* NextY()
+        {
+            rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
+            return rowPtr_ + x_ * PIX_WIDTH;
+        }
 
-    GRAPTHIC_INLINE const int8u* NextY()
-    {
-        rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
-        return rowPtr_ + x_ * PIXWIDTH;
-    }
-
-private:
-    const PixelFormatType*  pixFormat_;
-    const int8u*            rowPtr_;
-    int                     x_;
-    WrapY                   wrapY_;
-};
+    private:
+        const PixelFormatType*  pixFormat_;
+        const int8u*            rowPtr_;
+        int                     x_;
+        WrapY                   wrapY_;
+    };
 
 
     class WrapModeRepeat

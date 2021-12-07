@@ -56,7 +56,7 @@ namespace OHOS
             {
                 base_type::interpolator().coordinates(&x, &y);
                 const value_type* fg_ptr = (const value_type*)
-                    base_type::source().span(x >> image_subpixel_shift, 
+                    base_type::source().Span(x >> image_subpixel_shift,
                                              y >> image_subpixel_shift, 
                                              1);
                 span->r = fg_ptr[order_type::R];
@@ -127,7 +127,7 @@ namespace OHOS
                 x_hr &= image_subpixel_mask;
                 y_hr &= image_subpixel_mask;
 
-                fg_ptr = (const value_type*)base_type::source().span(x_lr, y_lr, 2);
+                fg_ptr = (const value_type*)base_type::source().Span(x_lr, y_lr, 2);
                 weight = (image_subpixel_scale - x_hr) * 
                          (image_subpixel_scale - y_hr);
                 fg[0] += weight * *fg_ptr++;
@@ -454,7 +454,7 @@ namespace OHOS
                 x_hr &= image_subpixel_mask;
                 y_hr &= image_subpixel_mask;
 
-                fg_ptr = (const value_type*)base_type::source().span(x_lr, y_lr, 2);
+                fg_ptr = (const value_type*)base_type::source().Span(x_lr, y_lr, 2);
                 weight = (weight_array[x_hr + image_subpixel_scale] * 
                           weight_array[y_hr + image_subpixel_scale] + 
                           image_filter_scale / 2) >> 
@@ -575,7 +575,7 @@ namespace OHOS
                 unsigned y_count = diameter;
 
                 y_hr = image_subpixel_mask - (y_hr & image_subpixel_mask);
-                fg_ptr = (const value_type*)base_type::source().span(x_lr + start, 
+                fg_ptr = (const value_type*)base_type::source().Span(x_lr + start,
                                                                      y_lr + start, 
                                                                      diameter);
                 for(;;)
@@ -698,7 +698,7 @@ namespace OHOS
 
                 int x_hr2 = x_hr;
                 const value_type* fg_ptr = 
-                    (const value_type*)base_type::source().span(x_lr, y_lr, len_x_lr);
+                    (const value_type*)base_type::source().Span(x_lr, y_lr, len_x_lr);
                 for(;;)
                 {
                     int weight_y = weight_array[y_hr];

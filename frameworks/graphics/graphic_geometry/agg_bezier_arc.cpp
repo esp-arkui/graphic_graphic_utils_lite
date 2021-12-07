@@ -235,12 +235,12 @@ namespace OHOS
         // We can now build and transform the resulting arc
         //------------------------
         m_arc.init(0.0, 0.0, rx, ry, start_angle, sweep_angle);
-        TransAffine mtx = trans_affine_rotation(angle);
-        mtx *= trans_affine_translation(cx, cy);
+        TransAffine mtx = TransAffineRotation(angle);
+        mtx *= TransAffineTranslation(cx, cy);
         
         for(unsigned i = 2; i < m_arc.num_vertices()-2; i += 2)
         {
-            mtx.transform(m_arc.vertices() + i, m_arc.vertices() + i + 1);
+            mtx.Transform(m_arc.vertices() + i, m_arc.vertices() + i + 1);
         }
 
         // We must make sure that the starting and ending points
