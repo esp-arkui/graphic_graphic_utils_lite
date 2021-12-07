@@ -46,8 +46,8 @@ namespace OHOS
         void approximation_scale(double s) { m_arc.approximation_scale(s); }
         double approximation_scale() const { return m_arc.approximation_scale(); }
 
-        void rewind(unsigned);
-        unsigned vertex(double* x, double* y);
+        void Rewind(unsigned);
+        unsigned Vertex(double* x, double* y);
 
     private:
         double m_x1;
@@ -62,7 +62,7 @@ namespace OHOS
         double m_ry3;
         double m_rx4;
         double m_ry4;
-        unsigned m_status;
+        unsigned status_;
         arc      m_arc;
     };
 

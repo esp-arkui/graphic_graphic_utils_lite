@@ -195,7 +195,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::add_curr_cell()
+    GRAPTHIC_INLINE void rasterizer_cells_aa<Cell>::add_curr_cell()
     {
         if(m_curr_cell.area | m_curr_cell.cover)
         {
@@ -211,7 +211,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::set_curr_cell(int x, int y)
+    GRAPTHIC_INLINE void rasterizer_cells_aa<Cell>::set_curr_cell(int x, int y)
     {
         if(m_curr_cell.not_equal(x, y, m_style_cell))
         {
@@ -226,7 +226,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::render_hline(int ey, 
+    GRAPTHIC_INLINE void rasterizer_cells_aa<Cell>::render_hline(int ey, 
                                                             int x1, int y1, 
                                                             int x2, int y2)
     {
@@ -321,7 +321,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::style(const cell_type& style_cell)
+    GRAPTHIC_INLINE void rasterizer_cells_aa<Cell>::style(const cell_type& style_cell)
     { 
         m_style_cell.style(style_cell); 
     }
@@ -505,7 +505,7 @@ namespace OHOS
 
 
     //------------------------------------------------------------------------
-    template <class T> static AGG_INLINE void swap_cells(T* a, T* b)
+    template <class T> static GRAPTHIC_INLINE void swap_cells(T* a, T* b)
     {
         T temp = *a;
         *a = *b;

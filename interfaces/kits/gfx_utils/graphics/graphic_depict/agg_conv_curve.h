@@ -128,7 +128,7 @@ namespace OHOS
     template<class VertexSource, class Curve3, class Curve4>
     void conv_curve<VertexSource, Curve3, Curve4>::rewind(unsigned path_id)
     {
-        m_source->rewind(path_id);
+        m_source->Rewind(path_id);
         m_last_x = 0.0;
         m_last_y = 0.0;
         m_curve3.reset();
@@ -159,11 +159,11 @@ namespace OHOS
         double end_x = 0;
         double end_y = 0;
 
-        unsigned cmd = m_source->vertex(x, y);
+        unsigned cmd = m_source->Vertex(x, y);
         switch(cmd)
         {
         case path_cmd_curve3:
-            m_source->vertex(&end_x, &end_y);
+            m_source->Vertex(&end_x, &end_y);
 
             m_curve3.init(m_last_x, m_last_y, 
                           *x,       *y, 
@@ -175,8 +175,8 @@ namespace OHOS
             break;
 
         case path_cmd_curve4:
-            m_source->vertex(&ct2_x, &ct2_y);
-            m_source->vertex(&end_x, &end_y);
+            m_source->Vertex(&ct2_x, &ct2_y);
+            m_source->Vertex(&end_x, &end_y);
 
             m_curve4.init(m_last_x, m_last_y, 
                           *x,       *y, 

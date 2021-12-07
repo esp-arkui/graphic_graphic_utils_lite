@@ -157,51 +157,51 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
+        static GRAPTHIC_INLINE double to_double(value_type a)
         {
             return double(a) / base_mask;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
+        static GRAPTHIC_INLINE value_type from_double(double a)
         {
             return value_type(uround(a * base_mask));
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
+        static GRAPTHIC_INLINE value_type empty_value()
         {
             return 0;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
+        static GRAPTHIC_INLINE value_type full_value()
         {
             return base_mask;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
+        GRAPTHIC_INLINE bool is_transparent() const
         {
             return a == 0;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
+        GRAPTHIC_INLINE bool is_opaque() const
         {
             return a == base_mask;
         }
 
         //--------------------------------------------------------------------
         // Fixed-point multiply, exact over int8u.
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type multiply(value_type a, value_type b) 
         {
             calc_type t = a * b + base_MSB;
             return value_type(((t >> base_shift) + t) >> base_shift);
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type demultiply(value_type a, value_type b) 
         {
             if (a * b == 0)
             {
@@ -216,14 +216,14 @@ namespace OHOS
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downscale(T a) 
+        static GRAPTHIC_INLINE T downscale(T a) 
         {
             return a >> base_shift;
         }
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
+        static GRAPTHIC_INLINE T downshift(T a, unsigned n) 
         {
             return a >> n;
         }
@@ -231,27 +231,27 @@ namespace OHOS
         //--------------------------------------------------------------------
         // Fixed-point multiply, exact over int8u.
         // Specifically for multiplying a color component by a cover.
-        static AGG_INLINE value_type mult_cover(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type mult_cover(value_type a, value_type b) 
         {
             return multiply(a, b);
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
+        static GRAPTHIC_INLINE cover_type scale_cover(cover_type a, value_type b) 
         {
             return multiply(b, a);
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
         {
             return p + q - multiply(p, a);
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type lerp(value_type p, value_type q, value_type a) 
         {
             int t = (q - p) * a + base_MSB - (p > q);
             return value_type(p + (((t >> base_shift) + t) >> base_shift));
@@ -326,7 +326,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void add(const self_type& c, unsigned cover)
+        GRAPTHIC_INLINE void add(const self_type& c, unsigned cover)
         {
             calc_type cv, ca;
             if (cover == cover_mask)
@@ -457,51 +457,51 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
+        static GRAPTHIC_INLINE double to_double(value_type a)
         {
             return double(a) / base_mask;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
+        static GRAPTHIC_INLINE value_type from_double(double a)
         {
             return value_type(uround(a * base_mask));
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
+        static GRAPTHIC_INLINE value_type empty_value()
         {
             return 0;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
+        static GRAPTHIC_INLINE value_type full_value()
         {
             return base_mask;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
+        GRAPTHIC_INLINE bool is_transparent() const
         {
             return a == 0;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
+        GRAPTHIC_INLINE bool is_opaque() const
         {
             return a == base_mask;
         }
 
         //--------------------------------------------------------------------
         // Fixed-point multiply, exact over int16u.
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type multiply(value_type a, value_type b) 
         {
             calc_type t = a * b + base_MSB;
             return value_type(((t >> base_shift) + t) >> base_shift);
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type demultiply(value_type a, value_type b) 
         {
             if (a * b == 0)
             {
@@ -516,14 +516,14 @@ namespace OHOS
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downscale(T a) 
+        static GRAPTHIC_INLINE T downscale(T a) 
         {
             return a >> base_shift;
         }
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
+        static GRAPTHIC_INLINE T downshift(T a, unsigned n) 
         {
             return a >> n;
         }
@@ -531,27 +531,27 @@ namespace OHOS
         //--------------------------------------------------------------------
         // Fixed-point multiply, almost exact over int16u.
         // Specifically for multiplying a color component by a cover.
-        static AGG_INLINE value_type mult_cover(value_type a, cover_type b) 
+        static GRAPTHIC_INLINE value_type mult_cover(value_type a, cover_type b) 
         {
             return multiply(a, b << 8 | b);
         }
         
         //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
+        static GRAPTHIC_INLINE cover_type scale_cover(cover_type a, value_type b) 
         {
             return mult_cover(b, a) >> 8;
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
         {
             return p + q - multiply(p, a);
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type lerp(value_type p, value_type q, value_type a) 
         {
             int t = (q - p) * a + base_MSB - (p > q);
             return value_type(p + (((t >> base_shift) + t) >> base_shift));
@@ -627,7 +627,7 @@ namespace OHOS
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE void add(const self_type& c, unsigned cover)
+        GRAPTHIC_INLINE void add(const self_type& c, unsigned cover)
         {
             calc_type cv, ca;
             if (cover == cover_mask)
@@ -773,95 +773,95 @@ namespace OHOS
 		}
 
 		//--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
+        static GRAPTHIC_INLINE double to_double(value_type a)
         {
             return a;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
+        static GRAPTHIC_INLINE value_type from_double(double a)
         {
             return value_type(a);
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
+        static GRAPTHIC_INLINE value_type empty_value()
         {
             return 0;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
+        static GRAPTHIC_INLINE value_type full_value()
         {
             return 1;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
+        GRAPTHIC_INLINE bool is_transparent() const
         {
             return a <= 0;
         }
 
         //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
+        GRAPTHIC_INLINE bool is_opaque() const
         {
             return a >= 1;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type invert(value_type x) 
+        static GRAPTHIC_INLINE value_type invert(value_type x) 
         {
             return 1 - x;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type multiply(value_type a, value_type b) 
         {
             return value_type(a * b);
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
+        static GRAPTHIC_INLINE value_type demultiply(value_type a, value_type b) 
         {
             return (b == 0) ? 0 : value_type(a / b);
         }
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downscale(T a) 
+        static GRAPTHIC_INLINE T downscale(T a) 
         {
             return a;
         }
 
         //--------------------------------------------------------------------
         template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
+        static GRAPTHIC_INLINE T downshift(T a, unsigned n) 
         {
             return n > 0 ? a / (1 << n) : a;
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE value_type mult_cover(value_type a, cover_type b) 
+        static GRAPTHIC_INLINE value_type mult_cover(value_type a, cover_type b) 
         {
             return value_type(a * b / cover_mask);
         }
 
         //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
+        static GRAPTHIC_INLINE cover_type scale_cover(cover_type a, value_type b) 
         {
             return cover_type(uround(a * b));
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
         {
             return (1 - a) * p + q; // more accurate than "p + q - p * a"
         }
         
         //--------------------------------------------------------------------
         // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
+        static GRAPTHIC_INLINE value_type lerp(value_type p, value_type q, value_type a) 
         {
 			// The form "p + a * (q - p)" avoids a multiplication, but may produce an 
 			// inaccurate result. For example, "p + (q - p)" may not be exactly equal 

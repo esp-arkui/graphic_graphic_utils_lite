@@ -38,7 +38,7 @@ namespace OHOS
     struct ras_conv_int
     {
         typedef int coord_type;
-        static AGG_INLINE int mul_div(double a, double b, double c)
+        static GRAPTHIC_INLINE int mul_div(double a, double b, double c)
         {
             return iround(a * b / c);
         }
@@ -86,7 +86,7 @@ namespace OHOS
 
     private:
         template<class Rasterizer>
-        AGG_INLINE void line_clip_y(Rasterizer& ras,
+        GRAPTHIC_INLINE void line_clip_y(Rasterizer& ras,
                                     coord_type x1, coord_type y1, 
                                     coord_type x2, coord_type y2, 
                                     unsigned   f1, unsigned   f2) const
