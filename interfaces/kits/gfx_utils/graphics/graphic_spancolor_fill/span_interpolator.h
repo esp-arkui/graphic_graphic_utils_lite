@@ -76,7 +76,7 @@ namespace OHOS
     /**
      *线性的扫描线插入器
      */
-    template <class Transformer = trans_affine, unsigned SubpixelShift = 8>
+    template <class Transformer = TransAffine, unsigned SubpixelShift = 8>
     class span_interpolator_linear
     {
     public:
@@ -115,13 +115,13 @@ namespace OHOS
 
             tx = x;
             ty = y;
-            m_trans->transform(&tx, &ty);
+            m_trans->Transform(&tx, &ty);
             int x1 = iround(tx * subpixel_scale);
             int y1 = iround(ty * subpixel_scale);
 
             tx = x + len;
             ty = y;
-            m_trans->transform(&tx, &ty);
+            m_trans->Transform(&tx, &ty);
             int x2 = iround(tx * subpixel_scale);
             int y2 = iround(ty * subpixel_scale);
 

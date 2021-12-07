@@ -207,12 +207,12 @@ namespace OHOS
     {
         ValueType r,g,b,a;
 
-        GRAPTHIC_INLINE void Clear() 
+        AGG_INLINE void Clear() 
         { 
             r = g = b = a = 0; 
         }
 
-        template<class ArgT> GRAPTHIC_INLINE void Add(const ArgT& v)
+        template<class ArgT> AGG_INLINE void Add(const ArgT& v)
         {
             r += v.r;
             g += v.g;
@@ -220,7 +220,7 @@ namespace OHOS
             a += v.a;
         }
 
-        template<class ArgT> GRAPTHIC_INLINE void Add(const ArgT& v, unsigned k)
+        template<class ArgT> AGG_INLINE void Add(const ArgT& v, unsigned k)
         {
             r += v.r * k;
             g += v.g * k;
@@ -228,7 +228,7 @@ namespace OHOS
             a += v.a * k;
         }
 
-        template<class ArgT> GRAPTHIC_INLINE void Sub(const ArgT& v)
+        template<class ArgT> AGG_INLINE void Sub(const ArgT& v)
         {
             r -= v.r;
             g -= v.g;
@@ -236,7 +236,7 @@ namespace OHOS
             a -= v.a;
         }
 
-        template<class ArgT> GRAPTHIC_INLINE void CalculatePixel(ArgT& v, unsigned div)
+        template<class ArgT> AGG_INLINE void CalculatePixel(ArgT& v, unsigned div)
         {
             v.r = ValueType(r / div);
             v.g = ValueType(g / div);
@@ -245,7 +245,7 @@ namespace OHOS
         }
 
         template<class ArgT> 
-        GRAPTHIC_INLINE void CalculatePixel(ArgT& v, unsigned mul, unsigned shr)
+        AGG_INLINE void CalculatePixel(ArgT& v, unsigned mul, unsigned shr)
         {
             v.r = ValueType((r * mul) >> shr);
             v.g = ValueType((g * mul) >> shr);

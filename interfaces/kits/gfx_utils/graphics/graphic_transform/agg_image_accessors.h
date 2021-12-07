@@ -56,7 +56,7 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* Pixel() const
+        AGG_INLINE const int8u* Pixel() const
         {
             int x = x_;
             int y = y_;
@@ -86,7 +86,7 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
+        AGG_INLINE const int8u* Span(int x, int y, unsigned len)
         {
             x_ = x0_ = x;
             y_ = y;
@@ -104,7 +104,7 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* NextX()
+        AGG_INLINE const int8u* NextX()
         {
             if(pixPtr_) {
                 return pixPtr_ += PIX_WIDTH;
@@ -119,7 +119,7 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* NextY()
+        AGG_INLINE const int8u* NextY()
         {
             ++y_;
             x_ = x0_;
@@ -172,7 +172,7 @@ private:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* Pixel() const
+    AGG_INLINE const int8u* Pixel() const
     {
         int x = x_;
         int y = y_;
@@ -205,7 +205,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
+    AGG_INLINE const int8u* Span(int x, int y, unsigned len)
     {
         x_ = x0_ = x;
         y_ = y;
@@ -223,7 +223,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextX()
+    AGG_INLINE const int8u* NextX()
     {
         if(pixPtr_ != 0) {
             return pixPtr_ += PIX_WIDTH;
@@ -238,7 +238,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextY()
+    AGG_INLINE const int8u* NextY()
     {
         ++y_;
         x_ = x0_;
@@ -295,7 +295,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
+    AGG_INLINE const int8u* Span(int x, int y, unsigned)
     {
         x_ = x;
         rowPtr_ = pixFormat_->pix_ptr(0, wrapY_(y));
@@ -308,7 +308,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextX()
+    AGG_INLINE const int8u* NextX()
     {
         int x = ++wrapX_;
         return rowPtr_ + x * PIX_WIDTH;
@@ -321,7 +321,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextY()
+    AGG_INLINE const int8u* NextY()
     {
         rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
         return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -374,7 +374,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned len)
+    AGG_INLINE const int8u* Span(int x, int y, unsigned len)
     {
         x_ = x;
         y_ = y;
@@ -392,7 +392,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextX()
+    AGG_INLINE const int8u* NextX()
     {
         if (y_ >= (int)pixFormat_->height()) {
            return NULL;
@@ -407,7 +407,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    GRAPTHIC_INLINE const int8u* NextY()
+    AGG_INLINE const int8u* NextY()
     {
         rowPtr_ = pixFormat_->pixPtr(0, y_);
         return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -457,7 +457,7 @@ private:
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* Span(int x, int y, unsigned)
+        AGG_INLINE const int8u* Span(int x, int y, unsigned)
         {
             x_ = x;
             if (x >= (int)pixFormat_->width()){
@@ -474,7 +474,7 @@ private:
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* NextX()
+        AGG_INLINE const int8u* NextX()
         {
             int x = ++x_;
             if (x >= (int)pixFormat_->width()) {
@@ -490,7 +490,7 @@ private:
          * @since 1.0
          * @version 1.0
          */
-        GRAPTHIC_INLINE const int8u* NextY()
+        AGG_INLINE const int8u* NextY()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + x_ * PIX_WIDTH;
@@ -514,12 +514,12 @@ private:
             value_(0)
         {}
 
-        GRAPTHIC_INLINE unsigned operator() (int v)
+        AGG_INLINE unsigned operator() (int v)
         { 
             return value_ = (unsigned(v) + add_) % size_; 
         }
 
-        GRAPTHIC_INLINE unsigned operator++ ()
+        AGG_INLINE unsigned operator++ ()
         {
             ++value_;
             if(value_ >= size_) {

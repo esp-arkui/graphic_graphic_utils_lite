@@ -146,7 +146,7 @@ namespace OHOS
         bool navigate_scanline(int y);
 
         //--------------------------------------------------------------------
-        GRAPTHIC_INLINE unsigned calculate_alpha(int area) const
+        AGG_INLINE unsigned calculate_alpha(int area) const
         {
             int cover = area >> (poly_subpixel_shift*2 + 1 - aa_shift);
 
@@ -389,7 +389,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Clip> 
-    GRAPTHIC_INLINE bool rasterizer_scanline_aa<Clip>::rewind_scanlines()
+    AGG_INLINE bool rasterizer_scanline_aa<Clip>::rewind_scanlines()
     {
         if(m_auto_close) close_polygon();
         m_outline.sort_cells();
@@ -404,7 +404,7 @@ namespace OHOS
 
     //------------------------------------------------------------------------
     template<class Clip> 
-    GRAPTHIC_INLINE bool rasterizer_scanline_aa<Clip>::navigate_scanline(int y)
+    AGG_INLINE bool rasterizer_scanline_aa<Clip>::navigate_scanline(int y)
     {
         if(m_auto_close) close_polygon();
         m_outline.sort_cells();

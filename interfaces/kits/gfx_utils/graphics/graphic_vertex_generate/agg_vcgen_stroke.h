@@ -45,32 +45,32 @@ namespace OHOS
 
         VCGenStroke();
 
-        void LineCap(line_cap_e lc)     
+        void LineCap(LineCap lc)
         { 
             stroker_.line_cap(lc); 
         }
 
-        void LineJoin(line_join_e lj)   
+        void LineJoin(LineJoin lj)
         { 
             stroker_.line_join(lj);
         }
 
-        void InnerJoin(inner_join_e ij) 
+        void InnerJoin(InnerJoin ij)
         { 
             stroker_.inner_join(ij); 
         }
 
-        line_cap_e   LineCap()   const 
+        enum LineCap   LineCap()   const
         { 
             return stroker_.line_cap(); 
         }
 
-        line_join_e  LineJoin()  const 
+        enum LineJoin  LineJoin()  const
         { 
             return stroker_.line_join(); 
         }
 
-        inner_join_e InnerJoin() const 
+        enum InnerJoin InnerJoin() const
         { 
             return stroker_.inner_join(); 
         }
@@ -85,15 +85,7 @@ namespace OHOS
             stroker_.miter_limit(ml); 
         }
 
-        void MiterLimitTheta(double t) 
-        { 
-            stroker_.miter_limit_theta(t); 
-        }
 
-        void InnerMiterLimit(double ml) 
-        { 
-            stroker_.inner_miter_limit(ml); 
-        }
 
         void ApproximationScale(double as) 
         { 
@@ -110,10 +102,7 @@ namespace OHOS
             return stroker_.miter_limit(); 
         }
 
-        double InnerMiterLimit() const 
-        { 
-            return stroker_.inner_miter_limit(); 
-        }
+
 
         double ApproximationScale() const 
         { 

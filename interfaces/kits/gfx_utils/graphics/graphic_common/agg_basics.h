@@ -107,9 +107,9 @@ namespace OHOS
 #endif
 
 #if defined(_MSC_VER)
-#define GRAPTHIC_INLINE __forceinline
+#define AGG_INLINE __forceinline
 #else
-#define GRAPTHIC_INLINE inline
+#define AGG_INLINE inline
 #endif
 
 namespace OHOS
@@ -127,14 +127,14 @@ namespace OHOS
 #if defined(AGG_FISTP)
 #pragma warning(push)
 #pragma warning(disable : 4035) //Disable warning "no return value"
-    GRAPTHIC_INLINE int iround(double v)              //-------iround
+    AGG_INLINE int iround(double v)              //-------iround
     {
         int t;
         __asm fld   qword ptr [v]
         __asm fistp dword ptr [t]
         __asm mov eax, dword ptr [t]
     }
-    GRAPTHIC_INLINE unsigned uround(double v)         //-------uround
+    AGG_INLINE unsigned uround(double v)         //-------uround
     {
         unsigned t;
         __asm fld   qword ptr [v]
@@ -142,70 +142,70 @@ namespace OHOS
         __asm mov eax, dword ptr [t]
     }
 #pragma warning(pop)
-    GRAPTHIC_INLINE int ifloor(double v)
+    AGG_INLINE int ifloor(double v)
     {
         return int(floor(v));
     }
-    GRAPTHIC_INLINE unsigned ufloor(double v)         //-------ufloor
+    AGG_INLINE unsigned ufloor(double v)         //-------ufloor
     {
         return unsigned(floor(v));
     }
-    GRAPTHIC_INLINE int iceil(double v)
+    AGG_INLINE int iceil(double v)
     {
         return int(ceil(v));
     }
-    GRAPTHIC_INLINE unsigned uceil(double v)          //--------uceil
+    AGG_INLINE unsigned uceil(double v)          //--------uceil
     {
         return unsigned(ceil(v));
     }
 #elif defined(AGG_QIFIST)
-    GRAPTHIC_INLINE int iround(double v)
+    AGG_INLINE int iround(double v)
     {
         return int(v);
     }
-    GRAPTHIC_INLINE int uround(double v)
+    AGG_INLINE int uround(double v)
     {
         return unsigned(v);
     }
-    GRAPTHIC_INLINE int ifloor(double v)
+    AGG_INLINE int ifloor(double v)
     {
         return int(std::floor(v));
     }
-    GRAPTHIC_INLINE unsigned ufloor(double v)
+    AGG_INLINE unsigned ufloor(double v)
     {
         return unsigned(std::floor(v));
     }
-    GRAPTHIC_INLINE int iceil(double v)
+    AGG_INLINE int iceil(double v)
     {
         return int(std::ceil(v));
     }
-    GRAPTHIC_INLINE unsigned uceil(double v)
+    AGG_INLINE unsigned uceil(double v)
     {
         return unsigned(std::ceil(v));
     }
 #else
-    GRAPTHIC_INLINE int iround(double v)
+    AGG_INLINE int iround(double v)
     {
         return int((v < 0.0) ? v - 0.5 : v + 0.5);
     }
-    GRAPTHIC_INLINE int uround(double v)
+    AGG_INLINE int uround(double v)
     {
         return unsigned(v + 0.5);
     }
-    GRAPTHIC_INLINE int ifloor(double v)
+    AGG_INLINE int ifloor(double v)
     {
         int i = int(v);
         return i - (i > v);
     }
-    GRAPTHIC_INLINE unsigned ufloor(double v)
+    AGG_INLINE unsigned ufloor(double v)
     {
         return unsigned(v);
     }
-    GRAPTHIC_INLINE int iceil(double v)
+    AGG_INLINE int iceil(double v)
     {
         return int(std::ceil(v));
     }
-    GRAPTHIC_INLINE unsigned uceil(double v)
+    AGG_INLINE unsigned uceil(double v)
     {
         return unsigned(std::ceil(v));
     }
@@ -214,7 +214,7 @@ namespace OHOS
     //---------------------------------------------------------------saturation
     template<int Limit> struct saturation
     {
-        GRAPTHIC_INLINE static int iround(double v)
+        AGG_INLINE static int iround(double v)
         {
             if(v < double(-Limit)) return -Limit;
             if(v > double( Limit)) return  Limit;
@@ -225,7 +225,7 @@ namespace OHOS
     //------------------------------------------------------------------mul_one
     template<unsigned Shift> struct mul_one
     {
-        GRAPTHIC_INLINE static unsigned mul(unsigned a, unsigned b)
+        AGG_INLINE static unsigned mul(unsigned a, unsigned b)
         {
             unsigned q = a * b + (1 << (Shift-1));
             return (q + (q >> Shift)) >> Shift;

@@ -34,7 +34,7 @@ namespace OHOS
     const double intersection_epsilon = 1.0e-30;
 
     //------------------------------------------------------------cross_product
-    GRAPTHIC_INLINE double cross_product(double x1, double y1, 
+    AGG_INLINE double cross_product(double x1, double y1, 
                                     double x2, double y2, 
                                     double x,  double y)
     {
@@ -42,7 +42,7 @@ namespace OHOS
     }
 
     //--------------------------------------------------------point_in_triangle
-    GRAPTHIC_INLINE bool point_in_triangle(double x1, double y1, 
+    AGG_INLINE bool point_in_triangle(double x1, double y1, 
                                       double x2, double y2, 
                                       double x3, double y3, 
                                       double x,  double y)
@@ -54,7 +54,7 @@ namespace OHOS
     }
 
     //-----------------------------------------------------------calc_distance
-    GRAPTHIC_INLINE double calc_distance(double x1, double y1, double x2, double y2)
+    AGG_INLINE double calc_distance(double x1, double y1, double x2, double y2)
     {
         double dx = x2-x1;
         double dy = y2-y1;
@@ -62,7 +62,7 @@ namespace OHOS
     }
 
     //--------------------------------------------------------calc_sq_distance
-    GRAPTHIC_INLINE double calc_sq_distance(double x1, double y1, double x2, double y2)
+    AGG_INLINE double calc_sq_distance(double x1, double y1, double x2, double y2)
     {
         double dx = x2-x1;
         double dy = y2-y1;
@@ -70,7 +70,7 @@ namespace OHOS
     }
 
     //------------------------------------------------calc_line_point_distance
-    GRAPTHIC_INLINE double calc_line_point_distance(double x1, double y1, 
+    AGG_INLINE double calc_line_point_distance(double x1, double y1, 
                                                double x2, double y2, 
                                                double x,  double y)
     {
@@ -85,7 +85,7 @@ namespace OHOS
     }
 
     //-------------------------------------------------------calc_line_point_u
-    GRAPTHIC_INLINE double calc_segment_point_u(double x1, double y1, 
+    AGG_INLINE double calc_segment_point_u(double x1, double y1, 
                                            double x2, double y2, 
                                            double x,  double y)
     {
@@ -104,7 +104,7 @@ namespace OHOS
     }
 
     //---------------------------------------------calc_line_point_sq_distance
-    GRAPTHIC_INLINE double calc_segment_point_sq_distance(double x1, double y1, 
+    AGG_INLINE double calc_segment_point_sq_distance(double x1, double y1, 
                                                      double x2, double y2, 
                                                      double x,  double y,
                                                      double u)
@@ -122,7 +122,7 @@ namespace OHOS
     }
 
     //---------------------------------------------calc_line_point_sq_distance
-    GRAPTHIC_INLINE double calc_segment_point_sq_distance(double x1, double y1, 
+    AGG_INLINE double calc_segment_point_sq_distance(double x1, double y1, 
                                                      double x2, double y2, 
                                                      double x,  double y)
     {
@@ -133,7 +133,7 @@ namespace OHOS
     }
 
     //-------------------------------------------------------calc_intersection
-    GRAPTHIC_INLINE bool calc_intersection(double ax, double ay, double bx, double by,
+    AGG_INLINE bool calc_intersection(double ax, double ay, double bx, double by,
                                       double cx, double cy, double dx, double dy,
                                       double* x, double* y)
     {
@@ -147,7 +147,7 @@ namespace OHOS
     }
 
     //-----------------------------------------------------intersection_exists
-    GRAPTHIC_INLINE bool intersection_exists(double x1, double y1, double x2, double y2,
+    AGG_INLINE bool intersection_exists(double x1, double y1, double x2, double y2,
                                         double x3, double y3, double x4, double y4)
     {
         // It's less expensive but you can't control the 
@@ -174,7 +174,7 @@ namespace OHOS
     }
 
     //--------------------------------------------------------calc_orthogonal
-    GRAPTHIC_INLINE void calc_orthogonal(double thickness,
+    AGG_INLINE void calc_orthogonal(double thickness,
                                     double x1, double y1,
                                     double x2, double y2,
                                     double* x, double* y)
@@ -187,7 +187,7 @@ namespace OHOS
     }
 
     //--------------------------------------------------------dilate_triangle
-    GRAPTHIC_INLINE void dilate_triangle(double x1, double y1,
+    AGG_INLINE void dilate_triangle(double x1, double y1,
                                     double x2, double y2,
                                     double x3, double y3,
                                     double *x, double* y,
@@ -219,7 +219,7 @@ namespace OHOS
     }
 
     //------------------------------------------------------calc_triangle_area
-    GRAPTHIC_INLINE double calc_triangle_area(double x1, double y1,
+    AGG_INLINE double calc_triangle_area(double x1, double y1,
                                          double x2, double y2,
                                          double x3, double y3)
     {
@@ -258,7 +258,7 @@ namespace OHOS
     #pragma warning(push)
     #pragma warning(disable : 4035) //Disable warning "no return value"
     #endif
-    GRAPTHIC_INLINE unsigned fast_sqrt(unsigned val)
+    AGG_INLINE unsigned fast_sqrt(unsigned val)
     {
     #if defined(_M_IX86) && defined(_MSC_VER) && !defined(AGG_NO_ASM)
         //For Ix86 family processors this assembler code is used. 

@@ -39,15 +39,15 @@ namespace OHOS
         {
         }
 
-        void line_cap(LineCap lc)     { base_type::generator().line_cap(lc);  }
-        void line_join(LineJoin lj)   { base_type::generator().line_join(lj); }
-        void inner_join(InnerJoin ij) { base_type::generator().inner_join(ij); }
+        void line_cap(LineCap lc)     { base_type::generator().LineCap(lc);  }
+        void line_join(LineJoin lj)   { base_type::generator().LineJoin(lj); }
+        void inner_join(InnerJoin ij) { base_type::generator().InnerJoin(ij); }
 
         LineCap   line_cap()   const { return base_type::generator().line_cap();  }
         LineJoin  line_join()  const { return base_type::generator().line_join(); }
         InnerJoin inner_join() const { return base_type::generator().inner_join(); }
 
-        void width(double w) { base_type::generator().width(w); }
+        void width(double w) { base_type::generator().Width(w); }
         void miter_limit(double ml) { base_type::generator().MiterLimit(ml); }
         void approximation_scale(double as) { base_type::generator().ApproximationScale(as); }
 
