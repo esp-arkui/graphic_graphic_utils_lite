@@ -37,7 +37,7 @@ namespace agg
              class Generator, 
              class Markers=null_markers> class conv_adaptor_vcgen
     {
-        enum status
+        enum StatusEnum
         {
             initial,
             accumulate,

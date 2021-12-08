@@ -13,24 +13,24 @@
 * limitations under the License.
 */
 
-#include <cmath>
 #include <gfx_utils/graphics/graphic_geometry/agg_arc.h>
 
-namespace OHOS{
-Arc::Arc(double x,  double y, 
-         double rx, double ry, 
-         double a1, double a2, 
-         bool ccw) :
-    x_(x), y_(y), rx_(rx), ry_(ry), scale_(1.0)
+#include <cmath>
+
+namespace OHOS {
+Arc::Arc(double centerX, double centerY,
+         double rx, double ry,
+         double a1, double a2,
+         bool ccw)
+    : centerX_(centerX), centerY_(centerY), rx_(rx), ry_(ry), scale_(1.0)
 {
     Normalize(a1, a2, ccw);
 }
-  
-void Arc::ApproximationScale(double s)
+
+void Arc::ApproximationScale(double sale)
 {
-    scale_ = s;
-    if(initialized_)
-    {
+    scale_ = sale;
+    if (initialized_) {
         Normalize(start_, end_, ccw_);
     }
 }
@@ -41,14 +41,14 @@ unsigned Arc::Vertex(double* x, double* y)
         return PATH_CMD_STOP;
     }
     if ((angle_ < end_ - da_ / 4) != ccw_) {
-        *x = x_ + std::cos(end_) * rx_;
-        *y = y_ + std::sin(end_) * ry_;
+        *x = centerX_ + std::cos(end_) * rx_;
+        *y = centerY_ + std::sin(end_) * ry_;
         pathCmd_ = PATH_CMD_STOP;
         return PATH_CMD_LINE_TO;
     }
 
-    *x = x_ + std::cos(angle_) * rx_;
-    *y = y_ + std::sin(angle_) * ry_;
+    *x = centerX_ + std::cos(angle_) * rx_;
+    *y = centerY_ + std::sin(angle_) * ry_;
 
     angle_ += da_;
 
@@ -59,39 +59,36 @@ unsigned Arc::Vertex(double* x, double* y)
 
 void Arc::Rewind(unsigned)
 {
-    pathCmd_ = PATH_CMD_MOVE_TO; 
+    pathCmd_ = PATH_CMD_MOVE_TO;
     angle_ = start_;
 }
 
-void Arc::Normalize(double a1, double a2, bool ccw)
+void Arc::Normalize(double angle1, double angle2, bool ccw)
 {
     double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
     da_ = std::acos(ra / (ra + 0.125 / scale_)) * 2;
-    if(ccw)
-    {
-        while (a2 < a1) {
-            a2 += pi * 2.0;
+    if (ccw) {
+        while (angle2 < angle1) {
+            angle2 += PI * 2.0;
         }
-    }
-    else
-    {
-        while (a1 < a2) {
-            a1 += pi * 2.0;
+    } else {
+        while (angle1 < angle2) {
+            angle1 += PI * 2.0;
         }
         da_ = -da_;
     }
-    ccw_   = ccw;
-    start_ = a1;
-    end_   = a2;
+    ccw_ = ccw;
+    start_ = angle1;
+    end_ = angle2;
     initialized_ = true;
 }
 
-void Arc::Init(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+void Arc::Init(double centerX, double centerY, double rx, double ry, double angle1, double angle2, bool ccw)
 {
-    x_ = x;
-    y_ = y;
+    centerX_ = centerX;
+    centerY_ = centerY;
     rx_ = rx;
     ry_ = ry;
-    Normalize(a1, a2, ccw);
+    Normalize(angle1, angle2, ccw);
 }
-}
+} // namespace OHOS

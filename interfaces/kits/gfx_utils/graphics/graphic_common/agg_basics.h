@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_basics.h
  *
- * @brief Defines 图形操作基本数据类型.
+ * @brief Defines 图形操作基本数据类型与通用函数.
  *
  * @since 1.0
  * @version 1.0
@@ -41,7 +41,7 @@
 #include "graphic_geometry_allocator.h"
 #else
 namespace OHOS {
-template <class T> 
+template <class T>
 struct ObjAllocator {
     static T* Allocate()
     {
@@ -53,7 +53,7 @@ struct ObjAllocator {
     }
 };
 
-template <class T> 
+template <class T>
 struct ArrAllocator {
     static T* Allocate(unsigned num)
     {
@@ -97,7 +97,6 @@ struct ArrAllocator {
 #define GRAPHIC_GEOMETRY_INT64 signed long long
 #endif
 
-
 #ifndef GRAPHIC_GEOMETRY_INT64U
 #define GRAPHIC_GEOMETRY_INT64U unsigned __int64
 #else
@@ -128,7 +127,7 @@ using int64 = GRAPHIC_GEOMETRY_INT64;
 using int64u = GRAPHIC_GEOMETRY_INT64U;
 #if defined(GRAPHIC_GEOMETRY_FISTP)
 #pragma warning(push)
-#pragma warning(disable : 4035) // Disable warning "no return value"
+#pragma warning(disable : 4035)              // Disable warning "no return value"
 GRAPHIC_GEOMETRY_INLINE int Iround(double v) //-------iround
 {
     int t;
@@ -182,6 +181,14 @@ GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
     return unsigned(std::ceil(val));
 }
 #else
+GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
+{
+    return int(std::ceil(val));
+}
+GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
+{
+    return unsigned(std::ceil(val));
+}
 GRAPHIC_GEOMETRY_INLINE int Iround(double val)
 {
     return int((val < 0.0) ? val - 0.5 : val + 0.5);
@@ -199,14 +206,7 @@ GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val)
 {
     return unsigned(val);
 }
-GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
-{
-    return int(std::ceil(val));
-}
-GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
-{
-    return unsigned(std::ceil(val));
-}
+
 #endif
 
 template <int Limit>
@@ -215,7 +215,7 @@ struct Saturation {
     {
         if (roundVal < double(-Limit)) {
             return -Limit;
-        } 
+        }
         if (roundVal > double(Limit)) {
             return Limit;
         }
@@ -223,7 +223,7 @@ struct Saturation {
     }
 };
 
-template <unsigned Shift> 
+template <unsigned Shift>
 struct MulOne {
     GRAPHIC_GEOMETRY_INLINE static unsigned Mul(unsigned val1, unsigned val2)
     {
@@ -234,26 +234,27 @@ struct MulOne {
 
 using CoverType = unsigned char;
 
-enum FillingRuleE {
+enum FillingRuleEnum
+{
     FILL_NON_ZERO,
     FILL_EVEN_ODD
 };
 
-enum PolySubpixelScaleE {
+enum PolySubpixelScaleEnum
+{
     POLY_SUBPIXEL_SHIFT = 8,
     POLY_SUBPIXEL_SCALE = 1 << POLY_SUBPIXEL_SHIFT,
     POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE - 1
 };
 
-enum CoverScaleE {
+enum CoverScaleEnum
+{
     COVER_SHIFT = 8,
     COVER_SIZE = 1 << COVER_SHIFT,
     COVER_MASK = COVER_SIZE - 1,
     COVER_NONE = 0,
     COVER_FULL = COVER_MASK
 };
-
-const double PI = 3.14159265358979323846;
 
 inline double Rad2Deg(double val)
 {
@@ -273,9 +274,12 @@ struct RectBase {
     T y1;
     T x2;
     T y2;
-    
-    RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_) {}
-    RectBase() {}
+
+    RectBase(T x1_, T y1_, T x2_, T y2_)
+        : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+    {}
+    RectBase()
+    {}
 
     const SelfType& Normalize()
     {
@@ -305,16 +309,16 @@ struct RectBase {
     {
         if (x2 > r.x2) {
             x2 = r.x2;
-        } 
+        }
         if (y2 > r.y2) {
             y2 = r.y2;
-        }  
+        }
         if (x1 < r.x1) {
             x1 = r.x1;
-        }   
+        }
         if (y1 < r.y1) {
             y1 = r.y1;
-        } 
+        }
         return y1 <= y2 && x1 <= x2;
     }
 
@@ -325,77 +329,94 @@ struct RectBase {
 
     bool Overlaps(const SelfType& r) const
     {
-        return !(r.y1 > y2 || r.y2<y1 || r.x1> x2 || r.x2 < x1);
+        return !(r.y1 > y2 || r.y2 < y1 || r.x1 > x2 || r.x2 < x1);
     }
 
     bool HitTest(T x, T y) const
     {
         return (y >= y1 && y <= y2 && x >= x1 && x <= x2);
     }
-
 };
 
-template <class Rect> 
-inline Rect IntersectRectangles(const Rect& r1, const Rect& r2)
+/**
+ * @brief 获取两矩形是否相交区域.
+ *
+ * @param rect1,rect2 两个矩形.
+ * @return Returns 相交的矩形.
+ * @since 1.0
+ * @version 1.0
+ */
+template <class Rect>
+inline Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
 {
-    Rect r = r1;
-    if (r.x2 > r2.x2) {
-        r.x2 = r2.x2;
+    Rect rect = rect1;
+    if (rect.x2 > rect2.x2) {
+        rect.x2 = rect2.x2;
     }
-    if (r.y2 > r2.y2) {
-        r.y2 = r2.y2;
-    }  
-    if (r.x1 < r2.x1) {
-        r.x1 = r2.x1;
-    } 
-    if (r.y1 < r2.y1) {
-        r.y1 = r2.y1;
+    if (rect.y2 > rect2.y2) {
+        rect.y2 = rect2.y2;
     }
-    return r;
+    if (rect.x1 < rect2.x1) {
+        rect.x1 = rect2.x1;
+    }
+    if (rect.y1 < rect2.y1) {
+        rect.y1 = rect2.y1;
+    }
+    return rect;
 }
 
-template <class Rect> 
-inline Rect UniteRectangles(const Rect& r1, const Rect& r2)
+/**
+ * @brief 获取两矩形的并集区域.
+ *
+ * @param rect1,rect2 两个矩形.
+ * @return Returns 并集区域的矩形.
+ * @since 1.0
+ * @version 1.0
+ */
+template <class Rect>
+inline Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
 {
-    Rect r = r1;
-    if (r.x2 < r2.x2) {
-        r.x2 = r2.x2;
+    Rect rect = rect1;
+    if (rect.x2 < rect2.x2) {
+        rect.x2 = rect2.x2;
     }
-    if (r.y2 < r2.y2) {
-        r.y2 = r2.y2;
+    if (rect.y2 < rect2.y2) {
+        rect.y2 = rect2.y2;
     }
-    if (r.x1 > r2.x1) {
-        r.x1 = r2.x1;
+    if (rect.x1 > rect2.x1) {
+        rect.x1 = rect2.x1;
     }
-    if (r.y1 > r2.y1) {
-        r.y1 = r2.y1;
+    if (rect.y1 > rect2.y1) {
+        rect.y1 = rect2.y1;
     }
-    return r;
+    return rect;
 }
 
 using RectI = RectBase<int>;
 using RectF = RectBase<float>;
 using RectD = RectBase<double>;
 
-enum PathCommandsE {
-    PATH_CMD_STOP = 0,        
-    PATH_CMD_MOVE_TO = 1,     
-    PATH_CMD_LINE_TO = 2,     
-    PATH_CMD_CURVE3 = 3,      
-    PATH_CMD_CURVE4 = 4,      
-    PATH_CMD_CURVEN = 5,      
-    PATH_CMD_CARROM = 6,      
-    PATH_CMD_UBSPLINE = 7,    
-    PATH_CMD_END_POLY = 0x0F, 
-    PATH_CMD_MASK = 0x0F      
+enum PathCommandsEnum
+{
+    PATH_CMD_STOP = 0,
+    PATH_CMD_MOVE_TO = 1,
+    PATH_CMD_LINE_TO = 2,
+    PATH_CMD_CURVE3 = 3,
+    PATH_CMD_CURVE4 = 4,
+    PATH_CMD_CURVEN = 5,
+    PATH_CMD_CARROM = 6,
+    PATH_CMD_UBSPLINE = 7,
+    PATH_CMD_END_POLY = 0x0F,
+    PATH_CMD_MASK = 0x0F
 };
 
-enum PathFlagsE {
-    PATH_FLAGS_NONE = 0,     
-    PATH_FLAGS_CCW = 0x10,   
-    PATH_FLAGS_CW = 0x20,    
-    PATH_FLAGS_CLOSE = 0x40, 
-    PATH_FLAGS_MASK = 0xF0   
+enum PathFlagsEnum
+{
+    PATH_FLAGS_NONE = 0,
+    PATH_FLAGS_CCW = 0x10,
+    PATH_FLAGS_CW = 0x20,
+    PATH_FLAGS_CLOSE = 0x40,
+    PATH_FLAGS_MASK = 0xF0
 };
 
 inline bool IsDrawing(unsigned val)
@@ -425,7 +446,7 @@ inline bool IsLineTo(unsigned val)
 
 inline bool IsCurve(unsigned val)
 {
-    return PATH_CMD_CURVE4 == val ||  PATH_CMD_CURVE3 == val;
+    return PATH_CMD_CURVE4 == val || PATH_CMD_CURVE3 == val;
 }
 inline bool IsCurve3(unsigned val)
 {
@@ -492,51 +513,71 @@ inline unsigned GetOrientation(unsigned val)
     return val & (PATH_FLAGS_CW | PATH_FLAGS_CCW);
 }
 
-template <class T> 
+template <class T>
 struct PointBase {
     using ValueType = T;
     T x;
     T y;
-    PointBase() {}
-    PointBase(T x_, T y_) : x(x_), y(y_) {}
+    PointBase()
+    {}
+    PointBase(T x_, T y_)
+        : x(x_), y(y_)
+    {}
 };
-using PointF = PointBase<float>;  
-using PointD = PointBase<double>; 
-using PointI = PointBase<int>;    
+using PointF = PointBase<float>;
+using PointD = PointBase<double>;
+using PointI = PointBase<int>;
 
-template <class T> 
+template <class T>
 struct VertexBase {
     using ValueType = T;
     T x;
     T y;
     unsigned cmd;
-    VertexBase() {}
-    VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_) {}
+    VertexBase()
+    {}
+    VertexBase(T x_, T y_, unsigned cmd_)
+        : x(x_), y(y_), cmd(cmd_)
+    {}
 };
 
-using VertexF = VertexBase<float> ; 
-using VertexD = VertexBase<double>; 
-using VertexI = VertexBase<int>;    
+using VertexF = VertexBase<float>;
+using VertexD = VertexBase<double>;
+using VertexI = VertexBase<int>;
 
-template <class T> 
+template <class T>
 struct ConstRowInfo {
     int x1;
     int x2;
     const T* ptr;
-    ConstRowInfo() {}
-    ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_) {}
+    ConstRowInfo()
+    {}
+    ConstRowInfo(int x1_, int x2_, const T* ptr_)
+        : x1(x1_), x2(x2_), ptr(ptr_)
+    {}
 };
 
-template <class T> 
+template <class T>
 struct RowInfo {
     int x1;
     int x2;
     T* ptr;
-    RowInfo() {}
-    RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_) {}
+    RowInfo()
+    {}
+    RowInfo(int x1_, int x2_, T* ptr_)
+        : x1(x1_), x2(x2_), ptr(ptr_)
+    {}
 };
 
-template <class T> 
+/**
+ * @brief 两个数是否相近.
+ *
+ * @param val1,val2 两个数,epsilon 误差.
+ * @return Returns 两个数是否相近.
+ *@since 1.0
+ * @version 1.0
+ */
+template <class T>
 inline bool IsEqualEps(T val1, T val2, T epsilon)
 {
     bool neg1 = val1 < 0.0;

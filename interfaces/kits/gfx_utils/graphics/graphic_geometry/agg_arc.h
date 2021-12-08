@@ -17,16 +17,16 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines color types gray8, gray16.
+ * @brief Defines Arc.
  *
  * @since 1.0
  * @version 1.0
  */
 
 /**
- * @file graphic_geometry_color_gray.h
+ * @file graphic_geometry_arc.h
  *
- * @brief Defines xxxxxxxxxxxxxxxxxxxxx.
+ * @brief Defines 弧形数据类.
  *
  * @since 1.0
  * @version 1.0
@@ -39,45 +39,79 @@
 namespace OHOS {
 class Arc : public HeapBase {
 public:
-    Arc() : scale_(1.0), initialized_(false) {}
-
-    Arc(double x, double y, 
-        double rx, double ry, 
-        double a1, double a2, 
-        bool ccw=true);
-        
-    void Rewind(unsigned);
-
-    void ApproximationScale(double s);
-
-    double ApproximationScale() const 
-    { 
-        return scale_;  
+    Arc()
+        : scale_(1.0), initialized_(false)
+    {
     }
 
-    unsigned Vertex(double* x, double* y);
+    Arc(double centerX, double centerY,
+        double rx, double ry,
+        double angle1, double angle2,
+        bool ccw = true);
+    /**
+     * @brief 回到最开始步骤.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    void Rewind(unsigned);
 
-    void Init(double x, double y, double rx, double ry, double a1, double a2, bool ccw = true);
+    /**
+     * @brief 设置缩放值.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    void ApproximationScale(double scale);
+
+    /**
+     * @brief 获取缩放值.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    double ApproximationScale() const
+    {
+        return scale_;
+    }
+
+    /**
+     * @brief 取出顶点源用于坐标转换重组通道.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    unsigned Vertex(double* y, double* x);
+    /**
+     * @brief 初始化弧线.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    void Init(double centerX, double centerY, double rx, double ry, double angle1, double angle2, bool ccw = true);
 
 private:
-    void Normalize(double a1, double a2, bool ccw);
+    /**
+     * @brief 规范化弧线数据.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    void Normalize(double angle1, double angle2, bool ccw);
     bool initialized_;
     unsigned pathCmd_;
-    double   x_;
-    double   y_;
-    double   rx_;
-    double   ry_;
-    double   angle_;
-    double   start_;
-    double   end_;
-    double   scale_;
-    double   da_;
-    bool     ccw_;
-
+    double centerX_;
+    double centerY_;
+    double rx_;
+    double ry_;
+    double angle_;
+    double start_;
+    double end_;
+    double scale_;
+    double da_;
+    bool ccw_; //弧线的方向
 };
 
-
-}
-
+} // namespace OHOS
 
 #endif

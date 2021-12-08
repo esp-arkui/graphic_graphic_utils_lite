@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_clip_liang_barsky.h
 *
-* @brief Defines 矩形剪辑相关方法.
+* @brief Defines 裁剪相关方法.
 *
 * @since 1.0
 * @version 1.0
@@ -48,44 +48,72 @@ enum ClippingFlagsE
     CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
 };
 
-template <class T> inline
-unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
+/**
+ * @brief 确定y的位置，横向裁剪.
+ * @param y 纵向位置,clipBox裁剪窗口
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
+inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
 {
     return ((y < clipBox.y1) << 3) | ((y > clipBox.y2) << 1);
 }
 
-template <class T> 
+/**
+ * @brief 确定x的位置，纵向裁剪.
+ * @param x 横向位置,clipBox裁剪窗口
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
 inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
 {
     return ((x < clipBox.x1) << 2) | (x > clipBox.x2);
 }
 
-template <class T> inline 
-unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
+/**
+ * @brief 确定顶点的位置，按点裁剪.
+ * @param x,y 顶点位置,clipBox裁剪窗口
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
+inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
 {
     return ((x < clipBox.x1) << 2) | ((y < clipBox.y1) << 3) | (x > clipBox.x2) | ((y > clipBox.y2) << 1);
 }
 
-#define CLIP_LINAGE_BARSKY_VAL_DEF \
-double tinY;\
-double toutX;\
-double toutY;\
-double tin1;\
-double tin2;\
-double tout1;\
-double xin;\
-double xout;\
-double yin;\
-double yout;\
-double tinX;\
-unsigned np = 0;\
-const double limitZero = 1e-30;\
-double deltaX = x2 - x1;\
-double deltaY = y2 - y1;\
+#define CLIP_LINAGE_BARSKY_VAL_DEF  \
+    double tinY;                    \
+    double toutX;                   \
+    double toutY;                   \
+    double tin1;                    \
+    double tin2;                    \
+    double tout1;                   \
+    double xin;                     \
+    double xout;                    \
+    double yin;                     \
+    double yout;                    \
+    double tinX;                    \
+    unsigned np = 0;                \
+    const double limitZero = 1e-30; \
+    double deltaX = x2 - x1;        \
+    double deltaY = y2 - y1;
 
-template<class T> 
+/**
+ * @brief 确定顶点的位置，按点裁剪.
+ * @param x1,y1 线段起点位置,x2,y2 线段结束位置,clipBox裁剪窗口,x,y 返回结果
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
 inline unsigned ClipLiangBarsky(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox,
-                                    T* x, T* y)
+                                T* x, T* y)
 {
     CLIP_LINAGE_BARSKY_VAL_DEF
     if (deltaX == 0.0) {
@@ -168,8 +196,15 @@ inline unsigned ClipLiangBarsky(T x1, T y1, T x2, T y2, const RectBase<T>& clipB
     return np;
 }
 
-template <class T> 
-bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T* x, T* y, unsigned flags)
+/**
+ * @brief 裁剪移动的点.
+ * @param x1,y1 起点位置,x2,y2 终点位置,clipBox裁剪窗口,x,y 返回结果
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
+bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T x, T y, unsigned flags)
 {
     T bound;
 
@@ -194,13 +229,20 @@ bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T* x, T* 
     return true;
 }
 
-template<class T> 
+/**
+ * @brief 线段裁剪.
+ * @param x1,y1 线段起点位置,x2,y2 线段结束位置,clipBox裁剪窗口
+ * @return 返回对应的区域编码
+ * @since 1.0
+ * @version 1.0
+ */
+template <class T>
 unsigned ClipLineSegment(T* x1, T* y1, T* x2, T* y2, const RectBase<T>& clipBox)
 {
     unsigned ret = 0;
     unsigned f2 = ClippingFlags(*x2, *y2, clipBox);
     unsigned f1 = ClippingFlags(*x1, *y1, clipBox);
-    if ((f1 | f2) == 0) {
+    if (0 == (f2 | f1)) {
         return 0;
     }
     if ((f1 & CLIPPING_FLAGS_X_CLIPPED) != 0 && (f1 & CLIPPING_FLAGS_X_CLIPPED) == (f2 & CLIPPING_FLAGS_X_CLIPPED)) {
@@ -234,9 +276,6 @@ unsigned ClipLineSegment(T* x1, T* y1, T* x2, T* y2, const RectBase<T>& clipBox)
     return ret;
 }
 
-
-
-}
-
+} // namespace OHOS
 
 #endif

@@ -38,30 +38,32 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace OHOS{
-template<class VertexSequence> 
-void ShortenPath(VertexSequence& vs, double s, unsigned closed = 0)
+namespace OHOS {
+/**
+* @brief 缩短顶点源中的点.
+*
+* @param vtxSeq 顶点源,distence 距离,closed 是否关闭.
+* @since 1.0
+* @version 1.0
+*/
+template <class VertexSequence>
+void ShortenPath(VertexSequence& vtxSeq, double distence, unsigned closed = 0)
 {
-    using  VertexType = typename VertexSequence::ValueType;
+    using VertexType = typename VertexSequence::ValueType;
 
-    if(s > 0.0 && vs.Size() > 1)
-    {
+    if (vtxSeq.Size() > 1 && distence > 0.0) {
         double d;
-        int n = int(vs.Size() - 2);
-        while(n)
-        {
-            d = vs[n].dist;
-            if(d > s) break;
-            vs.RemoveLast();
-            s -= d;
-            --n;
+        int nSize = int(vtxSeq.Size() - 2);
+        while (nSize) {
+            d = vtxSeq[nSize].dist;
+            if (distence < d) {
+                break;
+            }
+            vtxSeq.RemoveLast();
+            distence = distence - d;
+            --nSize;
         }
-        if (vs.Size() < 2)
-        {
-            vs.RemoveAll();
-        }
-        else
-        {
+        if (2 <= vtxSeq.Size() {
             n = vs.Size() - 1;
             VertexType& prev = vs[n - 1];
             VertexType& last = vs[n];
@@ -74,11 +76,12 @@ void ShortenPath(VertexSequence& vs, double s, unsigned closed = 0)
                 vs.RemoveLast();
             }
             vs.Close(closed != 0);
+        } else {
+            vs.RemoveAll();
         }
     }
 }
 
-
-}
+} // namespace OHOS
 
 #endif

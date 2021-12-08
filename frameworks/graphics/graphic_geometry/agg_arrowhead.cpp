@@ -37,19 +37,11 @@ void Arrowhead::Rewind(unsigned pathId)
 {
     currId_ = pathId;
     currCoord_ = 0;
-    if (pathId == 0)
-    {
-        if(!tailFlag_) {
-            ;
+    if (pathId == 0) {
+        if (!tailFlag_) {
             cmd_[0] = PATH_CMD_STOP;
             return;
         }
-        coord_[0]  =  tailD1_;             coord_[1]  =  0.0;
-        coord_[2]  =  tailD1_ - tailD4_; coord_[3]  =  tailD3_;
-        coord_[4]  = -tailD2_ - tailD4_; coord_[5]  =  tailD3_;
-        coord_[6]  = -tailD2_;             coord_[7]  =  0.0;
-        coord_[8]  = -tailD2_ - tailD4_; coord_[9]  = -tailD3_;
-        coord_[10] =  tailD1_ - tailD4_; coord_[11] = -tailD3_;
 
         cmd_[0] = PATH_CMD_MOVE_TO;
         cmd_[1] = PATH_CMD_LINE_TO;
@@ -59,20 +51,35 @@ void Arrowhead::Rewind(unsigned pathId)
         cmd_[5] = PATH_CMD_LINE_TO;
         cmd_[7] = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
         cmd_[6] = PATH_CMD_STOP;
+
+        coord_[0] = tailD1_;
+        coord_[1] = 0.0;
+        coord_[2] = tailD1_ - tailD4_;
+        coord_[3] = tailD3_;
+        coord_[4] = -tailD2_ - tailD4_;
+        coord_[5] = tailD3_;
+        coord_[6] = -tailD2_;
+        coord_[7] = 0.0;
+        coord_[8] = -tailD2_ - tailD4_;
+        coord_[9] = -tailD3_;
+        coord_[10] = tailD1_ - tailD4_;
+        coord_[11] = -tailD3_;
         return;
     }
 
-    if(pathId == 1)
-    {
-        if(!headFlag_)
-        {
+    if (pathId == 1) {
+        if (!headFlag_) {
             cmd_[0] = PATH_CMD_STOP;
             return;
         }
-        coord_[0]  = -headD1_;            coord_[1]  = 0.0;
-        coord_[2]  = headD2_ + headD4_; coord_[3]  = -headD3_;
-        coord_[4]  = headD2_;             coord_[5]  = 0.0;
-        coord_[6]  = headD2_ + headD4_; coord_[7]  = headD3_;
+        coord_[0] = -headD1_;
+        coord_[1] = 0.0;
+        coord_[2] = headD2_ + headD4_;
+        coord_[3] = -headD3_;
+        coord_[4] = headD2_;
+        coord_[5] = 0.0;
+        coord_[6] = headD2_ + headD4_;
+        coord_[7] = headD3_;
 
         cmd_[0] = PATH_CMD_MOVE_TO;
         cmd_[1] = PATH_CMD_LINE_TO;
@@ -86,8 +93,7 @@ void Arrowhead::Rewind(unsigned pathId)
 
 unsigned Arrowhead::Vertex(double* x, double* y)
 {
-    if(currId_ < 2)
-    {
+    if (currId_ < 2) {
         unsigned currIdx = currCoord_ * 2;
         *x = coord_[currIdx];
         *y = coord_[currIdx + 1];
