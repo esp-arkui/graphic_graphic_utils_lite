@@ -38,7 +38,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace OHOS {
-enum ClippingFlagsE
+enum ClippingFlagsEnum
 {
     CLIPPING_FLAGS_X1_CLIPPED = 4,
     CLIPPING_FLAGS_X2_CLIPPED = 1,
@@ -49,7 +49,7 @@ enum ClippingFlagsE
 };
 
 /**
- * @brief 确定y的位置，横向裁剪.
+ * @brief 确定y的位置，纵向裁剪.
  * @param y 纵向位置,clipBox裁剪窗口
  * @return 返回对应的区域编码
  * @since 1.0
@@ -62,7 +62,7 @@ inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
 }
 
 /**
- * @brief 确定x的位置，纵向裁剪.
+ * @brief 确定x的位置，横向裁剪.
  * @param x 横向位置,clipBox裁剪窗口
  * @return 返回对应的区域编码
  * @since 1.0
@@ -75,7 +75,7 @@ inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
 }
 
 /**
- * @brief 确定顶点的位置，按点裁剪.
+ * @brief 根据顶点的位置确定顶点的剪裁.
  * @param x,y 顶点位置,clipBox裁剪窗口
  * @return 返回对应的区域编码
  * @since 1.0
@@ -204,7 +204,7 @@ inline unsigned ClipLiangBarsky(T x1, T y1, T x2, T y2, const RectBase<T>& clipB
  * @version 1.0
  */
 template <class T>
-bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T x, T y, unsigned flags)
+bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T* x, T* y, unsigned flags)
 {
     T bound;
 
@@ -231,8 +231,8 @@ bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T x, T y,
 
 /**
  * @brief 线段裁剪.
- * @param x1,y1 线段起点位置,x2,y2 线段结束位置,clipBox裁剪窗口
- * @return 返回对应的区域编码
+ * @param x1,y1 线段起点位置,x2,y2 线段结束位置,clipBox裁剪窗口.
+ * @return 返回对应的区域编码与裁剪后的线段起始位置.
  * @since 1.0
  * @version 1.0
  */
