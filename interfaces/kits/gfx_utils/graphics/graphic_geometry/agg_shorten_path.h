@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_path_storage.h
  *
- * @brief Defines ����ShortenPath.
+ * @brief Defines º¯ÊýShortenPath.
  *
  * @since 1.0
  * @version 1.0
@@ -40,9 +40,9 @@
 
 namespace OHOS {
 /**
-* @brief ���̶���Դ�еĵ�.
+* @brief 缩短vtxSeq中顶点的距离.
 *
-* @param vtxSeq ����Դ,distence ����,closed �Ƿ�ر�.
+* @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
 * @since 1.0
 * @version 1.0
 */
@@ -64,20 +64,20 @@ void ShortenPath(VertexSequence& vtxSeq, double distence, unsigned closed = 0)
             --nSize;
         }
         if (2 <= vtxSeq.Size() {
-            n = vs.Size() - 1;
-            VertexType& prev = vs[n - 1];
-            VertexType& last = vs[n];
+            n = vtxSeq.Size() - 1;
+            VertexType& prev = vtxSeq[n - 1];
+            VertexType& last = vtxSeq[n];
             d = (prev.dist - s) / prev.dist;
             double x = prev.x + (last.x - prev.x) * d;
             double y = prev.y + (last.y - prev.y) * d;
             last.x = x;
             last.y = y;
-            if (!prev(last)) {
-                vs.RemoveLast();
+            if (!prev(last)) {//计算两个顶点距离是否很近
+                vtxSeq.RemoveLast();//删除距离不近的点
             }
-            vs.Close(closed != 0);
+            vtxSeq.Close(closed != 0);
         } else {
-            vs.RemoveAll();
+            vtxSeq.RemoveAll();
         }
     }
 }

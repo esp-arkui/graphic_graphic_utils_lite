@@ -18,7 +18,7 @@
 #include <cmath>
 
 namespace OHOS {
-/* 贝塞尔曲线的极限收敛值 */
+/* 卤麓脠没露没脟煤脧脽碌脛录芦脧脼脢脮脕虏脰碌 */
 const double BEZIER_ARC_ANGLE_EPSILON = 0.01;
 
 void ArcToBezier(double cx, double cy, double rx, double ry,

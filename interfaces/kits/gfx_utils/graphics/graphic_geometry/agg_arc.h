@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines »¡ĞÎÊı¾İÀà.
+ * @brief Defines Â»Â¡ÃÃÃŠÃ½Â¾ÃÃ€Ã .
  *
  * @since 1.0
  * @version 1.0
@@ -44,12 +44,19 @@ public:
     {
     }
 
+    /**
+     * @brief æ„é€ å¼§çº¿.
+     * @param centerX,centerY å¼§çº¿åœ†å¿ƒ, rx æ¨ªè½´åŠå¾„ ry çºµè½´åŠå¾„,
+     * angle1,angle2èµ·å§‹è§’åº¦,ccw æ–¹å‘
+     * @since 1.0
+     * @version 1.0
+     */
     Arc(double centerX, double centerY,
         double rx, double ry,
         double angle1, double angle2,
         bool ccw = true);
     /**
-     * @brief »Øµ½×î¿ªÊ¼²½Öè.
+     * @brief è®¾ç½®ä¸ºåˆå§‹æ­¥éª¤.
      *
      * @since 1.0
      * @version 1.0
@@ -57,7 +64,7 @@ public:
     void Rewind(unsigned);
 
     /**
-     * @brief ÉèÖÃËõ·ÅÖµ.
+     * @brief è®¾ç½®ä¼¸ç¼©æ¯”.
      *
      * @since 1.0
      * @version 1.0
@@ -65,7 +72,7 @@ public:
     void ApproximationScale(double scale);
 
     /**
-     * @brief »ñÈ¡Ëõ·ÅÖµ.
+     * @brief è·å–è®¾ç½®ä¼¸ç¼©æ¯”.
      *
      * @since 1.0
      * @version 1.0
@@ -76,14 +83,14 @@ public:
     }
 
     /**
-     * @brief È¡³ö¶¥µãÔ´ÓÃÓÚ×ø±ê×ª»»ÖØ×éÍ¨µÀ.
-     *
+     * @brief è·å–é¡¶ç‚¹.
+     * @return è¿”å›è¿æ¥å‘½ä»¤
      * @since 1.0
      * @version 1.0
      */
     unsigned Vertex(double* y, double* x);
     /**
-     * @brief ³õÊ¼»¯»¡Ïß.
+     * @brief åˆå§‹åŒ–ä¸€ä¸ªå¼§çº¿.
      *
      * @since 1.0
      * @version 1.0
@@ -92,7 +99,7 @@ public:
 
 private:
     /**
-     * @brief ¹æ·¶»¯»¡ÏßÊı¾İ.
+     * @brief è§„èŒƒåŒ–å¼§çº¿.
      *
      * @since 1.0
      * @version 1.0
@@ -109,7 +116,7 @@ private:
     double end_;
     double scale_;
     double da_;
-    bool ccw_; //»¡ÏßµÄ·½Ïò
+    bool ccw_; //æ–¹å‘
 };
 
 } // namespace OHOS

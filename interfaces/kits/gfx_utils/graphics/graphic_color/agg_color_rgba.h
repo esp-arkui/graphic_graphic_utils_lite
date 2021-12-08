@@ -27,7 +27,7 @@
 #include <cmath>
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_common/agg_gamma_lut.h"
-namespace agg
+namespace OHOS
 {
     // Supported component orders for RGB and RGBA pixel formats
     //=======================================================================

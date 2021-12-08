@@ -1,31 +1,40 @@
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+/**
+* @file agg_rasterizer_sl_clip.h
+* @brief Defines 光栅栏剪裁
+* @since 1.0
+* @version 1.0
+*/
+
+
 //----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-#ifndef AGG_RASTERIZER_SL_CLIP_INCLUDED
-#define AGG_RASTERIZER_SL_CLIP_INCLUDED
+#ifndef GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
+#define GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h"
 
-namespace agg
+namespace OHOS
 {
-    //--------------------------------------------------------poly_max_coord_e
     enum poly_max_coord_e
     {
         poly_max_coord = (1 << 30) - 1 //----poly_max_coord
     };
-    
-    //------------------------------------------------------------ras_conv_int
+
     struct ras_conv_int
     {
         typedef int coord_type;
@@ -39,78 +48,12 @@ namespace agg
         static int downscale(int v)  { return v; }
     };
 
-    //--------------------------------------------------------ras_conv_int_sat
-    struct ras_conv_int_sat
-    {
-        typedef int coord_type;
-        static AGG_INLINE int mul_div(double a, double b, double c)
-        {
-            return saturation<poly_max_coord>::iround(a * b / c);
-        }
-        static int xi(int v) { return v; }
-        static int yi(int v) { return v; }
-        static int upscale(double v) 
-        { 
-            return saturation<poly_max_coord>::iround(v * poly_subpixel_scale); 
-        }
-        static int downscale(int v) { return v; }
-    };
-
-    //---------------------------------------------------------ras_conv_int_3x
-    struct ras_conv_int_3x
-    {
-        typedef int coord_type;
-        static AGG_INLINE int mul_div(double a, double b, double c)
-        {
-            return iround(a * b / c);
-        }
-        static int xi(int v) { return v * 3; }
-        static int yi(int v) { return v; }
-        static int upscale(double v) { return iround(v * poly_subpixel_scale); }
-        static int downscale(int v)  { return v; }
-    };
-
-    //-----------------------------------------------------------ras_conv_dbl
-    struct ras_conv_dbl
-    {
-        typedef double coord_type;
-        static AGG_INLINE double mul_div(double a, double b, double c)
-        {
-            return a * b / c;
-        }
-        static int xi(double v) { return iround(v * poly_subpixel_scale); }
-        static int yi(double v) { return iround(v * poly_subpixel_scale); }
-        static double upscale(double v) { return v; }
-        static double downscale(int v)  { return v / double(poly_subpixel_scale); }
-    };
-
-    //--------------------------------------------------------ras_conv_dbl_3x
-    struct ras_conv_dbl_3x
-    {
-        typedef double coord_type;
-        static AGG_INLINE double mul_div(double a, double b, double c)
-        {
-            return a * b / c;
-        }
-        static int xi(double v) { return iround(v * poly_subpixel_scale * 3); }
-        static int yi(double v) { return iround(v * poly_subpixel_scale); }
-        static double upscale(double v) { return v; }
-        static double downscale(int v)  { return v / double(poly_subpixel_scale); }
-    };
-
-
-
-
-
-    //------------------------------------------------------rasterizer_sl_clip
     template<class Conv> class rasterizer_sl_clip
     {
     public:
         typedef Conv                      conv_type;
         typedef typename Conv::coord_type coord_type;
         typedef rect_base<coord_type>     rect_type;
-
-        //--------------------------------------------------------------------
         rasterizer_sl_clip() :  
             m_clip_box(0,0,0,0),
             m_x1(0),
@@ -142,7 +85,6 @@ namespace agg
         }
 
     private:
-        //------------------------------------------------------------------------
         template<class Rasterizer>
         AGG_INLINE void line_clip_y(Rasterizer& ras,
                                     coord_type x1, coord_type y1, 
@@ -197,9 +139,7 @@ namespace agg
             }
         }
 
-
     public:
-        //--------------------------------------------------------------------
         template<class Rasterizer>
         void line_to(Rasterizer& ras, coord_type x2, coord_type y2)
         {
@@ -295,7 +235,6 @@ namespace agg
             m_y1 = y2;
         }
 
-
     private:
         rect_type        m_clip_box;
         coord_type       m_x1;
@@ -304,48 +243,7 @@ namespace agg
         bool             m_clipping;
     };
 
-
-
-
-    //---------------------------------------------------rasterizer_sl_no_clip
-    class rasterizer_sl_no_clip
-    {
-    public:
-        typedef ras_conv_int conv_type;
-        typedef int          coord_type;
-
-        rasterizer_sl_no_clip() : m_x1(0), m_y1(0) {}
-
-        void reset_clipping() {}
-        void clip_box(coord_type, coord_type, coord_type, coord_type) {}
-        void move_to(coord_type x1, coord_type y1) { m_x1 = x1; m_y1 = y1; }
-
-        template<class Rasterizer>
-        void line_to(Rasterizer& ras, coord_type x2, coord_type y2) 
-        { 
-            ras.line(m_x1, m_y1, x2, y2); 
-            m_x1 = x2; 
-            m_y1 = y2;
-        }
-
-    private:
-        int m_x1, m_y1;
-    };
-
-
-    //                                         -----rasterizer_sl_clip_int
-    //                                         -----rasterizer_sl_clip_int_sat
-    //                                         -----rasterizer_sl_clip_int_3x
-    //                                         -----rasterizer_sl_clip_dbl
-    //                                         -----rasterizer_sl_clip_dbl_3x
-    //------------------------------------------------------------------------
-    typedef rasterizer_sl_clip<ras_conv_int>     rasterizer_sl_clip_int;
-    typedef rasterizer_sl_clip<ras_conv_int_sat> rasterizer_sl_clip_int_sat;
-    typedef rasterizer_sl_clip<ras_conv_int_3x>  rasterizer_sl_clip_int_3x;
-    typedef rasterizer_sl_clip<ras_conv_dbl>     rasterizer_sl_clip_dbl;
-    typedef rasterizer_sl_clip<ras_conv_dbl_3x>  rasterizer_sl_clip_dbl_3x;
-
-
+    using rasterizer_sl_clip_int =rasterizer_sl_clip<ras_conv_int>;
 }
 
 #endif

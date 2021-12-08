@@ -35,7 +35,7 @@ namespace OHOS {
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines ¼òµ¥Êı×éÈİÆ÷Àà.
+ * @brief Defines PodAutoArrayæ•°ç»„.
  *
  * @since 1.0
  * @version 1.0
@@ -97,7 +97,7 @@ private:
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines ¼òµ¥Êı×éÈİÆ÷ÊÊÅäÀà.
+ * @brief Defines PodAutoArrayæ•°ç»„é€‚é…å™¨.
  *
  * @since 1.0
  * @version 1.0
@@ -147,9 +147,8 @@ private:
 };
 
 /**
- * @file graphic_geometry_arc.h
  *
- * @brief Defines ÏòÁ¿ÈİÆ÷Àà,Ìá¹©ÁËÇå³ı,Ôö¼ÓÁËÔö¼Ó£¬²åÈëµÈ·½·¨.
+ * @brief Defines PodAutoVector,å¢åŠ äº†å¯ä»¥å¢åˆ æ”¹çš„æ–¹æ³•.
  *
  * @since 1.0
  * @version 1.0
@@ -227,7 +226,7 @@ private:
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines ¼òµ¥Êı×éÈİÆ÷Àà.
+ * @brief Defines PodArrayï¼Œå¯ä»¥ä¿®æ”¹å¤§å°.
  *
  * @since 1.0
  * @version 1.0
@@ -317,6 +316,14 @@ private:
     unsigned size_;
 };
 
+/**
+ * @file graphic_geometry_arc.h
+ *
+ * @brief Defines PodVectorï¼Œæä¾›äº†åºåˆ—åŒ–ä¸ååºåˆ—åŒ–çš„æ–¹æ³•.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
 template <class T>
 class PodVector : public HeapBase {
 public:

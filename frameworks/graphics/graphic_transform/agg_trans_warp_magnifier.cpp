@@ -16,7 +16,7 @@
 #include <cmath>
 #include <gfx_utils/graphics/graphic_transform/agg_trans_warp_magnifier.h>
 
-namespace agg
+namespace OHOS
 {
 
     //------------------------------------------------------------------------

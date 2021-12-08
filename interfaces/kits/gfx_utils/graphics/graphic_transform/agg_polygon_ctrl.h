@@ -28,7 +28,7 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "agg_ctrl.h"
 
-namespace agg
+namespace OHOS
 {
     class simple_polygon_vertex_source
     {

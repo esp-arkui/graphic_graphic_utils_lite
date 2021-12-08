@@ -20,7 +20,7 @@
 
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace agg
+namespace OHOS
 {
     
     // See also: agg_trans_double_path.cpp

@@ -18,10 +18,10 @@
 
 #include <cstring>
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "render/agg_rendering_buffer.h"
+#include "render/rendering_buffer.h"
 
 
-namespace agg
+namespace OHOS
 {
 
     //--------------------------------------------------------------color_conv

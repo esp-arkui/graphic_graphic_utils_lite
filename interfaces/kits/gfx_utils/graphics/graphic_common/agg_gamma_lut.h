@@ -20,7 +20,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "agg_gamma_functions.h"
 
-namespace agg
+namespace OHOS
 {
     template<class LoResT=int8u, 
              class HiResT=int8u, 

@@ -22,7 +22,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
-namespace agg
+namespace OHOS
 {
 
     //----------------------------------------------------------conv_transform
