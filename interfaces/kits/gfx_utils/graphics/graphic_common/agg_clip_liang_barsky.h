@@ -103,7 +103,7 @@ inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
     const double limitZero = 1e-30; \
     double deltaX = x2 - x1;        \
     double deltaY = y2 - y1;
-
+//函数分解，太长了
 /**
  * @brief 确定顶点的位置，按点裁剪.
  * @param x1,y1 线段起点位置,x2,y2 线段结束位置,clipBox裁剪窗口,x,y 返回结果
@@ -240,15 +240,15 @@ template <class T>
 unsigned ClipLineSegment(T* x1, T* y1, T* x2, T* y2, const RectBase<T>& clipBox)
 {
     unsigned ret = 0;
-    unsigned f2 = ClippingFlags(*x2, *y2, clipBox);
+    unsigned f2 = ClippingFlags(*x2, *y2, clipBox);//TODO f1  f2两个变量修改
     unsigned f1 = ClippingFlags(*x1, *y1, clipBox);
     if (0 == (f2 | f1)) {
-        return 0;
+        return 0;//TODO  值得含义
     }
-    if ((f1 & CLIPPING_FLAGS_X_CLIPPED) != 0 && (f1 & CLIPPING_FLAGS_X_CLIPPED) == (f2 & CLIPPING_FLAGS_X_CLIPPED)) {
+    if ((f1 & CLIPPING_FLAGS_X_CLIPPED) != 0 && (f1 & CLIPPING_FLAGS_X_CLIPPED) == (f2 & CLIPPING_FLAGS_X_CLIPPED)) {//要解释
         return 4;
     }
-    if ((f1 & CLIPPING_FLAGS_Y_CLIPPED) != 0 && (f1 & CLIPPING_FLAGS_Y_CLIPPED) == (f2 & CLIPPING_FLAGS_Y_CLIPPED)) {
+    if ((f1 & CLIPPING_FLAGS_Y_CLIPPED) != 0 && (f1 & CLIPPING_FLAGS_Y_CLIPPED) == (f2 & CLIPPING_FLAGS_Y_CLIPPED)) {//要解释
         return 4;
     }
     T tx2 = *x2;

@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines »¡ÐÎÊý¾ÝÀà.
+ * @brief Defines 弧线类.
  *
  * @since 1.0
  * @version 1.0
