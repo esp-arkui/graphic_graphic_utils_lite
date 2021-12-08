@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_bounding_rect.h
  *
- * @brief Defines Ô²½Ç¾ØĞÎÀà.
+ * @brief Defines åœ†è§’çŸ©å½¢ç±».
  *
  * @since 1.0
  * @version 1.0
@@ -47,9 +47,9 @@ namespace OHOS{
 class RoundedRect : public HeapBase{
 public:
     /**
-     * @brief ¹¹ÔìÔ²½Ç¾ØĞÎ.
+     * @brief æ„é€ åœ†è§’çŸ©å½¢.
      *
-     * @param x1,y1 ¾ØĞÎ×óÉÏ½Ç¶¥µã,x2,y2 ¾ØĞÎÓÒÏÂ½Ç¶¥µã,r Ô²½Ç°ë¾¶.
+     * @param x1,y1 çŸ©å½¢å·¦ä¸Šè§’é¡¶ç‚¹,x2,y2 çŸ©å½¢å³ä¸‹è§’é¡¶ç‚¹,r åœ†è§’åŠå¾„.
      * @since 1.0
      * @version 1.0
      */
@@ -58,27 +58,27 @@ public:
     RoundedRect() {}
 
     /**
-     * @brief ÉèÖÃÔ²½Ç¾ØĞÎ¶¥µãÔ²»¡µÄºáÏò°ë¾¶Óë×İÏò°ë¾¶.
+     * @brief è®¾ç½®åœ†è§’çŸ©å½¢é¡¶ç‚¹åœ†å¼§çš„æ¨ªå‘åŠå¾„ä¸çºµå‘åŠå¾„.
      *
-     * @param rxºáÏò°ë¾¶,×İÏò°ë¾¶.
+     * @param rxæ¨ªå‘åŠå¾„,çºµå‘åŠå¾„.
      * @since 1.0
      * @version 1.0
      */
     void Radius(double rx, double ry);
 
     /**
-     * @brief ÉèÖÃÔ²½Ç¾ØĞÎËÄ¸ö¶¥µãÔ²»¡µÄºáÏò°ë¾¶Óë×İÏò°ë¾¶.
+     * @brief è®¾ç½®åœ†è§’çŸ©å½¢å››ä¸ªé¡¶ç‚¹åœ†å¼§çš„æ¨ªå‘åŠå¾„ä¸çºµå‘åŠå¾„.
      *
-     * @param rxBottomÏÂ·½Á½¸öµãºáÏò°ë¾¶,ryBottomÏÂ·½Á½¸öµã×İÏò°ë¾¶,rxTopÉÏ·½Á½¸öµãºáÏò°ë¾¶,ryTopÉÏ·½Á½¸öµã×İÏò°ë¾¶.
+     * @param rxBottomä¸‹æ–¹ä¸¤ä¸ªç‚¹æ¨ªå‘åŠå¾„,ryBottomä¸‹æ–¹ä¸¤ä¸ªç‚¹çºµå‘åŠå¾„,rxTopä¸Šæ–¹ä¸¤ä¸ªç‚¹æ¨ªå‘åŠå¾„,ryTopä¸Šæ–¹ä¸¤ä¸ªç‚¹çºµå‘åŠå¾„.
      * @since 1.0
      * @version 1.0
      */
     void Radius(double rxBottom, double ryBottom, double rxTop, double ryTop);
 
      /**
-     * @brief ·Ö±ğÉèÖÃÔ²½Ç¾ØĞÎËÄ¸ö¶¥µãÔ²»¡µÄºáÏò°ë¾¶Óë×İÏò°ë¾¶.
+     * @brief åˆ†åˆ«è®¾ç½®åœ†è§’çŸ©å½¢å››ä¸ªé¡¶ç‚¹åœ†å¼§çš„æ¨ªå‘åŠå¾„ä¸çºµå‘åŠå¾„.
      *
-     * @param ·Ö±ğ¶ÔÓ¦ËÄ¸ö¶¥µã,rx ºáÏò°ë¾¶,ry ×İÏò°ë¾¶.
+     * @param åˆ†åˆ«å¯¹åº”å››ä¸ªé¡¶ç‚¹,rx æ¨ªå‘åŠå¾„,ry çºµå‘åŠå¾„.
      * @since 1.0
      * @version 1.0
      */
@@ -86,9 +86,9 @@ public:
                 double rx3, double ry3, double rx4, double ry4);
 
     /**
-     * @brief ÉèÖÃ¶¥µã»¡ĞÎµÄÉìËõ±È
+     * @brief è®¾ç½®é¡¶ç‚¹å¼§å½¢çš„ä¼¸ç¼©æ¯”
      *
-     * @param ÉìËõ±È.
+     * @param ä¼¸ç¼©æ¯”.
      * @since 1.0
      * @version 1.0
      */
@@ -98,25 +98,25 @@ public:
     }
 
     /**
-     * @brief ÉèÖÃ¾ØĞÎµÄ×óÉÏ½ÇÓëÓÒÏÂ½ÇÁ½¸ö¶¥µã.
+     * @brief è®¾ç½®çŸ©å½¢çš„å·¦ä¸Šè§’ä¸å³ä¸‹è§’ä¸¤ä¸ªé¡¶ç‚¹.
      *
-     * @param x1Óëy1×óÉÏ½Ç¶¥µã,x2Óëy2ÓÒÏÂ½Ç¶¥µã.
+     * @param x1ä¸y1å·¦ä¸Šè§’é¡¶ç‚¹,x2ä¸y2å³ä¸‹è§’é¡¶ç‚¹.
      * @since 1.0
      * @version 1.0
      */
     void Rect(double x1, double y1, double x2, double y2);
 
     /**
-     * @brief ÉèÖÃÔ²½Ç¾ØĞÎ¶¥µãÔ²»¡µÄ°ë¾¶.
+     * @brief è®¾ç½®åœ†è§’çŸ©å½¢é¡¶ç‚¹åœ†å¼§çš„åŠå¾„.
      *
-     * @param r °ë¾¶.
+     * @param r åŠå¾„.
      * @since 1.0
      * @version 1.0
      */
     void Radius(double r);
 
     /**
-     * @brief ¹æ·¶»¯Ô²½Ç¾ØĞÎµÄ»¡ĞÎ°ë¾¶.
+     * @brief è§„èŒƒåŒ–åœ†è§’çŸ©å½¢çš„å¼§å½¢åŠå¾„.
      *
      * @since 1.0
      * @version 1.0
@@ -124,7 +124,7 @@ public:
     void NormalizeRadius();
     
      /**
-     * @brief »Øµ½×î¿ªÊ¼²½Öè.
+     * @brief å›åˆ°æœ€å¼€å§‹æ­¥éª¤.
      *
      * @since 1.0
      * @version 1.0
@@ -132,8 +132,8 @@ public:
     void Rewind(unsigned);
 
     /**
-     * @brief »ñÈ¡¶¥µã»¡ĞÎµÄÉìËõ±È
-     * @return ÉìËõ±È.
+     * @brief è·å–é¡¶ç‚¹å¼§å½¢çš„ä¼¸ç¼©æ¯”
+     * @return ä¼¸ç¼©æ¯”.
      * @since 1.0
      * @version 1.0
      */
@@ -143,9 +143,9 @@ public:
     }
 
     /**
-     * @brief È¡³ö¶¥µãÔ´ÓÃÓÚ×ø±ê×ª»»ÖØ×éÍ¨µÀ.
-     * @param x,y ¶¥µãÔ´
-     * @return Á¬½ÓÃüÁî
+     * @brief å–å‡ºé¡¶ç‚¹æºç”¨äºåæ ‡è½¬æ¢é‡ç»„é€šé“.
+     * @param x,y é¡¶ç‚¹æº
+     * @return è¿æ¥å‘½ä»¤
      * @since 1.0
      * @version 1.0
      */

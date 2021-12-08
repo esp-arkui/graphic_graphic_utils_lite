@@ -17,7 +17,7 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Í¼ĞÎ²Ù×÷
+ * @brief Defines å›¾å½¢æ“ä½œ
  *
  * @since 1.0
  * @version 1.0
@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_basics.h
  *
- * @brief Defines Í¼ĞÎ²Ù×÷»ù±¾Êı¾İÀàĞÍÓëÍ¨ÓÃº¯Êı.
+ * @brief Defines å›¾å½¢æ“ä½œåŸºæœ¬æ•°æ®ç±»å‹ä¸é€šç”¨å‡½æ•°.
  *
  * @since 1.0
  * @version 1.0
@@ -339,10 +339,10 @@ struct RectBase {
 };
 
 /**
- * @brief »ñÈ¡Á½¾ØĞÎÊÇ·ñÏà½»ÇøÓò.
+ * @brief è·å–ä¸¤çŸ©å½¢æ˜¯å¦ç›¸äº¤åŒºåŸŸ.
  *
- * @param rect1,rect2 Á½¸ö¾ØĞÎ.
- * @return Returns Ïà½»µÄ¾ØĞÎ.
+ * @param rect1,rect2 ä¸¤ä¸ªçŸ©å½¢.
+ * @return Returns ç›¸äº¤çš„çŸ©å½¢.
  * @since 1.0
  * @version 1.0
  */
@@ -366,10 +366,10 @@ inline Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
 }
 
 /**
- * @brief »ñÈ¡Á½¾ØĞÎµÄ²¢¼¯ÇøÓò.
+ * @brief è·å–ä¸¤çŸ©å½¢çš„å¹¶é›†åŒºåŸŸ.
  *
- * @param rect1,rect2 Á½¸ö¾ØĞÎ.
- * @return Returns ²¢¼¯ÇøÓòµÄ¾ØĞÎ.
+ * @param rect1,rect2 ä¸¤ä¸ªçŸ©å½¢.
+ * @return Returns å¹¶é›†åŒºåŸŸçš„çŸ©å½¢.
  * @since 1.0
  * @version 1.0
  */
@@ -570,10 +570,10 @@ struct RowInfo {
 };
 
 /**
- * @brief Á½¸öÊıÊÇ·ñÏà½ü.
+ * @brief ä¸¤ä¸ªæ•°æ˜¯å¦ç›¸è¿‘.
  *
- * @param val1,val2 Á½¸öÊı,epsilon Îó²î.
- * @return Returns Á½¸öÊıÊÇ·ñÏà½ü.
+ * @param val1,val2 ä¸¤ä¸ªæ•°,epsilon è¯¯å·®.
+ * @return Returns ä¸¤ä¸ªæ•°æ˜¯å¦ç›¸è¿‘.
  *@since 1.0
  * @version 1.0
  */

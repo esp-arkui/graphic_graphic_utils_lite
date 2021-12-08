@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_vertex_sequence.h
  *
- * @brief Defines ¶¨ÒåVertexSequenceÀà.
+ * @brief Defines å®šä¹‰VertexSequenceç±».
  *
  * @since 1.0
  * @version 1.0
@@ -52,27 +52,27 @@ class VertexSequence : public PodBvector<T, S> {
 public:
     using BaseType = PodBvector<T, S>;
     /**
-     * @brief ·â±Õ¶¥µãÔ´.
+     * @brief å°é—­é¡¶ç‚¹æº.
      *
-     * @param remove_flag ÊÇ·ñ·â±Õ.
+     * @param remove_flag æ˜¯å¦å°é—­.
      * @since 1.0
      * @version 1.0
      */
     void Close(bool remove_flag);
 
     /**
-     * @brief Ôö¼ÓÒ»¸öµã.
+     * @brief å¢åŠ ä¸€ä¸ªç‚¹.
      *
-     * @param val ¶¥µã.
+     * @param val é¡¶ç‚¹.
      * @since 1.0
      * @version 1.0
      */
     void Add(const T& val);
 
     /**
-     * @brief ĞŞ¸Ä×îºóÒ»¸ö¶¥µã.
+     * @brief ä¿®æ”¹æœ€åä¸€ä¸ªé¡¶ç‚¹.
      *
-     * @param t ¶¥µã.
+     * @param t é¡¶ç‚¹.
      * @since 1.0
      * @version 1.0
      */
@@ -93,7 +93,7 @@ void VertexSequence<T, S>::Close(bool closed)
 
     if (closed) {
         while (1 < BaseType::Size()) {
-            if ((*this)[BaseType::Size() - 1]((*this)[0])) {//¼ÆËãÁ½¶¥µã¾àÀë
+            if ((*this)[BaseType::Size() - 1]((*this)[0])) {//è®¡ç®—ä¸¤é¡¶ç‚¹è·ç¦»
                 break;
             }
             BaseType::RemoveLast();
@@ -127,9 +127,9 @@ struct VertexDist {
     VertexDist()
     {}
     /**
-     * @brief ¹¹ÔìVertexDist.
+     * @brief æ„é€ VertexDist.
      *
-     * @param x_,y_ ¶¥µã×ø±ê.
+     * @param x_,y_ é¡¶ç‚¹åæ ‡.
      * @since 1.0
      * @version 1.0
      */
@@ -138,10 +138,10 @@ struct VertexDist {
     {
     }
     /**
-     * @brief ¼ÆËãÁ½¸öµãµÄ¾àÀëÊÇ·ñºÜÏà½ü.
+     * @brief è®¡ç®—ä¸¤ä¸ªç‚¹çš„è·ç¦»æ˜¯å¦å¾ˆç›¸è¿‘.
      *
-     * @param ¶¥µã.
-     * @return Á½µã¾àÀëºÜ½ü·µ»Øfalse.
+     * @param é¡¶ç‚¹.
+     * @return ä¸¤ç‚¹è·ç¦»å¾ˆè¿‘è¿”å›false.
      * @since 1.0
      * @version 1.0
      */
@@ -162,9 +162,9 @@ struct VertexDistCmd : public VertexDist {
     VertexDistCmd()
     {}
     /**
-     * @brief ¹¹ÔìVertexDist.
+     * @brief æ„é€ VertexDist.
      *
-     * @param x_,y_ ¶¥µã×ø±ê, cmd_ Á¬½ÓÃüÁî.
+     * @param x_,y_ é¡¶ç‚¹åæ ‡, cmd_ è¿æ¥å‘½ä»¤.
      * @since 1.0
      * @version 1.0
      */

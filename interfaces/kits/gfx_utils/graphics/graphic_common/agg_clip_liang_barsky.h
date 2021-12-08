@@ -26,7 +26,7 @@
 /**
 * @file graphic_geometry_clip_liang_barsky.h
 *
-* @brief Defines ²Ã¼ôÏà¹Ø·½·¨.
+* @brief Defines è£å‰ªç›¸å…³æ–¹æ³•.
 *
 * @since 1.0
 * @version 1.0
@@ -49,9 +49,9 @@ enum ClippingFlagsEnum
 };
 
 /**
- * @brief È·¶¨yµÄÎ»ÖÃ£¬×İÏò²Ã¼ô.
- * @param y ×İÏòÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂë
+ * @brief ç¡®å®šyçš„ä½ç½®ï¼Œçºµå‘è£å‰ª.
+ * @param y çºµå‘ä½ç½®,clipBoxè£å‰ªçª—å£
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç 
  * @since 1.0
  * @version 1.0
  */
@@ -62,9 +62,9 @@ inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
 }
 
 /**
- * @brief È·¶¨xµÄÎ»ÖÃ£¬ºáÏò²Ã¼ô.
- * @param x ºáÏòÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂë
+ * @brief ç¡®å®šxçš„ä½ç½®ï¼Œæ¨ªå‘è£å‰ª.
+ * @param x æ¨ªå‘ä½ç½®,clipBoxè£å‰ªçª—å£
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç 
  * @since 1.0
  * @version 1.0
  */
@@ -75,9 +75,9 @@ inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
 }
 
 /**
- * @brief ¸ù¾İ¶¥µãµÄÎ»ÖÃÈ·¶¨¶¥µãµÄ¼ô²Ã.
- * @param x,y ¶¥µãÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂë
+ * @brief æ ¹æ®é¡¶ç‚¹çš„ä½ç½®ç¡®å®šé¡¶ç‚¹çš„å‰ªè£.
+ * @param x,y é¡¶ç‚¹ä½ç½®,clipBoxè£å‰ªçª—å£
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç 
  * @since 1.0
  * @version 1.0
  */
@@ -105,9 +105,9 @@ inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
     double deltaY = y2 - y1;
 
 /**
- * @brief È·¶¨¶¥µãµÄÎ»ÖÃ£¬°´µã²Ã¼ô.
- * @param x1,y1 Ïß¶ÎÆğµãÎ»ÖÃ,x2,y2 Ïß¶Î½áÊøÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú,x,y ·µ»Ø½á¹û
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂë
+ * @brief ç¡®å®šé¡¶ç‚¹çš„ä½ç½®ï¼ŒæŒ‰ç‚¹è£å‰ª.
+ * @param x1,y1 çº¿æ®µèµ·ç‚¹ä½ç½®,x2,y2 çº¿æ®µç»“æŸä½ç½®,clipBoxè£å‰ªçª—å£,x,y è¿”å›ç»“æœ
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç 
  * @since 1.0
  * @version 1.0
  */
@@ -197,9 +197,9 @@ inline unsigned ClipLiangBarsky(T x1, T y1, T x2, T y2, const RectBase<T>& clipB
 }
 
 /**
- * @brief ²Ã¼ôÒÆ¶¯µÄµã.
- * @param x1,y1 ÆğµãÎ»ÖÃ,x2,y2 ÖÕµãÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú,x,y ·µ»Ø½á¹û
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂë
+ * @brief è£å‰ªç§»åŠ¨çš„ç‚¹.
+ * @param x1,y1 èµ·ç‚¹ä½ç½®,x2,y2 ç»ˆç‚¹ä½ç½®,clipBoxè£å‰ªçª—å£,x,y è¿”å›ç»“æœ
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç 
  * @since 1.0
  * @version 1.0
  */
@@ -230,9 +230,9 @@ bool ClipMovePoint(T x1, T y1, T x2, T y2, const RectBase<T>& clipBox, T* x, T* 
 }
 
 /**
- * @brief Ïß¶Î²Ã¼ô.
- * @param x1,y1 Ïß¶ÎÆğµãÎ»ÖÃ,x2,y2 Ïß¶Î½áÊøÎ»ÖÃ,clipBox²Ã¼ô´°¿Ú.
- * @return ·µ»Ø¶ÔÓ¦µÄÇøÓò±àÂëÓë²Ã¼ôºóµÄÏß¶ÎÆğÊ¼Î»ÖÃ.
+ * @brief çº¿æ®µè£å‰ª.
+ * @param x1,y1 çº¿æ®µèµ·ç‚¹ä½ç½®,x2,y2 çº¿æ®µç»“æŸä½ç½®,clipBoxè£å‰ªçª—å£.
+ * @return è¿”å›å¯¹åº”çš„åŒºåŸŸç¼–ç ä¸è£å‰ªåçš„çº¿æ®µèµ·å§‹ä½ç½®.
  * @since 1.0
  * @version 1.0
  */
