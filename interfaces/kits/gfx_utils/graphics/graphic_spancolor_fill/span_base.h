@@ -111,7 +111,7 @@ namespace OHOS
 
         /**
          * @brief generate 生成SpanGenerator 和 SpanConverter的span
-         * @param span 扫描线
+         * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度

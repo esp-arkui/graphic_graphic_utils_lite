@@ -43,87 +43,6 @@ namespace OHOS
         IMAGE_SUBPIXEL_MASK = IMAGE_SUBPIXEL_SCALE - 1
     };
 
-    class ImageRgbaLut
-    {
-    public:
-        template <class FilterF>
-        void Calculate(const FilterF& filter,
-                       bool normalization = true)
-        {
-            filter;
-            double r = filter.radius();
-            realloc_lut(r);
-            unsigned i;
-            unsigned pivot = diameter() << (IMAGE_SUBPIXEL_SHIFT - 1);
-            for (i = 0; i < pivot; i++)
-            {
-                double x = double(i) / double(IMAGE_SUBPIXEL_SCALE);
-                double y = filter.calc_weight(x);
-                weightArray_[pivot + i] =
-                    weightArray_[pivot - i] = (int16)iround(y * IMAGE_RGBA_SCALE);
-            }
-            unsigned end = (diameter() << IMAGE_SUBPIXEL_SHIFT) - 1;
-            weightArray_[0] = weightArray_[end];
-            if (normalization)
-            {
-                normalize();
-            }
-        }
-
-        ImageRgbaLut() :
-            radius_(0), diameter_(0), start_(0)
-        {
-        }
-
-        template <class FilterF>
-        ImageRgbaLut(const FilterF& filter,
-                     bool normalization = true)
-        {
-            calculate(filter, normalization);
-        }
-
-        double radius() const
-        {
-            return radius_;
-        }
-        unsigned diameter() const
-        {
-            return diameter_;
-        }
-        int start() const
-        {
-            return start_;
-        }
-        const int16* weight_array() const
-        {
-            return &weightArray_[0];
-        }
-        void normalize();
-
-    private:
-        void realloc_lut(double radius);
-        ImageRgbaLut(const ImageRgbaLut&);
-        const ImageRgbaLut& operator=(const ImageRgbaLut&);
-
-        double radius_;
-        unsigned diameter_;
-        int start_;
-        pod_array<int16> weightArray_;
-    };
-
-    template <class FilterF>
-    class ImageRgba : public ImageRgbaLut
-    {
-    public:
-        ImageRgba()
-        {
-            Calculate(filterFunction);
-        }
-
-    private:
-        FilterF filterFunction;
-    };
-
     template <class Source, class Interpolator>
     class SpanImage
     {
@@ -134,76 +53,27 @@ namespace OHOS
         SpanImage()
         {
         }
+        /**
+         * @brief 构造函数传参
+         */
         SpanImage(source_type& src,
-                  interpolator_type& interpolator,
-                  ImageRgbaLut* filter) :
+                  interpolator_type& interpolator) :
             src_(&src),
-            interpolator_(&interpolator),
-            m_filter(filter),
-            m_dx_dbl(0.5),
-            m_dy_dbl(0.5),
-            m_dx_int(IMAGE_SUBPIXEL_SCALE / 2),
-            m_dy_int(IMAGE_SUBPIXEL_SCALE / 2)
+            interpolator_(&interpolator)
         {
-        }
-        void attach(source_type& v)
-        {
-            src_ = &v;
         }
 
-        source_type& source()
+        /**
+         * @brief 返回 image_accessor
+         */
+        source_type& GetSource()
         {
             return *src_;
-        }
-        const source_type& source() const
-        {
-            return *src_;
-        }
-        const ImageRgbaLut& filter() const
-        {
-            return *m_filter;
-        }
-        int filter_dx_int() const
-        {
-            return m_dx_int;
-        }
-        int filter_dy_int() const
-        {
-            return m_dy_int;
-        }
-        double filter_dx_dbl() const
-        {
-            return m_dx_dbl;
-        }
-        double filter_dy_dbl() const
-        {
-            return m_dy_dbl;
-        }
-
-        void interpolator(interpolator_type& v)
-        {
-            interpolator_ = &v;
         }
         /**
-         * @brief 添加过滤模式
+         * @brief 返回插值器
          */
-        void filter(ImageRgbaLut& v)
-        {
-            m_filter = &v;
-        }
-        void filter_offset(double dx, double dy)
-        {
-            m_dx_dbl = dx;
-            m_dy_dbl = dy;
-            m_dx_int = iround(dx * IMAGE_SUBPIXEL_SCALE);
-            m_dy_int = iround(dy * IMAGE_SUBPIXEL_SCALE);
-        }
-        void filter_offset(double d)
-        {
-            filter_offset(d, d);
-        }
-
-        interpolator_type& interpolator()
+        interpolator_type& GetInterpolator()
         {
             return *interpolator_;
         }
@@ -214,93 +84,100 @@ namespace OHOS
     private:
         source_type* src_;
         interpolator_type* interpolator_;
-        ImageRgbaLut* m_filter;
-        double m_dx_dbl;
-        double m_dy_dbl;
-        unsigned m_dx_int;
-        unsigned m_dy_int;
     };
 
+    /**
+     *生成相应image
+     */
     template <class Source, class Interpolator>
     class spanImageRgba : public SpanImage<Source, Interpolator>
     {
     public:
-        typedef Source source_type;
-        typedef typename source_type::color_type color_type;
-        typedef typename source_type::order_type order_type;
-        typedef Interpolator interpolator_type;
-        typedef SpanImage<source_type, interpolator_type> base_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        using source_type = Source;
+        using color_type = typename source_type::color_type;
+        using order_type = typename source_type::order_type;
+        using interpolator_type = Interpolator;
+        using spanImage = SpanImage<source_type, interpolator_type>;
+        using value_type = typename color_type::value_type;
+        using calc_type = typename color_type::calc_type;
+        using long_type = typename color_type::long_type;
 
         spanImageRgba()
         {
         }
-        spanImageRgba(source_type& src, interpolator_type& inter) :
-            base_type(src, inter, 0)
+        spanImageRgba(source_type& src, interpolator_type& interpolator) :
+            spanImage(src, interpolator)
         {
         }
 
+        /**
+         * @brief generate 生成相应image
+         * @param span 需要填色的扫描线首地址
+         * @param x 坐标-x
+         * @param y 坐标-y
+         * @param len 扫描线长度
+         */
         void generate(color_type* span, int x, int y, unsigned len)
         {
-            base_type::interpolator().begin(x + base_type::filter_dx_dbl(),
-                                            y + base_type::filter_dy_dbl(), len);
+            spanImage::GetInterpolator().begin(x + 0.5, y + 0.5, len);
 
             long_type fg[4];
-            const value_type* fg_ptr;
+            const value_type* colorsPtr;
 
             do
             {
                 int x_hr;
                 int y_hr;
 
-                base_type::interpolator().coordinates(&x_hr, &y_hr);
+                spanImage::GetInterpolator().coordinates(&x_hr, &y_hr);
 
-                x_hr -= base_type::filter_dx_int();
-                y_hr -= base_type::filter_dy_int();
+                x_hr -= IMAGE_SUBPIXEL_SCALE / 2;
+                y_hr -= IMAGE_SUBPIXEL_SCALE / 2;
 
-                int x_lr = x_hr >> IMAGE_SUBPIXEL_SHIFT;
-                int y_lr = y_hr >> IMAGE_SUBPIXEL_SHIFT;
+                int spanX = x_hr >> IMAGE_SUBPIXEL_SHIFT;
+                int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
 
                 unsigned weight;
 
-                fg[0] =
-                    fg[1] =
-                        fg[2] =
-                            fg[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                fg[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                fg[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                fg[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                fg[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
 
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
 
-                fg_ptr = (const value_type*)base_type::source().span(x_lr, y_lr, 2);
+                colorsPtr = (const value_type*)spanImage::source().span(spanX, spanY, 2);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
                          (IMAGE_SUBPIXEL_SCALE - y_hr);
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                fg[0] += weight * *colorsPtr++;
+                fg[1] += weight * *colorsPtr++;
+                fg[2] += weight * *colorsPtr++;
+                fg[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                //获取下一个x对应颜色
+                colorsPtr = (const value_type*)spanImage::source().next_x();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                fg[0] += weight * *colorsPtr++;
+                fg[1] += weight * *colorsPtr++;
+                fg[2] += weight * *colorsPtr++;
+                fg[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().next_y();
+                //获取下一个y对应颜色
+                colorsPtr = (const value_type*)spanImage::source().next_y();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                fg[0] += weight * *colorsPtr++;
+                fg[1] += weight * *colorsPtr++;
+                fg[2] += weight * *colorsPtr++;
+                fg[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                //获取下一个x对应颜色
+                colorsPtr = (const value_type*)spanImage::source().next_x();
                 weight = x_hr * y_hr;
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                fg[0] += weight * *colorsPtr++;
+                fg[1] += weight * *colorsPtr++;
+                fg[2] += weight * *colorsPtr++;
+                fg[3] += weight * *colorsPtr;
 
                 span->r = value_type(color_type::downshift(fg[order_type::R], IMAGE_SUBPIXEL_SHIFT * 2));
                 span->g = value_type(color_type::downshift(fg[order_type::G], IMAGE_SUBPIXEL_SHIFT * 2));
@@ -308,7 +185,7 @@ namespace OHOS
                 span->a = value_type(color_type::downshift(fg[order_type::A], IMAGE_SUBPIXEL_SHIFT * 2));
 
                 ++span;
-                ++base_type::interpolator();
+                ++spanImage::GetInterpolator();
 
             } while (--len);
         }

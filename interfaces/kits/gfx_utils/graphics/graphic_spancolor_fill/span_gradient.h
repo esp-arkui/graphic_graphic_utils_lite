@@ -68,8 +68,8 @@ namespace OHOS
         }
 
         /**
-         * @brief generate 从color_function取出rgba赋予span中的rgba
-         * @param span 扫描线
+         * @brief generate 从colorFunction_取出rgba赋予span中的rgba
+         * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度
@@ -158,6 +158,9 @@ namespace OHOS
         }
 
     private:
+        /**
+         * @brief 更新m_mul
+         */
         void UpdateValues()
         {
             endRadiusSquare_ = double(endRadius_) * double(endRadius_);

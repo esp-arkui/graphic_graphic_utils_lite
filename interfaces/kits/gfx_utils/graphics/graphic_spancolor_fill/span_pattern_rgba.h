@@ -26,21 +26,21 @@
 namespace OHOS
 {
     template <class Source>
-    class span_pattern_rgba
+    class SpanPatternRgba
     {
     public:
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
         typedef typename PatternSource::order_type orderType;
         typedef typename colorType::value_type valueType;
-        span_pattern_rgba()
+        SpanPatternRgba()
         {
         }
-        span_pattern_rgba(PatternSource& source,
-                          unsigned offset_x, unsigned offset_y) :
+        SpanPatternRgba(PatternSource& source,
+                        unsigned offset_x, unsigned offset_y) :
             patternSource(&source),
-            offset_x(offset_x),
-            offset_y(offset_y)
+            offsetX(offset_x),
+            offsetY(offset_y)
         {
         }
         /**
@@ -51,7 +51,7 @@ namespace OHOS
         }
         /**
          * @brief generate 从m_src取出rgba赋予span中的rgba
-         * @param span 扫描线
+         * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度
@@ -59,8 +59,8 @@ namespace OHOS
         void generate(colorType* span, int x, int y, unsigned len)
         {
             //z坐标加上x，y的偏移量
-            x += offset_x;
-            y += offset_y;
+            x += offsetX;
+            y += offsetY;
             //从对应的image_accessors模板中取出对应像素
             const valueType* p = (const valueType*)patternSource->span(x, y, len);
             for (; len; --len, p = (const valueType*)patternSource->next_x(), ++span)
@@ -86,8 +86,8 @@ namespace OHOS
 
     private:
         PatternSource* patternSource;
-        unsigned offset_x;
-        unsigned offset_y;
+        unsigned offsetX;
+        unsigned offsetY;
     };
 } // namespace OHOS
 
