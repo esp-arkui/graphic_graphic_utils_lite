@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -18,10 +18,8 @@
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h"
 
-
 namespace OHOS
 {
-
     //============================================================vcgen_stroke
     //
     // See Implementation agg_vcgen_stroke.cpp
@@ -47,53 +45,94 @@ namespace OHOS
 
     public:
         typedef vertex_sequence<vertex_dist, 6> vertex_storage;
-        typedef pod_bvector<point_d, 6>         coord_storage;
+        typedef pod_bvector<point_d, 6> coord_storage;
 
         vcgen_stroke();
 
-        void line_cap(LineCap lc)     { m_stroker.line_cap(lc); }
-        void line_join(LineJoin lj)   { m_stroker.line_join(lj); }
-        void inner_join(InnerJoin ij) { m_stroker.inner_join(ij); }
+        void SetLineCap(LineCap lc)
+        {
+            m_stroker.SetLineCap(lc);
+        }
+        void SetLineJoin(LineJoin lj)
+        {
+            m_stroker.SetLineJoin(lj);
+        }
+        void SetInnerJoin(InnerJoin ij)
+        {
+            m_stroker.SetInnerJoin(ij);
+        }
 
-        LineCap   line_cap()   const { return m_stroker.line_cap(); }
-        LineJoin  line_join()  const { return m_stroker.line_join(); }
-        InnerJoin inner_join() const { return m_stroker.inner_join(); }
+        LineCap GetLineCap() const
+        {
+            return m_stroker.GetLineCap();
+        }
+        LineJoin GetLineJoin() const
+        {
+            return m_stroker.GetLineJoin();
+        }
+        InnerJoin GetInnerJoin() const
+        {
+            return m_stroker.GetInnerJoin();
+        }
 
-        void width(double w) { m_stroker.width(w); }
-        void miter_limit(double ml) { m_stroker.miter_limit(ml); }
-        void approximation_scale(double as) { m_stroker.approximation_scale(as); }
+        void width(double w)
+        {
+            m_stroker.width(w);
+        }
+        void SetMiterLimit(double ml)
+        {
+            m_stroker.SetMiterLimit(ml);
+        }
+        void SetApproximationScale(double as)
+        {
+            m_stroker.SetApproximationScale(as);
+        }
 
-        double width() const { return m_stroker.width(); }
-        double miter_limit() const { return m_stroker.miter_limit(); }
-        double approximation_scale() const { return m_stroker.approximation_scale(); }
+        double width() const
+        {
+            return m_stroker.width();
+        }
+        double GetMiterLimit() const
+        {
+            return m_stroker.GetMiterLimit();
+        }
+        double GetApproximationScale() const
+        {
+            return m_stroker.GetApproximationScale();
+        }
 
-        void shorten(double s) { m_shorten = s; }
-        double shorten() const { return m_shorten; }
+        void shorten(double s)
+        {
+            m_shorten = s;
+        }
+        double shorten() const
+        {
+            return m_shorten;
+        }
 
         // Vertex Generator Interface
         void remove_all();
         void add_vertex(double x, double y, unsigned cmd);
 
         // Vertex Source Interface
-        void     rewind(unsigned path_id);
+        void rewind(unsigned path_id);
         unsigned vertex(double* x, double* y);
 
     private:
         vcgen_stroke(const vcgen_stroke&);
-        const vcgen_stroke& operator = (const vcgen_stroke&);
+        const vcgen_stroke& operator=(const vcgen_stroke&);
 
-        math_stroke<coord_storage> m_stroker;
-        vertex_storage             m_src_vertices;
-        coord_storage              m_out_vertices;
-        double                     m_shorten;
-        unsigned                   m_closed;
-        status_e                   m_status;
-        status_e                   m_prev_status;
-        unsigned                   m_src_vertex;
-        unsigned                   m_out_vertex;
+        MathStroke<coord_storage> m_stroker;
+        vertex_storage m_src_vertices;
+        coord_storage m_out_vertices;
+        double m_shorten;
+        unsigned m_closed;
+        status_e m_status;
+        status_e m_prev_status;
+        unsigned m_src_vertex;
+        unsigned m_out_vertex;
     };
 
-
-}
+} // namespace OHOS
 
 #endif

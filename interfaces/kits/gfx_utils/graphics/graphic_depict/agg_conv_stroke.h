@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -19,52 +19,91 @@
 #ifndef AGG_CONV_STROKE_INCLUDED
 #define AGG_CONV_STROKE_INCLUDED
 
+#include "agg_conv_adaptor_vcgen.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h"
-#include "agg_conv_adaptor_vcgen.h"
 
 namespace OHOS
 {
-
     //-------------------------------------------------------------conv_stroke
-    template<class VertexSource, class Markers=null_markers> 
-    struct conv_stroke : 
-    public conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>
+    template <class VertexSource, class Markers = null_markers>
+    struct conv_stroke : public conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>
     {
         typedef Markers marker_type;
         typedef conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers> base_type;
 
-        conv_stroke(VertexSource& vs) : 
+        conv_stroke(VertexSource& vs) :
             conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>(vs)
         {
         }
 
-        void line_cap(LineCap lc)     { base_type::generator().line_cap(lc);  }
-        void line_join(LineJoin lj)   { base_type::generator().line_join(lj); }
-        void inner_join(InnerJoin ij) { base_type::generator().inner_join(ij); }
+        void SetLineCap(LineCap lc)
+        {
+            base_type::generator().SetLineCap(lc);
+        }
+        void SetLineJoin(LineJoin lj)
+        {
+            base_type::generator().SetLineJoin(lj);
+        }
+        void SetInnerJoin(InnerJoin ij)
+        {
+            base_type::generator().SetInnerJoin(ij);
+        }
 
-        LineCap   line_cap()   const { return base_type::generator().line_cap();  }
-        LineJoin  line_join()  const { return base_type::generator().line_join(); }
-        InnerJoin inner_join() const { return base_type::generator().inner_join(); }
+        LineCap GetLineCap() const
+        {
+            return base_type::generator().GetLineCap();
+        }
+        LineJoin GetLineJoin() const
+        {
+            return base_type::generator().GetLineJoin();
+        }
+        InnerJoin GetInnerJoin() const
+        {
+            return base_type::generator().GetInnerJoin();
+        }
 
-        void width(double w) { base_type::generator().width(w); }
-        void miter_limit(double ml) { base_type::generator().miter_limit(ml); }
-        void approximation_scale(double as) { base_type::generator().approximation_scale(as); }
+        void width(double w)
+        {
+            base_type::generator().width(w);
+        }
+        void SetMiterLimit(double ml)
+        {
+            base_type::generator().SetMiterLimit(ml);
+        }
+        void SetApproximationScale(double as)
+        {
+            base_type::generator().SetApproximationScale(as);
+        }
 
-        double width() const { return base_type::generator().width(); }
-        double miter_limit() const { return base_type::generator().miter_limit(); }
-        double approximation_scale() const { return base_type::generator().approximation_scale(); }
+        double width() const
+        {
+            return base_type::generator().width();
+        }
+        double GetMiterLimit() const
+        {
+            return base_type::generator().GetMiterLimit();
+        }
+        double GetApproximationScale() const
+        {
+            return base_type::generator().GetApproximationScale();
+        }
 
-        void shorten(double s) { base_type::generator().shorten(s); }
-        double shorten() const { return base_type::generator().shorten(); }
+        void shorten(double s)
+        {
+            base_type::generator().shorten(s);
+        }
+        double shorten() const
+        {
+            return base_type::generator().shorten();
+        }
 
     private:
-       conv_stroke(const conv_stroke<VertexSource, Markers>&);
-       const conv_stroke<VertexSource, Markers>& 
-           operator = (const conv_stroke<VertexSource, Markers>&);
-
+        conv_stroke(const conv_stroke<VertexSource, Markers>&);
+        const conv_stroke<VertexSource, Markers>&
+            operator=(const conv_stroke<VertexSource, Markers>&);
     };
 
-}
+} // namespace OHOS
 
 #endif

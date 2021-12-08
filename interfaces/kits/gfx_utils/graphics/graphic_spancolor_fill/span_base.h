@@ -40,32 +40,32 @@ namespace OHOS
          */
         AGG_INLINE color_type* allocate(unsigned span_len)
         {
-            if (span_len > m_span.size())
+            if (span_len > spans.size())
             {
-                m_span.resize(((span_len + 255) >> 8) << 8);
+                spans.resize(((span_len + 255) >> 8) << 8);
             }
-            return &m_span[0];
+            return &spans[0];
         }
 
         /**
-         * @brief span 返回扫描线数组
+         * @brief span 返回扫描线数组首地址
          * @return
          */
         AGG_INLINE color_type* span()
         {
-            return &m_span[0];
+            return &spans[0];
         }
 
         /**
-         * @brief max_span_len 返回扫描线数组长度
+         * @brief GetMaxSpansSize 返回扫描线数组长度
          */
-        AGG_INLINE unsigned max_span_len() const
+        AGG_INLINE unsigned GetMaxSpansSize() const
         {
-            return m_span.size();
+            return spans.size();
         }
 
     private:
-        pod_array<color_type> m_span;
+        pod_array<color_type> spans;
     };
 
     /**
@@ -78,7 +78,7 @@ namespace OHOS
         typedef typename SpanGenerator::color_type color_type;
 
         span_converter(SpanGenerator& span_gen, SpanConverter& span_cnv) :
-            m_span_gen(&span_gen), m_span_cnv(&span_cnv)
+            spanGenerator(&span_gen), spanConverter(&span_cnv)
         {
         }
 
@@ -88,7 +88,7 @@ namespace OHOS
          */
         void attach_generator(SpanGenerator& span_gen)
         {
-            m_span_gen = &span_gen;
+            spanGenerator = &span_gen;
         }
 
         /**
@@ -97,7 +97,7 @@ namespace OHOS
          */
         void attach_converter(SpanConverter& span_cnv)
         {
-            m_span_cnv = &span_cnv;
+            spanConverter = &span_cnv;
         }
 
         /**
@@ -105,8 +105,8 @@ namespace OHOS
          */
         void prepare()
         {
-            m_span_gen->prepare();
-            m_span_cnv->prepare();
+            spanGenerator->prepare();
+            spanConverter->prepare();
         }
 
         /**
@@ -118,13 +118,13 @@ namespace OHOS
          */
         void generate(color_type* span, int x, int y, unsigned len)
         {
-            m_span_gen->generate(span, x, y, len);
-            m_span_cnv->generate(span, x, y, len);
+            spanGenerator->generate(span, x, y, len);
+            spanConverter->generate(span, x, y, len);
         }
 
     private:
-        SpanGenerator* m_span_gen;
-        SpanConverter* m_span_cnv;
+        SpanGenerator* spanGenerator;
+        SpanConverter* spanConverter;
     };
 } // namespace OHOS
 

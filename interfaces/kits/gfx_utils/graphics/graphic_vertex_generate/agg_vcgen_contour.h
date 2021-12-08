@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.4
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -20,7 +20,6 @@
 
 namespace OHOS
 {
-
     //----------------------------------------------------------vcgen_contour
     //
     // See Implementation agg_vcgen_contour.cpp
@@ -39,51 +38,87 @@ namespace OHOS
 
     public:
         typedef vertex_sequence<vertex_dist, 6> vertex_storage;
-        typedef pod_bvector<point_d, 6>         coord_storage;
+        typedef pod_bvector<point_d, 6> coord_storage;
 
         vcgen_contour();
 
-        void line_cap(LineCap lc)     { m_stroker.line_cap(lc); }
-        void line_join(LineJoin lj)   { m_stroker.line_join(lj); }
-        void inner_join(InnerJoin ij) { m_stroker.inner_join(ij); }
+        void SetLineCap(LineCap lc)
+        {
+            m_stroker.SetLineCap(lc);
+        }
+        void SetLineJoin(LineJoin lj)
+        {
+            m_stroker.SetLineJoin(lj);
+        }
+        void SetInnerJoin(InnerJoin ij)
+        {
+            m_stroker.SetInnerJoin(ij);
+        }
 
-        LineCap   line_cap()   const { return m_stroker.line_cap(); }
-        LineJoin  line_join()  const { return m_stroker.line_join(); }
-        InnerJoin inner_join() const { return m_stroker.inner_join(); }
+        LineCap GetLineCap() const
+        {
+            return m_stroker.GetLineCap();
+        }
+        LineJoin GetLineJoin() const
+        {
+            return m_stroker.GetLineJoin();
+        }
+        InnerJoin GetInnerJoin() const
+        {
+            return m_stroker.GetInnerJoin();
+        }
 
-        void width(double w) { m_stroker.width(m_width = w); }
-        void miter_limit(double ml) { m_stroker.miter_limit(ml); }
+        void width(double w)
+        {
+            m_stroker.width(m_width = w);
+        }
+        void SetMiterLimit(double ml)
+        {
+            m_stroker.SetMiterLimit(ml);
+        }
 
-        double width() const { return m_width; }
-        double miter_limit() const { return m_stroker.miter_limit(); }
+        double width() const
+        {
+            return m_width;
+        }
+        double GetMiterLimit() const
+        {
+            return m_stroker.GetMiterLimit();
+        }
 
-        void auto_detect_orientation(bool v) { m_auto_detect = v; }
-        bool auto_detect_orientation() const { return m_auto_detect; }
+        void auto_detect_orientation(bool v)
+        {
+            m_auto_detect = v;
+        }
+        bool auto_detect_orientation() const
+        {
+            return m_auto_detect;
+        }
 
         // Generator interface
         void remove_all();
         void add_vertex(double x, double y, unsigned cmd);
 
         // Vertex Source Interface
-        void     rewind(unsigned path_id);
+        void rewind(unsigned path_id);
         unsigned vertex(double* x, double* y);
 
     private:
         vcgen_contour(const vcgen_contour&);
-        const vcgen_contour& operator = (const vcgen_contour&);
+        const vcgen_contour& operator=(const vcgen_contour&);
 
-        math_stroke<coord_storage> m_stroker;
-        double                     m_width;
-        vertex_storage             m_src_vertices;
-        coord_storage              m_out_vertices;
-        status_e                   m_status;
-        unsigned                   m_src_vertex;
-        unsigned                   m_out_vertex;
-        unsigned                   m_closed;
-        unsigned                   m_orientation;
-        bool                       m_auto_detect;
+        MathStroke<coord_storage> m_stroker;
+        double m_width;
+        vertex_storage m_src_vertices;
+        coord_storage m_out_vertices;
+        status_e m_status;
+        unsigned m_src_vertex;
+        unsigned m_out_vertex;
+        unsigned m_closed;
+        unsigned m_orientation;
+        bool m_auto_detect;
     };
 
-}
+} // namespace OHOS
 
 #endif
