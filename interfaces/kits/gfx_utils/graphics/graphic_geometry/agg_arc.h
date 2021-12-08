@@ -46,8 +46,8 @@ public:
 
     /**
      * @brief 构造弧线.
-     * @param centerX,centerY 弧线圆心, rx 横轴半径 ry 纵轴半径,
-     * angle1,angle2起始角度,ccw 方向
+     * @param centerX,centerY 弧线圆心, rx 椭圆弧横轴半径 ry 椭圆弧纵轴半径,
+     * angle1,angle2起始角度,ccw 弧线是否顺时针方向
      * @since 1.0
      * @version 1.0
      */
@@ -105,18 +105,18 @@ private:
      * @version 1.0
      */
     void Normalize(double angle1, double angle2, bool ccw);
-    bool initialized_;
-    unsigned pathCmd_;
-    double centerX_;
-    double centerY_;
-    double rx_;
-    double ry_;
-    double angle_;
-    double start_;
-    double end_;
-    double scale_;
-    double da_;
-    bool ccw_; //方向
+    bool initialized_;  //是否被Init
+    unsigned pathCmd_;  //连接命令
+    double centerX_;    //中心X坐标
+    double centerY_;    //中心Y坐标
+    double rx_;         //X短半轴
+    double ry_;         //Y半轴
+    double angle_;      //当前角度
+    double start_;      //起始角度
+    double end_;        //结束角度
+    double scale_;      //伸缩比
+    double da_;         //弧度变化率
+    bool ccw_;          //方向
 };
 
 } // namespace OHOS

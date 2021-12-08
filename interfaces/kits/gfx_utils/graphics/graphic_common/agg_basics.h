@@ -103,17 +103,6 @@ struct ArrAllocator {
 #define GRAPHIC_GEOMETRY_INT64U unsigned long long
 #endif
 
-//------------------------------------------------ Some fixes for MS Visual C++
-#if defined(_MSC_VER)
-#pragma warning(disable : 4786) // Identifier was truncated...
-#endif
-
-//#if defined(_MSC_VER)
-//#define GRAPHIC_GEOMETRY_INLINE __forceinline
-//#else
-//#define GRAPHIC_GEOMETRY_INLINE inline
-//#endif
-
 #define GRAPHIC_GEOMETRY_INLINE inline
 
 namespace OHOS {
