@@ -252,41 +252,7 @@ namespace OHOS
             if (cp != 0 && (cp > 0) == (width_ > 0))
             {
                 double limit = ((len1 < len2) ? len1 : len2) / widthAbs_;
-                switch (innerJoinEnum)
-                {
-                    default:
-                        AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
-                        AddVertex(vc, vd1.x + dx2, vd1.y - dy2);
-                        break;
-                    case INNER_MITER:
-                        CalcMiter(vc, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
-                        break;
-                    case INNER_JAG:
-                    case INNER_ROUND:
-                        cp = (dx1 - dx2) * (dx1 - dx2) + (dy1 - dy2) * (dy1 - dy2);
-                        if (cp < len1 * len1 && cp < len2 * len2)
-                        {
-                            CalcMiter(vc, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
-                        }
-                        else
-                        {
-                            if (innerJoinEnum == INNER_JAG)
-                            {
-                                AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
-                                AddVertex(vc, vd1.x, vd1.y);
-                                AddVertex(vc, vd1.x + dx2, vd1.y - dy2);
-                            }
-                            else
-                            {
-                                AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
-                                AddVertex(vc, vd1.x, vd1.y);
-                                CalcArc(vc, vd1.x, vd1.y, dx2, -dy2, dx1, -dy1);
-                                AddVertex(vc, vd1.x, vd1.y);
-                                AddVertex(vc, vd1.x + dx2, vd1.y - dy2);
-                            }
-                        }
-                        break;
-                }
+                CalcMiter(vc, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
             }
             else
             {

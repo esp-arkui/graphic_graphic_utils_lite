@@ -128,15 +128,6 @@ namespace OHOS
             dda2LineInterpolatorX = dda2_line_interpolator(x1, x2, len);
             dda2LineInterpolatorY = dda2_line_interpolator(y1, y2, len);
         }
-        /**
-         * @brief  同步
-         */
-        void resynchronize(double xe, double ye, unsigned len)
-        {
-            transType->transform(&xe, &ye);
-            dda2LineInterpolatorX = dda2_line_interpolator(dda2LineInterpolatorX.y(), iround(xe * SUBPIXEL_SCALE), len);
-            dda2LineInterpolatorY = dda2_line_interpolator(dda2LineInterpolatorY.y(), iround(ye * SUBPIXEL_SCALE), len);
-        }
 
         /**
          * @brief 重写++

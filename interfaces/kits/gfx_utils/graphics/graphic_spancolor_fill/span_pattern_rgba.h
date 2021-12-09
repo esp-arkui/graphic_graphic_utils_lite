@@ -23,11 +23,9 @@
 #ifndef GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
 #define GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
 
-namespace OHOS
-{
+namespace OHOS {
     template <class Source>
-    class SpanPatternRgba
-    {
+    class SpanPatternRgba {
     public:
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
@@ -44,37 +42,33 @@ namespace OHOS
         {
         }
         /**
-         * @brief prepare 预备用给render_scanlines_aa中的
+         * @brief Prepare 预备用给render_scanlines_aa中的
          */
-        void prepare()
+        void Prepare()
         {
         }
         /**
-         * @brief generate 从m_src取出rgba赋予span中的rgba
+         * @brief Generate 从m_src取出rgba赋予span中的rgba
          * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度
          */
-        void generate(colorType* span, int x, int y, unsigned len)
+        void Generate(colorType* span, int x, int y, unsigned len)
         {
             //z坐标加上x，y的偏移量
             x += offsetX;
             y += offsetY;
             //从对应的image_accessors模板中取出对应像素
-            const valueType* p = (const valueType*)patternSource->span(x, y, len);
-            for (; len; --len, p = (const valueType*)patternSource->next_x(), ++span)
-            {
-                if (p)
-                {
+            const valueType* color = (const valueType*)patternSource->span(x, y, len);
+            for (; len; --len, color = (const valueType*)patternSource->next_x(), ++span) {
+                if (color) {
                     //从source_type取出相应像素。
-                    span->r = p[orderType::R];
-                    span->g = p[orderType::G];
-                    span->b = p[orderType::B];
-                    span->a = p[orderType::A];
-                }
-                else
-                {
+                    span->r = color[orderType::R];
+                    span->g = color[orderType::G];
+                    span->b = color[orderType::B];
+                    span->a = color[orderType::A];
+                } else {
                     //默认的颜色黑色不透明
                     span->r = 0;
                     span->g = 0;

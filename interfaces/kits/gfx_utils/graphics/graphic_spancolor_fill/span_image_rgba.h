@@ -27,8 +27,7 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "span_interpolator.h"
-namespace OHOS
-{
+namespace OHOS {
     enum ImageRgbaScale
     {
         IMAGE_RGBA_SHIFT = 14,
@@ -44,8 +43,7 @@ namespace OHOS
     };
 
     template <class Source, class Interpolator>
-    class SpanImage
-    {
+    class SpanImage {
     public:
         typedef Source source_type;
         typedef Interpolator interpolator_type;
@@ -77,7 +75,7 @@ namespace OHOS
         {
             return *interpolator_;
         }
-        void prepare()
+        void Prepare()
         {
         }
 
@@ -90,8 +88,7 @@ namespace OHOS
      *生成相应image
      */
     template <class Source, class Interpolator>
-    class spanImageRgba : public SpanImage<Source, Interpolator>
-    {
+    class spanImageRgba : public SpanImage<Source, Interpolator> {
     public:
         using source_type = Source;
         using color_type = typename source_type::color_type;
@@ -111,21 +108,20 @@ namespace OHOS
         }
 
         /**
-         * @brief generate 生成相应image
+         * @brief Generate 生成相应image
          * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度
          */
-        void generate(color_type* span, int x, int y, unsigned len)
+        void Generate(color_type* span, int x, int y, unsigned len)
         {
             spanImage::GetInterpolator().begin(x + 0.5, y + 0.5, len);
 
-            long_type fg[4];
+            long_type luminance[4];
             const value_type* colorsPtr;
 
-            do
-            {
+            do {
                 int x_hr;
                 int y_hr;
 
@@ -139,50 +135,50 @@ namespace OHOS
 
                 unsigned weight;
 
-                fg[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                fg[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                fg[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                fg[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
 
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
 
-                colorsPtr = (const value_type*)spanImage::source().span(spanX, spanY, 2);
+                colorsPtr = (const value_type*)spanImage::GetSource().span(spanX, spanY, 2);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
                          (IMAGE_SUBPIXEL_SCALE - y_hr);
-                fg[0] += weight * *colorsPtr++;
-                fg[1] += weight * *colorsPtr++;
-                fg[2] += weight * *colorsPtr++;
-                fg[3] += weight * *colorsPtr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
                 //获取下一个x对应颜色
-                colorsPtr = (const value_type*)spanImage::source().next_x();
+                colorsPtr = (const value_type*)spanImage::GetSource().next_x();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
-                fg[0] += weight * *colorsPtr++;
-                fg[1] += weight * *colorsPtr++;
-                fg[2] += weight * *colorsPtr++;
-                fg[3] += weight * *colorsPtr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
                 //获取下一个y对应颜色
-                colorsPtr = (const value_type*)spanImage::source().next_y();
+                colorsPtr = (const value_type*)spanImage::GetSource().next_y();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
-                fg[0] += weight * *colorsPtr++;
-                fg[1] += weight * *colorsPtr++;
-                fg[2] += weight * *colorsPtr++;
-                fg[3] += weight * *colorsPtr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
                 //获取下一个x对应颜色
-                colorsPtr = (const value_type*)spanImage::source().next_x();
+                colorsPtr = (const value_type*)spanImage::GetSource().next_x();
                 weight = x_hr * y_hr;
-                fg[0] += weight * *colorsPtr++;
-                fg[1] += weight * *colorsPtr++;
-                fg[2] += weight * *colorsPtr++;
-                fg[3] += weight * *colorsPtr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
-                span->r = value_type(color_type::downshift(fg[order_type::R], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->g = value_type(color_type::downshift(fg[order_type::G], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->b = value_type(color_type::downshift(fg[order_type::B], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->a = value_type(color_type::downshift(fg[order_type::A], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->r = value_type(color_type::downshift(luminance[order_type::R], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->g = value_type(color_type::downshift(luminance[order_type::G], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->b = value_type(color_type::downshift(luminance[order_type::B], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->a = value_type(color_type::downshift(luminance[order_type::A], IMAGE_SUBPIXEL_SHIFT * 2));
 
                 ++span;
                 ++spanImage::GetInterpolator();
