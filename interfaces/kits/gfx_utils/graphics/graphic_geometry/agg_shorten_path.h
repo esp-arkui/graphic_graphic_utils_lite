@@ -40,8 +40,8 @@
 
 namespace OHOS {
 /**
-* @brief 缩短vtxSeq中顶点的距离.
-*
+* @brief 长线达到缩短成断线（长线变短线,dash 中使用）.
+* 
 * @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
 * @since 1.0
 * @version 1.0
@@ -67,7 +67,7 @@ void ShortenPath(VertexSequence& vtxSeq, double distence, unsigned closed = 0)
             n = vtxSeq.Size() - 1;
             VertexType& prev = vtxSeq[n - 1];
             VertexType& last = vtxSeq[n];
-            d = (prev.dist - s) / prev.dist;
+            d = (prev.dist - distence) / prev.dist;
             double x = prev.x + (last.x - prev.x) * d;
             double y = prev.y + (last.y - prev.y) * d;
             last.x = x;

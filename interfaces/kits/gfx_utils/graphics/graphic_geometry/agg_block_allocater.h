@@ -93,7 +93,7 @@ private:
     void AllocateBlock(unsigned size);
 
     unsigned blockSize_;    //总大小
-    unsigned blockPtrInc_;  //增长值
+    unsigned blockPtrInc_;  //增长值,每个块的大小
     unsigned numBlocks_;    //块数
     unsigned maxBlocks_;    //最大块数
     BlockType* blocks_;     //每一块的数据类型及大小
@@ -102,3 +102,5 @@ private:
 };
 
 }
+
+#include "agg_block_allocater.cpp"

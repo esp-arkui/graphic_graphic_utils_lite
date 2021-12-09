@@ -87,7 +87,7 @@ void VertexSequence<T, S>::Close(bool closed)
             break;
         }
         T t = (*this)[BaseType::Size() - 1];
-        BaseType::remove_last();
+        BaseType::RemoveLast();
         ModifyLast(t);
     }
 

@@ -28,9 +28,10 @@
 
 #include <cstddef>
 #include <cstring>
-#include "securec.h"
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "heap_base.h"
+#include "securec.h"
 namespace OHOS {
 /**
  * @file graphic_geometry_arc.h
@@ -40,57 +41,95 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-template <class T, unsigned Size> class PodAutoArray : public HeapBase {
+template <class T, unsigned Size>
+class PodAutoArray : public HeapBase {
 public:
     using ValueType = T;
     using SelfType = PodAutoArray<T, Size>;
 
-    PodAutoArray() {}
-
+    PodAutoArray()
+    /**
+    * @file graphic_geometry_arc.h
+    *
+    * @brief Defines 构造PodAutoArray数组,固定容量.
+    * @param data 初始数据
+    * @since 1.0
+    * @version 1.0
+    */
     explicit PodAutoArray(const T* data)
     {
-        std::memcpy_s(data_, sizeof(T) * Size, data, sizeof(T) * Size);
-        std::memcpy_s(data_, sizeof(T) * Size, sizeof(data_), data, sizeof(T) * Size);
+        std::memcpy_s(data_, sizeof(data_) * Size, sizeof(data_), data, sizeof(T) * Size);
     }
 
     const SelfType& operator=(const T* data)
     {
-        std::memcpy(data_, sizeof(T) * Size, data, sizeof(T) * Size);
+        std::memcpy_s(data_, sizeof(data_), data, sizeof(T) * Size);
         return *this;
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& operator[](unsigned index) const
     {
         return data_[index];
     }
 
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& operator[](unsigned index)
     {
         return data_[index];
     }
-
-    const T& IndexAt(unsigned index) const 
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
+    const T& IndexAt(unsigned index) const
     {
         return data_[index];
     }
-
-    T& IndexAt(unsigned index) 
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
+    T& IndexAt(unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T ValueAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取元素个数.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     static unsigned Size()
     {
         return Size;
     }
 
 private:
-    T data_[Size]; // data_ 名称修改
+    T data_[Size];//保存元素个数
 };
 
 /**
@@ -101,37 +140,77 @@ private:
  * @since 1.0
  * @version 1.0
  */
-template <class T> class PodArrayAdaptor : public HeapBase {
+template <class T>
+class PodArrayAdaptor : public HeapBase {
 public:
     using ValueType = T;
 
-    PodArrayAdaptor(T* array, unsigned size) : data_(array), size_(size) {}
-
+    /**
+     *
+     * @brief Defines 构造PodAutoArray数组适配器.
+     * @param array 原数组,size 数组容量
+     * @since 1.0
+     * @version 1.0
+     */
+    PodArrayAdaptor(T* array, unsigned size)
+        : data_(array), size_(size)
+    {}
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& operator[](unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& operator[](unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T ValueAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& IndexAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& IndexAt(unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取元素个数.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     unsigned Size() const
     {
         return size_;
@@ -142,4 +221,4 @@ private:
     unsigned size_;
 };
 
-}
+} // namespace OHOS

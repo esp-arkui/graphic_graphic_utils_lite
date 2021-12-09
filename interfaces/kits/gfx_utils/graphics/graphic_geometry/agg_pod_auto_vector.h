@@ -44,7 +44,7 @@ namespace OHOS {
 
 /**
  *
- * @brief Defines PodAutoVector,增加了可以增删改的方法.
+ * @brief Defines PodAutoVector,增加了可以增删改的方法，最大容量固定.
  *
  * @since 1.0
  * @version 1.0
@@ -54,66 +54,127 @@ class PodAutoVector : public HeapBase {
 public:
     using ValueType = T;
     using SelfType = PodAutoVector<T, Size>;
-
+    /**
+     * @brief 构造一个PodAutoVector.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     PodAutoVector() : size_(0) {}
 
+     /**
+     * @brief 清空元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     void Clear()
     {
         size_ = 0;
     }
-
+    /**
+     * @brief 清空元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     void RemoveAll()
     {
         size_ = 0;
     }
-
+    /**
+     * @brief 增加一个元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     void Add(const T& val)
     {
         data_[size_++] = val;
     }
-
+    /**
+     * @brief 偏移数组首地址.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     void IncSize(unsigned size)
     {
         data_ += size;
     }
-
+    /**
+     * @brief 增加一个元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     void PushBack(const T& val)
     {
         data_[size_++] = val;
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& operator[](unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& operator[](unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& IndexAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& IndexAt(unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T ValueAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取元素个数.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     unsigned Size() const
     {
         return size_;
     }
 
 private:
-    T data_[Size];
-    unsigned size_;
+    T data_[Size];  //保存元素的数组
+    unsigned size_; //元素数量
 };
 }

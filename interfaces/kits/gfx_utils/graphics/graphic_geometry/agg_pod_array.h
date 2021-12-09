@@ -36,7 +36,7 @@ namespace OHOS {
 /**
  * @file graphic_geometry_arc.h
  *
- * @brief Defines PodArray，可以修改大小.
+ * @brief Defines PodArray数组,容量可变.
  *
  * @since 1.0
  * @version 1.0
@@ -52,7 +52,13 @@ public:
     }
 
     PodArray() : data_(0), size_(0) {}
-
+    /**
+     *
+     * @brief 构造Defines PodArray数组.
+     * @param size 初始容量
+     * @since 1.0
+     * @version 1.0
+     */
     PodArray(unsigned size) : data_(ArrAllocator<T>::Allocate(size)), size_(size) {}
 
     PodArray(const SelfType& v) : data_(ArrAllocator<T>::Allocate(v.size_)), size_(v.size_)
@@ -63,45 +69,87 @@ public:
     const SelfType& operator=(const SelfType& v)
     {
         Resize(v.size());
-        std::memcpy(data_, sizeof(T) * size_, v.data_, sizeof(T) * size_);
+        std::memcpy_s(data_, sizeof(T) * size_, v.data_, sizeof(T) * size_);
         return *this;
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& operator[](unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& operator[](unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T ValueAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T& IndexAt(unsigned index) const
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取指定索引的元素.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T& IndexAt(unsigned index)
     {
         return data_[index];
     }
-
+    /**
+     * @brief 获取元素首地址.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     const T* Data() const
     {
         return data_;
     }
-
+    /**
+     * @brief 获取元素首地址.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     T* Data()
     {
         return data_;
     }
 
+    /**
+     *
+     * @brief 修改Defines PodArray数组容量.
+     * @param size 容量
+     * @since 1.0
+     * @version 1.0
+     */
     void Resize(unsigned size)
     {
         if (size != size_) {
@@ -109,7 +157,12 @@ public:
             data_ = ArrAllocator<T>::Allocate(size_ = size);
         }
     }
-
+    /**
+     * @brief 获取元素个数.
+     * 
+     * @since 1.0
+     * @version 1.0
+     */
     unsigned Size() const
     {
         return size_;
