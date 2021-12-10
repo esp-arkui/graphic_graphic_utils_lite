@@ -38,7 +38,7 @@ namespace OHOS
          * @param span_len 扫描线长度
          * @return m_span的首地址
          */
-        GRAPHIC_INLINE color_type* allocate(unsigned span_len)
+        AGG_INLINE color_type* allocate(unsigned span_len)
         {
             if (span_len > m_span.size())
             {
@@ -51,7 +51,7 @@ namespace OHOS
          * @brief span 返回扫描线数组
          * @return
          */
-        GRAPHIC_INLINE color_type* span()
+        AGG_INLINE color_type* span()
         {
             return &m_span[0];
         }
@@ -59,7 +59,7 @@ namespace OHOS
         /**
          * @brief max_span_len 返回扫描线数组长度
          */
-        GRAPHIC_INLINE unsigned max_span_len() const
+        AGG_INLINE unsigned max_span_len() const
         {
             return m_span.size();
         }

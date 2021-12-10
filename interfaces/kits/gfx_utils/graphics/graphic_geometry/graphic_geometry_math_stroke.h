@@ -334,7 +334,7 @@ namespace OHOS
         }
 
     private:
-        GRAPHIC_INLINE void add_vertex(VertexConsumer& vc, double x, double y)
+        AGG_INLINE void add_vertex(VertexConsumer& vc, double x, double y)
         {
             vc.add(coord_type(x, y));
         }
