@@ -31,7 +31,10 @@
 
 namespace OHOS {
     /**
-     *渐变的扫描线填色模板
+     * 渐变的扫描线填色模板
+     * @template ColorT 颜色来源类型，Interpolator span 插值器
+     * @GradientFgradient_function 对应模式计算当前点所处位置的函数
+     * @ColorF 颜色数组
      */
     template <class ColorT, class Interpolator, class GradientF, class ColorF>
     class SpanGradient {
@@ -97,6 +100,8 @@ namespace OHOS {
 
     /**
      * @brief 计算放射渐变时当前(x,y)的color_function 数组下标
+     * @since 1.0
+     * @version 1.0
      */
     class GradientRadialCalculate {
     public:
