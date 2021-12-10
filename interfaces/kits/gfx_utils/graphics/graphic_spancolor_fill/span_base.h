@@ -44,23 +44,6 @@ namespace OHOS {
             return &spans[0];
         }
 
-        /**
-         * @brief span 返回扫描线数组首地址
-         * @return
-         */
-        AGG_INLINE color_type* span()
-        {
-            return &spans[0];
-        }
-
-        /**
-         * @brief GetMaxSpansSize 返回扫描线数组长度
-         */
-        AGG_INLINE unsigned GetMaxSpansSize() const
-        {
-            return spans.size();
-        }
-
     private:
         pod_array<color_type> spans;
     };
