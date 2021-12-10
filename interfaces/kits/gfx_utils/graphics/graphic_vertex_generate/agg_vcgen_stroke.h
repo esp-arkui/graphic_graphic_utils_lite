@@ -18,12 +18,9 @@
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h"
 
+namespace OHOS {
 
-namespace OHOS
-{
-
-    class VCGenStroke
-    {
+    class VCGenStroke {
         enum Status
         {
             INITIAL,
@@ -40,108 +37,103 @@ namespace OHOS
         };
 
     public:
-        using VertexStorage= vertex_sequence<vertex_dist, 6>;
+        using VertexStorage = vertex_sequence<vertex_dist, 6>;
         using CoordStorage = pod_bvector<point_d, 6>;
 
         VCGenStroke();
 
         void LineCap(LineCap lc)
-        { 
-            stroker_.line_cap(lc); 
+        {
+            stroker_.SetLineCap(lc);
         }
 
         void LineJoin(LineJoin lj)
-        { 
-            stroker_.line_join(lj);
+        {
+            stroker_.SetLineJoin(lj);
         }
 
         void InnerJoin(InnerJoin ij)
-        { 
-            stroker_.inner_join(ij); 
+        {
+            stroker_.SetInnerJoin(ij);
         }
 
-        enum LineCap   LineCap()   const
-        { 
-            return stroker_.line_cap(); 
+        enum LineCap LineCap() const
+        {
+            return stroker_.GetLineCap();
         }
 
-        enum LineJoin  LineJoin()  const
-        { 
-            return stroker_.line_join(); 
+        enum LineJoin LineJoin() const
+        {
+            return stroker_.GetLineJoin();
         }
 
         enum InnerJoin InnerJoin() const
-        { 
-            return stroker_.inner_join(); 
+        {
+            return stroker_.GetInnerJoin();
         }
 
-        void Width(double w) 
-        { 
-            stroker_.width(w); 
+        void Width(double w)
+        {
+            stroker_.width(w);
         }
 
-        void MiterLimit(double ml) 
-        { 
-            stroker_.miter_limit(ml); 
+        void MiterLimit(double ml)
+        {
+            stroker_.SetMiterLimit(ml);
         }
 
-
-
-        void ApproximationScale(double as) 
-        { 
-            stroker_.approximation_scale(as); 
+        void ApproximationScale(double as)
+        {
+            stroker_.SetApproximationScale(as);
         }
 
-        double Width() const 
-        { 
-            return stroker_.width(); 
+        double Width() const
+        {
+            return stroker_.width();
         }
 
-        double MiterLimit() const 
-        { 
-            return stroker_.miter_limit(); 
+        double MiterLimit() const
+        {
+            return stroker_.GetMiterLimit();
         }
 
-
-
-        double ApproximationScale() const 
-        { 
-            return stroker_.approximation_scale(); 
+        double ApproximationScale() const
+        {
+            return stroker_.GetApproximationScale();
         }
 
-        void Shorten(double s) 
-        { 
-            shorten_ = s; 
+        void Shorten(double s)
+        {
+            shorten_ = s;
         }
 
-        double Shorten() const 
-        { 
-            return shorten_; 
+        double Shorten() const
+        {
+            return shorten_;
         }
 
         void RemoveAll();
 
         void AddVertex(double x, double y, unsigned cmd);
 
-        void     Rewind(unsigned pathId);
+        void Rewind(unsigned pathId);
         unsigned Vertex(double* x, double* y);
 
     private:
         VCGenStroke(const VCGenStroke&);
-        const VCGenStroke& operator = (const VCGenStroke&);
+        const VCGenStroke& operator=(const VCGenStroke&);
 
-        math_stroke<CoordStorage> stroker_;
-        VertexStorage             srcVertices_;
-        CoordStorage              outVertices_;
-        double                     shorten_;
-        unsigned                   closed_;
-        Status                   status_;
-        Status                   prevStatus_;
-        unsigned                   srcVertex_;
-        unsigned                   outVertex_;
+        MathStroke<CoordStorage> stroker_;
+        VertexStorage srcVertices_;
+        CoordStorage outVertices_;
+        double shorten_;
+        unsigned closed_;
+        Status status_;
+        Status prevStatus_;
+        unsigned srcVertex_;
+        unsigned outVertex_;
     };
 
-
-}
+} // namespace OHOS
 
 #endif

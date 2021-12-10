@@ -32,26 +32,26 @@ namespace OHOS
      *根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
      */
     template <class ColorInterpolator, unsigned ColorLutSize = 256>
-    class gradient_lut
+    class GradientLut
     {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
         enum
         {
-            color_lut_size = ColorLutSize
+            colorLutSize_ = ColorLutSize
         };
-        gradient_lut() :
-            m_color_lut(color_lut_size)
+        GradientLut() :
+            colorType(colorLutSize_)
         {
         }
 
         /**
          *删除所有颜色
          */
-        void remove_all()
+        void RemoveAll()
         {
-            m_color_profile.remove_all();
+            colorProfile.remove_all();
         }
 
         /**
@@ -59,45 +59,47 @@ namespace OHOS
          * @param offset (0-1)
          * @param color 添加的颜色
          */
-        void add_color(double offset, const color_type& color)
+        void AddColor(double offset, const color_type& color)
         {
-            m_color_profile.add(color_point(offset, color));
+            colorProfile.add(ColorPoint(offset, color));
         }
 
         /**
-        *根据渐变颜色构建color_lut_type
+        *根据渐变颜色构建color_type数组
+        *数组长度0-255
+        *数组内容根据渐变颜色分布在数组上
         */
-        void build_lut()
+        void BuildLut()
         {
-            quick_sort(m_color_profile, offset_less);
-            m_color_profile.cut_at(remove_duplicates(m_color_profile, offset_equal));
-            if (m_color_profile.size() > 1)
+            quick_sort(colorProfile, OffsetLess);
+            colorProfile.cut_at(remove_duplicates(colorProfile, OffsetEqual));
+            if (colorProfile.size() > 1)
             {
-                unsigned i;
-                unsigned start = uround(m_color_profile[0].offset * color_lut_size);
+                unsigned index;
+                unsigned start = uround(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
-                color_type c = m_color_profile[0].color;
-                for (i = 0; i < start; i++)
+                color_type color = colorProfile[0].color;
+                for (index = 0; index < start; index++)
                 {
-                    m_color_lut[i] = c;
+                    colorType[index] = color;
                 }
-                for (i = 1; i < m_color_profile.size(); i++)
+                for (index = 1; index < colorProfile.size(); index++)
                 {
-                    end = uround(m_color_profile[i].offset * color_lut_size);
-                    interpolator_type ci(m_color_profile[i - 1].color,
-                                         m_color_profile[i].color,
+                    end = uround(colorProfile[index].offset * colorLutSize_);
+                    interpolator_type ci(colorProfile[index - 1].color,
+                                         colorProfile[index].color,
                                          end - start + 1);
                     while (start < end)
                     {
-                        m_color_lut[start] = ci.color();
+                        colorType[start] = ci.color();
                         ++ci;
                         ++start;
                     }
                 }
-                c = m_color_profile.last().color;
-                for (; end < m_color_lut.size(); end++)
+                color = colorProfile.last().color;
+                for (; end < colorType.size(); end++)
                 {
-                    m_color_lut[end] = c;
+                    colorType[end] = color;
                 }
             }
         }
@@ -107,24 +109,28 @@ namespace OHOS
          */
         static unsigned size()
         {
-            return color_lut_size;
+            return colorLutSize_;
         }
+
+        /**
+         * @brief 重写[]运算符
+         */
         const color_type& operator[](unsigned i) const
         {
-            return m_color_lut[i];
+            return colorType[i];
         }
 
     private:
-        struct color_point
+        struct ColorPoint
         {
             double offset;
             color_type color;
 
-            color_point()
+            ColorPoint()
             {
             }
-            color_point(double off, const color_type& c) :
-                offset(off), color(c)
+            ColorPoint(double offset_, const color_type& color_) :
+                offset(offset_), color(color_)
             {
                 if (offset < 0.0)
                     offset = 0.0;
@@ -132,20 +138,34 @@ namespace OHOS
                     offset = 1.0;
             }
         };
-        typedef OHOS::pod_bvector<color_point, 4> color_profile_type;
-        typedef OHOS::pod_array<color_type> color_lut_type;
 
-        static bool offset_less(const color_point& a, const color_point& b)
+        /**
+         * @brief OffsetLess 返回比较a的offset比b的offset小的比较结果
+         * @param colorPoint1 struct ColorPoint结构体
+         * @param colorPoint2 struct ColorPoint结构体
+         * @return true:colorPoint1在colorPoint2的前面 false colorPoint1在colorPoint2的后面
+         */
+        static bool OffsetLess(const ColorPoint& colorPoint1, const ColorPoint& colorPoint2)
         {
-            return a.offset < b.offset;
-        }
-        static bool offset_equal(const color_point& a, const color_point& b)
-        {
-            return a.offset == b.offset;
+            return colorPoint1.offset < colorPoint2.offset;
         }
 
-        color_profile_type m_color_profile;
-        color_lut_type m_color_lut;
+        /**
+         * @brief OffsetEqual 返回比较a的offset比b的offset相等的比较结果
+         * @param colorPoint1 struct ColorPoint结构体
+         * @param colorPoint2 struct ColorPoint结构体
+         * @return 返回 true：colorPoint1,colorPoint2的offset相等, false：a,b的offset不相等
+         */
+        static bool OffsetEqual(const ColorPoint& colorPoint1, const ColorPoint& colorPoint2)
+        {
+            return colorPoint1.offset == colorPoint2.offset;
+        }
+
+        using colorProfileType = OHOS::pod_bvector<ColorPoint, 4>;
+        colorProfileType colorProfile;
+
+        using colorLutType = OHOS::pod_array<color_type>;
+        colorLutType colorType;
     };
 } // namespace OHOS
 

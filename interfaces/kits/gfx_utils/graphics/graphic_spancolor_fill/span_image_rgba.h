@@ -27,288 +27,162 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "span_interpolator.h"
-namespace OHOS
-{
-    enum image_rgba_scale_e
+namespace OHOS {
+    enum ImageRgbaScale
     {
-        image_rgba_shift = 14,                    //----image_rgba_shift
-        image_rgba_scale = 1 << image_rgba_shift, //----image_rgba_scale
-        image_rgba_mask = image_rgba_scale - 1    //----image_rgba_mask
+        IMAGE_RGBA_SHIFT = 14,
+        IMAGE_RGBA_SCALE = 1 << IMAGE_RGBA_SHIFT,
+        IMAGE_RGBA_MASK = IMAGE_RGBA_SCALE - 1
     };
 
-    enum image_subpixel_scale_e
+    enum ImageSubpixelScale
     {
-        image_subpixel_shift = 8,                         //----image_subpixel_shift
-        image_subpixel_scale = 1 << image_subpixel_shift, //----image_subpixel_scale
-        image_subpixel_mask = image_subpixel_scale - 1    //----image_subpixel_mask
-    };
-
-    class image_rgba_lut
-    {
-    public:
-        template <class FilterF>
-        void calculate(const FilterF& filter,
-                       bool normalization = true)
-        {
-            filter;
-            double r = filter.radius();
-            realloc_lut(r);
-            unsigned i;
-            unsigned pivot = diameter() << (image_subpixel_shift - 1);
-            for (i = 0; i < pivot; i++)
-            {
-                double x = double(i) / double(image_subpixel_scale);
-                double y = filter.calc_weight(x);
-                m_weight_array[pivot + i] =
-                    m_weight_array[pivot - i] = (int16)iround(y * image_rgba_scale);
-            }
-            unsigned end = (diameter() << image_subpixel_shift) - 1;
-            m_weight_array[0] = m_weight_array[end];
-            if (normalization)
-            {
-                normalize();
-            }
-        }
-
-        image_rgba_lut() :
-            m_radius(0), m_diameter(0), m_start(0)
-        {
-        }
-
-        template <class FilterF>
-        image_rgba_lut(const FilterF& filter,
-                       bool normalization = true)
-        {
-            calculate(filter, normalization);
-        }
-
-        double radius() const
-        {
-            return m_radius;
-        }
-        unsigned diameter() const
-        {
-            return m_diameter;
-        }
-        int start() const
-        {
-            return m_start;
-        }
-        const int16* weight_array() const
-        {
-            return &m_weight_array[0];
-        }
-        void normalize();
-
-    private:
-        void realloc_lut(double radius);
-        image_rgba_lut(const image_rgba_lut&);
-        const image_rgba_lut& operator=(const image_rgba_lut&);
-
-        double m_radius;
-        unsigned m_diameter;
-        int m_start;
-        pod_array<int16> m_weight_array;
-    };
-
-    template <class FilterF>
-    class image_rgba : public image_rgba_lut
-    {
-    public:
-        image_rgba()
-        {
-            calculate(m_filter_function);
-        }
-
-    private:
-        FilterF m_filter_function;
+        IMAGE_SUBPIXEL_SHIFT = 8,
+        IMAGE_SUBPIXEL_SCALE = 1 << IMAGE_SUBPIXEL_SHIFT,
+        IMAGE_SUBPIXEL_MASK = IMAGE_SUBPIXEL_SCALE - 1
     };
 
     template <class Source, class Interpolator>
-    class span_image
-    {
+    class SpanImage {
     public:
         typedef Source source_type;
         typedef Interpolator interpolator_type;
 
-        span_image()
+        SpanImage()
         {
-        }
-        span_image(source_type& src,
-                   interpolator_type& interpolator,
-                   image_rgba_lut* filter) :
-            m_src(&src),
-            m_interpolator(&interpolator),
-            m_filter(filter),
-            m_dx_dbl(0.5),
-            m_dy_dbl(0.5),
-            m_dx_int(image_subpixel_scale / 2),
-            m_dy_int(image_subpixel_scale / 2)
-        {
-        }
-        void attach(source_type& v)
-        {
-            m_src = &v;
-        }
-
-        source_type& source()
-        {
-            return *m_src;
-        }
-        const source_type& source() const
-        {
-            return *m_src;
-        }
-        const image_rgba_lut& filter() const
-        {
-            return *m_filter;
-        }
-        int filter_dx_int() const
-        {
-            return m_dx_int;
-        }
-        int filter_dy_int() const
-        {
-            return m_dy_int;
-        }
-        double filter_dx_dbl() const
-        {
-            return m_dx_dbl;
-        }
-        double filter_dy_dbl() const
-        {
-            return m_dy_dbl;
-        }
-
-        void interpolator(interpolator_type& v)
-        {
-            m_interpolator = &v;
         }
         /**
-         * @brief 添加过滤模式
+         * @brief 构造函数传参
          */
-        void filter(image_rgba_lut& v)
+        SpanImage(source_type& src,
+                  interpolator_type& interpolator) :
+            src_(&src),
+            interpolator_(&interpolator)
         {
-            m_filter = &v;
-        }
-        void filter_offset(double dx, double dy)
-        {
-            m_dx_dbl = dx;
-            m_dy_dbl = dy;
-            m_dx_int = iround(dx * image_subpixel_scale);
-            m_dy_int = iround(dy * image_subpixel_scale);
-        }
-        void filter_offset(double d)
-        {
-            filter_offset(d, d);
         }
 
-        interpolator_type& interpolator()
+        /**
+         * @brief 返回 image_accessor
+         */
+        source_type& GetSource()
         {
-            return *m_interpolator;
+            return *src_;
         }
-        void prepare()
+        /**
+         * @brief 返回插值器
+         */
+        interpolator_type& GetInterpolator()
+        {
+            return *interpolator_;
+        }
+        void Prepare()
         {
         }
 
     private:
-        source_type* m_src;
-        interpolator_type* m_interpolator;
-        image_rgba_lut* m_filter;
-        double m_dx_dbl;
-        double m_dy_dbl;
-        unsigned m_dx_int;
-        unsigned m_dy_int;
+        source_type* src_;
+        interpolator_type* interpolator_;
     };
 
+    /**
+     *生成相应image
+     */
     template <class Source, class Interpolator>
-    class span_image_rgba : public span_image<Source, Interpolator>
-    {
+    class SpanImageRgba : public SpanImage<Source, Interpolator> {
     public:
-        typedef Source source_type;
-        typedef typename source_type::color_type color_type;
-        typedef typename source_type::order_type order_type;
-        typedef Interpolator interpolator_type;
-        typedef span_image<source_type, interpolator_type> base_type;
-        typedef typename color_type::value_type value_type;
-        typedef typename color_type::calc_type calc_type;
-        typedef typename color_type::long_type long_type;
+        using source_type = Source;
+        using color_type = typename source_type::color_type;
+        using order_type = typename source_type::order_type;
+        using interpolator_type = Interpolator;
+        using spanImage = SpanImage<source_type, interpolator_type>;
+        using value_type = typename color_type::value_type;
+        using calc_type = typename color_type::calc_type;
+        using long_type = typename color_type::long_type;
 
-        span_image_rgba()
+        SpanImageRgba()
         {
         }
-        span_image_rgba(source_type& src, interpolator_type& inter) :
-            base_type(src, inter, 0)
+        SpanImageRgba(source_type& src, interpolator_type& interpolator) :
+            spanImage(src, interpolator)
         {
         }
 
-        void generate(color_type* span, int x, int y, unsigned len)
+        /**
+         * @brief Generate 生成相应image
+         * @param span 需要填色的扫描线首地址
+         * @param x 坐标-x
+         * @param y 坐标-y
+         * @param len 扫描线长度
+         */
+        void Generate(color_type* span, int x, int y, unsigned len)
         {
-            base_type::interpolator().begin(x + base_type::filter_dx_dbl(),
-                                            y + base_type::filter_dy_dbl(), len);
+            spanImage::GetInterpolator().begin(x + 0.5, y + 0.5, len);
 
-            long_type fg[4];
-            const value_type* fg_ptr;
+            long_type luminance[4];
+            const value_type* colorsPtr;
 
-            do
-            {
+            do {
                 int x_hr;
                 int y_hr;
 
-                base_type::interpolator().coordinates(&x_hr, &y_hr);
+                spanImage::GetInterpolator().coordinates(&x_hr, &y_hr);
 
-                x_hr -= base_type::filter_dx_int();
-                y_hr -= base_type::filter_dy_int();
+                x_hr -= IMAGE_SUBPIXEL_SCALE / 2;
+                y_hr -= IMAGE_SUBPIXEL_SCALE / 2;
 
-                int x_lr = x_hr >> image_subpixel_shift;
-                int y_lr = y_hr >> image_subpixel_shift;
+                int spanX = x_hr >> IMAGE_SUBPIXEL_SHIFT;
+                int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
 
                 unsigned weight;
 
-                fg[0] =
-                    fg[1] =
-                        fg[2] =
-                            fg[3] = image_subpixel_scale * image_subpixel_scale / 2;
+                luminance[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
 
-                x_hr &= image_subpixel_mask;
-                y_hr &= image_subpixel_mask;
+                x_hr &= IMAGE_SUBPIXEL_MASK;
+                y_hr &= IMAGE_SUBPIXEL_MASK;
 
-                fg_ptr = (const value_type*)base_type::source().Span(x_lr, y_lr, 2);
-                weight = (image_subpixel_scale - x_hr) *
-                         (image_subpixel_scale - y_hr);
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, 2);
+                weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
+                         (IMAGE_SUBPIXEL_SCALE - y_hr);
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().NextX();
-                weight = x_hr * (image_subpixel_scale - y_hr);
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                //获取下一个x对应颜色
+                colorsPtr = (const value_type*)spanImage::GetSource().NextX();
+                weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().NextY();
-                weight = (image_subpixel_scale - x_hr) * y_hr;
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                //获取下一个y对应颜色
+                colorsPtr = (const value_type*)spanImage::GetSource().NextY();
+                weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
-                fg_ptr = (const value_type*)base_type::source().NextX();
+                //获取下一个x对应颜色
+                colorsPtr = (const value_type*)spanImage::GetSource().NextX();
+
                 weight = x_hr * y_hr;
-                fg[0] += weight * *fg_ptr++;
-                fg[1] += weight * *fg_ptr++;
-                fg[2] += weight * *fg_ptr++;
-                fg[3] += weight * *fg_ptr;
+                luminance[0] += weight * *colorsPtr++;
+                luminance[1] += weight * *colorsPtr++;
+                luminance[2] += weight * *colorsPtr++;
+                luminance[3] += weight * *colorsPtr;
 
-                span->r = value_type(color_type::downshift(fg[order_type::R], image_subpixel_shift * 2));
-                span->g = value_type(color_type::downshift(fg[order_type::G], image_subpixel_shift * 2));
-                span->b = value_type(color_type::downshift(fg[order_type::B], image_subpixel_shift * 2));
-                span->a = value_type(color_type::downshift(fg[order_type::A], image_subpixel_shift * 2));
+                span->r = value_type(color_type::downshift(luminance[order_type::R], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->g = value_type(color_type::downshift(luminance[order_type::G], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->b = value_type(color_type::downshift(luminance[order_type::B], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->a = value_type(color_type::downshift(luminance[order_type::A], IMAGE_SUBPIXEL_SHIFT * 2));
 
                 ++span;
-                ++base_type::interpolator();
+                ++spanImage::GetInterpolator();
 
             } while (--len);
         }

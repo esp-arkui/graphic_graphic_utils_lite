@@ -28,20 +28,18 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
-namespace OHOS
-{
+namespace OHOS {
     /**
      *渐变的颜色插入器
      */
     template <class ColorT>
-    struct color_interpolator
-    {
+    struct ColorInterpolator {
     public:
         typedef ColorT color_type;
 
-        color_interpolator(const color_type& color1,
-                           const color_type& color2,
-                           unsigned distance) :
+        ColorInterpolator(const color_type& color1,
+                          const color_type& color2,
+                          unsigned distance) :
             colorStart(color1),
             colorEnd(color2),
             len(distance),
@@ -76,37 +74,36 @@ namespace OHOS
     /**
      *线性的扫描线插入器
      */
-    template <class Transformer = TransAffine, unsigned SubpixelShift = 8>
-    class span_interpolator_linear
-    {
+    template <class Transformer = TransAffine, unsigned SUBPIXELSHIFT = 8>
+    class SpanInterpolatorLinear {
     public:
         typedef Transformer trans_type;
 
-        enum subpixel_scale_e
+        enum SubpixelScale
         {
-            subpixel_shift = SubpixelShift,
-            subpixel_scale = 1 << subpixel_shift
+            SUBPIXEL_SHIFT = SUBPIXELSHIFT,
+            SUBPIXEL_SCALE = 1 << SUBPIXEL_SHIFT
         };
-        span_interpolator_linear()
+        SpanInterpolatorLinear()
         {
         }
-        span_interpolator_linear(trans_type& trans) :
-            m_trans(&trans)
+        SpanInterpolatorLinear(trans_type& trans) :
+            transType(&trans)
         {
         }
-        span_interpolator_linear(trans_type& trans,
-                                 double x, double y, unsigned len) :
-            m_trans(&trans)
+        SpanInterpolatorLinear(trans_type& trans,
+                               double x, double y, unsigned len) :
+            transType(&trans)
         {
             begin(x, y, len);
         }
         const trans_type& transformer() const
         {
-            return *m_trans;
+            return *transType;
         }
         void transformer(trans_type& trans)
         {
-            m_trans = &trans;
+            transType = &trans;
         }
         void begin(double x, double y, unsigned len)
         {
@@ -115,27 +112,19 @@ namespace OHOS
 
             tx = x;
             ty = y;
-            m_trans->Transform(&tx, &ty);
-            int x1 = iround(tx * subpixel_scale);
-            int y1 = iround(ty * subpixel_scale);
+
+            transType->Transform(&tx, &ty);
+            int x1 = iround(tx * SUBPIXEL_SCALE);
+            int y1 = iround(ty * SUBPIXEL_SCALE);
 
             tx = x + len;
             ty = y;
-            m_trans->Transform(&tx, &ty);
-            int x2 = iround(tx * subpixel_scale);
-            int y2 = iround(ty * subpixel_scale);
+            transType->Transform(&tx, &ty);
+            int x2 = iround(tx * SUBPIXEL_SCALE);
+            int y2 = iround(ty * SUBPIXEL_SCALE);
 
-            m_li_x = dda2_line_interpolator(x1, x2, len);
-            m_li_y = dda2_line_interpolator(y1, y2, len);
-        }
-        /**
-         * @brief  同步
-         */
-        void resynchronize(double xe, double ye, unsigned len)
-        {
-            m_trans->transform(&xe, &ye);
-            m_li_x = dda2_line_interpolator(m_li_x.y(), iround(xe * subpixel_scale), len);
-            m_li_y = dda2_line_interpolator(m_li_y.y(), iround(ye * subpixel_scale), len);
+            dda2LineInterpolatorX = dda2_line_interpolator(x1, x2, len);
+            dda2LineInterpolatorY = dda2_line_interpolator(y1, y2, len);
         }
 
         /**
@@ -143,20 +132,20 @@ namespace OHOS
          */
         void operator++()
         {
-            ++m_li_x;
-            ++m_li_y;
+            ++dda2LineInterpolatorX;
+            ++dda2LineInterpolatorY;
         }
 
         void coordinates(int* x, int* y) const
         {
-            *x = m_li_x.y();
-            *y = m_li_y.y();
+            *x = dda2LineInterpolatorX.y();
+            *y = dda2LineInterpolatorY.y();
         }
 
     private:
-        trans_type* m_trans;
-        dda2_line_interpolator m_li_x;
-        dda2_line_interpolator m_li_y;
+        trans_type* transType;
+        dda2_line_interpolator dda2LineInterpolatorX;
+        dda2_line_interpolator dda2LineInterpolatorY;
     };
 } // namespace OHOS
 
