@@ -1,136 +1,137 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_VCGEN_STROKE_INCLUDED
-#define AGG_VCGEN_STROKE_INCLUDED
+#ifndef GRAPHIC_VCGEN_STROKE_INCLUDED
+#define GRAPHIC_VCGEN_STROKE_INCLUDED
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_math_stroke.h"
 
-namespace OHOS
-{
-    //============================================================vcgen_stroke
-    //
-    // See Implementation agg_vcgen_stroke.cpp
-    // Stroke generator
-    //
-    //------------------------------------------------------------------------
-    class vcgen_stroke
-    {
-        enum status_e
+namespace OHOS {
+
+    class VCGenStroke {
+        enum Status
         {
-            initial,
-            ready,
-            cap1,
-            cap2,
-            outline1,
-            close_first,
-            outline2,
-            out_vertices,
-            end_poly1,
-            end_poly2,
-            stop
+            INITIAL,
+            READY,
+            CAP1,
+            CAP2,
+            OUTLINE1,
+            CLOSE_FIRST,
+            OUTLINE2,
+            OUT_VERTICES,
+            END_POLY1,
+            END_POLY2,
+            STOP
         };
 
     public:
-        typedef vertex_sequence<vertex_dist, 6> vertex_storage;
-        typedef pod_bvector<point_d, 6> coord_storage;
+        using VertexStorage = vertex_sequence<vertex_dist, 6>;
+        using CoordStorage = pod_bvector<point_d, 6>;
 
-        vcgen_stroke();
+        VCGenStroke();
 
-        void SetLineCap(LineCap lc)
+        void LineCap(LineCap lc)
         {
-            m_stroker.SetLineCap(lc);
-        }
-        void SetLineJoin(LineJoin lj)
-        {
-            m_stroker.SetLineJoin(lj);
-        }
-        void SetInnerJoin(InnerJoin ij)
-        {
-            m_stroker.SetInnerJoin(ij);
+            stroker_.SetLineCap(lc);
         }
 
-        LineCap GetLineCap() const
+        void LineJoin(LineJoin lj)
         {
-            return m_stroker.GetLineCap();
-        }
-        LineJoin GetLineJoin() const
-        {
-            return m_stroker.GetLineJoin();
-        }
-        InnerJoin GetInnerJoin() const
-        {
-            return m_stroker.GetInnerJoin();
+            stroker_.SetLineJoin(lj);
         }
 
-        void width(double w)
+        void InnerJoin(InnerJoin ij)
         {
-            m_stroker.width(w);
-        }
-        void SetMiterLimit(double ml)
-        {
-            m_stroker.SetMiterLimit(ml);
-        }
-        void SetApproximationScale(double as)
-        {
-            m_stroker.SetApproximationScale(as);
+            stroker_.SetInnerJoin(ij);
         }
 
-        double width() const
+        enum LineCap LineCap() const
         {
-            return m_stroker.width();
-        }
-        double GetMiterLimit() const
-        {
-            return m_stroker.GetMiterLimit();
-        }
-        double GetApproximationScale() const
-        {
-            return m_stroker.GetApproximationScale();
+            return stroker_.GetLineCap();
         }
 
-        void shorten(double s)
+        enum LineJoin LineJoin() const
         {
-            m_shorten = s;
-        }
-        double shorten() const
-        {
-            return m_shorten;
+            return stroker_.GetLineJoin();
         }
 
-        // Vertex Generator Interface
-        void remove_all();
-        void add_vertex(double x, double y, unsigned cmd);
+        enum InnerJoin InnerJoin() const
+        {
+            return stroker_.GetInnerJoin();
+        }
 
-        // Vertex Source Interface
-        void rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+        void Width(double w)
+        {
+            stroker_.width(w);
+        }
+
+        void MiterLimit(double ml)
+        {
+            stroker_.SetMiterLimit(ml);
+        }
+
+        void ApproximationScale(double as)
+        {
+            stroker_.SetApproximationScale(as);
+        }
+
+        double Width() const
+        {
+            return stroker_.width();
+        }
+
+        double MiterLimit() const
+        {
+            return stroker_.GetMiterLimit();
+        }
+
+        double ApproximationScale() const
+        {
+            return stroker_.GetApproximationScale();
+        }
+
+        void Shorten(double s)
+        {
+            shorten_ = s;
+        }
+
+        double Shorten() const
+        {
+            return shorten_;
+        }
+
+        void RemoveAll();
+
+        void AddVertex(double x, double y, unsigned cmd);
+
+        void Rewind(unsigned pathId);
+        unsigned Vertex(double* x, double* y);
 
     private:
-        vcgen_stroke(const vcgen_stroke&);
-        const vcgen_stroke& operator=(const vcgen_stroke&);
+        VCGenStroke(const VCGenStroke&);
+        const VCGenStroke& operator=(const VCGenStroke&);
 
-        MathStroke<coord_storage> m_stroker;
-        vertex_storage m_src_vertices;
-        coord_storage m_out_vertices;
-        double m_shorten;
-        unsigned m_closed;
-        status_e m_status;
-        status_e m_prev_status;
-        unsigned m_src_vertex;
-        unsigned m_out_vertex;
+        MathStroke<CoordStorage> stroker_;
+        VertexStorage srcVertices_;
+        CoordStorage outVertices_;
+        double shorten_;
+        unsigned closed_;
+        Status status_;
+        Status prevStatus_;
+        unsigned srcVertex_;
+        unsigned outVertex_;
     };
 
 } // namespace OHOS

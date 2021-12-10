@@ -60,8 +60,8 @@ namespace OHOS {
             x += offsetX;
             y += offsetY;
             //从对应的image_accessors模板中取出对应像素
-            const valueType* color = (const valueType*)patternSource->span(x, y, len);
-            for (; len; --len, color = (const valueType*)patternSource->next_x(), ++span) {
+            const valueType* color = (const valueType*)patternSource->Span(x, y, len);
+            for (; len; --len, color = (const valueType*)patternSource->NextX(), ++span) {
                 if (color) {
                     //从source_type取出相应像素。
                     span->r = color[orderType::R];

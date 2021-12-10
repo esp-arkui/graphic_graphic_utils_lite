@@ -23,8 +23,8 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_curves.h"
 
-namespace OHOS
-{
+namespace OHOS {
+
     //---------------------------------------------------------------conv_curve
     // Curve converter class. Any path storage can have Bezier curves defined
     // by their control points. There're two types of curves supported: curve3
@@ -52,8 +52,7 @@ namespace OHOS
     template <class VertexSource,
               class Curve3 = curve3,
               class Curve4 = curve4>
-    class conv_curve
-    {
+    class conv_curve {
     public:
         typedef Curve3 curve3_type;
         typedef Curve4 curve4_type;
@@ -61,8 +60,7 @@ namespace OHOS
 
         explicit conv_curve(VertexSource& source) :
             m_source(&source), m_last_x(0.0), m_last_y(0.0)
-        {
-        }
+        {}
         void attach(VertexSource& source)
         {
             m_source = &source;
@@ -79,15 +77,15 @@ namespace OHOS
             return m_curve4.approximation_method();
         }
 
-        void SetApproximationScale(double s)
+        void approximation_scale(double s)
         {
             m_curve3.SetApproximationScale(s);
             m_curve4.SetApproximationScale(s);
         }
 
-        double GetApproximationScale() const
+        double approximation_scale() const
         {
-            return m_curve4.GetApproximationScale();
+            return m_curve4.approximation_scale();
         }
 
         void angle_tolerance(double v)
@@ -130,7 +128,7 @@ namespace OHOS
     template <class VertexSource, class Curve3, class Curve4>
     void conv_curve<VertexSource, Curve3, Curve4>::rewind(unsigned path_id)
     {
-        m_source->rewind(path_id);
+        m_source->Rewind(path_id);
         m_last_x = 0.0;
         m_last_y = 0.0;
         m_curve3.reset();
@@ -141,15 +139,13 @@ namespace OHOS
     template <class VertexSource, class Curve3, class Curve4>
     unsigned conv_curve<VertexSource, Curve3, Curve4>::vertex(double* x, double* y)
     {
-        if (!is_stop(m_curve3.vertex(x, y)))
-        {
+        if (!is_stop(m_curve3.vertex(x, y))) {
             m_last_x = *x;
             m_last_y = *y;
             return path_cmd_line_to;
         }
 
-        if (!is_stop(m_curve4.vertex(x, y)))
-        {
+        if (!is_stop(m_curve4.vertex(x, y))) {
             m_last_x = *x;
             m_last_y = *y;
             return path_cmd_line_to;
@@ -160,11 +156,10 @@ namespace OHOS
         double end_x = 0;
         double end_y = 0;
 
-        unsigned cmd = m_source->vertex(x, y);
-        switch (cmd)
-        {
+        unsigned cmd = m_source->Vertex(x, y);
+        switch (cmd) {
             case path_cmd_curve3:
-                m_source->vertex(&end_x, &end_y);
+                m_source->Vertex(&end_x, &end_y);
 
                 m_curve3.init(m_last_x, m_last_y,
                               *x, *y,
@@ -176,8 +171,8 @@ namespace OHOS
                 break;
 
             case path_cmd_curve4:
-                m_source->vertex(&ct2_x, &ct2_y);
-                m_source->vertex(&end_x, &end_y);
+                m_source->Vertex(&ct2_x, &ct2_y);
+                m_source->Vertex(&end_x, &end_y);
 
                 m_curve4.init(m_last_x, m_last_y,
                               *x, *y,

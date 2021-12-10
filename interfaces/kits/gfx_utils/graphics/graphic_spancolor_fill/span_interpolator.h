@@ -28,14 +28,12 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
-namespace OHOS
-{
+namespace OHOS {
     /**
      *渐变的颜色插入器
      */
     template <class ColorT>
-    struct ColorInterpolator
-    {
+    struct ColorInterpolator {
     public:
         typedef ColorT color_type;
 
@@ -76,15 +74,14 @@ namespace OHOS
     /**
      *线性的扫描线插入器
      */
-    template <class Transformer = trans_affine, unsigned subpixelShift = 8>
-    class SpanInterpolatorLinear
-    {
+    template <class Transformer = TransAffine, unsigned SUBPIXELSHIFT = 8>
+    class SpanInterpolatorLinear {
     public:
         typedef Transformer trans_type;
 
         enum SubpixelScale
         {
-            SUBPIXEL_SHIFT = subpixelShift,
+            SUBPIXEL_SHIFT = SUBPIXELSHIFT,
             SUBPIXEL_SCALE = 1 << SUBPIXEL_SHIFT
         };
         SpanInterpolatorLinear()
@@ -115,13 +112,14 @@ namespace OHOS
 
             tx = x;
             ty = y;
-            transType->transform(&tx, &ty);
+
+            transType->Transform(&tx, &ty);
             int x1 = iround(tx * SUBPIXEL_SCALE);
             int y1 = iround(ty * SUBPIXEL_SCALE);
 
             tx = x + len;
             ty = y;
-            transType->transform(&tx, &ty);
+            transType->Transform(&tx, &ty);
             int x2 = iround(tx * SUBPIXEL_SCALE);
             int y2 = iround(ty * SUBPIXEL_SCALE);
 

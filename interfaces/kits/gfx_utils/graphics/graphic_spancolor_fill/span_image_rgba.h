@@ -88,7 +88,7 @@ namespace OHOS {
      *生成相应image
      */
     template <class Source, class Interpolator>
-    class spanImageRgba : public SpanImage<Source, Interpolator> {
+    class SpanImageRgba : public SpanImage<Source, Interpolator> {
     public:
         using source_type = Source;
         using color_type = typename source_type::color_type;
@@ -99,10 +99,10 @@ namespace OHOS {
         using calc_type = typename color_type::calc_type;
         using long_type = typename color_type::long_type;
 
-        spanImageRgba()
+        SpanImageRgba()
         {
         }
-        spanImageRgba(source_type& src, interpolator_type& interpolator) :
+        SpanImageRgba(source_type& src, interpolator_type& interpolator) :
             spanImage(src, interpolator)
         {
         }
@@ -143,7 +143,7 @@ namespace OHOS {
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
 
-                colorsPtr = (const value_type*)spanImage::GetSource().span(spanX, spanY, 2);
+                colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, 2);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
                          (IMAGE_SUBPIXEL_SCALE - y_hr);
                 luminance[0] += weight * *colorsPtr++;
@@ -152,7 +152,7 @@ namespace OHOS {
                 luminance[3] += weight * *colorsPtr;
 
                 //获取下一个x对应颜色
-                colorsPtr = (const value_type*)spanImage::GetSource().next_x();
+                colorsPtr = (const value_type*)spanImage::GetSource().NextX();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
                 luminance[0] += weight * *colorsPtr++;
                 luminance[1] += weight * *colorsPtr++;
@@ -160,7 +160,7 @@ namespace OHOS {
                 luminance[3] += weight * *colorsPtr;
 
                 //获取下一个y对应颜色
-                colorsPtr = (const value_type*)spanImage::GetSource().next_y();
+                colorsPtr = (const value_type*)spanImage::GetSource().NextY();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
                 luminance[0] += weight * *colorsPtr++;
                 luminance[1] += weight * *colorsPtr++;
@@ -168,7 +168,8 @@ namespace OHOS {
                 luminance[3] += weight * *colorsPtr;
 
                 //获取下一个x对应颜色
-                colorsPtr = (const value_type*)spanImage::GetSource().next_x();
+                colorsPtr = (const value_type*)spanImage::GetSource().NextX();
+
                 weight = x_hr * y_hr;
                 luminance[0] += weight * *colorsPtr++;
                 luminance[1] += weight * *colorsPtr++;

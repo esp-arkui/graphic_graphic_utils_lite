@@ -23,79 +23,69 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_stroke.h"
 
-namespace OHOS
-{
+namespace OHOS {
+
     //-------------------------------------------------------------conv_stroke
     template <class VertexSource, class Markers = null_markers>
-    struct conv_stroke : public conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>
-    {
+    struct conv_stroke : public conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers> {
         typedef Markers marker_type;
-        typedef conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers> base_type;
+        typedef conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers> base_type;
 
         conv_stroke(VertexSource& vs) :
-            conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>(vs)
+            conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers>(vs)
         {
         }
 
-        void SetLineCap(LineCap lc)
+        void line_cap(LineCap lc)
         {
-            base_type::generator().SetLineCap(lc);
+            base_type::generator().LineCap(lc);
         }
-        void SetLineJoin(LineJoin lj)
+        void line_join(LineJoin lj)
         {
-            base_type::generator().SetLineJoin(lj);
+            base_type::generator().LineJoin(lj);
         }
-        void SetInnerJoin(InnerJoin ij)
+        void inner_join(InnerJoin ij)
         {
-            base_type::generator().SetInnerJoin(ij);
+            base_type::generator().InnerJoin(ij);
         }
 
-        LineCap GetLineCap() const
+        LineCap line_cap() const
         {
-            return base_type::generator().GetLineCap();
+            return base_type::generator().line_cap();
         }
-        LineJoin GetLineJoin() const
+        LineJoin line_join() const
         {
-            return base_type::generator().GetLineJoin();
+            return base_type::generator().line_join();
         }
-        InnerJoin GetInnerJoin() const
+        InnerJoin inner_join() const
         {
-            return base_type::generator().GetInnerJoin();
+            return base_type::generator().inner_join();
         }
 
         void width(double w)
         {
-            base_type::generator().width(w);
+            base_type::generator().Width(w);
         }
-        void SetMiterLimit(double ml)
+        void miter_limit(double ml)
         {
-            base_type::generator().SetMiterLimit(ml);
+            base_type::generator().MiterLimit(ml);
         }
-        void SetApproximationScale(double as)
+        void approximation_scale(double as)
         {
-            base_type::generator().SetApproximationScale(as);
+            base_type::generator().ApproximationScale(as);
         }
 
         double width() const
         {
             return base_type::generator().width();
         }
-        double GetMiterLimit() const
+        double miter_limit() const
         {
-            return base_type::generator().GetMiterLimit();
+            return base_type::generator().MiterLimit();
         }
-        double GetApproximationScale() const
+        double approximation_scale() const
         {
-            return base_type::generator().GetApproximationScale();
-        }
-
-        void shorten(double s)
-        {
-            base_type::generator().shorten(s);
-        }
-        double shorten() const
-        {
-            return base_type::generator().shorten();
+            return base_type::generator().ApproximationScale();
         }
 
     private:

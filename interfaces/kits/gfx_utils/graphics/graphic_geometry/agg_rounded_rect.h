@@ -23,14 +23,12 @@
 #include "agg_arc.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace OHOS
-{
+namespace OHOS {
     //------------------------------------------------------------rounded_rect
     //
     // See Implemantation agg_rounded_rect.cpp
     //
-    class rounded_rect
-    {
+    class rounded_rect {
     public:
         rounded_rect()
         {
@@ -54,8 +52,8 @@ namespace OHOS
             return m_arc.GetApproximationScale();
         }
 
-        void rewind(unsigned);
-        unsigned vertex(double* x, double* y);
+        void Rewind(unsigned);
+        unsigned Vertex(double* x, double* y);
 
     private:
         double m_x1;
@@ -70,7 +68,7 @@ namespace OHOS
         double m_ry3;
         double m_rx4;
         double m_ry4;
-        unsigned m_status;
+        unsigned status_;
         arc m_arc;
     };
 

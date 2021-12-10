@@ -47,7 +47,7 @@ namespace OHOS
     public:
         explicit conv_adaptor_vcgen(VertexSource& source) :
             m_source(&source), 
-            m_status(initial)
+            status_(initial)
         {}
         void attach(VertexSource& source) { m_source = &source; }
 
@@ -60,7 +60,7 @@ namespace OHOS
         void rewind(unsigned path_id) 
         { 
             m_source->rewind(path_id); 
-            m_status = initial;
+            status_ = initial;
         }
 
         unsigned vertex(double* x, double* y);
@@ -74,7 +74,7 @@ namespace OHOS
         VertexSource* m_source;
         Generator     m_generator;
         Markers       m_markers;
-        status        m_status;
+        status        status_;
         unsigned      m_last_cmd;
         double        m_start_x;
         double        m_start_y;
@@ -92,18 +92,18 @@ namespace OHOS
         bool done = false;
         while(!done)
         {
-            switch(m_status)
+            switch(status_)
             {
             case initial:
                 m_markers.remove_all();
                 m_last_cmd = m_source->vertex(&m_start_x, &m_start_y);
-                m_status = accumulate;
+                status_ = accumulate;
 
             case accumulate:
                 if(is_stop(m_last_cmd)) return path_cmd_stop;
 
-                m_generator.remove_all();
-                m_generator.add_vertex(m_start_x, m_start_y, path_cmd_move_to);
+                m_generator.RemoveAll();
+                m_generator.AddVertex(m_start_x, m_start_y, path_cmd_move_to);
                 m_markers.add_vertex(m_start_x, m_start_y, path_cmd_move_to);
 
                 for(;;)
@@ -118,7 +118,7 @@ namespace OHOS
                             m_start_y = *y;
                             break;
                         }
-                        m_generator.add_vertex(*x, *y, cmd);
+                        m_generator.AddVertex(*x, *y, cmd);
                         m_markers.add_vertex(*x, *y, path_cmd_line_to);
                     }
                     else
@@ -130,19 +130,19 @@ namespace OHOS
                         }
                         if(is_end_poly(cmd))
                         {
-                            m_generator.add_vertex(*x, *y, cmd);
+                            m_generator.AddVertex(*x, *y, cmd);
                             break;
                         }
                     }
                 }
-                m_generator.rewind(0);
-                m_status = generate;
+                m_generator.Rewind(0);
+                status_ = generate;
 
             case generate:
-                cmd = m_generator.vertex(x, y);
+                cmd = m_generator.Vertex(x, y);
                 if(is_stop(cmd))
                 {
-                    m_status = accumulate;
+                    status_ = accumulate;
                     break;
                 }
                 done = true;
