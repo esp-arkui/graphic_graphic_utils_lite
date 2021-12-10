@@ -62,8 +62,8 @@ namespace OHOS
             x += offset_x;
             y += offset_y;
             //从对应的image_accessors模板中取出对应像素
-            const valueType* p = (const valueType*)patternSource->span(x, y, len);
-            for (; len; --len, p = (const valueType*)patternSource->next_x(), ++span)
+            const valueType* p = (const valueType*)patternSource->Span(x, y, len);
+            for (; len; --len, p = (const valueType*)patternSource->NextX(), ++span)
             {
                 if (p)
                 {

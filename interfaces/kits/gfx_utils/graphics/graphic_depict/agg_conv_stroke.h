@@ -29,34 +29,32 @@ namespace OHOS
     //-------------------------------------------------------------conv_stroke
     template<class VertexSource, class Markers=null_markers> 
     struct conv_stroke : 
-    public conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>
+    public conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers>
     {
         typedef Markers marker_type;
-        typedef conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers> base_type;
+        typedef conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers> base_type;
 
         conv_stroke(VertexSource& vs) : 
-            conv_adaptor_vcgen<VertexSource, vcgen_stroke, Markers>(vs)
+            conv_adaptor_vcgen<VertexSource, VCGenStroke, Markers>(vs)
         {
         }
 
-        void line_cap(LineCap lc)     { base_type::generator().line_cap(lc);  }
-        void line_join(LineJoin lj)   { base_type::generator().line_join(lj); }
-        void inner_join(InnerJoin ij) { base_type::generator().inner_join(ij); }
+        void line_cap(LineCap lc)     { base_type::generator().LineCap(lc);  }
+        void line_join(LineJoin lj)   { base_type::generator().LineJoin(lj); }
+        void inner_join(InnerJoin ij) { base_type::generator().InnerJoin(ij); }
 
         LineCap   line_cap()   const { return base_type::generator().line_cap();  }
         LineJoin  line_join()  const { return base_type::generator().line_join(); }
         InnerJoin inner_join() const { return base_type::generator().inner_join(); }
 
-        void width(double w) { base_type::generator().width(w); }
-        void miter_limit(double ml) { base_type::generator().miter_limit(ml); }
-        void approximation_scale(double as) { base_type::generator().approximation_scale(as); }
+        void width(double w) { base_type::generator().Width(w); }
+        void miter_limit(double ml) { base_type::generator().MiterLimit(ml); }
+        void approximation_scale(double as) { base_type::generator().ApproximationScale(as); }
 
         double width() const { return base_type::generator().width(); }
-        double miter_limit() const { return base_type::generator().miter_limit(); }
-        double approximation_scale() const { return base_type::generator().approximation_scale(); }
+        double miter_limit() const { return base_type::generator().MiterLimit(); }
+        double approximation_scale() const { return base_type::generator().ApproximationScale(); }
 
-        void shorten(double s) { base_type::generator().shorten(s); }
-        double shorten() const { return base_type::generator().shorten(); }
 
     private:
        conv_stroke(const conv_stroke<VertexSource, Markers>&);

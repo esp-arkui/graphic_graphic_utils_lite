@@ -273,7 +273,7 @@ namespace OHOS
                 x_hr &= image_subpixel_mask;
                 y_hr &= image_subpixel_mask;
 
-                fg_ptr = (const value_type*)base_type::source().span(x_lr, y_lr, 2);
+                fg_ptr = (const value_type*)base_type::source().Span(x_lr, y_lr, 2);
                 weight = (image_subpixel_scale - x_hr) *
                          (image_subpixel_scale - y_hr);
                 fg[0] += weight * *fg_ptr++;
@@ -281,21 +281,21 @@ namespace OHOS
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = x_hr * (image_subpixel_scale - y_hr);
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_y();
+                fg_ptr = (const value_type*)base_type::source().NextY();
                 weight = (image_subpixel_scale - x_hr) * y_hr;
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;
                 fg[2] += weight * *fg_ptr++;
                 fg[3] += weight * *fg_ptr;
 
-                fg_ptr = (const value_type*)base_type::source().next_x();
+                fg_ptr = (const value_type*)base_type::source().NextX();
                 weight = x_hr * y_hr;
                 fg[0] += weight * *fg_ptr++;
                 fg[1] += weight * *fg_ptr++;

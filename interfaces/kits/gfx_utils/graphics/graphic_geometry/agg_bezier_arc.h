@@ -57,13 +57,13 @@ namespace OHOS
                   double sweep_angle);
 
         //--------------------------------------------------------------------
-        void rewind(unsigned)
+        void Rewind(unsigned)
         {
             m_vertex = 0;
         }
 
         //--------------------------------------------------------------------
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
             if(m_vertex >= m_num_vertices) return path_cmd_stop;
             *x = m_vertices[m_vertex];
@@ -128,15 +128,15 @@ namespace OHOS
         bool radii_ok() const { return m_radii_ok; }
 
         //--------------------------------------------------------------------
-        void rewind(unsigned)
+        void Rewind(unsigned)
         {
-            m_arc.rewind(0);
+            m_arc.Rewind(0);
         }
 
         //--------------------------------------------------------------------
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
-            return m_arc.vertex(x, y);
+            return m_arc.Vertex(x, y);
         }
 
         // Supplemantary functions. num_vertices() actually returns doubled 
