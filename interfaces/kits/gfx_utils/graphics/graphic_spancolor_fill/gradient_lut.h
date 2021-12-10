@@ -102,7 +102,7 @@ namespace OHOS {
                                          colorProfile[index].color,
                                          end - start + 1);
                     while (start < end) {
-                        colorType[start] = ci.color();
+                        colorType[start] = ci.GetColor();
                         ++ci;
                         ++start;
                     }

@@ -27,21 +27,26 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "span_interpolator.h"
+
 namespace OHOS {
-    enum ImageRgbaScale
-    {
+    enum ImageRgbaScale {
         IMAGE_RGBA_SHIFT = 14,
         IMAGE_RGBA_SCALE = 1 << IMAGE_RGBA_SHIFT,
         IMAGE_RGBA_MASK = IMAGE_RGBA_SCALE - 1
     };
 
-    enum ImageSubpixelScale
-    {
+    enum ImageSubpixelScale {
         IMAGE_SUBPIXEL_SHIFT = 8,
         IMAGE_SUBPIXEL_SCALE = 1 << IMAGE_SUBPIXEL_SHIFT,
         IMAGE_SUBPIXEL_MASK = IMAGE_SUBPIXEL_SCALE - 1
     };
-
+    /**
+    * @template class SpanImage
+    * @brief Defines 图像插值器包装类
+    * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+    * @since 1.0
+    * @version 1.0
+    */
     template <class Source, class Interpolator>
     class SpanImage {
     public:
@@ -85,8 +90,12 @@ namespace OHOS {
     };
 
     /**
-     *生成相应image
-     */
+    * @template class SpanImage
+    * @brief Defines 扫描线图像过滤器
+    * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+    * @since 1.0
+    * @version 1.0
+    */
     template <class Source, class Interpolator>
     class SpanImageRgba : public SpanImage<Source, Interpolator> {
     public:
@@ -116,7 +125,7 @@ namespace OHOS {
          */
         void Generate(color_type* span, int x, int y, unsigned len)
         {
-            spanImage::GetInterpolator().begin(x + 0.5, y + 0.5, len);
+            spanImage::GetInterpolator().Begin(x + 0.5, y + 0.5, len);
 
             long_type luminance[4];
             const value_type* colorsPtr;
@@ -125,7 +134,10 @@ namespace OHOS {
                 int x_hr;
                 int y_hr;
 
-                spanImage::GetInterpolator().coordinates(&x_hr, &y_hr);
+                /**
+                 * 获取插值器新增加的新的坐标点
+                 */
+                spanImage::GetInterpolator().Coordinates(&x_hr, &y_hr);
 
                 x_hr -= IMAGE_SUBPIXEL_SCALE / 2;
                 y_hr -= IMAGE_SUBPIXEL_SCALE / 2;
@@ -134,15 +146,23 @@ namespace OHOS {
                 int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
 
                 unsigned weight;
-
+                /**
+                 * 设置图像色彩值 r g b a 像素值的
+                 */
                 luminance[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
                 luminance[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
                 luminance[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
                 luminance[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
 
+                /**
+                 * 获取图像像素点坐标
+                 */
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
 
+                /**
+                 * 获取需要插值的颜色指针
+                 */
                 colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, 2);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
                          (IMAGE_SUBPIXEL_SCALE - y_hr);

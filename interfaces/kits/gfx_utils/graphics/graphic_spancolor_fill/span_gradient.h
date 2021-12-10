@@ -78,9 +78,9 @@ namespace OHOS {
         void Generate(color_type* span, int x, int y, unsigned len)
         {
             int downscaleShift = interpolator_type::SUBPIXEL_SHIFT - gradient_subpixel_shift;
-            interpolator_->begin(x + 0.5, y + 0.5, len);
+            interpolator_->Begin(x + 0.5, y + 0.5, len);
             for (; len; --len, ++(*interpolator_)) {
-                interpolator_->coordinates(&x, &y);
+                interpolator_->Coordinates(&x, &y);
                 int index = gradientFunction_->Calculate(x >> downscaleShift,
                                                          y >> downscaleShift,
                                                          distance1_,
