@@ -1,164 +1,176 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Rounded rectangle vertex generator
-//
-//----------------------------------------------------------------------------
 
-#include <cmath>
 #include <gfx_utils/graphics/graphic_geometry/agg_rounded_rect.h>
 
+#include <cmath>
 
-namespace OHOS
-{
-    //------------------------------------------------------------------------
-    rounded_rect::rounded_rect(double x1, double y1, double x2, double y2, double r) :
-        m_x1(x1), m_y1(y1), m_x2(x2), m_y2(y2),
-        m_rx1(r), m_ry1(r), m_rx2(r), m_ry2(r), 
-        m_rx3(r), m_ry3(r), m_rx4(r), m_ry4(r)
+namespace OHOS {
+    RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r) :
+        x1_(x1), y1_(y1), x2_(x2), y2_(y2),
+        rx1_(r), ry1_(r), rx2_(r), ry2_(r),
+        rx3_(r), ry3_(r), rx4_(r), ry4_(r)
     {
-        if(x1 > x2) { m_x1 = x2; m_x2 = x1; }
-        if(y1 > y2) { m_y1 = y2; m_y2 = y1; }
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::rect(double x1, double y1, double x2, double y2)
-    {
-        m_x1 = x1;
-        m_y1 = y1;
-        m_x2 = x2;
-        m_y2 = y2;
-        if(x1 > x2) { m_x1 = x2; m_x2 = x1; }
-        if(y1 > y2) { m_y1 = y2; m_y2 = y1; }
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::radius(double r)
-    {
-        m_rx1 = m_ry1 = m_rx2 = m_ry2 = m_rx3 = m_ry3 = m_rx4 = m_ry4 = r; 
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::radius(double rx, double ry)
-    {
-        m_rx1 = m_rx2 = m_rx3 = m_rx4 = rx; 
-        m_ry1 = m_ry2 = m_ry3 = m_ry4 = ry; 
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::radius(double rx_bottom, double ry_bottom, 
-                              double rx_top,    double ry_top)
-    {
-        m_rx1 = m_rx2 = rx_bottom; 
-        m_rx3 = m_rx4 = rx_top; 
-        m_ry1 = m_ry2 = ry_bottom; 
-        m_ry3 = m_ry4 = ry_top; 
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::radius(double rx1, double ry1, double rx2, double ry2, 
-                              double rx3, double ry3, double rx4, double ry4)
-    {
-        m_rx1 = rx1; m_ry1 = ry1; m_rx2 = rx2; m_ry2 = ry2; 
-        m_rx3 = rx3; m_ry3 = ry3; m_rx4 = rx4; m_ry4 = ry4;
-    }
-
-    //--------------------------------------------------------------------
-    void rounded_rect::normalize_radius()
-    {
-        double dx = std::fabs(m_y2 - m_y1);
-        double dy = std::fabs(m_x2 - m_x1);
-
-        double k = 1.0;
-        double t;
-        t = dx / (m_rx1 + m_rx2); if(t < k) k = t; 
-        t = dx / (m_rx3 + m_rx4); if(t < k) k = t; 
-        t = dy / (m_ry1 + m_ry2); if(t < k) k = t; 
-        t = dy / (m_ry3 + m_ry4); if(t < k) k = t; 
-
-        if(k < 1.0)
-        {
-            m_rx1 *= k; m_ry1 *= k; m_rx2 *= k; m_ry2 *= k;
-            m_rx3 *= k; m_ry3 *= k; m_rx4 *= k; m_ry4 *= k;
+        if (x1 > x2) {
+            x1_ = x2;
+            x2_ = x1;
+        }
+        if (y1 > y2) {
+            y1_ = y2;
+            y2_ = y1;
         }
     }
 
-    //--------------------------------------------------------------------
-    void rounded_rect::Rewind(unsigned)
+    void RoundedRect::Rect(double x1, double y1, double x2, double y2)
+    {
+        x2_ = x2;
+        y2_ = y2;
+        x1_ = x1;
+        y1_ = y1;
+        if (x1 > x2) {
+            x1_ = x2;
+            x2_ = x1;
+        }
+        if (y1 > y2) {
+            y1_ = y2;
+            y2_ = y1;
+        }
+    }
+
+    void RoundedRect::Radius(double r)
+    {
+        rx1_ = ry1_ = rx2_ = ry2_ = rx3_ = ry3_ = rx4_ = ry4_ = r;
+    }
+
+    void RoundedRect::Radius(double rx, double ry)
+    {
+        ry1_ = ry2_ = ry3_ = ry4_ = ry;
+        rx1_ = rx2_ = rx3_ = rx4_ = rx;
+    }
+
+    void RoundedRect::Radius(double rxBottom, double ryBottom,
+                             double rxTop, double ryTop)
+    {
+        rx1_ = rx2_ = rxBottom;
+        rx3_ = rx4_ = rxTop;
+        ry1_ = ry2_ = ryBottom;
+        ry3_ = ry4_ = ryTop;
+    }
+
+    void RoundedRect::Radius(double rx1,
+                             double ry1,
+                             double rx2,
+                             double ry2,
+                             double rx3, double ry3, double rx4, double ry4)
+    {
+        rx1_ = rx1;
+        ry1_ = ry1;
+        rx2_ = rx2;
+        ry2_ = ry2;
+        rx3_ = rx3;
+        ry3_ = ry3;
+        rx4_ = rx4;
+        ry4_ = ry4;
+    }
+
+    void RoundedRect::NormalizeRadius()
+    {
+        double dx = std::fabs(y2_ - y1_);
+        double dy = std::fabs(x2_ - x1_);
+
+        double k = 1.0;
+        double t;
+        t = dx / (rx1_ + rx2_);
+        if (t < k)
+            k = t;
+        t = dx / (rx3_ + rx4_);
+        if (t < k)
+            k = t;
+        t = dy / (ry1_ + ry2_);
+        if (t < k)
+            k = t;
+        t = dy / (ry3_ + ry4_);
+        if (t < k)
+            k = t;
+
+        if (k < 1.0) {
+            rx1_ *= k;
+            ry1_ *= k;
+            rx2_ *= k;
+            ry2_ *= k;
+            rx3_ *= k;
+            ry3_ *= k;
+            rx4_ *= k;
+            ry4_ *= k;
+        }
+    }
+
+    void RoundedRect::Rewind(unsigned)
     {
         status_ = 0;
     }
 
-    //--------------------------------------------------------------------
-    unsigned rounded_rect::Vertex(double* x, double* y)
+    unsigned RoundedRect::Vertex(double* x, double* y)
     {
-        unsigned cmd = path_cmd_stop;
-        switch(status_)
-        {
-        case 0:
-            m_arc.init(m_x1 + m_rx1, m_y1 + m_ry1, m_rx1, m_ry1,
-                       pi, pi+pi*0.5);
-            m_arc.rewind(0);
-            status_++;
+        unsigned cmd = PATH_CMD_STOP;
+        switch (status_) {
+            case 0:
+                arc_.Init(x1_ + rx1_, y1_ + ry1_, rx1_, ry1_, PI, PI + PI * 0.5);
+                arc_.Rewind(0);
+                status_++;
 
-        case 1:
-            cmd = m_arc.vertex(x, y);
-            if(is_stop(cmd)) status_++;
-            else return cmd;
+            case 1:
+                cmd = arc_.Vertex(x, y);
+                if (IsStop(cmd)) {
+                    status_++;
+                } else {
+                    return cmd;
+                }
 
-        case 2:
-            m_arc.init(m_x2 - m_rx2, m_y1 + m_ry2, m_rx2, m_ry2,
-                       pi+pi*0.5, 0.0);
-            m_arc.rewind(0);
-            status_++;
+            case 2:
+                arc_.Init(x2_ - rx2_, y1_ + ry2_, rx2_, ry2_, PI + PI * 0.5, 0.0);
+                arc_.Rewind(0);
+                status_++;
 
-        case 3:
-            cmd = m_arc.vertex(x, y);
-            if(is_stop(cmd)) status_++;
-            else return path_cmd_line_to;
+            case 3:
+                cmd = arc_.Vertex(x, y);
+                if (IsStop(cmd)) {
+                    status_++;
+                } else {
+                    return PATH_CMD_LINE_TO;
+                }
 
-        case 4:
-            m_arc.init(m_x2 - m_rx3, m_y2 - m_ry3, m_rx3, m_ry3,
-                       0.0, pi*0.5);
-            m_arc.rewind(0);
-            status_++;
+            case 4:
+                arc_.Init(x2_ - rx3_, y2_ - ry3_, rx3_, ry3_,
+                          0.0, PI * 0.5);
+                arc_.Rewind(0);
+                status_++;
 
-        case 5:
-            cmd = m_arc.vertex(x, y);
-            if(is_stop(cmd)) status_++;
-            else return path_cmd_line_to;
+            case 5:
+                cmd = arc_.Vertex(x, y);
+                if (IsStop(cmd)) {
+                    status_++;
+                } else {
+                    return PATH_CMD_LINE_TO;
+                }
 
-        case 6:
-            m_arc.init(m_x1 + m_rx4, m_y2 - m_ry4, m_rx4, m_ry4,
-                       pi*0.5, pi);
-            m_arc.rewind(0);
-            status_++;
+            case 6:
+                arc_.Init(x1_ + rx4_, y2_ - ry4_, rx4_, ry4_, PI * 0.5, PI);
+                arc_.Rewind(0);
+                status_++;
 
-        case 7:
-            cmd = m_arc.vertex(x, y);
-            if(is_stop(cmd)) status_++;
-            else return path_cmd_line_to;
+            case 7:
+                cmd = arc_.Vertex(x, y);
+                if (IsStop(cmd)) {
+                    status_++;
+                } else {
+                    return PATH_CMD_LINE_TO;
+                }
 
-        case 8:
-            cmd = path_cmd_end_poly | path_flags_close | path_flags_ccw;
-            status_++;
-            break;
+            case 8:
+                cmd = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
+                status_++;
+                break;
         }
         return cmd;
     }
 
-
-}
-
+} // namespace OHOS

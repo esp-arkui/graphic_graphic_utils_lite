@@ -30,7 +30,7 @@ namespace OHOS {
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
         typedef typename PatternSource::order_type orderType;
-        typedef typename colorType::value_type valueType;
+        typedef typename colorType::ValueType valueType;
         SpanPatternRgba()
         {
         }
@@ -64,16 +64,16 @@ namespace OHOS {
             for (; len; --len, color = (const valueType*)patternSource->NextX(), ++span) {
                 if (color) {
                     //从source_type取出相应像素。
-                    span->r = color[orderType::R];
-                    span->g = color[orderType::G];
-                    span->b = color[orderType::B];
-                    span->a = color[orderType::A];
+                    span->redValue = color[orderType::RED];
+                    span->greenValue = color[orderType::GREEN];
+                    span->blueValue = color[orderType::BLUE];
+                    span->alphaValue = color[orderType::ALPHA];
                 } else {
                     //默认的颜色黑色不透明
-                    span->r = 0;
-                    span->g = 0;
-                    span->b = 0;
-                    span->a = 255; //0-透明255-不透明
+                    span->redValue = 0;
+                    span->greenValue = 0;
+                    span->blueValue = 0;
+                    span->alphaValue = 255; //0-透明255-不透明
                 }
             }
         }

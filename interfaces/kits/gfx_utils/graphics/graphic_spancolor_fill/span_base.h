@@ -36,10 +36,10 @@ namespace OHOS {
          * @param span_len 扫描线长度
          * @return m_span的首地址
          */
-        AGG_INLINE color_type* Resize(unsigned span_len)
+        GRAPHIC_GEOMETRY_INLINE color_type* Resize(unsigned span_len)
         {
-            if (span_len > spans.size()) {
-                spans.resize(((span_len + 255) >> 8) << 8);
+            if (span_len > spans.Size()) {
+                spans.Resize(((span_len + 255) >> 8) << 8);
             }
             return &spans[0];
         }
@@ -48,7 +48,7 @@ namespace OHOS {
          * @brief span 返回扫描线数组首地址
          * @return
          */
-        AGG_INLINE color_type* span()
+        GRAPHIC_GEOMETRY_INLINE color_type* span()
         {
             return &spans[0];
         }
@@ -56,13 +56,13 @@ namespace OHOS {
         /**
          * @brief GetMaxSpansSize 返回扫描线数组长度
          */
-        AGG_INLINE unsigned GetMaxSpansSize() const
+        GRAPHIC_GEOMETRY_INLINE unsigned GetMaxSpansSize() const
         {
             return spans.size();
         }
 
     private:
-        pod_array<color_type> spans;
+        PodArray<color_type> spans;
     };
 
 } // namespace OHOS

@@ -37,8 +37,8 @@ namespace OHOS {
         };
 
     public:
-        using VertexStorage = vertex_sequence<vertex_dist, 6>;
-        using CoordStorage = pod_bvector<point_d, 6>;
+        using VertexStorage = VertexSequence<VertexDist, 6>;
+        using CoordStorage = PodBvector<PointD, 6>;
 
         VCGenStroke();
 

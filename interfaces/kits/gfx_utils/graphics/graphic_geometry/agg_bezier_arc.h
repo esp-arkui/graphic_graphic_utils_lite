@@ -1,160 +1,271 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Arc generator. Produces at most 4 consecutive cubic bezier curves, i.e., 
-// 4, 7, 10, or 13 vertices.
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_BEZIER_ARC_INCLUDED
-#define AGG_BEZIER_ARC_INCLUDED
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines ArcToBezier BezierArc BezierArcSvg.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_geometry_bezier_arc.h
+ *
+ * @brief Defines 贝塞尔弧结构类.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
+#define GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 
 #include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
-#include "gfx_utils/graphics/graphic_depict/agg_conv_transform.h"
+#include "gfx_utils/heap_base.h"
+namespace OHOS {
+    const int BEZIER_ARC_VERTEX_NUM = 26; //贝塞尔弧顶点坐标数
+    /**
+     * @brief 弧形转换为贝塞尔曲线.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    void ArcToBezier(double cx, double cy, double rx, double ry,
+                     double startAngle, double sweepAngle,
+                     double* curve);
 
-namespace OHOS
-{
-
-    //-----------------------------------------------------------------------
-    void arc_to_bezier(double cx, double cy, double rx, double ry, 
-                       double start_angle, double sweep_angle,
-                       double* curve);
-
-
-    //==============================================================bezier_arc
-    // 
-    // See implemantaion agg_bezier_arc.cpp
-    //
-    class bezier_arc
-    {
+    /**
+     * @file graphic_geometry_bezier_arc.h
+     *
+     * @brief Defines BezierArc.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    class BezierArc : public HeapBase {
     public:
-        //--------------------------------------------------------------------
-        bezier_arc() : m_vertex(26), m_num_vertices(0), m_cmd(path_cmd_line_to) {}
-        bezier_arc(double x,  double y, 
-                   double rx, double ry, 
-                   double start_angle, 
-                   double sweep_angle)
+        BezierArc() :
+            vertex_(BEZIER_ARC_VERTEX_NUM), numVertices_(0), cmd_(PATH_CMD_LINE_TO)
+        {}
+
+        /**
+         * @brief 使用弧线初始化贝塞尔曲线.
+         * @Param centerX centerY 圆弧圆心，rx ry 圆弧横纵半径，startAngle sweepAngle 圆弧起止角度
+         * @since 1.0
+         * @version 1.0
+         */
+        BezierArc(double centerX, double centerY,
+                  double rx, double ry,
+                  double startAngle,
+                  double sweepAngle)
         {
-            init(x, y, rx, ry, start_angle, sweep_angle);
+            Init(centerX, centerY, rx, ry, startAngle, sweepAngle);
         }
 
-        //--------------------------------------------------------------------
-        void init(double x,  double y, 
-                  double rx, double ry, 
-                  double start_angle, 
-                  double sweep_angle);
+        /**
+         * @brief 使用弧线初始化贝塞尔曲线.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Init(double x, double y,
+                  double rx, double ry,
+                  double startAngle,
+                  double sweepAngle);
 
-        //--------------------------------------------------------------------
+        /**
+         * @brief 回到最开始步骤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Rewind(unsigned)
         {
-            m_vertex = 0;
+            vertex_ = 0;
         }
 
-        //--------------------------------------------------------------------
+        /**
+         * @brief 取出顶点源用于坐标转换重组通道.
+         * @return 返回命令
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned Vertex(double* x, double* y)
         {
-            if(m_vertex >= m_num_vertices) return path_cmd_stop;
-            *x = m_vertices[m_vertex];
-            *y = m_vertices[m_vertex + 1];
-            m_vertex += 2;
-            return (m_vertex == 2) ? unsigned(path_cmd_move_to) : m_cmd;
+            if (vertex_ >= numVertices_) {
+                return PATH_CMD_STOP;
+            }
+            *x = vertices_[vertex_];
+            *y = vertices_[vertex_ + 1];
+            vertex_ = vertex_ + 2;
+            if (vertex_ == 2) {
+                return unsigned(PATH_CMD_MOVE_TO);
+            } else {
+                return cmd_;
+            }
         }
 
-        // Supplemantary functions. num_vertices() actually returns doubled 
-        // number of vertices. That is, for 1 vertex it returns 2.
-        //--------------------------------------------------------------------
-        unsigned  num_vertices() const { return m_num_vertices; }
-        const double* vertices() const { return m_vertices;     }
-        double*       vertices()       { return m_vertices;     }
- 
+        /**
+         * @brief 获取顶点源个数.
+         * @return 顶点个数
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned Nuvertices() const
+        {
+            return numVertices_;
+        }
+
+        /**
+         * @brief 获取顶点源.
+         * @return 顶点源数据
+         * @since 1.0
+         * @version 1.0
+         */
+        const double* Vertices() const
+        {
+            return vertices_;
+        }
+
+        /**
+         * @brief 获取顶点源.
+         * @return 顶点源数据
+         * @since 1.0
+         * @version 1.0
+         */
+        double* Vertices()
+        {
+            return vertices_;
+        }
+
     private:
-        unsigned m_vertex;
-        unsigned m_num_vertices;
-        double   m_vertices[26];
-        unsigned m_cmd;
+        unsigned vertex_;
+        unsigned numVertices_;
+        double vertices_[BEZIER_ARC_VERTEX_NUM];
+        unsigned cmd_;
     };
 
-
-
-    //==========================================================bezier_arc_svg
-    // Compute an SVG-style bezier arc. 
-    //
-    // Computes an elliptical arc from (x1, y1) to (x2, y2). The size and 
-    // orientation of the ellipse are defined by two radii (rx, ry) 
-    // and an x-axis-rotation, which indicates how the ellipse as a whole 
-    // is rotated relative to the current coordinate system. The center 
-    // (cx, cy) of the ellipse is calculated automatically to satisfy the 
-    // constraints imposed by the other parameters. 
-    // large-arc-flag and sweep-flag contribute to the automatic calculations 
-    // and help determine how the arc is drawn.
-    class bezier_arc_svg
-    {
+    /**
+     * @brief 计算SVG样式的贝塞尔弧.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    class BezierArcSvg : public HeapBase {
     public:
-        //--------------------------------------------------------------------
-        bezier_arc_svg() : m_arc(), m_radii_ok(false) {}
+        BezierArcSvg() :
+            arc_(), radiiOK_(false)
+        {}
 
-        bezier_arc_svg(double x1, double y1, 
-                       double rx, double ry, 
-                       double angle,
-                       bool large_arc_flag,
-                       bool sweep_flag,
-                       double x2, double y2) : 
-            m_arc(), m_radii_ok(false)
+        /**
+         * @brief 计算从（x1，y1）到（x2，y2）的椭圆弧.
+         * 椭圆的方向由两个半径（rx，ry）定义
+         * @param x1,y1 起点坐标,x1,y1 终点坐标, rx,ry 长短轴半径,angle 角度,
+         * largeArcFlag 大弧线标志,sweepFlag 扫掠角标志
+         * @since 1.0
+         * @version 1.0
+         */
+        BezierArcSvg(double x1,
+                     double y1,
+                     double rx, double ry,
+                     double angle,
+                     bool largeArcFlag, //大弧线标志
+                     bool sweepFlag,    //扫掠角标志
+                     double x2, double y2) :
+            arc_(),
+            radiiOK_(false)
         {
-            init(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2);
+            Init(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2);
         }
 
-        //--------------------------------------------------------------------
-        void init(double x1, double y1, 
-                  double rx, double ry, 
+        bool RadiiOK() const
+        {
+            return radiiOK_;
+        }
+
+        void Init(double x1,
+                  double y1,
+                  double rx,
+                  double ry,
                   double angle,
-                  bool large_arc_flag,
-                  bool sweep_flag,
-                  double x2, double y2);
+                  bool largeArcFlag,
+                  bool sweepFlag,
+                  double x2,
+                  double y2);
 
-        //--------------------------------------------------------------------
-        bool radii_ok() const { return m_radii_ok; }
-
-        //--------------------------------------------------------------------
+        /**
+        * @brief 回到最开始步骤.
+        *
+        * @since 1.0
+        * @version 1.0
+        */
         void Rewind(unsigned)
         {
-            m_arc.Rewind(0);
+            arc_.Rewind(0);
         }
 
-        //--------------------------------------------------------------------
+        /**
+         * @brief 取出顶点源用于坐标转换重组通道.
+         * @return 返回连接命令
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned Vertex(double* x, double* y)
         {
-            return m_arc.Vertex(x, y);
+            return arc_.Vertex(x, y);
         }
 
-        // Supplemantary functions. num_vertices() actually returns doubled 
-        // number of vertices. That is, for 1 vertex it returns 2.
-        //--------------------------------------------------------------------
-        unsigned  num_vertices() const { return m_arc.num_vertices(); }
-        const double* vertices() const { return m_arc.vertices();     }
-        double*       vertices()       { return m_arc.vertices();     }
+        /**
+         * @brief 返回贝塞尔弧的顶点数据。
+         * @return 返回顶点源
+         * @since 1.0
+         * @version 1.0
+         */
+        const double* Vertices() const
+        {
+            return arc_.Vertices();
+        }
+
+        /**
+         * @brief 返回贝塞尔弧的顶点数据.
+         * @return 返回贝塞尔弧的顶点数据.
+         * @since 1.0
+         * @version 1.0
+         */
+        double* Vertices()
+        {
+            return arc_.Vertices();
+        }
+
+        /**
+         * @brief 返回两倍的值顶点数。也就是说，对于1个顶点，它返回2。
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned NumVertices_() const
+        {
+            return arc_.Nuvertices();
+        }
 
     private:
-        bezier_arc m_arc;
-        bool       m_radii_ok;
+        BezierArc arc_;
+        bool radiiOK_;
     };
 
-
-
-
-}
-
+} // namespace OHOS
 
 #endif

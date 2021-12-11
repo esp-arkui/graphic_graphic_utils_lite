@@ -27,7 +27,6 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "span_interpolator.h"
-
 namespace OHOS {
     enum ImageRgbaScale {
         IMAGE_RGBA_SHIFT = 14,
@@ -104,9 +103,9 @@ namespace OHOS {
         using order_type = typename source_type::order_type;
         using interpolator_type = Interpolator;
         using spanImage = SpanImage<source_type, interpolator_type>;
-        using value_type = typename color_type::value_type;
-        using calc_type = typename color_type::calc_type;
-        using long_type = typename color_type::long_type;
+        using value_type = typename color_type::ValueType;
+        using calc_type = typename color_type::CalcType;
+        using long_type = typename color_type::LongType;
 
         SpanImageRgba()
         {
@@ -196,10 +195,10 @@ namespace OHOS {
                 luminance[2] += weight * *colorsPtr++;
                 luminance[3] += weight * *colorsPtr;
 
-                span->r = value_type(color_type::downshift(luminance[order_type::R], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->g = value_type(color_type::downshift(luminance[order_type::G], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->b = value_type(color_type::downshift(luminance[order_type::B], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->a = value_type(color_type::downshift(luminance[order_type::A], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->redValue = value_type(color_type::Downshift(luminance[order_type::RED], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->greenValue = value_type(color_type::Downshift(luminance[order_type::GREEN], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->blueValue = value_type(color_type::Downshift(luminance[order_type::BLUE], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->alphaValue = value_type(color_type::Downshift(luminance[order_type::ALPHA], IMAGE_SUBPIXEL_SHIFT * 2));
 
                 ++span;
                 ++spanImage::GetInterpolator();

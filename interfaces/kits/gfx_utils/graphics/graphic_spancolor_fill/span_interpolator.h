@@ -61,7 +61,7 @@ namespace OHOS {
          */
         color_type GetColor() const
         {
-            return colorStart.gradient(colorEnd, double(place) / len);
+            return colorStart.Gradient(colorEnd, double(place) / len);
         }
 
     private:
@@ -117,17 +117,17 @@ namespace OHOS {
             ty = y;
 
             transType->Transform(&tx, &ty);
-            int x1 = iround(tx * SUBPIXEL_SCALE);
-            int y1 = iround(ty * SUBPIXEL_SCALE);
+            int x1 = Iround(tx * SUBPIXEL_SCALE);
+            int y1 = Iround(ty * SUBPIXEL_SCALE);
 
             tx = x + len;
             ty = y;
             transType->Transform(&tx, &ty);
-            int x2 = iround(tx * SUBPIXEL_SCALE);
-            int y2 = iround(ty * SUBPIXEL_SCALE);
+            int x2 = Iround(tx * SUBPIXEL_SCALE);
+            int y2 = Iround(ty * SUBPIXEL_SCALE);
 
-            dda2LineInterpolatorX = dda2_line_interpolator(x1, x2, len);
-            dda2LineInterpolatorY = dda2_line_interpolator(y1, y2, len);
+            dda2LineInterpolatorX = Dda2LineInterpolator(x1, x2, len);
+            dda2LineInterpolatorY = Dda2LineInterpolator(y1, y2, len);
         }
 
         /*
@@ -136,8 +136,8 @@ namespace OHOS {
         void Resynchronize(double xe, double ye, unsigned len)
         {
             transType->transform(&xe, &ye);
-            dda2LineInterpolatorX = dda2_line_interpolator(dda2LineInterpolatorX.y(), iround(xe * SUBPIXEL_SCALE), len);
-            dda2LineInterpolatorY = dda2_line_interpolator(dda2LineInterpolatorY.y(), iround(ye * SUBPIXEL_SCALE), len);
+            dda2LineInterpolatorX = Dda2LineInterpolator(dda2LineInterpolatorX.GetCoordinate(), Iround(xe * SUBPIXEL_SCALE), len);
+            dda2LineInterpolatorY = Dda2LineInterpolator(dda2LineInterpolatorY.GetCoordinate(), Iround(ye * SUBPIXEL_SCALE), len);
         }
 
         /**
@@ -151,14 +151,14 @@ namespace OHOS {
 
         void Coordinates(int* x, int* y) const
         {
-            *x = dda2LineInterpolatorX.y();
-            *y = dda2LineInterpolatorY.y();
+            *x = dda2LineInterpolatorX.GetCoordinate();
+            *y = dda2LineInterpolatorY.GetCoordinate();
         }
 
     private:
         trans_type* transType;
-        dda2_line_interpolator dda2LineInterpolatorX;
-        dda2_line_interpolator dda2LineInterpolatorY;
+        Dda2LineInterpolator dda2LineInterpolatorX;
+        Dda2LineInterpolator dda2LineInterpolatorY;
     };
 } // namespace OHOS
 

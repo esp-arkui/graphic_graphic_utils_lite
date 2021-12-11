@@ -1,66 +1,87 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_SHORTEN_PATH_INCLUDED
-#define AGG_SHORTEN_PATH_INCLUDED
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines function ShortenPath.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_geometry_path_storage.h
+ *
+ * @brief Defines oˉêyShortenPath.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
+#define GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace OHOS
-{
-
-    //===========================================================shorten_path
-    template<class VertexSequence> 
-    void shorten_path(VertexSequence& vs, double s, unsigned closed = 0)
+namespace OHOS {
+    /**
+    * @brief 长线达到缩短成断线（长线变短线,dash 中使用）.
+    *
+    * @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class VertexSequence>
+    void ShortenPath(VertexSequence& vtxSeq, double distence, unsigned closed = 0)
     {
-        typedef typename VertexSequence::value_type vertex_type;
+        using VertexType = typename VertexSequence::ValueType;
 
-        if(s > 0.0 && vs.size() > 1)
-        {
+        if (vtxSeq.Size() > 1 && distence > 0.0) {
             double d;
-            int n = int(vs.size() - 2);
-            while(n)
-            {
-                d = vs[n].dist;
-                if(d > s) break;
-                vs.remove_last();
-                s -= d;
-                --n;
+            int nSize = int(vtxSeq.Size() - 2);
+            while (nSize) {
+                d = vtxSeq[nSize].dist;
+                if (distence < d) {
+                    break;
+                }
+                vtxSeq.RemoveLast();
+                distence = distence - d;
+                --nSize;
             }
-            if(vs.size() < 2)
-            {
-                vs.remove_all();
-            }
-            else
-            {
-                n = vs.size() - 1;
-                vertex_type& prev = vs[n-1];
-                vertex_type& last = vs[n];
-                d = (prev.dist - s) / prev.dist;
+            if (2 <= vtxSeq.Size()) {
+                nSize = vtxSeq.Size() - 1;
+                VertexType& prev = vtxSeq[nSize - 1];
+                VertexType& last = vtxSeq[nSize];
+                d = (prev.dist - distence) / prev.dist;
                 double x = prev.x + (last.x - prev.x) * d;
                 double y = prev.y + (last.y - prev.y) * d;
                 last.x = x;
                 last.y = y;
-                if(!prev(last)) vs.remove_last();
-                vs.close(closed != 0);
+                if (!prev(last)) {       //计算两个顶点距离是否很近
+                    vtxSeq.RemoveLast(); //删除距离不近的点
+                }
+                vtxSeq.Close(closed != 0);
+            } else {
+                vtxSeq.RemoveAll();
             }
         }
     }
 
-
-}
+} // namespace OHOS
 
 #endif

@@ -1,172 +1,179 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// vertex_sequence container and vertex_dist struct
-//
-//----------------------------------------------------------------------------
-#ifndef AGG_VERTEX_SEQUENCE_INCLUDED
-#define AGG_VERTEX_SEQUENCE_INCLUDED
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines VertexSequence VertexDist VertexDistCmd.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_geometry_vertex_sequence.h
+ *
+ * @brief Defines 定义VertexSequence类.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
+#define GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
+
+#include "agg_pod_bvector.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "gfx_utils/graphics/graphic_common/agg_math.h"
-
-namespace OHOS
-{
-
-    //----------------------------------------------------------vertex_sequence
-    // Modified OHOS::pod_bvector. The data is interpreted as a sequence 
-    // of vertices. It means that the type T must expose:
-    //
-    // bool T::operator() (const T& val)
-    // 
-    // that is called every time new vertex is being added. The main purpose
-    // of this operator is the possibility to calculate some values during 
-    // adding and to return true if the vertex fits some criteria or false if
-    // it doesn't. In the last case the new vertex is not added. 
-    // 
-    // The simple example is filtering coinciding vertices with calculation 
-    // of the distance between the current and previous ones:
-    //
-    //    struct vertex_dist
-    //    {
-    //        double   x;
-    //        double   y;
-    //        double   dist;
-    //
-    //        vertex_dist() {}
-    //        vertex_dist(double x_, double y_) :
-    //            x(x_),
-    //            y(y_),
-    //            dist(0.0)
-    //        {
-    //        }
-    //
-    //        bool operator () (const vertex_dist& val)
-    //        {
-    //            return (dist = calc_distance(x, y, val.x, val.y)) > EPSILON;
-    //        }
-    //    };
-    //
-    // Function close() calls this operator and removes the last vertex if 
-    // necessary.
-    //------------------------------------------------------------------------
-    template<class T, unsigned S=6> 
-    class vertex_sequence : public pod_bvector<T, S>
-    {
+#include "gfx_utils/graphics/graphic_geometry/agg_array.h"
+namespace OHOS {
+    /**
+     * @brief Defines a VertexSequence class.
+     *
+     * @param T Indicates the type of the data in the VertexSequence list.
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T, unsigned S = 6>
+    class VertexSequence : public PodBvector<T, S> {
     public:
-        typedef pod_bvector<T, S> base_type;
+        using BaseType = PodBvector<T, S>;
+        /**
+         * @brief 封闭顶点源.
+         *
+         * @param remove_flag 是否封闭.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Close(bool remove_flag);
 
-        void add(const T& val);
-        void modify_last(const T& val);
-        void close(bool remove_flag);
+        /**
+         * @brief 增加一个点.
+         *
+         * @param val 顶点.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Add(const T& val);
+
+        /**
+         * @brief 修改最后一个顶点.
+         *
+         * @param t 顶点.
+         * @since 1.0
+         * @version 1.0
+         */
+        void ModifyLast(const T& val);
     };
 
-
-
-    //------------------------------------------------------------------------
-    template<class T, unsigned S> 
-    void vertex_sequence<T, S>::add(const T& val)
+    template <class T, unsigned S>
+    void VertexSequence<T, S>::Close(bool closed)
     {
-        if(base_type::size() > 1)
-        {
-            if(!(*this)[base_type::size() - 2]((*this)[base_type::size() - 1])) 
-            {
-                base_type::remove_last();
+        while (1 < BaseType::Size()) {
+            if ((*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
+                break;
             }
-        }
-        base_type::add(val);
-    }
-
-
-    //------------------------------------------------------------------------
-    template<class T, unsigned S> 
-    void vertex_sequence<T, S>::modify_last(const T& val)
-    {
-        base_type::remove_last();
-        add(val);
-    }
-
-
-
-    //------------------------------------------------------------------------
-    template<class T, unsigned S> 
-    void vertex_sequence<T, S>::close(bool closed)
-    {
-        while(base_type::size() > 1)
-        {
-            if((*this)[base_type::size() - 2]((*this)[base_type::size() - 1])) break;
-            T t = (*this)[base_type::size() - 1];
-            base_type::remove_last();
-            modify_last(t);
+            T t = (*this)[BaseType::Size() - 1];
+            BaseType::RemoveLast();
+            ModifyLast(t);
         }
 
-        if(closed)
-        {
-            while(base_type::size() > 1)
-            {
-                if((*this)[base_type::size() - 1]((*this)[0])) break;
-                base_type::remove_last();
+        if (closed) {
+            while (1 < BaseType::Size()) {
+                if ((*this)[BaseType::Size() - 1]((*this)[0])) { //计算两顶点距离
+                    break;
+                }
+                BaseType::RemoveLast();
             }
         }
     }
 
-
-    //-------------------------------------------------------------vertex_dist
-    // Vertex (x, y) with the distance to the next one. The last vertex has 
-    // distance between the last and the first points if the polygon is closed
-    // and 0.0 if it's a polyline.
-    struct vertex_dist
+    template <class T, unsigned S>
+    void VertexSequence<T, S>::Add(const T& val)
     {
-        double   x;
-        double   y;
-        double   dist;
+        if (1 < BaseType::Size()) {
+            if (!(*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
+                BaseType::RemoveLast();
+            }
+        }
+        BaseType::Add(val);
+    }
 
-        vertex_dist() {}
-        vertex_dist(double x_, double y_) :
-            x(x_),
-            y(y_),
-            dist(0.0)
+    template <class T, unsigned S>
+    void VertexSequence<T, S>::ModifyLast(const T& val)
+    {
+        BaseType::RemoveLast();
+        Add(val);
+    }
+
+    struct VertexDist {
+        double x;
+        double y;
+        double dist;
+
+        VertexDist()
+        {}
+        /**
+         * @brief 构造VertexDist.
+         *
+         * @param x_,y_ 顶点坐标.
+         * @since 1.0
+         * @version 1.0
+         */
+        VertexDist(double x_, double y_) :
+            x(x_), y(y_), dist(0.0)
         {
         }
-
-        bool operator () (const vertex_dist& val)
+        /**
+         * @brief 计算两个点的距离是否很相近.
+         *
+         * @param 顶点.
+         * @return 两点距离很近返回false.
+         * @since 1.0
+         * @version 1.0
+         */
+        bool operator()(const VertexDist& val)
         {
-            bool ret = (dist = calc_distance(x, y, val.x, val.y)) > vertex_dist_epsilon;
-            if(!ret) dist = 1.0 / vertex_dist_epsilon;
+            dist = CalcDistance(x, y, val.x, val.y);
+            bool ret = dist > VERTEX_DIST_EPSILON;
+            if (!ret) {
+                dist = 1.0 / VERTEX_DIST_EPSILON;
+            }
             return ret;
         }
     };
 
-
-
-    //--------------------------------------------------------vertex_dist_cmd
-    // Save as the above but with additional "command" value
-    struct vertex_dist_cmd : public vertex_dist
-    {
+    struct VertexDistCmd : public VertexDist {
         unsigned cmd;
 
-        vertex_dist_cmd() {}
-        vertex_dist_cmd(double x_, double y_, unsigned cmd_) :
-            vertex_dist(x_, y_),
-            cmd(cmd_)
+        VertexDistCmd()
+        {}
+        /**
+     * @brief 构造VertexDist.
+     *
+     * @param x_,y_ 顶点坐标, cmd_ 连接命令.
+     * @since 1.0
+     * @version 1.0
+     */
+        VertexDistCmd(double x_, double y_, unsigned cmd_) :
+            VertexDist(x_, y_), cmd(cmd_)
         {
         }
     };
 
-
-}
+} // namespace OHOS
 
 #endif

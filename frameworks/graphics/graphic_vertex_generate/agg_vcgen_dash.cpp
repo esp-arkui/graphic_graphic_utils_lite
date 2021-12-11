@@ -12,12 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <cmath>
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h"
+
+#include <cmath>
+
 #include "gfx_utils/graphics/graphic_geometry/agg_shorten_path.h"
 
-namespace OHOS
-{
+namespace OHOS {
 
     //------------------------------------------------------------------------
     VCGenDash::VCGenDash() :
@@ -33,8 +34,6 @@ namespace OHOS
         srcVertex_(0)
     {}
 
-
-
     //------------------------------------------------------------------------
     void VCGenDash::RemoveAllDashes()
     {
@@ -44,17 +43,15 @@ namespace OHOS
         currDash_ = 0;
     }
 
-
     //------------------------------------------------------------------------
     void VCGenDash::AddDash(double dashLen, double gapLen)
     {
-        if(numDashes_ < MAX_DASHES){
+        if (numDashes_ < MAX_DASHES) {
             totalDashLen_ += dashLen + gapLen;
             dashes_[numDashes_++] = dashLen;
             dashes_[numDashes_++] = gapLen;
         }
     }
-
 
     //------------------------------------------------------------------------
     void VCGenDash::DashStart(double ds)
@@ -63,151 +60,137 @@ namespace OHOS
         CalcDashStart(std::fabs(ds));
     }
 
-
     //------------------------------------------------------------------------
     void VCGenDash::CalcDashStart(double ds)
     {
         currDash_ = 0;
         currDashStart_ = 0.0;
-        for(;ds > 0.0;){
-            if(ds > dashes_[currDash_]){
+        for (; ds > 0.0;) {
+            if (ds > dashes_[currDash_]) {
                 ds -= dashes_[currDash_];
                 ++currDash_;
                 currDashStart_ = 0.0;
-                if(currDash_ >= numDashes_) 
-                {
+                if (currDash_ >= numDashes_) {
                     currDash_ = 0;
                 }
-            }else{
+            } else {
                 currDashStart_ = ds;
                 ds = 0.0;
             }
         }
     }
 
-
     //------------------------------------------------------------------------
     void VCGenDash::RemoveAll()
     {
         status_ = INITIAL;
-        srcVertices_.remove_all();
+        srcVertices_.RemoveAll();
         closed_ = 0;
     }
-
 
     //------------------------------------------------------------------------
     void VCGenDash::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
-        if(is_move_to(cmd)){
-            srcVertices_.modify_last(vertex_dist(x, y));
-        }
-        else{
-            if(is_vertex(cmd)){
-                srcVertices_.add(vertex_dist(x, y));
-            }else{
-                closed_ = get_close_flag(cmd);
+        if (IsMoveTo(cmd)) {
+            srcVertices_.ModifyLast(VertexDist(x, y));
+        } else {
+            if (IsVertex(cmd)) {
+                srcVertices_.Add(VertexDist(x, y));
+            } else {
+                closed_ = GetCloseFlag(cmd);
             }
         }
     }
 
-
     //------------------------------------------------------------------------
     void VCGenDash::Rewind(unsigned)
     {
-        if(status_ == INITIAL){
-            srcVertices_.close(closed_ != 0);
-            shorten_path(srcVertices_, shorten_, closed_);
+        if (status_ == INITIAL) {
+            srcVertices_.Close(closed_ != 0);
+            ShortenPath(srcVertices_, shorten_, closed_);
         }
         status_ = READY;
         srcVertex_ = 0;
     }
 
-
     //------------------------------------------------------------------------
     unsigned VCGenDash::Vertex(double* x, double* y)
     {
-        unsigned cmd = path_cmd_move_to;
-        while(!is_stop(cmd))
-        {
-            switch(status_)
-            {
-            case INITIAL:
-                Rewind(0);
+        unsigned cmd = PATH_CMD_MOVE_TO;
+        while (!IsStop(cmd)) {
+            switch (status_) {
+                case INITIAL:
+                    Rewind(0);
 
-            case READY:
-                if(numDashes_ < 2 || srcVertices_.size() < 2){
-                    cmd = path_cmd_stop;
-                    break;
-                }
-                status_ = POLYLINE;
-                srcVertex_ = 1;
-                vertexDist1_ = &srcVertices_[0];
-                vertexDist2_ = &srcVertices_[1];
-                currRest = vertexDist1_->dist;
-                *x = vertexDist1_->x;
-                *y = vertexDist1_->y;
-                if(dashStart_ >= 0.0) {
-                    CalcDashStart(dashStart_);
-                }
-                return path_cmd_move_to;
+                case READY:
+                    if (numDashes_ < 2 || srcVertices_.Size() < 2) {
+                        cmd = PATH_CMD_STOP;
+                        break;
+                    }
+                    status_ = POLYLINE;
+                    srcVertex_ = 1;
+                    vertexDist1_ = &srcVertices_[0];
+                    vertexDist2_ = &srcVertices_[1];
+                    currRest = vertexDist1_->dist;
+                    *x = vertexDist1_->x;
+                    *y = vertexDist1_->y;
+                    if (dashStart_ >= 0.0) {
+                        CalcDashStart(dashStart_);
+                    }
+                    return PATH_CMD_MOVE_TO;
 
-            case POLYLINE:
-                {
+                case POLYLINE: {
                     double dash_rest = dashes_[currDash_] - currDashStart_;
 
-                    unsigned cmd = (currDash_ & 1) ? 
-                                   path_cmd_move_to : 
-                                   path_cmd_line_to;
+                    unsigned cmd = (currDash_ & 1) ?
+                                       PATH_CMD_MOVE_TO :
+                                       PATH_CMD_LINE_TO;
 
-                    if(currRest > dash_rest){
+                    if (currRest > dash_rest) {
                         currRest -= dash_rest;
                         ++currDash_;
-                        if(currDash_ >= numDashes_) {
+                        if (currDash_ >= numDashes_) {
                             currDash_ = 0;
                         }
                         currDashStart_ = 0.0;
                         *x = vertexDist2_->x - (vertexDist2_->x - vertexDist1_->x) * currRest / vertexDist1_->dist;
                         *y = vertexDist2_->y - (vertexDist2_->y - vertexDist1_->y) * currRest / vertexDist1_->dist;
-                    }else{
+                    } else {
                         currDashStart_ += currRest;
                         *x = vertexDist2_->x;
                         *y = vertexDist2_->y;
                         ++srcVertex_;
                         vertexDist1_ = vertexDist2_;
                         currRest = vertexDist1_->dist;
-                        if(closed_){
-                            if(srcVertex_ > srcVertices_.size()){
+                        if (closed_) {
+                            if (srcVertex_ > srcVertices_.Size()) {
                                 status_ = STOP;
-                            }else{
-                                int n=0;
-                                if(srcVertex_ >= srcVertices_.size()){
+                            } else {
+                                int n = 0;
+                                if (srcVertex_ >= srcVertices_.Size()) {
                                     vertexDist2_ = &srcVertices_[0];
-                                }else{
+                                } else {
                                     vertexDist2_ = &srcVertices_[srcVertex_];
                                 }
                             }
-                        }else{
-                            if(srcVertex_ >= srcVertices_.size()){
+                        } else {
+                            if (srcVertex_ >= srcVertices_.Size()) {
                                 status_ = STOP;
-                            }else{
+                            } else {
                                 vertexDist2_ = &srcVertices_[srcVertex_];
                             }
                         }
                     }
                     return cmd;
-                }
-                break;
+                } break;
 
-            case STOP:
-                cmd = path_cmd_stop;
-                break;
+                case STOP:
+                    cmd = PATH_CMD_STOP;
+                    break;
             }
-
         }
-        return path_cmd_stop;
+        return PATH_CMD_STOP;
     }
 
-
-}
-
+} // namespace OHOS

@@ -18,10 +18,8 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace OHOS
-{
-    class VCGenDash
-    {
+namespace OHOS {
+    class VCGenDash {
         enum MaxDashes
         {
             MAX_DASHES = 32
@@ -36,7 +34,7 @@ namespace OHOS
         };
 
     public:
-        typedef vertex_sequence<vertex_dist, 6> VertexStorage;
+        typedef VertexSequence<VertexDist, 6> VertexStorage;
 
         VCGenDash();
         /**
@@ -46,7 +44,7 @@ namespace OHOS
          * @version 1.0
          */
         void RemoveAllDashes();
-         /**
+        /**
          * @brief 添加破折号
          * 
          * @param dashLen 线段长度
@@ -55,7 +53,7 @@ namespace OHOS
          * @version 1.0
          */
         void AddDash(double dashLen, double gapLen);
-         /**
+        /**
          * @brief 设定dashStart_
          * 
          * @param 设定值
@@ -70,9 +68,9 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        void Shorten(double s) 
-        { 
-            shorten_ = s; 
+        void Shorten(double s)
+        {
+            shorten_ = s;
         }
         /**
          * @brief 获取storten_
@@ -81,9 +79,9 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        double Shorten() const 
-        { 
-            return shorten_; 
+        double Shorten() const
+        {
+            return shorten_;
         }
         /**
          * @brief 去除所有顶点
@@ -102,35 +100,34 @@ namespace OHOS
          * @version 1.0
          */
         void AddVertex(double x, double y, unsigned cmd);
-        
-        void     Rewind(unsigned pathId);
+
+        void Rewind(unsigned pathId);
 
         unsigned Vertex(double* x, double* y);
 
     private:
         VCGenDash(const VCGenDash&);
-        const VCGenDash& operator = (const VCGenDash&);
+        const VCGenDash& operator=(const VCGenDash&);
 
         void CalcDashStart(double ds);
 
-        double             dashes_[MAX_DASHES];
-        double             totalDashLen_;
-        unsigned           numDashes_;
-        double             dashStart_;
-        double             shorten_;
-        double             currDashStart_;
-        unsigned           currDash_;
-        double             currRest;
-        const vertex_dist* vertexDist1_;
-        const vertex_dist* vertexDist2_;
+        double dashes_[MAX_DASHES];
+        double totalDashLen_;
+        unsigned numDashes_;
+        double dashStart_;
+        double shorten_;
+        double currDashStart_;
+        unsigned currDash_;
+        double currRest;
+        const VertexDist* vertexDist1_;
+        const VertexDist* vertexDist2_;
 
         VertexStorage srcVertices_;
-        unsigned       closed_;
-        Status       status_;
-        unsigned       srcVertex_;
+        unsigned closed_;
+        Status status_;
+        unsigned srcVertex_;
     };
 
-
-}
+} // namespace OHOS
 
 #endif

@@ -59,8 +59,8 @@ namespace OHOS {
             interpolator_(&inter),
             gradientFunction_(&gradient_function),
             colorFunction_(&color_function),
-            distance1_(iround(distance1 * gradient_subpixel_scale)),
-            distance2_(iround(distance2 * gradient_subpixel_scale))
+            distance1_(Iround(distance1 * gradient_subpixel_scale)),
+            distance2_(Iround(distance2 * gradient_subpixel_scale))
         {
         }
 
@@ -121,9 +121,9 @@ namespace OHOS {
          * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
          */
         GradientRadialCalculate(double endRadius, double dx, double dy) :
-            endRadius_(iround(endRadius * gradient_subpixel_scale)),
-            dx_(iround(dx * gradient_subpixel_scale)),
-            dy_(iround(dy * gradient_subpixel_scale))
+            endRadius_(Iround(endRadius * gradient_subpixel_scale)),
+            dx_(Iround(dx * gradient_subpixel_scale)),
+            dy_(Iround(dy * gradient_subpixel_scale))
         {
             UpdateValues();
         }
@@ -147,7 +147,7 @@ namespace OHOS {
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            int index = ((iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
+            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
 
             if (index < 0) {
                 index = 0;

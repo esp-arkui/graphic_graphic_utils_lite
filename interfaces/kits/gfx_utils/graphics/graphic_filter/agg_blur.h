@@ -15,77 +15,73 @@
 #ifndef AGG_BLUR_INCLUDED
 #define AGG_BLUR_INCLUDED
 
-
-#include <cstring>
 #include <cmath>
+#include <cstring>
+
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "render/agg_pixfmt_base.h"
 #include "render/agg_pixfmt_transposer.h"
 #include "render/renderer_base.h"
 
-namespace OHOS
-{
+namespace OHOS {
 
-    template<class T> struct StackBlurTables
-    {
+    template <class T>
+    struct StackBlurTables {
         static int16u const stackBlur8Mul[255];
-        static int8u  const stackBlur8Shr[255];
+        static int8u const stackBlur8Shr[255];
     };
 
     //------------------------------------------------------------------------
-    template<class T> 
-    int16u const StackBlurTables<T>::stackBlur8Mul[255] = 
-    {
-        512,512,456,512,328,456,335,512,405,328,271,456,388,335,292,512,
-        454,405,364,328,298,271,496,456,420,388,360,335,312,292,273,512,
-        482,454,428,405,383,364,345,328,312,298,284,271,259,496,475,456,
-        437,420,404,388,374,360,347,335,323,312,302,292,282,273,265,512,
-        497,482,468,454,441,428,417,405,394,383,373,364,354,345,337,328,
-        320,312,305,298,291,284,278,271,265,259,507,496,485,475,465,456,
-        446,437,428,420,412,404,396,388,381,374,367,360,354,347,341,335,
-        329,323,318,312,307,302,297,292,287,282,278,273,269,265,261,512,
-        505,497,489,482,475,468,461,454,447,441,435,428,422,417,411,405,
-        399,394,389,383,378,373,368,364,359,354,350,345,341,337,332,328,
-        324,320,316,312,309,305,301,298,294,291,287,284,281,278,274,271,
-        268,265,262,259,257,507,501,496,491,485,480,475,470,465,460,456,
-        451,446,442,437,433,428,424,420,416,412,408,404,400,396,392,388,
-        385,381,377,374,370,367,363,360,357,354,350,347,344,341,338,335,
-        332,329,326,323,320,318,315,312,310,307,304,302,299,297,294,292,
-        289,287,285,282,280,278,275,273,271,269,267,265,263,261,259
-    };
+    template <class T>
+    int16u const StackBlurTables<T>::stackBlur8Mul[255] =
+        {
+            512, 512, 456, 512, 328, 456, 335, 512, 405, 328, 271, 456, 388, 335, 292, 512,
+            454, 405, 364, 328, 298, 271, 496, 456, 420, 388, 360, 335, 312, 292, 273, 512,
+            482, 454, 428, 405, 383, 364, 345, 328, 312, 298, 284, 271, 259, 496, 475, 456,
+            437, 420, 404, 388, 374, 360, 347, 335, 323, 312, 302, 292, 282, 273, 265, 512,
+            497, 482, 468, 454, 441, 428, 417, 405, 394, 383, 373, 364, 354, 345, 337, 328,
+            320, 312, 305, 298, 291, 284, 278, 271, 265, 259, 507, 496, 485, 475, 465, 456,
+            446, 437, 428, 420, 412, 404, 396, 388, 381, 374, 367, 360, 354, 347, 341, 335,
+            329, 323, 318, 312, 307, 302, 297, 292, 287, 282, 278, 273, 269, 265, 261, 512,
+            505, 497, 489, 482, 475, 468, 461, 454, 447, 441, 435, 428, 422, 417, 411, 405,
+            399, 394, 389, 383, 378, 373, 368, 364, 359, 354, 350, 345, 341, 337, 332, 328,
+            324, 320, 316, 312, 309, 305, 301, 298, 294, 291, 287, 284, 281, 278, 274, 271,
+            268, 265, 262, 259, 257, 507, 501, 496, 491, 485, 480, 475, 470, 465, 460, 456,
+            451, 446, 442, 437, 433, 428, 424, 420, 416, 412, 408, 404, 400, 396, 392, 388,
+            385, 381, 377, 374, 370, 367, 363, 360, 357, 354, 350, 347, 344, 341, 338, 335,
+            332, 329, 326, 323, 320, 318, 315, 312, 310, 307, 304, 302, 299, 297, 294, 292,
+            289, 287, 285, 282, 280, 278, 275, 273, 271, 269, 267, 265, 263, 261, 259};
 
     //------------------------------------------------------------------------
-    template<class T> 
-    int8u const StackBlurTables<T>::stackBlur8Shr[255] = 
-    {
-          9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17, 
-         17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 
-         19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
-         20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21,
-         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
-         21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22, 
-         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
-         22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23, 
-         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
-         23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 
-         23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 
-         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
-         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
-         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
-         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24
-    };
-
-
+    template <class T>
+    int8u const StackBlurTables<T>::stackBlur8Shr[255] =
+        {
+            9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17,
+            17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
+            19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
+            20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21,
+            21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+            21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22,
+            22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+            22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23,
+            23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+            23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+            23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+            23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+            24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+            24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+            24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+            24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24};
 
     //==============================================================StackBlur
-    template<class ColorType, class CalculatorType> class StackBlur
-    {
+    template <class ColorType, class CalculatorType>
+    class StackBlur {
     public:
         //--------------------------------------------------------------------
-        template<class Img> void BlurX(Img& img, unsigned radius)
+        template <class Img>
+        void BlurX(Img& img, unsigned radius)
         {
-            if(radius < 1) {
+            if (radius < 1) {
                 return;
             }
 
@@ -93,47 +89,46 @@ namespace OHOS
             unsigned stack_ptr;
             unsigned stackStart;
 
-            ColorType      pix;
-            ColorType*     stackPixel;
+            ColorType pix;
+            ColorType* stackPixel;
             CalculatorType sum;
             CalculatorType sumIn;
             CalculatorType sumOut;
 
-            unsigned w   = img.width();
-            unsigned h   = img.height();
-            unsigned wm  = w - 1;
+            unsigned w = img.Width();
+            unsigned h = img.Height();
+            unsigned wm = w - 1;
             unsigned div = radius * 2 + 1;
 
             unsigned divSum = (radius + 1) * (radius + 1);
             unsigned mulSum = 0;
             unsigned shrSum = 0;
-            unsigned maxVal = ColorType::base_mask;
+            unsigned maxVal = ColorType::BASEMASK;
 
-            if(maxVal <= 255 && radius < 255)
-            {
+            if (maxVal <= 255 && radius < 255) {
                 mulSum = StackBlurTables<int>::stackBlur8Mul[radius];
                 shrSum = StackBlurTables<int>::stackBlur8Shr[radius];
             }
 
-            buffer_.allocate(w, 128);
-            stack_.allocate(div, 32);
+            buffer_.Allocate(w, 128);
+            stack_.Allocate(div, 32);
 
-            for(y = 0; y < h; y++){
+            for (y = 0; y < h; y++) {
                 sum.Clear();
                 sumIn.Clear();
                 sumOut.Clear();
 
-                pix = img.pixel(0, y);
-                for(i = 0; i <= radius; i++){
+                pix = img.Pixel(0, y);
+                for (i = 0; i <= radius; i++) {
                     stack_[i] = pix;
                     sum.Add(pix, i + 1);
                     sumOut.Add(pix);
                 }
-                for(i = 1; i <= radius; i++){
-                    if(i>wm){
-                        pix = img.pixel(wm, y);
-                    }else{
-                        pix = img.pixel(i, y);
+                for (i = 1; i <= radius; i++) {
+                    if (i > wm) {
+                        pix = img.Pixel(wm, y);
+                    } else {
+                        pix = img.Pixel(i, y);
                     }
                     stack_[i + radius] = pix;
                     sum.Add(pix, radius + 1 - i);
@@ -141,17 +136,17 @@ namespace OHOS
                 }
 
                 stack_ptr = radius;
-                for(x = 0; x < w; x++){
-                    if(mulSum) {
+                for (x = 0; x < w; x++) {
+                    if (mulSum) {
                         sum.CalculatePixel(buffer_[x], mulSum, shrSum);
-                    }else{        
+                    } else {
                         sum.CalculatePixel(buffer_[x], divSum);
                     }
 
                     sum.Sub(sumOut);
-           
+
                     stackStart = stack_ptr + div - radius;
-                    if(stackStart >= div) {
+                    if (stackStart >= div) {
                         stackStart -= div;
                     }
                     stackPixel = &stack_[stackStart];
@@ -159,18 +154,18 @@ namespace OHOS
                     sumOut.Sub(*stackPixel);
 
                     xp = x + radius + 1;
-                    if(xp > wm) {
+                    if (xp > wm) {
                         xp = wm;
                     }
-                    pix = img.pixel(xp, y);
-            
+                    pix = img.Pixel(xp, y);
+
                     *stackPixel = pix;
-            
+
                     sumIn.Add(pix);
                     sum.Add(sumIn);
-            
+
                     ++stack_ptr;
-                    if(stack_ptr >= div) {
+                    if (stack_ptr >= div) {
                         stack_ptr = 0;
                     }
                     stackPixel = &stack_[stack_ptr];
@@ -178,84 +173,87 @@ namespace OHOS
                     sumOut.Add(*stackPixel);
                     sumIn.Sub(*stackPixel);
                 }
-                img.copy_color_hspan(0, y, w, &buffer_[0]);
+                img.CopyColorHspan(0, y, w, &buffer_[0]);
             }
         }
 
         //--------------------------------------------------------------------
-        template<class Img> void BlurY(Img& img, unsigned radius)
+        template <class Img>
+        void BlurY(Img& img, unsigned radius)
         {
-            pixfmt_transposer<Img> img2(img);
+            PixfmtTransposer<Img> img2(img);
             BlurX(img2, radius);
         }
 
         //--------------------------------------------------------------------
-        template<class Img> void Blur(Img& img, unsigned radius)
+        template <class Img>
+        void Blur(Img& img, unsigned radius)
         {
             BlurX(img, radius);
-            pixfmt_transposer<Img> img2(img);
+            PixfmtTransposer<Img> img2(img);
             BlurX(img2, radius);
         }
 
     private:
-        pod_vector<ColorType> buffer_;
-        pod_vector<ColorType> stack_;
+        PodVector<ColorType> buffer_;
+        PodVector<ColorType> stack_;
     };
 
     //====================================================StackBlurCalcRGBA
-    template<class ValueType=unsigned> struct StackBlurCalcRGBA
-    {
-        ValueType r,g,b,a;
+    template <class ValueType = unsigned>
+    struct StackBlurCalcRGBA {
+        ValueType redValue, greenValue, blueValue, alphaValue;
 
-        AGG_INLINE void Clear() 
-        { 
-            r = g = b = a = 0; 
+        GRAPHIC_GEOMETRY_INLINE void Clear()
+        {
+            redValue = greenValue = blueValue = alphaValue = 0;
         }
 
-        template<class ArgT> AGG_INLINE void Add(const ArgT& v)
+        template <class ArgT>
+        GRAPHIC_GEOMETRY_INLINE void Add(const ArgT& v)
         {
-            r += v.r;
-            g += v.g;
-            b += v.b;
-            a += v.a;
+            redValue += v.redValue;
+            greenValue += v.greenValue;
+            blueValue += v.blueValue;
+            alphaValue += v.alphaValue;
         }
 
-        template<class ArgT> AGG_INLINE void Add(const ArgT& v, unsigned k)
+        template <class ArgT>
+        GRAPHIC_GEOMETRY_INLINE void Add(const ArgT& v, unsigned k)
         {
-            r += v.r * k;
-            g += v.g * k;
-            b += v.b * k;
-            a += v.a * k;
+            redValue += v.redValue * k;
+            greenValue += v.greenValue * k;
+            blueValue += v.blueValue * k;
+            alphaValue += v.alphaValue * k;
         }
 
-        template<class ArgT> AGG_INLINE void Sub(const ArgT& v)
+        template <class ArgT>
+        GRAPHIC_GEOMETRY_INLINE void Sub(const ArgT& v)
         {
-            r -= v.r;
-            g -= v.g;
-            b -= v.b;
-            a -= v.a;
+            redValue -= v.redValue;
+            greenValue -= v.greenValue;
+            blueValue -= v.blueValue;
+            alphaValue -= v.alphaValue;
         }
 
-        template<class ArgT> AGG_INLINE void CalculatePixel(ArgT& v, unsigned div)
+        template <class ArgT>
+        GRAPHIC_GEOMETRY_INLINE void CalculatePixel(ArgT& v, unsigned div)
         {
-            v.r = ValueType(r / div);
-            v.g = ValueType(g / div);
-            v.b = ValueType(b / div);
-            v.a = ValueType(a / div);
+            v.redValue = ValueType(redValue / div);
+            v.greenValue = ValueType(greenValue / div);
+            v.blueValue = ValueType(blueValue / div);
+            v.alphaValue = ValueType(alphaValue / div);
         }
 
-        template<class ArgT> 
-        AGG_INLINE void CalculatePixel(ArgT& v, unsigned mul, unsigned shr)
+        template <class ArgT>
+        GRAPHIC_GEOMETRY_INLINE void CalculatePixel(ArgT& v, unsigned mul, unsigned shr)
         {
-            v.r = ValueType((r * mul) >> shr);
-            v.g = ValueType((g * mul) >> shr);
-            v.b = ValueType((b * mul) >> shr);
-            v.a = ValueType((a * mul) >> shr);
+            v.redValue = ValueType((redValue * mul) >> shr);
+            v.greenValue = ValueType((greenValue * mul) >> shr);
+            v.blueValue = ValueType((blueValue * mul) >> shr);
+            v.alphaValue = ValueType((alphaValue * mul) >> shr);
         }
     };
-}
-
-
-
+} // namespace OHOS
 
 #endif
