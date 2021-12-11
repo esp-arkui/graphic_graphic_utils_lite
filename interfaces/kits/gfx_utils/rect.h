@@ -46,24 +46,24 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-template <typename T> class CommonRect : public HeapBase {
+class Rect : public HeapBase {
 public:
     /**
-     * @brief A constructor used to create a <b>CommonRect</b> instance.
+     * @brief A constructor used to create a <b>Rect</b> instance.
      * @since 1.0
      * @version 1.0
      */
-    CommonRect() : left_(0), top_(0), right_(0), bottom_(0) {}
+    Rect() : left_(0), top_(0), right_(0), bottom_(0) {}
 
     /**
-     * @brief A destructor used to delete the <b>CommonRect</b> instance.
+     * @brief A destructor used to delete the <b>Rect</b> instance.
      * @since 1.0
      * @version 1.0
      */
-    ~CommonRect() {}
+    ~Rect() {}
 
     /**
-     * @brief A constructor used to create a <b>CommonRect</b> instance based on the coordinates of the four boundaries.
+     * @brief A constructor used to create a <b>Rect</b> instance based on the coordinates of the four boundaries.
      * @param left Indicates the coordinate of the left boundary.
      * @param top Indicates the coordinate of the top boundary.
      * @param right Indicates the coordinate of the right boundary.
@@ -71,44 +71,25 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    CommonRect(T left, T top, T right, T bottom)
-    {
-        left_ = left;
-        right_ = right;
-        top_ = top;
-        bottom_ = bottom;
-    }
+    Rect(int16_t left, int16_t top, int16_t right, int16_t bottom);
 
     /**
-     * @brief A constructor used to create a <b>CommonRect</b> instance by copying another rectangle.
+     * @brief A constructor used to create a <b>Rect</b> instance by copying another rectangle.
      *
      * @param other Indicates the rectangle to copy.
      * @since 1.0
      * @version 1.0
      */
-    CommonRect(const CommonRect<T>& other)
-
-    {
-        left_ = other.left_;
-        right_ = other.right_;
-        top_ = other.top_;
-        bottom_ = other.bottom_;
-    }
+    Rect(const Rect& other);
 
     /**
-     * @brief A constructor used to create a <b>CommonRect</b> instance by copying another rectangle.
+     * @brief A constructor used to create a <b>Rect</b> instance by copying another rectangle.
      *
      * @param other Indicates the rectangle to copy.
      * @since 1.0
      * @version 1.0
      */
-    CommonRect(const CommonRect<T>&& other)
-    {
-        left_ = other.left_;
-        right_ = other.right_;
-        top_ = other.top_;
-        bottom_ = other.bottom_;
-    }
+    Rect(const Rect&& other);
 
     /**
      * @brief Sets the coordinates of the four boundaries of a rectangle.
@@ -120,13 +101,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetRect(T left, T top, T right, T bottom)
-    {
-        left_ = left;
-        right_ = right;
-        top_ = top;
-        bottom_ = bottom;
-    }
+    void SetRect(int16_t left, int16_t top, int16_t right, int16_t bottom);
 
     /**
      * @brief Obtains the rectangle width.
@@ -134,7 +109,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetWidth() const
+    int16_t GetWidth() const
     {
         return right_ - left_ + 1;
     }
@@ -145,7 +120,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetHeight() const
+    int16_t GetHeight() const
     {
         return bottom_ - top_ + 1;
     }
@@ -156,7 +131,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetX() const
+    int16_t GetX() const
     {
         return left_;
     }
@@ -167,7 +142,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetY() const
+    int16_t GetY() const
     {
         return top_;
     }
@@ -178,7 +153,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetLeft() const
+    int16_t GetLeft() const
     {
         return left_;
     }
@@ -189,7 +164,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetTop() const
+    int16_t GetTop() const
     {
         return top_;
     }
@@ -200,7 +175,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetRight() const
+    int16_t GetRight() const
     {
         return right_;
     }
@@ -211,7 +186,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T GetBottom() const
+    int16_t GetBottom() const
     {
         return bottom_;
     }
@@ -222,7 +197,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetX(T x)
+    void SetX(int16_t x)
     {
         right_ += x - left_;
         left_ = x;
@@ -234,7 +209,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetY(T y)
+    void SetY(int16_t y)
     {
         bottom_ += y - top_;
         top_ = y;
@@ -248,7 +223,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetPosition(T x, T y)
+    void SetPosition(int16_t x, int16_t y)
     {
         right_ += x - left_;
         bottom_ += y - top_;
@@ -262,7 +237,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetWidth(T width)
+    void SetWidth(int16_t width)
     {
         right_ = left_ + width - 1;
     }
@@ -273,7 +248,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetHeight(T height)
+    void SetHeight(int16_t height)
     {
         bottom_ = top_ + height - 1;
     }
@@ -284,7 +259,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetLeft(T left)
+    void SetLeft(int16_t left)
     {
         left_ = left;
     }
@@ -295,7 +270,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetTop(T top)
+    void SetTop(int16_t top)
     {
         top_ = top;
     }
@@ -306,7 +281,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetRight(T right)
+    void SetRight(int16_t right)
     {
         right_ = right;
     }
@@ -317,7 +292,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void SetBottom(T bottom)
+    void SetBottom(int16_t bottom)
     {
         bottom_ = bottom;
     }
@@ -329,7 +304,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void Resize(T width, T height)
+    void Resize(int16_t width, int16_t height)
     {
         right_ = left_ + width - 1;
         bottom_ = top_ + height - 1;
@@ -341,10 +316,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    uint32_t GetSize() const
-    {
-        return static_cast<uint32_t>(right_ - left_ + 1) * (bottom_ - top_ + 1);
-    }
+    uint32_t GetSize() const;
 
     /**
      * @brief Checks whether two rectangles intersect.
@@ -354,19 +326,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool Intersect(const CommonRect<T>& rect1, const CommonRect<T>& rect2)
-    {
-        /* Get the smaller area from 'rect1' and 'rect2' */
-        left_ = MATH_MAX(rect1.left_, rect2.left_);
-        top_ = MATH_MAX(rect1.top_, rect2.top_);
-        right_ = MATH_MIN(rect1.right_, rect2.right_);
-        bottom_ = MATH_MIN(rect1.bottom_, rect2.bottom_);
-        if ((left_ > right_) || (top_ > bottom_)) {
-            return false;
-        }
-
-        return true;
-    }
+    bool Intersect(const Rect& rect1, const Rect& rect2);
 
     /**
      * @brief Obtains the minimum rectangle that contains another two rectangles.
@@ -375,13 +335,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    void Join(const CommonRect<T>& rect1, const CommonRect<T>& rect2)
-    {
-        left_ = MATH_MIN(rect1.left_, rect2.left_);
-        top_ = MATH_MIN(rect1.top_, rect2.top_);
-        right_ = MATH_MAX(rect1.right_, rect2.right_);
-        bottom_ = MATH_MAX(rect1.bottom_, rect2.bottom_);
-    }
+    void Join(const Rect& rect1, const Rect& rect2);
 
     /**
      * @brief Checks whether the rectangle contains a coordinate point.
@@ -390,17 +344,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsContains(const Vector2<T>& point) const
-    {
-        bool isContains = false;
-
-        if ((point.x_ >= this->left_) && (point.x_ <= this->right_) && (point.y_ >= this->top_) &&
-            (point.y_ <= this->bottom_)) {
-            isContains = true;
-        }
-
-        return isContains;
-    }
+    bool IsContains(const Vector2<int16_t>& point) const;
 
     /**
      * @brief Checks whether the rectangle contains a coordinate point.
@@ -409,17 +353,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsContains(const Point& point) const
-    {
-        bool isContains = false;
-
-        if ((point.x >= this->left_) && (point.x <= this->right_) && (point.y >= this->top_) &&
-            (point.y <= this->bottom_)) {
-            isContains = true;
-        }
-
-        return isContains;
-    }
+    bool IsContains(const Point& point) const;
 
     /**
      * @brief Checks whether the rectangle is adjacent to another rectangle horizontally or vertically.
@@ -428,18 +362,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsExtends(const CommonRect<T>& other) const
-    {
-        if (left_ == other.left_ && right_ == other.right_) {
-            return (top_ == other.bottom_ + 1) || (bottom_ == other.top_ - 1);
-        }
-
-        if (top_ == other.top_ && bottom_ == other.bottom_) {
-            return (left_ == other.right_ + 1) || (right_ == other.left_ - 1);
-        }
-
-        return false;
-    }
+    bool IsExtends(const Rect& other) const;
 
     /**
      * @brief Checks whether the rectangle intersects with another rectangle.
@@ -448,15 +371,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsIntersect(const CommonRect<T>& other) const
-    {
-        if ((this->left_ <= other.right_) && (this->right_ >= other.left_) && (this->top_ <= other.bottom_) &&
-            (this->bottom_ >= other.top_)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    bool IsIntersect(const Rect& other) const;
 
     /**
      * @brief Checks whether the rectangle contains another rectangle.
@@ -466,49 +381,18 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsContains(const CommonRect<T>& other) const
-    {
-        bool isContains = false;
+    bool IsContains(const Rect& other) const;
 
-        if (other.left_ >= this->left_ && other.top_ >= this->top_ && other.right_ <= this->right_ &&
-            other.bottom_ <= this->bottom_) {
-            isContains = true;
-        }
-
-        return isContains;
-    }
-
-    void Inflate(T delta);
-    void operator=(const CommonRect<T>& other)
-    {
-        left_ = other.left_;
-        right_ = other.right_;
-        top_ = other.top_;
-        bottom_ = other.bottom_;
-    }
-    void operator=(const CommonRect<T>&& other)
-    {
-        left_ = other.left_;
-        right_ = other.right_;
-        top_ = other.top_;
-        bottom_ = other.bottom_;
-    }
-    bool operator==(const CommonRect<T>& other) const
-    {
-        if (left_ == other.left_ && right_ == other.right_ && top_ == other.top_ && bottom_ == other.bottom_) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    void Inflate(int16_t delta);
+    void operator=(const Rect& other);
+    void operator=(const Rect&& other);
+    bool operator==(const Rect& other) const;
 
 protected:
-    T left_;
-    T top_;
-    T right_;
-    T bottom_;
+    int16_t left_;
+    int16_t top_;
+    int16_t right_;
+    int16_t bottom_;
 };
-using Rect = CommonRect<int16_t>;
-using Rect32 = CommonRect<int32_t>;
 } // namespace OHOS
 #endif // GRAPHIC_LITE_RECT_H
