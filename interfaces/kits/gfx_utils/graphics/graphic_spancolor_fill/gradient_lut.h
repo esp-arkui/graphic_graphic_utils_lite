@@ -28,8 +28,11 @@
 
 namespace OHOS {
     /**
-     *根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
-     */
+    * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
+    * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
+    * @since 1.0
+    * @version 1.0
+    */
     template <class ColorInterpolator, unsigned ColorLutSize = 256>
     class GradientLut {
     public:
@@ -45,17 +48,21 @@ namespace OHOS {
         }
 
         /**
-         *删除所有颜色
-         */
+        * @brief 删除所有颜色
+        * @since 1.0
+        * @version 1.0
+        */
         void RemoveAll()
         {
             colorProfile.remove_all();
         }
 
         /**
-         * @brief  在渐变过程中添加需要渐变的颜色和位置
+         * @brief 在渐变过程中添加需要渐变的颜色和位置
          * @param offset (0-1)
          * @param color 添加的颜色
+         * @since 1.0
+         * @version 1.0
          */
         void AddColor(double offset, const color_type& color)
         {
@@ -63,12 +70,17 @@ namespace OHOS {
         }
 
         /**
-        *根据渐变颜色构建color_type数组
-        *数组长度0-255
-        *数组内容根据渐变颜色分布在数组上
+        * @brief 根据渐变颜色构建color_type数组
+        * @数组长度0-255
+        * @数组内容根据渐变颜色分布在数组上
+        * @since 1.0
+        * @version 1.0
         */
         void BuildLut()
         {
+            /*
+             * 对于渐变颜色数组记性快速排序
+             */
             quick_sort(colorProfile, OffsetLess);
             colorProfile.cut_at(remove_duplicates(colorProfile, OffsetEqual));
             if (colorProfile.size() > 1) {
@@ -76,9 +88,17 @@ namespace OHOS {
                 unsigned start = uround(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
                 color_type color = colorProfile[0].color;
+
+                /*
+                 * 对于colorProfile[0]赋予初始颜色计算.
+                 */
                 for (index = 0; index < start; index++) {
                     colorType[index] = color;
                 }
+                /*
+                 * 从1到colorProfile.size() 间进行插值颜色计算.
+                 */
+
                 for (index = 1; index < colorProfile.size(); index++) {
                     end = uround(colorProfile[index].offset * colorLutSize_);
                     interpolator_type ci(colorProfile[index - 1].color,
@@ -91,6 +111,11 @@ namespace OHOS {
                     }
                 }
                 color = colorProfile.last().color;
+
+                /*
+                 * 对于colorProfile last 赋予end颜色..
+                 */
+
                 for (; end < colorType.size(); end++) {
                     colorType[end] = color;
                 }
@@ -99,6 +124,8 @@ namespace OHOS {
 
         /**
          * @brief size 返回color_lut_type的size
+         * @since 1.0
+         * @version 1.0
          */
         static unsigned size()
         {
@@ -107,6 +134,8 @@ namespace OHOS {
 
         /**
          * @brief 重写[]运算符
+         * @since 1.0
+         * @version 1.0
          */
         const color_type& operator[](unsigned i) const
         {

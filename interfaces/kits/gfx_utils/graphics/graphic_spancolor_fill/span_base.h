@@ -34,7 +34,7 @@ namespace OHOS {
         /**
          * @brief Resize 重新分配计算m_span长度
          * @param span_len 扫描线长度
-         * @return m_span的首地址
+         * @return spans的首地址
          */
         AGG_INLINE color_type* Resize(unsigned span_len)
         {

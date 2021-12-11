@@ -79,8 +79,7 @@ namespace OHOS {
     public:
         typedef Transformer trans_type;
 
-        enum SubpixelScale
-        {
+        enum SubpixelScale {
             SUBPIXEL_SHIFT = SUBPIXELSHIFT,
             SUBPIXEL_SCALE = 1 << SUBPIXEL_SHIFT
         };
@@ -95,17 +94,21 @@ namespace OHOS {
                                double x, double y, unsigned len) :
             transType(&trans)
         {
-            begin(x, y, len);
+            Begin(x, y, len);
         }
-        const trans_type& transformer() const
+        const trans_type& GetTransformer() const
         {
             return *transType;
         }
-        void transformer(trans_type& trans)
+        void SetTransformer(trans_type& trans)
         {
             transType = &trans;
         }
-        void begin(double x, double y, unsigned len)
+
+        /*
+         * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
+         */
+        void Begin(double x, double y, unsigned len)
         {
             double tx;
             double ty;
@@ -127,8 +130,18 @@ namespace OHOS {
             dda2LineInterpolatorY = dda2_line_interpolator(y1, y2, len);
         }
 
+        /*
+         * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
+         */
+        void Resynchronize(double xe, double ye, unsigned len)
+        {
+            transType->transform(&xe, &ye);
+            dda2LineInterpolatorX = dda2_line_interpolator(dda2LineInterpolatorX.y(), iround(xe * SUBPIXEL_SCALE), len);
+            dda2LineInterpolatorY = dda2_line_interpolator(dda2LineInterpolatorY.y(), iround(ye * SUBPIXEL_SCALE), len);
+        }
+
         /**
-         * @brief 重写++
+         * @brief 重载++运算符
          */
         void operator++()
         {
@@ -136,7 +149,7 @@ namespace OHOS {
             ++dda2LineInterpolatorY;
         }
 
-        void coordinates(int* x, int* y) const
+        void Coordinates(int* x, int* y) const
         {
             *x = dda2LineInterpolatorX.y();
             *y = dda2LineInterpolatorY.y();

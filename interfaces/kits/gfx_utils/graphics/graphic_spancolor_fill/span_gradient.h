@@ -31,7 +31,10 @@
 
 namespace OHOS {
     /**
-     *渐变的扫描线填色模板
+     * 渐变的扫描线填色模板
+     * @template ColorT 颜色来源类型，Interpolator span 插值器
+     * @GradientFgradient_function 对应模式计算当前点所处位置的函数
+     * @ColorF 颜色数组
      */
     template <class ColorT, class Interpolator, class GradientF, class ColorF>
     class SpanGradient {
@@ -75,9 +78,9 @@ namespace OHOS {
         void Generate(color_type* span, int x, int y, unsigned len)
         {
             int downscaleShift = interpolator_type::SUBPIXEL_SHIFT - gradient_subpixel_shift;
-            interpolator_->begin(x + 0.5, y + 0.5, len);
+            interpolator_->Begin(x + 0.5, y + 0.5, len);
             for (; len; --len, ++(*interpolator_)) {
-                interpolator_->coordinates(&x, &y);
+                interpolator_->Coordinates(&x, &y);
                 int index = gradientFunction_->Calculate(x >> downscaleShift,
                                                          y >> downscaleShift,
                                                          distance1_,
@@ -96,7 +99,10 @@ namespace OHOS {
     };
 
     /**
+     * gradient_function
      * @brief 计算放射渐变时当前(x,y)的color_function 数组下标
+     * @since 1.0
+     * @version 1.0
      */
     class GradientRadialCalculate {
     public:
@@ -135,12 +141,13 @@ namespace OHOS {
         {
             double dx = x - dx_;
             double dy = y - dy_;
-            double m_d2 = dx * dy_ - dy * dx_;
-            double m_d3 = endRadiusSquare_ * (dx * dx + dy * dy) - m_d2 * m_d2;
-            int dd = endRadius - startRadius; //半径的差
-            if (dd < 1)
-                dd = 1;
-            int index = ((iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_d3))) * m_mul) - startRadius) * size) / dd;
+            double m_distanceRadius = dx * dy_ - dy * dx_;
+            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
+            int deltaRadius = endRadius - startRadius; //半径的差
+            if (deltaRadius < 1) {
+                deltaRadius = 1;
+            }
+            int index = ((iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
 
             if (index < 0) {
                 index = 0;
@@ -160,25 +167,27 @@ namespace OHOS {
             endRadiusSquare_ = double(endRadius_) * double(endRadius_);
             double dxSquare_ = double(dx_) * double(dx_);
             double dySquare_ = double(dy_) * double(dy_);
-            double d = (endRadiusSquare_ - (dxSquare_ + dySquare_));
-            if (d == 0) {
+            double dRadius = (endRadiusSquare_ - (dxSquare_ + dySquare_));
+            if (dRadius == 0) {
                 if (dx_) {
-                    if (dx_ < 0)
+                    if (dx_ < 0) {
                         ++dx_;
-                    else
+                    } else {
                         --dx_;
+                    }
                 }
                 if (dy_) {
-                    if (dy_ < 0)
+                    if (dy_ < 0) {
                         ++dy_;
-                    else
+                    } else {
                         --dy_;
+                    }
                 }
                 dxSquare_ = double(dx_) * double(dx_);
                 dySquare_ = double(dy_) * double(dy_);
-                d = (endRadiusSquare_ - (dxSquare_ + dySquare_));
+                dRadius = (endRadiusSquare_ - (dxSquare_ + dySquare_));
             }
-            m_mul = endRadius_ / d;
+            m_mul = endRadius_ / dRadius;
         }
 
         int endRadius_;
@@ -192,6 +201,8 @@ namespace OHOS {
 
     /**
      * @brief 计算线性渐变时当前(x,y)的color_function 数组下标
+     * @since 1.0
+     * @version 1.0
      */
     class GradientLinearCalculate {
     public:
