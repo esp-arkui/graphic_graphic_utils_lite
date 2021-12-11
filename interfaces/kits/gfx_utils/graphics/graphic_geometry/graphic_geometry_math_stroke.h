@@ -55,14 +55,6 @@ namespace OHOS {
         MITER_JOIN_ROUND = 4
     };
 
-    enum InnerJoin
-    {
-        INNER_BEVEL,
-        INNER_MITER,
-        INNER_JAG,
-        INNER_ROUND
-    };
-
     template <class VertexConsumer>
     class MathStroke {
     public:
@@ -75,8 +67,7 @@ namespace OHOS {
             miterLimit_(4.0),
             approxScale_(1.0),
             lineCapEnum(BUTT_CAP),
-            lineJoinEnum(MITER_JOIN),
-            innerJoinEnum(INNER_MITER)
+            lineJoinEnum(MITER_JOIN)
         {
         }
 
@@ -95,11 +86,6 @@ namespace OHOS {
             lineJoinEnum = lineJoinE;
         }
 
-        void SetInnerJoin(InnerJoin innerJoinE)
-        {
-            innerJoinEnum = innerJoinE;
-        }
-
         LineCap GetLineCap() const
         {
             return lineCapEnum;
@@ -108,11 +94,6 @@ namespace OHOS {
         LineJoin GetLineJoin() const
         {
             return lineJoinEnum;
-        }
-
-        InnerJoin GetInnerJoin() const
-        {
-            return innerJoinEnum;
         }
 
         /**
@@ -398,7 +379,6 @@ namespace OHOS {
         double approxScale_;
         LineCap lineCapEnum;
         LineJoin lineJoinEnum;
-        InnerJoin innerJoinEnum;
     };
 } // namespace OHOS
 

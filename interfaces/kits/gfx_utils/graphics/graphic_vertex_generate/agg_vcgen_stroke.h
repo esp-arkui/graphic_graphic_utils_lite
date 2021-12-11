@@ -51,12 +51,6 @@ namespace OHOS {
         {
             stroker_.SetLineJoin(lj);
         }
-
-        void InnerJoin(InnerJoin ij)
-        {
-            stroker_.SetInnerJoin(ij);
-        }
-
         enum LineCap LineCap() const
         {
             return stroker_.GetLineCap();
@@ -65,11 +59,6 @@ namespace OHOS {
         enum LineJoin LineJoin() const
         {
             return stroker_.GetLineJoin();
-        }
-
-        enum InnerJoin InnerJoin() const
-        {
-            return stroker_.GetInnerJoin();
         }
 
         void Width(double w)

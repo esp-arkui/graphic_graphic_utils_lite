@@ -44,10 +44,6 @@ namespace OHOS {
         {
             base_type::generator().LineJoin(lj);
         }
-        void inner_join(InnerJoin ij)
-        {
-            base_type::generator().InnerJoin(ij);
-        }
 
         LineCap line_cap() const
         {
@@ -56,10 +52,6 @@ namespace OHOS {
         LineJoin line_join() const
         {
             return base_type::generator().line_join();
-        }
-        InnerJoin inner_join() const
-        {
-            return base_type::generator().inner_join();
         }
 
         void width(double w)
