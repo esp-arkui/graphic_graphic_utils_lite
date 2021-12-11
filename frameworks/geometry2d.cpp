@@ -17,6 +17,153 @@
 #include "securec.h"
 
 namespace OHOS {
+Rect::Rect(int16_t left, int16_t top, int16_t right, int16_t bottom)
+{
+    left_ = left;
+    right_ = right;
+    top_ = top;
+    bottom_ = bottom;
+}
+
+Rect::Rect(const Rect& other)
+{
+    left_ = other.left_;
+    right_ = other.right_;
+    top_ = other.top_;
+    bottom_ = other.bottom_;
+}
+
+Rect::Rect(const Rect&& other)
+{
+    left_ = other.left_;
+    right_ = other.right_;
+    top_ = other.top_;
+    bottom_ = other.bottom_;
+}
+
+void Rect::operator = (const Rect& other)
+{
+    left_ = other.left_;
+    right_ = other.right_;
+    top_ = other.top_;
+    bottom_ = other.bottom_;
+}
+
+void Rect::operator = (const Rect&& other)
+{
+    left_ = other.left_;
+    right_ = other.right_;
+    top_ = other.top_;
+    bottom_ = other.bottom_;
+}
+
+bool Rect::operator == (const Rect& other) const
+{
+    if (left_ == other.left_ && right_ == other.right_ &&
+        top_ == other.top_ && bottom_ == other.bottom_) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void Rect::SetRect(int16_t left, int16_t top, int16_t right, int16_t bottom)
+{
+    left_ = left;
+    right_ = right;
+    top_ = top;
+    bottom_ = bottom;
+}
+
+uint32_t Rect::GetSize() const
+{
+    return static_cast<uint32_t>(right_ - left_ + 1) * (bottom_ - top_ + 1);
+}
+
+bool Rect::Intersect(const Rect& rect1, const Rect& rect2)
+{
+    /* Get the smaller area from 'rect1' and 'rect2' */
+    left_ = MATH_MAX(rect1.left_, rect2.left_);
+    top_ = MATH_MAX(rect1.top_, rect2.top_);
+    right_ = MATH_MIN(rect1.right_, rect2.right_);
+    bottom_ = MATH_MIN(rect1.bottom_, rect2.bottom_);
+    if ((left_ > right_) || (top_ > bottom_)) {
+        return false;
+    }
+
+    return true;
+}
+
+void Rect::Join(const Rect& rect1, const Rect& rect2)
+{
+    left_ = MATH_MIN(rect1.left_, rect2.left_);
+    top_ = MATH_MIN(rect1.top_, rect2.top_);
+    right_ = MATH_MAX(rect1.right_, rect2.right_);
+    bottom_ = MATH_MAX(rect1.bottom_, rect2.bottom_);
+}
+
+bool Rect::IsContains(const Vector2<int16_t>& point) const
+{
+    bool isContains = false;
+
+    if ((point.x_ >= this->left_) && (point.x_ <= this->right_) &&
+        (point.y_ >= this->top_) && (point.y_ <= this->bottom_)) {
+        isContains = true;
+    }
+
+    return isContains;
+}
+
+bool Rect::IsContains(const Point& point) const
+{
+    bool isContains = false;
+
+    if ((point.x >= this->left_) && (point.x <= this->right_) &&
+        (point.y >= this->top_) && (point.y <= this->bottom_)) {
+        isContains = true;
+    }
+
+    return isContains;
+}
+bool Rect::IsIntersect(const Rect& other) const
+{
+    if ((this->left_ <= other.right_) &&
+        (this->right_ >= other.left_) &&
+        (this->top_ <= other.bottom_) &&
+        (this->bottom_ >= other.top_)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Rect::IsContains(const Rect& other) const
+{
+    bool isContains = false;
+
+    if (other.left_ >= this->left_ &&
+        other.top_ >= this->top_ &&
+        other.right_ <= this->right_ &&
+        other.bottom_ <= this->bottom_) {
+        isContains = true;
+    }
+
+    return isContains;
+}
+
+bool Rect::IsExtends(const Rect& other) const
+{
+    if (left_ == other.left_ && right_ == other.right_) {
+        return (top_ == other.bottom_ + 1) || (bottom_ == other.top_ - 1);
+    }
+
+    if (top_ == other.top_ && bottom_ == other.bottom_) {
+        return (left_ == other.right_ + 1) || (right_ == other.left_ - 1);
+    }
+
+    return false;
+}
+
 /* return point of intersection of two lines when it is sure a and b is intersected */
 bool Intersect(const Line& a, const Line& b, Vector2<int16_t>& out)
 {
