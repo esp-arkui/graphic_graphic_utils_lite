@@ -17,400 +17,597 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
- *
- * @since 1.0
- * @version 1.0
- */
-
-#ifndef GRAPHIC_GEOMETRY_POS_BVECTOR_INCLUDED
-#define GRAPHIC_GEOMETRY_POS_BVECTOR_INCLUDED
-
-#include <cstddef>
-#include <cstring>
-
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
-#include "securec.h"
-
-namespace OHOS {
-
-/**
  * @brief Defines PodBvector.
  *
  * @since 1.0
  * @version 1.0
  */
-template <class T, unsigned S = 6>
-class PodBvector : public HeapBase {
-public:
-    enum BlockScaleEnum
-    {
-        BLOCK_SHIFT = S,
-        BLOCK_SIZE = 1 << BLOCK_SHIFT,
-        BLOCK_MASK = BLOCK_SIZE - 1
+
+#ifndef GRAPHIC_GEOMETRY_POD_BVECTOR_INCLUDED
+#define GRAPHIC_GEOMETRY_POD_BVECTOR_INCLUDED
+
+#include <cstddef>
+#include <cstring>
+
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/heap_base.h"
+#include "securec.h"
+
+namespace OHOS {
+
+    /**
+     * @brief Defines PodBvector.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T, unsigned S = 6>
+    class PodBvector : public HeapBase {
+    public:
+        enum BlockScaleEnum
+        {
+            BLOCK_SHIFT = S,
+            BLOCK_SIZE = 1 << BLOCK_SHIFT,
+            BLOCK_MASK = BLOCK_SIZE - 1
+        };
+
+        using ValueType = T;
+
+        PodBvector();
+        /**
+        * @brief æ„é€ ä¸€ä¸ª PodBvector.
+        * @param blockPtrInc æ¯ä¸ªå—å¤§å°
+        * @since 1.0
+        * @version 1.0
+        */
+        PodBvector(unsigned blockPtrInc);
+
+        ~PodBvector();
+
+        PodBvector(const PodBvector<T, S>& v);
+
+        const PodBvector<T, S>& operator=(const PodBvector<T, S>& v);
+        /**
+        * @brief æ¸…ç©º.
+        * @since 1.0
+        * @version 1.0
+        */
+        void RemoveAll()
+        {
+            size_ = 0;
+        }
+        /**
+        * @brief æ¸…ç©º.
+        * @since 1.0
+        * @version 1.0
+        */
+        void Clear()
+        {
+            size_ = 0;
+        }
+        /**
+        * @brief é‡Šæ”¾æ‰€æœ‰å…ƒç´ å ç”¨çš„å†…å­˜å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        void FreeAll()
+        {
+            FreeTail(0);
+        }
+        /**
+        * @brief ä¿®æ”¹æœ€åä¸€ä¸ªå…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        void ModifyLast(const T& val);
+        /**
+        * @brief åˆ é™¤æœ€åä¸€ä¸ªå…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        void RemoveLast();
+        /**
+        * @brief ç”³è¯·numElementså¤§å°çš„è¿ç»­å†…å­˜å—.
+        * @param numElements è¦ç”³è¯·çš„å…ƒç´ ä¸ªæ•°
+        * @since 1.0
+        * @version 1.0
+        */
+        int AllocateContinuousBlock(unsigned numElements);
+        void AllocateBlock(unsigned blockNum);
+
+        /**
+        * @brief ä»æœ«å°¾é‡Šæ”¾å…ƒç´ .
+        * @param size è¦é‡Šæ”¾çš„ä¸ªæ•°
+        * @since 1.0
+        * @version 1.0
+        */
+        void FreeTail(unsigned size);
+        /**
+        * @brief å¢åŠ ä¸€ä¸ªå…ƒç´ .
+        * @param val å¢åŠ çš„å…ƒç´ 
+        * @since 1.0
+        * @version 1.0
+        */
+        void Add(const T& val);
+        /**
+        * @brief å¢åŠ ä¸€ä¸ªå…ƒç´ .
+        * @param val å¢åŠ çš„å…ƒç´ 
+        * @since 1.0
+        * @version 1.0
+        */
+        void PushBack(const T& val)
+        {
+            Add(val);
+        }
+
+        /**
+        * @brief å¢åŠ ä¸€ä¸ªæ•°ç»„.
+        * @param ptr è¦å¢åŠ çš„æ•°ç»„é¦–åœ°å€ï¼ŒnumElem å…ƒç´ ä¸ªæ•°
+        * @since 1.0
+        * @version 1.0
+        */
+        void AddArray(const T* ptr, unsigned numElem)
+        {
+            while (numElem--) {
+                Add(*ptr++);
+            }
+        }
+
+        /**
+        * @brief ç¼©å°æ•°ç»„å®¹é‡.
+        * @since 1.0
+        * @version 1.0
+        */
+        void CutAt(unsigned size)
+        {
+            if (size < size_) {
+                size_ = size;
+            }
+        }
+        /**
+        * @brief å¢åŠ æ•°æ®.
+        * @since 1.0
+        * @version 1.0
+        */
+        template <class DataAccessor>
+        void AddData(DataAccessor& data)
+        {
+            while (data.size()) {
+                Add(*data);
+                ++data;
+            }
+        }
+        /**
+        * @brief è·å–æ•°ç»„å®¹é‡.
+        * @since 1.0
+        * @version 1.0
+        */
+        unsigned Size() const
+        {
+            return size_;
+        }
+        /**
+        * @brief è·å–æŒ‡å®šç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        const T& operator[](unsigned index) const
+        {
+            return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
+        /**
+        * @brief è·å–æŒ‡å®šç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T& operator[](unsigned index)
+        {
+            return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
+        /**
+        * @brief è·å–æŒ‡å®šç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T& IndexAt(unsigned index)
+        {
+            return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
+        /**
+        * @brief è·å–æŒ‡å®šç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T ValueAt(unsigned index) const
+        {
+            return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        const T& IndexAt(unsigned index) const
+        {
+            return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T& Curr(unsigned index)
+        {
+            return (*this)[index];
+        }
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•ä¸Šçš„å‰ä¸€ä¸ªæ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        const T& Prev(unsigned index) const
+        {
+            return (*this)[(index + size_ - 1) % size_];
+        }
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•ä¸Šçš„å‰ä¸€ä¸ªæ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T& Prev(unsigned index)
+        {
+            return (*this)[(index + size_ - 1) % size_];
+        }
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•ä¸Šçš„æ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        const T& Curr(unsigned index) const
+        {
+            return (*this)[index];
+        }
+
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•ä¸Šçš„ä¸‹ä¸€ä¸ªæ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        const T& Next(unsigned index) const
+        {
+            return (*this)[(index + 1) % size_];
+        }
+
+        /**
+        * @brief è·å–å½“å‰ç´¢å¼•ä¸Šçš„ä¸‹ä¸€ä¸ªæ•°æ®å—.
+        * @since 1.0
+        * @version 1.0
+        */
+        T& Next(unsigned index)
+        {
+            return (*this)[(index + 1) % size_];
+        }
+        /**
+         * @brief è·å–æœ«å°¾æ•°æ®.
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& Last() const
+        {
+            return (*this)[size_ - 1];
+        }
+
+        /**
+         * @brief è·å–æœ«å°¾æ•°æ®.
+         * @since 1.0
+         * @version 1.0
+         */
+        T& Last()
+        {
+            return (*this)[size_ - 1];
+        }
+        /**
+         * @brief ååºåˆ—åŒ–æ•°æ®åˆ°å†…å­˜å—.
+         * @param data è¦ååºåˆ—çš„æ•°æ®ï¼ŒbyteSize è¦åºåˆ—åŒ–çš„å­—èŠ‚æ•°
+         * @since 1.0
+         * @version 1.0
+         */
+        void Deserialize(const int8u* data, unsigned byteSize);
+
+        /**
+         * @brief ååºåˆ—åŒ–æ•°æ®åˆ°å†…å­˜å—.
+         * @param start æŒ‡å®šä½ç½®, æŒ‡å®šä½ç½®å¤–çš„å¡«å……æ•°æ®ï¼Œdata è¦ååºåˆ—çš„æ•°æ®ï¼ŒbyteSize è¦åºåˆ—åŒ–çš„å­—èŠ‚æ•°
+         * @since 1.0
+         * @version 1.0
+         */
+        void Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize);
+        /**
+         * @brief è·å–å­—èŠ‚æ•°.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned ByteSize() const;
+
+        /**
+         * @brief åºåˆ—åŒ–æ•°æ®åˆ°æŒ‡å®šçš„åœ°å€.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Serialize(int8u* ptr) const;
+
+        /**
+         * @brief ååºåˆ—åŒ–æ•°æ®åˆ°å†…å­˜å—.
+         * @param start æŒ‡å®šä½ç½®, æŒ‡å®šä½ç½®å¤–çš„å¡«å……æ•°æ®ï¼Œdata è¦ååºåˆ—çš„æ•°æ®
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class ByteAccessor>
+        void Deserialize(unsigned start, const T& emptyVal, ByteAccessor data)
+        {
+            while (size_ < start) {
+                Add(emptyVal);
+            }
+
+            unsigned elesize_ = data.size() / sizeof(T);
+            for (unsigned i = 0; i < elesize_; ++i) {
+                int8u* ptr;
+                if (start + i < size_) {
+                    ptr = (int8u*)(&((*this)[start + i]));
+                } else {
+                    ptr = (int8u*)DataPtr();
+                    ++size_;
+                }
+                for (unsigned j = 0; j < sizeof(T); ++j) {
+                    *ptr++ = *data;
+                    ++data;
+                }
+            }
+        }
+        /**
+         * @brief ååºåˆ—åŒ–æ•°æ®åˆ°å†…å­˜å—.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class ByteAccessor>
+        void Deserialize(ByteAccessor data)
+        {
+            RemoveAll();
+            unsigned elesize_ = data.size() / sizeof(T);
+
+            for (unsigned i = 0; i < elesize_; ++i) {
+                int8u* ptr = (int8u*)DataPtr();
+                for (unsigned j = 0; j < sizeof(T); ++j) {
+                    *ptr++ = *data;
+                    ++data;
+                }
+                ++size_;
+            }
+        }
+
+        /**
+         * @brief è·å–æŒ‡å®šçš„å—åœ°å€.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T* Block(unsigned nb) const
+        {
+            return blocks_[nb];
+        }
+
+    private:
+        /**
+         * @brief ç”³è¯·æŒ‡å®šå¤§å°çš„å†…å­˜å—.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Allocatelock(unsigned nb);
+        T* DataPtr();
+
+        unsigned size_;        //å…ƒç´ ä¸ªæ•°
+        unsigned numBlocks_;   //å—æ•°é‡
+        unsigned maxBlocks_;   //æœ€å¤§å—æ•°
+        T** blocks_;           //æ‰€æœ‰å—çš„é¦–åœ°å€
+        unsigned blockPtrInc_; //æ¯ä¸ªå—çš„å¤§å°
     };
 
-    using ValueType = T;
-
-    PodBvector();
-    /**
-    * @brief ¹¹ÔìÒ»¸ö PodBvector.
-    * @param blockPtrInc Ã¿¸ö¿é´óĞ¡
-    * @since 1.0
-    * @version 1.0
-    */
-    PodBvector(unsigned blockPtrInc);
-
-    ~PodBvector();
-
-    PodBvector(const PodBvector<T, S>& v);
-
-    const PodBvector<T, S>& operator=(const PodBvector<T, S>& v);
-    /**
-    * @brief Çå¿Õ.
-    * @since 1.0
-    * @version 1.0
-    */
-    void RemoveAll()
+    template <class T, unsigned S>
+    PodBvector<T, S>::~PodBvector()
     {
-        size_ = 0;
-    }
-    /**
-    * @brief Çå¿Õ.
-    * @since 1.0
-    * @version 1.0
-    */
-    void Clear()
-    {
-        size_ = 0;
-    }
-    /**
-    * @brief ÊÍ·ÅËøÍ·ÔªËØÕ¼ÓÃµÄÄÚ´æ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    void FreeAll()
-    {
-        FreeTail(0);
-    }
-    /**
-    * @brief ĞŞ¸Ä×îºóÒ»¸öÔªËØ.
-    * @since 1.0
-    * @version 1.0
-    */
-    void ModifyLast(const T& val);
-    /**
-    * @brief É¾³ı×îºóÒ»¸öÔªËØ.
-    * @since 1.0
-    * @version 1.0
-    */
-    void RemoveLast();
-    /**
-    * @brief ÉêÇënumElements´óĞ¡µÄÁ¬ĞøÄÚ´æ¿é.
-    * @param numElements ÒªÉêÇëµÄÔªËØ¸öÊı
-    * @since 1.0
-    * @version 1.0
-    */
-    int AllocateContinuousBlock(unsigned numElements);
-    /**
-    * @brief ´ÓÄ©Î²ÊÍ·ÅÔªËØ.
-    * @param size ÒªÊÍ·ÅµÄ¸öÊı
-    * @since 1.0
-    * @version 1.0
-    */
-    void FreeTail(unsigned size);
-    /**
-    * @brief Ôö¼ÓÒ»¸öÔªËØ.
-    * @param val Ôö¼ÓµÄÔªËØ
-    * @since 1.0
-    * @version 1.0
-    */
-    void Add(const T& val);
-    /**
-    * @brief Ôö¼ÓÒ»¸öÔªËØ.
-    * @param val Ôö¼ÓµÄÔªËØ
-    * @since 1.0
-    * @version 1.0
-    */
-    void PushBack(const T& val)
-    {
-        Add(val);
-    }
-
-    /**
-    * @brief Ôö¼ÓÒ»¸öÊı×é.
-    * @param ptr ÒªÔö¼ÓµÄÊı×éÊ×µØÖ·£¬numElem ÔªËØ¸öÊı
-    * @since 1.0
-    * @version 1.0
-    */
-    void AddArray(const T* ptr, unsigned numElem)
-    {
-        while (numElem--) {
-            Add(*ptr++);
+        if (numBlocks_) {
+            T** blk = blocks_ + numBlocks_ - 1;
+            while (numBlocks_--) {
+                ArrAllocator<T>::Deallocate(*blk, BLOCK_SIZE);
+                --blk;
+            }
         }
+        ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
     }
 
-    /**
-    * @brief ËõĞ¡Êı×éÈİÁ¿.
-    * @since 1.0
-    * @version 1.0
-    */
-    void CutAt(unsigned size)
+    template <class T, unsigned S>
+    void PodBvector<T, S>::FreeTail(unsigned size)
     {
         if (size < size_) {
+            unsigned nb = (size + BLOCK_MASK) >> BLOCK_SHIFT;
+            while (numBlocks_ > nb) {
+                ArrAllocator<T>::Deallocate(blocks_[--numBlocks_], BLOCK_SIZE);
+            }
+            if (numBlocks_ == 0) {
+                ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
+                blocks_ = 0;
+                maxBlocks_ = 0;
+            }
             size_ = size;
         }
     }
-    /**
-    * @brief Ôö¼ÓÊı¾İ.
-    * @since 1.0
-    * @version 1.0
-    */
-    template <class DataAccessor>
-    void AddData(DataAccessor& data)
+
+    template <class T, unsigned S>
+    PodBvector<T, S>::PodBvector() :
+        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
     {
-        while (data.size()) {
-            Add(*data);
-            ++data;
+    }
+
+    template <class T, unsigned S>
+    PodBvector<T, S>::PodBvector(unsigned blockPtrInc) :
+        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
+    {
+    }
+
+    template <class T, unsigned S>
+    PodBvector<T, S>::PodBvector(const PodBvector<T, S>& v) :
+        size_(v.size_),
+        numBlocks_(v.numBlocks_),
+        maxBlocks_(v.maxBlocks_),
+        blocks_(v.maxBlocks_ ? ArrAllocator<T*>::Allocate(v.maxBlocks_) : 0),
+        blockPtrInc_(v.blockPtrInc_)
+    {
+        unsigned i;
+        for (i = 0; i < v.numBlocks_; ++i) {
+            blocks_[i] = ArrAllocator<T>::Allocate(BLOCK_SIZE);
+            memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
         }
     }
-    /**
-    * @brief »ñÈ¡Êı×éÈİÁ¿.
-    * @since 1.0
-    * @version 1.0
-    */
-    unsigned Size() const
+
+    template <class T, unsigned S>
+    const PodBvector<T, S>& PodBvector<T, S>::operator=(const PodBvector<T, S>& v)
     {
-        return size_;
-    }
-    /**
-    * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    const T& operator[](unsigned index) const
-    {
-        return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
-    }
-    /**
-    * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T& operator[](unsigned index)
-    {
-        return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
-    }
-    /**
-    * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T& IndexAt(unsigned index)
-    {
-        return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
-    }
-    /**
-    * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T ValueAt(unsigned index) const
-    {
-        return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
-    }
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    const T& IndexAt(unsigned index) const
-    {
-        return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
-    }
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T& Curr(unsigned index)
-    {
-        return (*this)[index];
-    }
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÉÏµÄÇ°Ò»¸öÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    const T& Prev(unsigned index) const
-    {
-        return (*this)[(index + size_ - 1) % size_];
-    }
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÉÏµÄÇ°Ò»¸öÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T& Prev(unsigned index)
-    {
-        return (*this)[(index + size_ - 1) % size_];
-    }
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÉÏµÄÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    const T& Curr(unsigned index) const
-    {
-        return (*this)[index];
+        unsigned i;
+        for (i = numBlocks_; i < v.numBlocks_; ++i) {
+            AllocateBlock(i);
+        }
+        for (i = 0; i < v.numBlocks_; ++i) {
+            memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
+        }
+        size_ = v.size_;
+        return *this;
     }
 
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÉÏµÄÏÂÒ»¸öÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    const T& Next(unsigned index) const
+    template <class T, unsigned S>
+    void PodBvector<T, S>::AllocateBlock(unsigned blockNum)
     {
-        return (*this)[(index + 1) % size_];
+        if (blockNum >= maxBlocks_) {
+            T** newBlocks = ArrAllocator<T*>::Allocate(maxBlocks_ + blockPtrInc_);
+
+            if (blocks_) {
+                memcpy_s(newBlocks, (maxBlocks_ + blockPtrInc_), blocks_, numBlocks_ * sizeof(T*));
+                //memcpy(newBlocks, blocks_, numBlocks_ * sizeof(T*));
+                ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
+            }
+            blocks_ = newBlocks;
+            maxBlocks_ += blockPtrInc_;
+        }
+        blocks_[blockNum] = ArrAllocator<T>::Allocate(BLOCK_SIZE);
+        numBlocks_++;
     }
 
-    /**
-    * @brief »ñÈ¡µ±Ç°Ë÷ÒıÉÏµÄÏÂÒ»¸öÊı¾İ¿é.
-    * @since 1.0
-    * @version 1.0
-    */
-    T& Next(unsigned index)
+    template <class T, unsigned S>
+    inline T* PodBvector<T, S>::DataPtr()
     {
-        return (*this)[(index + 1) % size_];
-    }
-    /**
-     * @brief »ñÈ¡Ä©Î²Êı¾İ.
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& Last() const
-    {
-        return (*this)[size_ - 1];
+        unsigned blockNum = size_ >> BLOCK_SHIFT; //è§£é‡Šå«ä¹‰
+        if (blockNum >= numBlocks_) {
+            AllocateBlock(blockNum);
+        }
+        return blocks_[blockNum] + (size_ & BLOCK_MASK);
     }
 
-    /**
-     * @brief »ñÈ¡Ä©Î²Êı¾İ.
-     * @since 1.0
-     * @version 1.0
-     */
-    T& Last()
+    template <class T, unsigned S>
+    inline void PodBvector<T, S>::Add(const T& val)
     {
-        return (*this)[size_ - 1];
+        *DataPtr() = val;
+        ++size_;
     }
-    /**
-     * @brief ·´ĞòÁĞ»¯Êı¾İµ½ÄÚ´æ¿é.
-     * @param data Òª·´ĞòÁĞµÄÊı¾İ£¬byteSize ÒªĞòÁĞ»¯µÄ×Ö½ÚÊı
-     * @since 1.0
-     * @version 1.0
-     */
-    void Deserialize(const int8u* data, unsigned byteSize);
 
-     /**
-     * @brief ·´ĞòÁĞ»¯Êı¾İµ½ÄÚ´æ¿é.
-     * @param start Ö¸¶¨Î»ÖÃ, Ö¸¶¨Î»ÖÃÍâµÄÌî³äÊı¾İ£¬data Òª·´ĞòÁĞµÄÊı¾İ£¬byteSize ÒªĞòÁĞ»¯µÄ×Ö½ÚÊı
-     * @since 1.0
-     * @version 1.0
-     */
-    void Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize);
-    /**
-     * @brief »ñÈ¡×Ö½ÚÊı.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned ByteSize() const;
+    template <class T, unsigned S>
+    inline void PodBvector<T, S>::RemoveLast()
+    {
+        if (size_) {
+            --size_;
+        }
+    }
 
-    /**
-     * @brief ĞòÁĞ»¯Êı¾İµ½Ö¸¶¨µÄµØÖ·.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    void Serialize(int8u* ptr) const;
+    template <class T, unsigned S>
+    void PodBvector<T, S>::ModifyLast(const T& val)
+    {
+        RemoveLast();
+        Add(val);
+    }
 
-     /**
-     * @brief ·´ĞòÁĞ»¯Êı¾İµ½ÄÚ´æ¿é.
-     * @param start Ö¸¶¨Î»ÖÃ, Ö¸¶¨Î»ÖÃÍâµÄÌî³äÊı¾İ£¬data Òª·´ĞòÁĞµÄÊı¾İ
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class ByteAccessor>
-    void Deserialize(unsigned start, const T& emptyVal, ByteAccessor data)
+    template <class T, unsigned S>
+    int PodBvector<T, S>::AllocateContinuousBlock(unsigned numElements)
+    {
+        if (numElements < BLOCK_SIZE) {
+            DataPtr();
+            unsigned rest = BLOCK_SIZE - (size_ & BLOCK_MASK);
+            unsigned index;
+            if (numElements <= rest) {
+                index = size_;
+                size_ += numElements;
+                return index;
+            }
+
+            size_ += rest;
+            DataPtr();
+            index = size_;
+            size_ += numElements;
+            return index;
+        }
+        return -1;
+    }
+
+    template <class T, unsigned S>
+    unsigned PodBvector<T, S>::ByteSize() const
+    {
+        return size_ * sizeof(T);
+    }
+
+    template <class T, unsigned S>
+    void PodBvector<T, S>::Serialize(int8u* ptr) const
+    {
+        unsigned i;
+        for (i = 0; i < size_; i++) {
+            memcpy_s(ptr, sizeof(T), &(*this)[i], sizeof(T));
+
+            ptr += sizeof(T);
+        }
+    }
+
+    template <class T, unsigned S>
+    void PodBvector<T, S>::Deserialize(const int8u* data, unsigned byteSize)
+    {
+        RemoveAll();
+        byteSize /= sizeof(T);
+        for (unsigned i = 0; i < byteSize; ++i) {
+            T* ptr = DataPtr();
+            memcpy_s(ptr, sizeof(T), data, sizeof(T));
+
+            ++size_;
+            data += sizeof(T);
+        }
+    }
+
+    template <class T, unsigned S>
+    void PodBvector<T, S>::Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize)
     {
         while (size_ < start) {
             Add(emptyVal);
         }
 
-        unsigned elesize_ = data.size() / sizeof(T);
-        for (unsigned i = 0; i < elesize_; ++i) {
-            int8u* ptr;
+        byteSize /= sizeof(T);
+        for (unsigned i = 0; i < byteSize; ++i) {
             if (start + i < size_) {
-                ptr = (int8u*)(&((*this)[start + i]));
+                memcpy_s(&((*this)[start + i]), sizeof(T), data, sizeof(T));
             } else {
-                ptr = (int8u*)DataPtr();
+                T* ptr = DataPtr();
+                memcpy_s(ptr, sizeof(T), data, sizeof(T));
                 ++size_;
             }
-            for (unsigned j = 0; j < sizeof(T); ++j) {
-                *ptr++ = *data;
-                ++data;
-            }
+            data += sizeof(T);
         }
     }
-    /**
-     * @brief ·´ĞòÁĞ»¯Êı¾İµ½ÄÚ´æ¿é.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class ByteAccessor>
-    void Deserialize(ByteAccessor data)
-    {
-        RemoveAll();
-        unsigned elesize_ = data.size() / sizeof(T);
-
-        for (unsigned i = 0; i < elesize_; ++i) {
-            int8u* ptr = (int8u*)DataPtr();
-            for (unsigned j = 0; j < sizeof(T); ++j) {
-                *ptr++ = *data;
-                ++data;
-            }
-            ++size_;
-        }
-    }
-
-    /**
-     * @brief »ñÈ¡Ö¸¶¨µÄ¿éµØÖ·.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T* Block(unsigned nb) const
-    {
-        return blocks_[nb];
-    }
-
-private:
-    /**
-     * @brief ÉêÇëÖ¸¶¨´óĞ¡µÄÄÚ´æ¿é.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    void Allocatelock(unsigned nb); 
-    T* DataPtr();
-
-    unsigned size_;         //ÔªËØ¸öÊı
-    unsigned numBlocks_;    //¿éÊıÁ¿
-    unsigned maxBlocks_;    //×î´ó¿éÊı
-    T** blocks_;            //ËùÓĞ¿éµÄÊ×µØÖ·
-    unsigned blockPtrInc_;  //Ã¿¸ö¿éµÄ´óĞ¡
-};
 
 } // namespace OHOS
+#endif

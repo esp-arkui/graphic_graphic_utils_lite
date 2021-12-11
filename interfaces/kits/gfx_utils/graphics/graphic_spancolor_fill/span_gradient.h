@@ -29,87 +29,103 @@
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
-namespace OHOS
-{
+namespace OHOS {
     /**
-     *渐变的扫描线填色模板
+     * 渐变的扫描线填色模板
+     * @template ColorT 颜色来源类型，Interpolator span 插值器
+     * @GradientFgradient_function 对应模式计算当前点所处位置的函数
+     * @ColorF 颜色数组
      */
     template <class ColorT, class Interpolator, class GradientF, class ColorF>
-    class span_gradient
-    {
+    class SpanGradient {
     public:
         typedef Interpolator interpolator_type;
         typedef ColorT color_type;
-        span_gradient()
+        SpanGradient()
         {
         }
-        span_gradient(interpolator_type& inter,
-                      GradientF& gradient_function,
-                      ColorF& color_function,
-                      double d1, double d2) :
-            m_interpolator(&inter),
-            m_gradient_function(&gradient_function),
-            m_color_function(&color_function),
-            m_d1(iround(d1 * gradient_subpixel_scale)),
-            m_d2(iround(d2 * gradient_subpixel_scale))
+        /**
+         * @brief SpanGradient 扫描线渐变的构造函数
+         * @param inter 插值器
+         * @param gradient_function 对应模式计算当前点所处位置的函数
+         * @param color_function 渐变梯度数组
+         * @param distance1  根据模式确定参数内容：放射渐变时为 开始圆半径
+         * @param distance2 根据模式确定参数内容：放射渐变时为 结束圆半径，线性渐变时为起止点的距离
+         */
+        SpanGradient(interpolator_type& inter,
+                     GradientF& gradient_function,
+                     ColorF& color_function,
+                     double distance1, double distance2) :
+            interpolator_(&inter),
+            gradientFunction_(&gradient_function),
+            colorFunction_(&color_function),
+            distance1_(Iround(distance1 * gradient_subpixel_scale)),
+            distance2_(Iround(distance2 * gradient_subpixel_scale))
         {
         }
 
-        void prepare()
+        void Prepare()
         {
         }
 
         /**
-         * @brief generate 从color_function取出rgba赋予span中的rgba
-         * @param span 扫描线
+         * @brief Generate 从colorFunction_取出rgba赋予span中的rgba
+         * @param span 需要填色的扫描线首地址
          * @param x 坐标-x
          * @param y 坐标-y
          * @param len 扫描线长度
          */
-        void generate(color_type* span, int x, int y, unsigned len)
+        void Generate(color_type* span, int x, int y, unsigned len)
         {
-            int downscaleShift = interpolator_type::subpixel_shift - gradient_subpixel_shift;
-            m_interpolator->begin(x + 0.5, y + 0.5, len);
-            for (; len; --len, ++(*m_interpolator))
-            {
-                m_interpolator->coordinates(&x, &y);
-                int index = m_gradient_function->calculate(x >> downscaleShift,
-                                                           y >> downscaleShift,
-                                                           m_d1,
-                                                           m_d2,
-                                                           m_color_function->size());
-                *span++ = (*m_color_function)[index];
+            int downscaleShift = interpolator_type::SUBPIXEL_SHIFT - gradient_subpixel_shift;
+            interpolator_->Begin(x + 0.5, y + 0.5, len);
+            for (; len; --len, ++(*interpolator_)) {
+                interpolator_->Coordinates(&x, &y);
+                int index = gradientFunction_->Calculate(x >> downscaleShift,
+                                                         y >> downscaleShift,
+                                                         distance1_,
+                                                         distance2_,
+                                                         colorFunction_->size());
+                *span++ = (*colorFunction_)[index];
             }
         }
 
     private:
-        interpolator_type* m_interpolator;
-        GradientF* m_gradient_function;
-        ColorF* m_color_function;
-        int m_d1;
-        int m_d2;
+        interpolator_type* interpolator_;
+        GradientF* gradientFunction_;
+        ColorF* colorFunction_;
+        int distance1_;
+        int distance2_;
     };
 
     /**
+     * gradient_function
      * @brief 计算放射渐变时当前(x,y)的color_function 数组下标
+     * @since 1.0
+     * @version 1.0
      */
-    class GradientRadialCalculate
-    {
+    class GradientRadialCalculate {
     public:
         GradientRadialCalculate() :
-            m_r(100 * gradient_subpixel_scale),
-            m_fx(0),
-            m_fy(0)
+            endRadius_(100 * gradient_subpixel_scale),
+            dx_(0),
+            dy_(0)
         {
-            update_values();
+            UpdateValues();
         }
 
-        GradientRadialCalculate(double r, double fx, double fy) :
-            m_r(iround(r * gradient_subpixel_scale)),
-            m_fx(iround(fx * gradient_subpixel_scale)),
-            m_fy(iround(fy * gradient_subpixel_scale))
+        /**
+         * @brief GradientRadialCalculate 构造函数入参
+         * @param endRadius 结束圆半径
+         * @param dx x轴方向上，结束圆圆心到开始圆圆心得距离
+         * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
+         */
+        GradientRadialCalculate(double endRadius, double dx, double dy) :
+            endRadius_(Iround(endRadius * gradient_subpixel_scale)),
+            dx_(Iround(dx * gradient_subpixel_scale)),
+            dy_(Iround(dy * gradient_subpixel_scale))
         {
-            update_values();
+            UpdateValues();
         }
 
         /**
@@ -118,70 +134,77 @@ namespace OHOS
          * @param y 坐标y
          * @param startRadius 开始圆半径
          * @param endRadius 结束圆半径
-         * @param size color_function的size
+         * @param size colorFunction_的size
          * @return
          */
-        int calculate(int x, int y, int startRadius, int endRadius, int size) const
+        int Calculate(int x, int y, int startRadius, int endRadius, int size) const
         {
-            double dx = x - m_fx;
-            double dy = y - m_fy;
-            double m_d2 = dx * m_fy - dy * m_fx;
-            double m_d3 = m_r2 * (dx * dx + dy * dy) - m_d2 * m_d2;
-            int dd = endRadius - startRadius;
-            if (dd < 1)
-                dd = 1;
-            int index = ((iround((dx * m_fx + dy * m_fy + std::sqrt(std::fabs(m_d3))) * m_mul) - startRadius) * size) / dd;
-            if (index < 0)
+            double dx = x - dx_;
+            double dy = y - dy_;
+            double m_distanceRadius = dx * dy_ - dy * dx_;
+            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
+            int deltaRadius = endRadius - startRadius; //半径的差
+            if (deltaRadius < 1) {
+                deltaRadius = 1;
+            }
+            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
+
+            if (index < 0) {
                 index = 0;
-            if (index >= size)
+            }
+            if (index >= size) {
                 index = size - 1;
+            }
             return index;
         }
 
     private:
-        void update_values()
+        /**
+         * @brief 更新m_mul
+         */
+        void UpdateValues()
         {
-            m_r2 = double(m_r) * double(m_r);
-            m_fx2 = double(m_fx) * double(m_fx);
-            m_fy2 = double(m_fy) * double(m_fy);
-            double d = (m_r2 - (m_fx2 + m_fy2));
-            if (d == 0)
-            {
-                if (m_fx)
-                {
-                    if (m_fx < 0)
-                        ++m_fx;
-                    else
-                        --m_fx;
+            endRadiusSquare_ = double(endRadius_) * double(endRadius_);
+            double dxSquare_ = double(dx_) * double(dx_);
+            double dySquare_ = double(dy_) * double(dy_);
+            double dRadius = (endRadiusSquare_ - (dxSquare_ + dySquare_));
+            if (dRadius == 0) {
+                if (dx_) {
+                    if (dx_ < 0) {
+                        ++dx_;
+                    } else {
+                        --dx_;
+                    }
                 }
-                if (m_fy)
-                {
-                    if (m_fy < 0)
-                        ++m_fy;
-                    else
-                        --m_fy;
+                if (dy_) {
+                    if (dy_ < 0) {
+                        ++dy_;
+                    } else {
+                        --dy_;
+                    }
                 }
-                m_fx2 = double(m_fx) * double(m_fx);
-                m_fy2 = double(m_fy) * double(m_fy);
-                d = (m_r2 - (m_fx2 + m_fy2));
+                dxSquare_ = double(dx_) * double(dx_);
+                dySquare_ = double(dy_) * double(dy_);
+                dRadius = (endRadiusSquare_ - (dxSquare_ + dySquare_));
             }
-            m_mul = m_r / d;
+            m_mul = endRadius_ / dRadius;
         }
 
-        int m_r;
-        int m_fx;
-        int m_fy;
-        double m_r2;
-        double m_fx2;
-        double m_fy2;
+        int endRadius_;
+        /** x轴方向上，结束圆圆心到开始圆圆心得距离 */
+        int dx_;
+        /** y轴方向上，结束圆圆心到开始圆圆心得距离 */
+        int dy_;
+        double endRadiusSquare_;
         double m_mul;
     };
 
     /**
      * @brief 计算线性渐变时当前(x,y)的color_function 数组下标
+     * @since 1.0
+     * @version 1.0
      */
-    class GradientLinearCalculate
-    {
+    class GradientLinearCalculate {
     public:
         /**
          * @brief calculate 计算线性渐变时当前(x,y)的color_function 数组下标
@@ -190,15 +213,18 @@ namespace OHOS
          * @param size color_function的size
          * @return
          */
-        static int calculate(int x, int, int, int distance, int size)
+        static int Calculate(int x, int, int, int distance, int size)
         {
-            if (distance < 1)
+            if (distance < 1) {
                 distance = 1;
+            }
             int index = (x * size) / distance;
-            if (index < 0)
+            if (index < 0) {
                 index = 0;
-            if (index >= size)
+            }
+            if (index >= size) {
                 index = size - 1;
+            }
             return index;
         }
     };

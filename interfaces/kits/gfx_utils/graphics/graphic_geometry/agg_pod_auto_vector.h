@@ -17,7 +17,7 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
+ * @brief Defines PodAutoVector.
  *
  * @since 1.0
  * @version 1.0
@@ -30,13 +30,13 @@
 #include <cstring>
 #include "securec.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 /**
- * @file agg_block_allocater.h
+ * @file agg_pod_auto_vector.h
  *
- * @brief Defines PodAutoVectorÊı×é.
+ * @brief Defines PodAutoVectoræ•°ç»„.
  *
  * @since 1.0
  * @version 1.0
@@ -44,18 +44,18 @@ namespace OHOS {
 
 /**
  *
- * @brief Defines PodAutoVector,Ôö¼ÓÁË¿ÉÒÔÔöÉ¾¸ÄµÄ·½·¨£¬×î´óÈİÁ¿¹Ì¶¨.
+ * @brief Defines PodAutoVector,å¢åŠ äº†å¯ä»¥å¢åˆ æ”¹çš„æ–¹æ³•ï¼Œæœ€å¤§å®¹é‡å›ºå®š.
  *
  * @since 1.0
  * @version 1.0
  */
-template <class T, unsigned Size> 
+template <class T, unsigned SizeN>
 class PodAutoVector : public HeapBase {
 public:
     using ValueType = T;
-    using SelfType = PodAutoVector<T, Size>;
+    using SelfType = PodAutoVector<T, SizeN>;
     /**
-     * @brief ¹¹ÔìÒ»¸öPodAutoVector.
+     * @brief æ„é€ ä¸€ä¸ªPodAutoVector.
      * 
      * @since 1.0
      * @version 1.0
@@ -63,7 +63,7 @@ public:
     PodAutoVector() : size_(0) {}
 
      /**
-     * @brief Çå¿ÕÔªËØ.
+     * @brief æ¸…ç©ºå…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -73,7 +73,7 @@ public:
         size_ = 0;
     }
     /**
-     * @brief Çå¿ÕÔªËØ.
+     * @brief æ¸…ç©ºå…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -83,7 +83,7 @@ public:
         size_ = 0;
     }
     /**
-     * @brief Ôö¼ÓÒ»¸öÔªËØ.
+     * @brief å¢åŠ ä¸€ä¸ªå…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -93,7 +93,7 @@ public:
         data_[size_++] = val;
     }
     /**
-     * @brief Æ«ÒÆÊı×éÊ×µØÖ·.
+     * @brief åç§»æ•°ç»„é¦–åœ°å€.
      * 
      * @since 1.0
      * @version 1.0
@@ -103,7 +103,7 @@ public:
         data_ += size;
     }
     /**
-     * @brief Ôö¼ÓÒ»¸öÔªËØ.
+     * @brief å¢åŠ ä¸€ä¸ªå…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -113,7 +113,7 @@ public:
         data_[size_++] = val;
     }
     /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
+     * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -123,7 +123,7 @@ public:
         return data_[index];
     }
     /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
+     * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -133,7 +133,7 @@ public:
         return data_[index];
     }
     /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
+     * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -143,7 +143,7 @@ public:
         return data_[index];
     }
     /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
+     * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -153,7 +153,7 @@ public:
         return data_[index];
     }
     /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
+     * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
      * 
      * @since 1.0
      * @version 1.0
@@ -163,7 +163,7 @@ public:
         return data_[index];
     }
     /**
-     * @brief »ñÈ¡ÔªËØ¸öÊı.
+     * @brief è·å–å…ƒç´ ä¸ªæ•°.
      * 
      * @since 1.0
      * @version 1.0
@@ -174,7 +174,8 @@ public:
     }
 
 private:
-    T data_[Size];  //±£´æÔªËØµÄÊı×é
-    unsigned size_; //ÔªËØÊıÁ¿
+    T data_[SizeN];  //ä¿å­˜å…ƒç´ çš„æ•°ç»„
+    unsigned size_; //å…ƒç´ æ•°é‡
 };
 }
+#endif

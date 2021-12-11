@@ -30,13 +30,13 @@
 #include <cstring>
 #include "securec.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 
 namespace OHOS {
 /**
  * @file agg_block_allocater.h
  *
- * @brief Defines BlockAllocator,ÉêÇëÁ¬ĞøµÄÄÚ´æ¿é.
+ * @brief Defines BlockAllocator,ç”³è¯·è¿ç»­çš„å†…å­˜å—.
  *
  * @since 1.0
  * @version 1.0
@@ -50,7 +50,7 @@ class BlockAllocator : public HeapBase {
 public:
     /**
      *
-     * @brief Defines ÊÍ·ÅËùÓĞÄÚ´æ¿é.
+     * @brief Defines é‡Šæ”¾æ‰€æœ‰å†…å­˜å—.
      *
      * @since 1.0
      * @version 1.0
@@ -64,8 +64,8 @@ public:
 
     /**
      *
-     * @brief Defines ¹¹ÔìÒ»¸öBlockAllocator.
-     * @param blockSize ×Ü´óĞ¡£¬blockPtrInc Ã¿Ò»¿éÄÚ´æÖ¸ÕëµÄÔö³¤Öµ
+     * @brief Defines æ„é€ ä¸€ä¸ªBlockAllocator.
+     * @param blockSize æ€»å¤§å°ï¼ŒblockPtrInc æ¯ä¸€å—å†…å­˜å¤§å°
      * @since 1.0
      * @version 1.0
      */
@@ -82,8 +82,8 @@ public:
 
     /**
      *
-     * @brief Defines ÉêÇëÄÚ´æ¿é.
-     * @param size ĞèÒªµÄ´óĞ¡
+     * @brief Defines ç”³è¯·å†…å­˜å—.
+     * @param size éœ€è¦çš„å¤§å°
      * @since 1.0
      * @version 1.0
      */
@@ -92,15 +92,15 @@ public:
 private:
     void AllocateBlock(unsigned size);
 
-    unsigned blockSize_;    //×Ü´óĞ¡
-    unsigned blockPtrInc_;  //Ôö³¤Öµ,Ã¿¸ö¿éµÄ´óĞ¡
-    unsigned numBlocks_;    //¿éÊı
-    unsigned maxBlocks_;    //×î´ó¿éÊı
-    BlockType* blocks_;     //Ã¿Ò»¿éµÄÊı¾İÀàĞÍ¼°´óĞ¡
-    int8u* bufPtr_;         //Êı¾İÖ¸Õë
-    unsigned rest_;         //ÖØÖÃ±êÖ¾
+    unsigned blockSize_;    //æ€»å¤§å°
+    unsigned blockPtrInc_;  //å¢é•¿å€¼,æ¯ä¸ªå—çš„å¤§å°
+    unsigned numBlocks_;    //å—æ•°
+    unsigned maxBlocks_;    //æœ€å¤§å—æ•°
+    BlockType* blocks_;     //æ¯ä¸€å—çš„æ•°æ®ç±»å‹åŠå¤§å°
+    int8u* bufPtr_;         //æ•°æ®æŒ‡é’ˆ
+    unsigned rest_;         //é‡ç½®æ ‡å¿—
 };
 
 }
 
-#include "agg_block_allocater.cpp"
+#endif

@@ -1,194 +1,110 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Affine transformations
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
 
-
-
-namespace OHOS
-{
+namespace OHOS {
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::parl_to_parl(const double* src, 
-                                                   const double* dst)
+    const TransAffine& TransAffine::ParlToParl(const double* src,
+                                               const double* dst)
     {
-        sx  = src[2] - src[0];
-        shy = src[3] - src[1];
-        shx = src[4] - src[0];
-        sy  = src[5] - src[1];
-        tx  = src[0];
-        ty  = src[1];
-        invert();
-        multiply(trans_affine(dst[2] - dst[0], dst[3] - dst[1], 
-                              dst[4] - dst[0], dst[5] - dst[1],
-                              dst[0], dst[1]));
+        scaleX = src[2] - src[0];
+        shearY = src[3] - src[1];
+        shearX = src[4] - src[0];
+        scaleY = src[5] - src[1];
+        translateX = src[0];
+        translateY = src[1];
+        Invert();
+        Multiply(TransAffine(dst[2] - dst[0], dst[3] - dst[1],
+                             dst[4] - dst[0], dst[5] - dst[1],
+                             dst[0], dst[1]));
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::rect_to_parl(double x1, double y1, 
-                                                   double x2, double y2, 
-                                                   const double* parl)
+    const TransAffine& TransAffine::RectToParl(double x1, double y1,
+                                               double x2, double y2,
+                                               const double* parl)
     {
         double src[6];
-        src[0] = x1; src[1] = y1;
-        src[2] = x2; src[3] = y1;
-        src[4] = x2; src[5] = y2;
-        parl_to_parl(src, parl);
+        src[0] = x1;
+        src[1] = y1;
+        src[2] = x2;
+        src[3] = y1;
+        src[4] = x2;
+        src[5] = y2;
+        ParlToParl(src, parl);
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::parl_to_rect(const double* parl, 
-                                                   double x1, double y1, 
-                                                   double x2, double y2)
+    const TransAffine& TransAffine::Multiply(const TransAffine& m)
     {
-        double dst[6];
-        dst[0] = x1; dst[1] = y1;
-        dst[2] = x2; dst[3] = y1;
-        dst[4] = x2; dst[5] = y2;
-        parl_to_parl(parl, dst);
+        double t0 = scaleX * m.scaleX + shearY * m.shearX;
+        double t2 = shearX * m.scaleX + scaleY * m.shearX;
+        double t4 = translateX * m.scaleX + translateY * m.shearX + m.translateX;
+        shearY = scaleX * m.shearY + shearY * m.scaleY;
+        scaleY = shearX * m.shearY + scaleY * m.scaleY;
+        translateY = translateX * m.shearY + translateY * m.scaleY + m.translateY;
+        scaleX = t0;
+        shearX = t2;
+        translateX = t4;
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::multiply(const trans_affine& m)
+    const TransAffine& TransAffine::Invert()
     {
-        double t0 = sx  * m.sx + shy * m.shx;
-        double t2 = shx * m.sx + sy  * m.shx;
-        double t4 = tx  * m.sx + ty  * m.shx + m.tx;
-        shy = sx  * m.shy + shy * m.sy;
-        sy  = shx * m.shy + sy  * m.sy;
-        ty  = tx  * m.shy + ty  * m.sy + m.ty;
-        sx  = t0;
-        shx = t2;
-        tx  = t4;
-        return *this;
-    }
+        double d = DeterminantReciprocal();
 
+        double t0 = scaleY * d;
+        scaleY = scaleX * d;
+        shearY = -shearY * d;
+        shearX = -shearX * d;
 
-    //------------------------------------------------------------------------
-    const trans_affine& trans_affine::invert()
-    {
-        double d  = determinant_reciprocal();
+        double t4 = -translateX * t0 - translateY * shearX;
+        translateY = -translateX * shearY - translateY * scaleY;
 
-        double t0  =  sy  * d;
-               sy  =  sx  * d;
-               shy = -shy * d;
-               shx = -shx * d;
-
-        double t4 = -tx * t0  - ty * shx;
-               ty = -tx * shy - ty * sy;
-
-        sx = t0;
-        tx = t4;
-        return *this;
-    }
-
-
-   //------------------------------------------------------------------------
-    const trans_affine& trans_affine::flip_x()
-    {
-        sx  = -sx;
-        shy = -shy;
-        tx  = -tx;
+        scaleX = t0;
+        translateX = t4;
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::flip_y()
+    const TransAffine& TransAffine::Reset()
     {
-        shx = -shx;
-        sy  = -sy;
-        ty  = -ty;
+        scaleX = scaleY = 1.0;
+        shearY = shearX = translateX = translateY = 0.0;
         return *this;
     }
 
     //------------------------------------------------------------------------
-    const trans_affine& trans_affine::reset()
+    bool TransAffine::IsIdentity(double epsilon) const
     {
-        sx  = sy  = 1.0; 
-        shy = shx = tx = ty = 0.0;
-        return *this;
+        return IsEqualEps(scaleX, 1.0, epsilon) &&
+               IsEqualEps(shearY, 0.0, epsilon) &&
+               IsEqualEps(shearX, 0.0, epsilon) &&
+               IsEqualEps(scaleY, 1.0, epsilon) &&
+               IsEqualEps(translateX, 0.0, epsilon) &&
+               IsEqualEps(translateY, 0.0, epsilon);
     }
 
     //------------------------------------------------------------------------
-    bool trans_affine::is_identity(double epsilon) const
+    bool TransAffine::IsValid(double epsilon) const
     {
-        return is_equal_eps(sx,  1.0, epsilon) &&
-               is_equal_eps(shy, 0.0, epsilon) &&
-               is_equal_eps(shx, 0.0, epsilon) && 
-               is_equal_eps(sy,  1.0, epsilon) &&
-               is_equal_eps(tx,  0.0, epsilon) &&
-               is_equal_eps(ty,  0.0, epsilon);
+        return std::fabs(scaleX) > epsilon && std::fabs(scaleY) > epsilon;
     }
 
-    //------------------------------------------------------------------------
-    bool trans_affine::is_valid(double epsilon) const
-    {
-        return std::fabs(sx) > epsilon && std::fabs(sy) > epsilon;
-    }
-
-    //------------------------------------------------------------------------
-    bool trans_affine::is_equal(const trans_affine& m, double epsilon) const
-    {
-        return is_equal_eps(sx,  m.sx,  epsilon) &&
-               is_equal_eps(shy, m.shy, epsilon) &&
-               is_equal_eps(shx, m.shx, epsilon) && 
-               is_equal_eps(sy,  m.sy,  epsilon) &&
-               is_equal_eps(tx,  m.tx,  epsilon) &&
-               is_equal_eps(ty,  m.ty,  epsilon);
-    }
-
-    //------------------------------------------------------------------------
-    double trans_affine::rotation() const
-    {
-        double x1 = 0.0;
-        double y1 = 0.0;
-        double x2 = 1.0;
-        double y2 = 0.0;
-        transform(&x1, &y1);
-        transform(&x2, &y2);
-        return std::atan2(y2-y1, x2-x1);
-    }
-
-    //------------------------------------------------------------------------
-    void trans_affine::translation(double* dx, double* dy) const
-    {
-        *dx = tx;
-        *dy = ty;
-    }
-
-    //------------------------------------------------------------------------
-    void trans_affine::scaling(double* x, double* y) const
-    {
-        double x1 = 0.0;
-        double y1 = 0.0;
-        double x2 = 1.0;
-        double y2 = 1.0;
-        trans_affine t(*this);
-        t *= trans_affine_rotation(-rotation());
-        t.transform(&x1, &y1);
-        t.transform(&x2, &y2);
-        *x = x2 - x1;
-        *y = y2 - y1;
-    }
-
-
-}
-
+} // namespace OHOS

@@ -20,27 +20,28 @@
 namespace OHOS {
 Arc::Arc(double centerX, double centerY,
          double rx, double ry,
-         double a1, double a2,
-         bool ccw)
+         double start_, double end_,
+         bool isClockwise)
     : centerX_(centerX), centerY_(centerY), rx_(rx), ry_(ry), scale_(1.0)
 {
-    Normalize(a1, a2, ccw);
+    Normalize(start_, end_, isClockwise);
 }
 
 void Arc::ApproximationScale(double sale)
 {
     scale_ = sale;
     if (initialized_) {
-        Normalize(start_, end_, ccw_);
+        Normalize(start_, end_, isClockwise_);
     }
 }
 
 unsigned Arc::Vertex(double* x, double* y)
 {
+    //当前命令是结束点没有顶点
     if (IsStop(pathCmd_)) {
         return PATH_CMD_STOP;
     }
-    if ((angle_ < end_ - da_ / 4) != ccw_) {
+    if ((angle_ < end_ - delatAngle_ / 4) != isClockwise_) {
         *x = centerX_ + std::cos(end_) * rx_;
         *y = centerY_ + std::sin(end_) * ry_;
         pathCmd_ = PATH_CMD_STOP;
@@ -50,7 +51,7 @@ unsigned Arc::Vertex(double* x, double* y)
     *x = centerX_ + std::cos(angle_) * rx_;
     *y = centerY_ + std::sin(angle_) * ry_;
 
-    angle_ += da_;
+    angle_ += delatAngle_;
 
     unsigned pf = pathCmd_;
     pathCmd_ = PATH_CMD_LINE_TO;
@@ -63,32 +64,33 @@ void Arc::Rewind(unsigned)
     angle_ = start_;
 }
 
-void Arc::Normalize(double angle1, double angle2, bool ccw)
-{
+void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
+{   
+    const double aa = 0.125;
     double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
-    da_ = std::acos(ra / (ra + 0.125 / scale_)) * 2;
-    if (ccw) {
-        while (angle2 < angle1) {
-            angle2 += PI * 2.0;
+    delatAngle_ = std::acos(ra / (ra + 0.125 / scale_)) * 2;//计算出弧度变化率
+    if (isClockwise) {
+        while (endAngle < startAngle) {
+            endAngle += PI * 2.0;
         }
     } else {
-        while (angle1 < angle2) {
-            angle1 += PI * 2.0;
+        while (startAngle < endAngle) {
+            startAngle += PI * 2.0;
         }
-        da_ = -da_;
+        delatAngle_ = -delatAngle_;
     }
-    ccw_ = ccw;
-    start_ = angle1;
-    end_ = angle2;
+    isClockwise_ = isClockwise;
+    start_ = startAngle;
+    end_ = endAngle;
     initialized_ = true;
 }
 
-void Arc::Init(double centerX, double centerY, double rx, double ry, double angle1, double angle2, bool ccw)
+void Arc::Init(double centerX, double centerY, double rx, double ry, double startAngle, double endAngle, bool isClockwise)
 {
     centerX_ = centerX;
     centerY_ = centerY;
     rx_ = rx;
     ry_ = ry;
-    Normalize(angle1, angle2, ccw);
+    Normalize(startAngle, endAngle, isClockwise);
 }
 } // namespace OHOS

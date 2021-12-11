@@ -17,302 +17,393 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
+ * @brief Defines PodVector.
  *
  * @since 1.0
  * @version 1.0
  */
 
-#ifndef GRAPHIC_GEOMETRY_POS_VECTOR_INCLUDED
-#define GRAPHIC_GEOMETRY_POS_VECTOR_INCLUDED
+#ifndef GRAPHIC_GEOMETRY_POD_VECTOR_INCLUDED
+#define GRAPHIC_GEOMETRY_POD_VECTOR_INCLUDED
 
 #include <cstddef>
 #include <cstring>
-#include "securec.h"
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
+#include "securec.h"
 
 namespace OHOS {
-/**
- * @file graphic_geometry_arc.h
- *
- * @brief Defines PodVector£¬Ìá¹©ÁËĞòÁĞ»¯Óë·´ĞòÁĞ»¯µÄ·½·¨.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class T> 
-class PodVector : public HeapBase {
-public:
-    using ValueType = T;
+    /**
+     * @file agg_pod_vector.h
+     *
+     * @brief Defines PodVectorï¼Œæä¾›äº†åºåˆ—åŒ–ä¸ååºåˆ—åŒ–çš„æ–¹æ³•.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T>
+    class PodVector : public HeapBase {
+    public:
+        using ValueType = T;
 
-    PodVector() : size_(0), capacity_(0), data_(nullptr) {}
+        PodVector() :
+            size_(0), capacity_(0), data_(0)
+        {}
 
-    /**
-     *
-     * @brief ¹¹ÔìÒ»¸öPodVector.
-     * @param cap ÈİÁ¿,extraTail 
-     * @since 1.0
-     * @version 1.0
-     */
-    PodVector(unsigned cap, unsigned extraTail = 0);
+        /**
+         *
+         * @brief æ„é€ ä¸€ä¸ªPodVector.
+         * @param cap å®¹é‡,extraTail
+         * @since 1.0
+         * @version 1.0
+         */
+        PodVector(unsigned cap, unsigned extraTail = 0);
 
-    PodVector(const PodVector<T>&);
+        PodVector(const PodVector<T>&);
 
-    ~PodVector()
-    {
-        ArrAllocator<T>::Deallocate(data_, capacity_);
-    }
+        ~PodVector()
+        {
+            ArrAllocator<T>::Deallocate(data_, capacity_);
+        }
 
-    const PodVector<T>& operator=(const PodVector<T>&);
+        const PodVector<T>& operator=(const PodVector<T>&);
 
-    /**
-     *
-     * @brief ÉèÖÃÈİÁ¿.
-     * @since 1.0
-     * @version 1.0
-     */
-    void Capacity(unsigned cap, unsigned extraTail = 0);
+        /**
+         *
+         * @brief è®¾ç½®å®¹é‡.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Capacity(unsigned cap, unsigned extraTail = 0);
 
-    /**
-     *
-     * @brief »ñÈ¡µ±Ç°ÈİÁ¿.
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned Capacity() const
-    {
-        return capacity_;
-    }
-    /**
-     *
-     * @brief ÉêÇëÄÚ´æ.
-     * @param size ÈİÁ¿,extraTail À©Õ¹ÈİÁ¿
-     * @since 1.0
-     * @version 1.0
-     */
-    void Allocate(unsigned size, unsigned extraTail = 0);
-    /**
-     *
-     * @brief Êı×éÀ©Èİ.
-     * @param Ö¸¶¨ĞÂÈİÁ¿
-     * @since 1.0
-     * @version 1.0
-     */
-    void Resize(unsigned newSize);
+        /**
+         *
+         * @brief è·å–å½“å‰å®¹é‡.
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned Capacity() const
+        {
+            return capacity_;
+        }
+        /**
+         *
+         * @brief ç”³è¯·å†…å­˜.
+         * @param size å®¹é‡,extraTail æ‰©å±•å®¹é‡
+         * @since 1.0
+         * @version 1.0
+         */
+        void Allocate(unsigned size, unsigned extraTail = 0);
+        /**
+         *
+         * @brief æ•°ç»„æ‰©å®¹.
+         * @param æŒ‡å®šæ–°å®¹é‡
+         * @since 1.0
+         * @version 1.0
+         */
+        void Resize(unsigned newSize);
 
-    /**
-     *
-     * @brief °ÑÊı¾İÈ«ÉèÖÃÎª0.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Zero()
-    {
-        std::memset_s(data_, sizeof(T) * size_, 0, sizeof(T) * size_);
-    }
-    /**
-     *
-     * @brief Ä©Î²Ôö¼ÓÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Add(const T& val)
-    {
-        data_[size_++] = val;
-    }
-    /**
-     *
-     * @brief Ä©Î²Ôö¼ÓÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void PushBack(const T& val)
-    {
-        data_[size_++] = val;
-    }
-    /**
-     *
-     * @brief Ö¸¶¨Î»ÖÃ²åÈëÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void InsertAt(unsigned pos, const T& val);
+        /**
+         *
+         * @brief æŠŠæ•°æ®å…¨è®¾ç½®ä¸º0.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CleanData()
+        {
+            memset_s(data_, sizeof(T) * size_, 0, sizeof(T) * size_);
+        }
+        /**
+         *
+         * @brief æœ«å°¾å¢åŠ å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Add(const T& val)
+        {
+            data_[size_++] = val;
+        }
+        /**
+         *
+         * @brief æœ«å°¾å¢åŠ å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void PushBack(const T& val)
+        {
+            data_[size_++] = val;
+        }
+        /**
+         *
+         * @brief æŒ‡å®šä½ç½®æ’å…¥å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void InsertAt(unsigned pos, const T& val);
 
-    /**
-     *
-     * @brief Ôö¼ÓÈİÁ¿.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void IncSize(unsigned size)
-    {
-        size_ += size;
-    }
-    /**
-     *
-     * @brief »ñÈ¡ÈİÁ¿.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned Size() const
-    {
-        return size_;
-    }
+        /**
+         *
+         * @brief å¢åŠ å®¹é‡.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void IncSize(unsigned size)
+        {
+            size_ += size;
+        }
+        /**
+         *
+         * @brief è·å–å®¹é‡.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned Size() const
+        {
+            return size_;
+        }
 
-    /**
-     *
-     * @brief »ñÈ¡Êı¾İ×Ö½ÚÊı.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned ByteSize() const
-    {
-        return size_ * sizeof(T);
-    }
+        /**
+         *
+         * @brief è·å–æ•°æ®å­—èŠ‚æ•°.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned ByteSize() const
+        {
+            return size_ * sizeof(T);
+        }
 
-    /**
-     *
-     * @brief °ÑptrÖ¸ÏòµÄÊı¾İĞòÁĞ»¯µ½Êı×é.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Serialize(int8u* ptr) const;
+        /**
+         *
+         * @brief æŠŠptræŒ‡å‘çš„æ•°æ®åºåˆ—åŒ–åˆ°æ•°ç»„.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Serialize(int8u* ptr) const;
 
-    /**
-     *
-     * @brief °ÑÊı×é·´ĞòÁĞ»¯µ½data.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Deserialize(const int8u* data, unsigned byteSize);
-    /**
-     *
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& operator[](unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     *
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    T& operator[](unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     *
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& IndexAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     *
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    T& IndexAt(unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     *
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    T ValueAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     *
-     * @brief É¾³ıËùÓĞÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    const T* Data() const
-    {
-        return data_;
-    }
+        /**
+         *
+         * @brief æŠŠæ•°ç»„ååºåˆ—åŒ–åˆ°data.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Deserialize(const int8u* data, unsigned byteSize);
+        /**
+         *
+         * @brief è·å–æŒ‡å®šç´¢å¼•å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& operator[](unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         *
+         * @brief è·å–æŒ‡å®šç´¢å¼•å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& operator[](unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         *
+         * @brief è·å–æŒ‡å®šç´¢å¼•å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& IndexAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         *
+         * @brief è·å–æŒ‡å®šç´¢å¼•å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& IndexAt(unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         *
+         * @brief è·å–æŒ‡å®šç´¢å¼•å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T ValueAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         *
+         * @brief è·å–æ•°ç»„æŒ‡é’ˆ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T* Data() const
+        {
+            return data_;
+        }
 
-    /**
-     *
-     * @brief »ñÈ¡Êı×éÖ¸Õë.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    T* Data()
-    {
-        return data_;
-    }
+        /**
+         *
+         * @brief è·å–æ•°ç»„æŒ‡é’ˆ.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T* Data()
+        {
+            return data_;
+        }
 
-    /**
-     *
-     * @brief ÖØÖÃÈİÁ¿.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void CutAt(unsigned num)
+        /**
+         *
+         * @brief é‡ç½®å®¹é‡.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void CutAt(unsigned num)
+        {
+            if (num < size_) {
+                size_ = num;
+            }
+        }
+        /**
+         *
+         * @brief åˆ é™¤æ‰€æœ‰å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void RemoveAll()
+        {
+            size_ = 0;
+        }
+        /**
+         *
+         * @brief åˆ é™¤æ‰€æœ‰å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void Clear()
+        {
+            size_ = 0;
+        }
+
+    private:
+        unsigned size_;
+        unsigned capacity_;
+        T* data_;
+    };
+
+    template <class T>
+    void PodVector<T>::Capacity(unsigned cap, unsigned extraTail)
     {
-        if (num < size_) {
-            size_ = num;
+        size_ = 0;
+        if (cap > capacity_) {
+            ArrAllocator<T>::Deallocate(data_, capacity_);
+            capacity_ = cap + extraTail;
+            data_ = capacity_ ? ArrAllocator<T>::Allocate(capacity_) : 0;
         }
     }
-    /**
-     *
-     * @brief É¾³ıËùÓĞÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void RemoveAll()
+
+    template <class T>
+    void PodVector<T>::Allocate(unsigned size, unsigned extraTail)
     {
-        size_ = 0;
-    }
-    /**
-     *
-     * @brief É¾³ıËùÓĞÔªËØ.
-     *
-     * @since 1.0
-     * @version 1.0
-     */
-    void Clear()
-    {
-        size_ = 0;
+        Capacity(size, extraTail);
+        size_ = size;
     }
 
-private:
-    unsigned size_;
-    unsigned capacity_;
-    T* data_;
-};
-}
+    template <class T>
+    void PodVector<T>::Resize(unsigned newSize)
+    {
+        if (newSize > size_) {
+            if (newSize > capacity_) {
+                T* data = ArrAllocator<T>::Allocate(newSize);
+                memcpy_s(data, newSize, data_, size_ * sizeof(T));
+                ArrAllocator<T>::Deallocate(data_, capacity_);
+                data_ = data;
+            }
+        } else {
+            size_ = newSize;
+        }
+    }
+
+    template <class T>
+    PodVector<T>::PodVector(unsigned cap, unsigned extraTail) :
+        size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
+    {
+    }
+
+    template <class T>
+    PodVector<T>::PodVector(const PodVector<T>& v) :
+        size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
+    {
+        memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
+    }
+
+    template <class T>
+    const PodVector<T>& PodVector<T>::operator=(const PodVector<T>& val)
+    {
+        Allocate(val.size_);
+        if (val.size_) {
+            memcpy_s(data_, sizeof(T) * val.size_, val.data_, sizeof(T) * val.size_);
+        }
+        return *this;
+    }
+
+    template <class T>
+    void PodVector<T>::Deserialize(const int8u* data, unsigned byteSize)
+    {
+        byteSize = byteSize / sizeof(T);
+        Allocate(byteSize);
+        if (byteSize) {
+            memcpy_s(data_, byteSize * sizeof(T), data, byteSize * sizeof(T));
+        }
+    }
+
+    template <class T>
+    void PodVector<T>::Serialize(int8u* ptr) const
+    {
+        if (size_) {
+            memcpy_s(ptr, size_ * sizeof(T), data_, size_ * sizeof(T));
+        }
+    }
+
+    template <class T>
+    void PodVector<T>::InsertAt(unsigned pos, const T& val)
+    {
+        if (pos >= size_) {
+            data_[size_] = val;
+        } else {
+            memmove_s(data_ + pos + 1, (size_ - pos) * sizeof(T), data_ + pos, (size_ - pos) * sizeof(T));
+            data_[pos] = val;
+        }
+        ++size_;
+    }
+
+} // namespace OHOS
+#endif

@@ -28,149 +28,157 @@
 
 #include <cstddef>
 #include <cstring>
-#include "securec.h"
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
+#include "securec.h"
 namespace OHOS {
 
-/**
- * @file graphic_geometry_arc.h
- *
- * @brief Defines PodArrayÊı×é,ÈİÁ¿¿É±ä.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class T> class PodArray : public HeapBase {
-public:
-    using ValueType = T;
-    using SelfType = PodArray<T>;
-
-    ~PodArray()
-    {
-        ArrAllocator<T>::Deallocate(data_, size_);
-    }
-
-    PodArray() : data_(0), size_(0) {}
     /**
+     * @file agg_pod_array.h
      *
-     * @brief ¹¹ÔìDefines PodArrayÊı×é.
-     * @param size ³õÊ¼ÈİÁ¿
-     * @since 1.0
-     * @version 1.0
-     */
-    PodArray(unsigned size) : data_(ArrAllocator<T>::Allocate(size)), size_(size) {}
-
-    PodArray(const SelfType& v) : data_(ArrAllocator<T>::Allocate(v.size_)), size_(v.size_)
-    {
-        std::memcpy_s(data_, sizeof(T) * size_, v.data_, sizeof(T) * size_);
-    }
-
-    const SelfType& operator=(const SelfType& v)
-    {
-        Resize(v.size());
-        std::memcpy_s(data_, sizeof(T) * size_, v.data_, sizeof(T) * size_);
-        return *this;
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& operator[](unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& operator[](unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T ValueAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& IndexAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& IndexAt(unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡ÔªËØÊ×µØÖ·.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T* Data() const
-    {
-        return data_;
-    }
-    /**
-     * @brief »ñÈ¡ÔªËØÊ×µØÖ·.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T* Data()
-    {
-        return data_;
-    }
-
-    /**
+     * @brief Defines PodArrayæ•°ç»„,å®¹é‡å¯å˜.
      *
-     * @brief ĞŞ¸ÄDefines PodArrayÊı×éÈİÁ¿.
-     * @param size ÈİÁ¿
      * @since 1.0
      * @version 1.0
      */
-    void Resize(unsigned size)
-    {
-        if (size != size_) {
-            pod_allocator<T>::Deallocate(data_, size_);
-            data_ = ArrAllocator<T>::Allocate(size_ = size);
+    template <class T>
+    class PodArray : public HeapBase {
+    public:
+        using ValueType = T;
+        using SelfType = PodArray<T>;
+
+        ~PodArray()
+        {
+            ArrAllocator<T>::Deallocate(data_, size_);
         }
-    }
-    /**
-     * @brief »ñÈ¡ÔªËØ¸öÊı.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned Size() const
-    {
-        return size_;
-    }
 
-private:
-    T* data_;
-    unsigned size_;
-};
+        PodArray() :
+            data_(0), size_(0)
+        {}
+        /**
+         *
+         * @brief æ„é€ Defines PodArrayæ•°ç»„.
+         * @param size åˆå§‹å®¹é‡
+         * @since 1.0
+         * @version 1.0
+         */
+        PodArray(unsigned size) :
+            data_(ArrAllocator<T>::Allocate(size)), size_(size)
+        {}
 
-}
+        PodArray(const SelfType& podArray) :
+            data_(ArrAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
+        {
+            memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
+        }
+
+        const SelfType& operator=(const SelfType& podArray)
+        {
+            Resize(podArray.Size());
+            memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
+            return *this;
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& operator[](unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& operator[](unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T ValueAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& IndexAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& IndexAt(unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–å…ƒç´ é¦–åœ°å€.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T* Data() const
+        {
+            return data_;
+        }
+        /**
+         * @brief è·å–å…ƒç´ é¦–åœ°å€.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T* Data()
+        {
+            return data_;
+        }
+
+        /**
+         *
+         * @brief ä¿®æ”¹Defines PodArrayæ•°ç»„å®¹é‡.
+         * @param size å®¹é‡
+         * @since 1.0
+         * @version 1.0
+         */
+        void Resize(unsigned size)
+        {
+            if (size != size_) {
+                ArrAllocator<T>::Deallocate(data_, size_);
+                data_ = ArrAllocator<T>::Allocate(size_ = size);
+            }
+        }
+        /**
+         * @brief è·å–å…ƒç´ ä¸ªæ•°.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned Size() const
+        {
+            return size_;
+        }
+
+    private:
+        T* data_;
+        unsigned size_;
+    };
+
+} // namespace OHOS
+#endif

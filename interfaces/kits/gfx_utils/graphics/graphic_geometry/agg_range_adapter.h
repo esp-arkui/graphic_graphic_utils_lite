@@ -30,206 +30,332 @@
 #include <cstring>
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 #include "securec.h"
 
 namespace OHOS {
 
-enum QuickSortThresholdEnum
-{
-    QUICK_SORT_THRESHOLD = 9
-};
+    const int QUICK_SORT_THRESHOLD = 9;
 
-/**
-*
-* @brief µÚÒ»¸öÊıÊÇ·ñ´óÓÚµÚ¶ş¸öÊı.
-* @since 1.0
-* @version 1.0
-*/
-inline bool IntLess(int a, int b)
-{
-    return a < b;
-}
-/**
-*
-* @brief µÚÒ»¸öÊıÊÇ·ñ´óÓÚµÚ¶ş¸öÊı.
-* @since 1.0
-* @version 1.0
-*/
-inline bool IntGreater(int a, int b)
-{
-    return a > b;
-}
-/**
-*
-* @brief µÚÒ»¸öÊıÊÇ·ñĞ¡ÓÚµÚ¶ş¸öÊı.
-* @since 1.0
-* @version 1.0
-*/
-inline bool UnsignedLess(unsigned a, unsigned b)
-{
-    return a < b;
-}
-
-/**
-*
-* @brief µÚÒ»¸öÊıÊÇ·ñ´óÓÚµÚ¶ş¸öÊı.
-* @since 1.0
-* @version 1.0
-*/
-inline bool UnsignedGreater(unsigned a, unsigned b)
-{
-    return a > b;
-}
-/**
-*
-* @brief ½»»»Êı¾İ.
-* @since 1.0
-* @version 1.0
-*/
-template <class T>
-inline void SwapElements(T& val1, T& val2)
-{
-    T t = val1;
-    val1 = val2;
-    val2 = t;
-}
-/**
-*
-* @brief ¿ìËÙÅÅĞòËã·¨.
-* @param arr ÒªÅÅĞòµÄÊı×é,less ÅÅĞòÌõ¼ş
-* @since 1.0
-* @version 1.0
-*/
-template <class Array, class Less>
-void QuickSort(Array& arr, Less less);
-
-/**
-*
-* @brief ¸ù¾İÖ¸¶¨Ìõ¼şÖ¸¶¨Ìõ¼şÉ¾³ıÖØ¸´µÄÔªËØ.
-* 
-* @param arr Ö¸¶¨Êı×é,equal Ö¸¶¨Ìõ¼ş
-* @since 1.0
-* @version 1.0
-*/
-template <class Array, class Equal>
-unsigned RemoveDuplicates(Array& arr, Equal equal);
-
-/**
-*
-* @brief ·´×ªÒ»¸öÊı×é.
-*
-* @since 1.0
-* @version 1.0
-*/
-template <class Array>
-void InvertContainer(Array& arr)
-{
-    int i = 0;
-    int j = arr.size() - 1;
-    while (i < j) {
-        SwapElements(arr[i++], arr[j--]);
-    }
-}
-
-/**
-*
-* @brief ¶ş·Ö·¨²éÕÒËã·¨.
-*
-* @since 1.0
-* @version 1.0
-*/
-template <class Array, class Value, class Less>
-unsigned BinarySearchPos(const Array& arrData, const Value& val, Less less);
-
-/**
-*
-* @brief ´ÓarrayµÄÖ¸¶¨Î»ÖÃÆğ·ÅÈëµ½RangeAdaptor.
-* @since 1.0
-* @version 1.0
-*/
-template <class Array>
-class RangeAdaptor : public HeapBase {
-public:
-    using ValueType = typename Array::ValueType;
     /**
     *
-    * @brief Ê¹ÓÃÒ»¸öÊı×é¹¹ÔìRangeAdaptor.
-    * @param array Ö¸¶¨Êı×é,start Ö¸¶¨ÆğÊ¼Î»ÖÃ, size Ö¸¶¨´óĞ¡
+    * @brief ç¬¬ä¸€ä¸ªæ•°æ˜¯å¦å°äºç¬¬äºŒä¸ªæ•°.
     * @since 1.0
     * @version 1.0
     */
-    RangeAdaptor(Array& array, unsigned start, unsigned size)
-        : data_(array), start_(start), size_(size)
-    {}
-    /**
-    *
-    * @brief »ñÈ¡Ö¸¶¨µÄ´óĞ¡.
-    * @since 1.0
-    * @version 1.0
-    */
-    unsigned Size() const
+    inline bool IntLess(int a, int b)
     {
-        return size_;
+        return a < b;
+    }
+    /**
+    *
+    * @brief ç¬¬ä¸€ä¸ªæ•°æ˜¯å¦å¤§äºç¬¬äºŒä¸ªæ•°.
+    * @since 1.0
+    * @version 1.0
+    */
+    inline bool IntGreater(int a, int b)
+    {
+        return a > b;
+    }
+    /**
+    *
+    * @brief ç¬¬ä¸€ä¸ªæ•°æ˜¯å¦å°äºç¬¬äºŒä¸ªæ•°.
+    * @since 1.0
+    * @version 1.0
+    */
+    inline bool UnsignedLess(unsigned a, unsigned b)
+    {
+        return a < b;
     }
 
     /**
     *
-    * @brief »ñÈ¡Ö¸¶¨µÄË÷ÒıµÄÔªËØ.
+    * @brief ç¬¬ä¸€ä¸ªæ•°æ˜¯å¦å¤§äºç¬¬äºŒä¸ªæ•°.
     * @since 1.0
     * @version 1.0
     */
-    const ValueType& operator[](unsigned i) const
+    inline bool UnsignedGreater(unsigned a, unsigned b)
     {
-        return data_[start_ + i];
+        return a > b;
+    }
+    /**
+    *
+    * @brief äº¤æ¢æ•°æ®.
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class T>
+    inline void SwapElements(T& val1, T& val2)
+    {
+        T temp = val1;
+        val1 = val2;
+        val2 = temp;
+    }
+    /**
+    *
+    * @brief å¿«é€Ÿæ’åºç®—æ³•.
+    * @param arr è¦æ’åºçš„æ•°ç»„,less æ’åºæ¡ä»¶
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Array, class Less>
+    void QuickSort(Array& arr, Less less);
+
+    /**
+    *
+    * @brief æ ¹æ®æŒ‡å®šæ¡ä»¶æŒ‡å®šæ¡ä»¶åˆ é™¤é‡å¤çš„å…ƒç´ .
+    *
+    * @param arr æŒ‡å®šæ•°ç»„,equal æŒ‡å®šæ¡ä»¶
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Array, class Equal>
+    unsigned RemoveDuplicates(Array& arr, Equal equal);
+
+    /**
+    *
+    * @brief åè½¬ä¸€ä¸ªæ•°ç»„.
+    *
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Array>
+    void InvertContainer(Array& arr)
+    {
+        int i = 0;
+        int j = arr.size() - 1;
+        while (i < j) {
+            SwapElements(arr[i++], arr[j--]);
+        }
     }
 
     /**
     *
-    * @brief »ñÈ¡Ö¸¶¨µÄË÷ÒıµÄÔªËØ.
+    * @brief äºŒåˆ†æ³•æŸ¥æ‰¾ç®—æ³•.
+    *
     * @since 1.0
     * @version 1.0
     */
-    ValueType& operator[](unsigned i)
-    {
-        return data_[start_ + i];
-    }
+    template <class Array, class Value, class Less>
+    unsigned BinarySearchPos(const Array& arrData, const Value& val, Less less);
 
     /**
     *
-    * @brief »ñÈ¡Ö¸¶¨µÄË÷ÒıµÄÔªËØ.
+    * @brief ä»arrayçš„æŒ‡å®šä½ç½®èµ·æ”¾å…¥åˆ°RangeAdaptor.
     * @since 1.0
     * @version 1.0
     */
-    const ValueType& IndexAt(unsigned i) const
+    template <class Array>
+    class RangeAdaptor : public HeapBase {
+    public:
+        using ValueType = typename Array::ValueType;
+        /**
+        *
+        * @brief ä½¿ç”¨ä¸€ä¸ªæ•°ç»„æ„é€ RangeAdaptor.
+        * @param array æŒ‡å®šæ•°ç»„,start æŒ‡å®šèµ·å§‹ä½ç½®, size æŒ‡å®šå¤§å°
+        * @since 1.0
+        * @version 1.0
+        */
+        RangeAdaptor(Array& array, unsigned start, unsigned size) :
+            data_(array), start_(start), size_(size)
+        {}
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„å¤§å°.
+        * @since 1.0
+        * @version 1.0
+        */
+        unsigned Size() const
+        {
+            return size_;
+        }
+
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„ç´¢å¼•çš„å…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        const ValueType& operator[](unsigned index) const
+        {
+            return data_[start_ + index];
+        }
+
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„ç´¢å¼•çš„å…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        ValueType& operator[](unsigned index)
+        {
+            return data_[start_ + index];
+        }
+
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„ç´¢å¼•çš„å…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        const ValueType& IndexAt(unsigned index) const
+        {
+            return data_[start_ + index];
+        }
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„ç´¢å¼•çš„å…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        ValueType& IndexAt(unsigned index)
+        {
+            return data_[start_ + index];
+        }
+        /**
+        *
+        * @brief è·å–æŒ‡å®šçš„ç´¢å¼•çš„å…ƒç´ .
+        * @since 1.0
+        * @version 1.0
+        */
+        ValueType ValueAt(unsigned index) const
+        {
+            return data_[start_ + index];
+        }
+
+    private:
+        Array& data_;    //åŸæ•°ç»„
+        unsigned start_; //åŸæ•°ç»„çš„èµ·å§‹ä½ç½®
+        unsigned size_;  //æŒ‡å®šçš„å¤§å°
+    };
+
+    template <class Array, class Less>
+    void QuickSort(Array& arr, Less less)
     {
-        return data_[start_ + i];
-    }
-    /**
-    *
-    * @brief »ñÈ¡Ö¸¶¨µÄË÷ÒıµÄÔªËØ.
-    * @since 1.0
-    * @version 1.0
-    */
-    ValueType& IndexAt(unsigned i)
-    {
-        return data_[start_ + i];
-    }
-    /**
-    *
-    * @brief »ñÈ¡Ö¸¶¨µÄË÷ÒıµÄÔªËØ.
-    * @since 1.0
-    * @version 1.0
-    */
-    ValueType ValueAt(unsigned i) const
-    {
-        return data_[start_ + i];
+        if (arr.Size() < 2) {
+            return;
+        }
+        typename Array::ValueType* e1;
+        typename Array::ValueType* e2;
+        int stack[80];
+        int* top = stack;
+        int limit = arr.Size();
+        int base = 0;
+        for (;;) {
+            int len = limit - base;
+            int i;
+            int j;
+            int pivot;
+            if (len > QUICK_SORT_THRESHOLD) {
+                pivot = base + len / 2;
+                SwapElements(arr[base], arr[pivot]);
+                i = base + 1;
+                j = limit - 1;
+                e1 = &(arr[j]);
+                e2 = &(arr[i]);
+                if (less(*e1, *e2)) {
+                    SwapElements(*e1, *e2);
+                }
+                e1 = &(arr[base]);
+                e2 = &(arr[i]);
+                if (less(*e1, *e2)) {
+                    SwapElements(*e1, *e2);
+                }
+                e1 = &(arr[j]);
+                e2 = &(arr[base]);
+                if (less(*e1, *e2))
+                    SwapElements(*e1, *e2);
+                for (;;) {
+                    do
+                        i++;
+                    while (less(arr[i], arr[base]));
+                    do
+                        j--;
+                    while (less(arr[base], arr[j]));
+
+                    if (i > j) {
+                        break;
+                    }
+                    SwapElements(arr[i], arr[j]);
+                }
+                SwapElements(arr[base], arr[j]);
+                if (j - base > limit - i) {
+                    top[0] = base;
+                    top[1] = j;
+                    base = i;
+                } else {
+                    top[0] = i;
+                    top[1] = limit;
+                    limit = j;
+                }
+                top += 2;
+            } else {
+                j = base;
+                i = j + 1;
+                for (; i < limit; j = i, i++) {
+                    for (; less(*(e1 = &(arr[j + 1])), *(e2 = &(arr[j]))); j--) {
+                        SwapElements(*e1, *e2);
+                        if (j == base) {
+                            break;
+                        }
+                    }
+                }
+                if (top > stack) {
+                    top -= 2;
+                    base = top[0];
+                    limit = top[1];
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
-private:
-    Array& data_;   //Ô­Êı×é
-    unsigned start_;//Ô­Êı×éµÄÆğÊ¼Î»ÖÃ
-    unsigned size_; //Ö¸¶¨µÄ´óĞ¡
-};
+    template <class Array, class Value, class Less>
+    unsigned BinarySearchPos(const Array& arrData, const Value& val, Less less)
+    {
+        if (arrData.size() == 0) {
+            return 0;
+        }
+
+        unsigned begin = 0;
+        unsigned end = arrData.size() - 1;
+
+        if (less(val, arrData[0])) {
+            return 0;
+        }
+        if (less(arrData[end], val)) {
+            return end + 1;
+        }
+
+        while (end - begin > 1) {
+            unsigned mid = (end + begin) >> 1;
+            if (less(val, arrData[mid])) {
+                end = mid;
+            } else {
+                begin = mid;
+            }
+        }
+
+        return end;
+    }
+
+    template <class Array, class Equal>
+    unsigned RemoveDuplicates(Array& arr, Equal equal)
+    {
+        if (arr.Size() < 2) {
+            return arr.Size();
+        }
+
+        unsigned i, j;
+        for (i = 1, j = 1; i < arr.Size(); i++) {
+            typename Array::ValueType& e = arr[i];
+            if (!equal(e, arr[i - 1])) {
+                arr[j++] = e;
+            }
+        }
+        return j;
+    }
 
 } // namespace OHOS
+#endif

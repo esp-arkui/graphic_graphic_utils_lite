@@ -17,7 +17,7 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
+ * @brief Defines PodAutoArray.
  *
  * @since 1.0
  * @version 1.0
@@ -30,195 +30,198 @@
 #include <cstring>
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "heap_base.h"
+#include "gfx_utils/heap_base.h"
 #include "securec.h"
+
 namespace OHOS {
-/**
- * @file graphic_geometry_arc.h
- *
- * @brief Defines PodAutoArrayÊı×é.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class T, unsigned Size>
-class PodAutoArray : public HeapBase {
-public:
-    using ValueType = T;
-    using SelfType = PodAutoArray<T, Size>;
-
-    PodAutoArray()
     /**
-    * @file graphic_geometry_arc.h
-    *
-    * @brief Defines ¹¹ÔìPodAutoArrayÊı×é,¹Ì¶¨ÈİÁ¿.
-    * @param data ³õÊ¼Êı¾İ
-    * @since 1.0
-    * @version 1.0
-    */
-    explicit PodAutoArray(const T* data)
-    {
-        std::memcpy_s(data_, sizeof(data_) * Size, sizeof(data_), data, sizeof(T) * Size);
-    }
-
-    const SelfType& operator=(const T* data)
-    {
-        std::memcpy_s(data_, sizeof(data_), data, sizeof(T) * Size);
-        return *this;
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& operator[](unsigned index) const
-    {
-        return data_[index];
-    }
-
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& operator[](unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& IndexAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& IndexAt(unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T ValueAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡ÔªËØ¸öÊı.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    static unsigned Size()
-    {
-        return Size;
-    }
-
-private:
-    T data_[Size];//±£´æÔªËØ¸öÊı
-};
-
-/**
- * @file graphic_geometry_arc.h
- *
- * @brief Defines PodAutoArrayÊı×éÊÊÅäÆ÷.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class T>
-class PodArrayAdaptor : public HeapBase {
-public:
-    using ValueType = T;
-
-    /**
+     * @file agg_pod_array.h
      *
-     * @brief Defines ¹¹ÔìPodAutoArrayÊı×éÊÊÅäÆ÷.
-     * @param array Ô­Êı×é,size Êı×éÈİÁ¿
+     * @brief Defines PodAutoArrayæ•°ç»„.
+     *
      * @since 1.0
      * @version 1.0
      */
-    PodArrayAdaptor(T* array, unsigned size)
-        : data_(array), size_(size)
-    {}
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& operator[](unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& operator[](unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T ValueAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    const T& IndexAt(unsigned index) const
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØ.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    T& IndexAt(unsigned index)
-    {
-        return data_[index];
-    }
-    /**
-     * @brief »ñÈ¡ÔªËØ¸öÊı.
-     * 
-     * @since 1.0
-     * @version 1.0
-     */
-    unsigned Size() const
-    {
-        return size_;
-    }
+    template <class T, unsigned SizeN>
+    class PodAutoArray : public HeapBase {
+    public:
+        using ValueType = T;
+        using SelfType = PodAutoArray<T, SizeN>;
 
-private:
-    T* data_;
-    unsigned size_;
-};
+        PodAutoArray()
+        {}
+        /**
+        *
+        * @brief Defines æ„é€ PodAutoArrayæ•°ç»„,å›ºå®šå®¹é‡.
+        * @param data åˆå§‹æ•°æ®
+        * @since 1.0
+        * @version 1.0
+        */
+        explicit PodAutoArray(const T* data)
+        {
+            memcpy_s(data_, data, sizeof(T) * (size_t)SizeN);
+        }
+
+        const SelfType& operator=(const T* data)
+        {
+            memcpy_s(data_, sizeof(data_), data, sizeof(T) * (size_t)SizeN);
+
+            return *this;
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& operator[](unsigned index) const
+        {
+            return data_[index];
+        }
+
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& operator[](unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& IndexAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& IndexAt(unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T ValueAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–å…ƒç´ ä¸ªæ•°.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static unsigned Size()
+        {
+            return SizeN;
+        }
+
+    private:
+        T data_[SizeN]; //ä¿å­˜å…ƒç´ ä¸ªæ•°
+    };
+
+    /**
+     * @file agg_pod_array.h
+     *
+     * @brief Defines PodAutoArrayæ•°ç»„é€‚é…å™¨.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T>
+    class PodArrayAdaptor : public HeapBase {
+    public:
+        using ValueType = T;
+
+        /**
+         *
+         * @brief Defines æ„é€ PodAutoArrayæ•°ç»„é€‚é…å™¨.
+         * @param array åŸæ•°ç»„,size æ•°ç»„å®¹é‡
+         * @since 1.0
+         * @version 1.0
+         */
+        PodArrayAdaptor(T* array, unsigned size) :
+            data_(array), size_(size)
+        {}
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& operator[](unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& operator[](unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T ValueAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& IndexAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ .
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& IndexAt(unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief è·å–å…ƒç´ ä¸ªæ•°.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned Size() const
+        {
+            return size_;
+        }
+
+    private:
+        T* data_;
+        unsigned size_;
+    };
 
 } // namespace OHOS
+#endif

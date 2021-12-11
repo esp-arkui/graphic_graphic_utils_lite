@@ -1,93 +1,133 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Line dash generator
-//
-//----------------------------------------------------------------------------
-#ifndef AGG_VCGEN_DASH_INCLUDED
-#define AGG_VCGEN_DASH_INCLUDED
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#ifndef GRAPHIC_VCGEN_DASH_INCLUDED
+#define GRAPHIC_VCGEN_DASH_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
-namespace OHOS
-{
-
-    //---------------------------------------------------------------vcgen_dash
-    //
-    // See Implementation agg_vcgen_dash.cpp
-    //
-    class vcgen_dash
-    {
-        enum max_dashes_e
+namespace OHOS {
+    class VCGenDash {
+        enum MaxDashes
         {
-            max_dashes = 32
+            MAX_DASHES = 32
         };
 
-        enum status_e
+        enum Status
         {
-            initial,
-            ready,
-            polyline,
-            stop
+            INITIAL,
+            READY,
+            POLYLINE,
+            STOP
         };
 
     public:
-        typedef vertex_sequence<vertex_dist, 6> vertex_storage;
+        typedef VertexSequence<VertexDist, 6> VertexStorage;
 
-        vcgen_dash();
+        VCGenDash();
+        /**
+         * @brief 去除所有破折号
+         * 
+         * @since 1.0
+         * @version 1.0
+         */
+        void RemoveAllDashes();
+        /**
+         * @brief 添加破折号
+         * 
+         * @param dashLen 线段长度
+         * @param gapLen 缺口长度
+         * @since 1.0
+         * @version 1.0
+         */
+        void AddDash(double dashLen, double gapLen);
+        /**
+         * @brief 设定dashStart_
+         * 
+         * @param 设定值
+         * @since 1.0
+         * @version 1.0
+         */
+        void DashStart(double ds);
+        /**
+         * @brief 设定shorten_
+         * 
+         * @param 设定值
+         * @since 1.0
+         * @version 1.0
+         */
+        void Shorten(double s)
+        {
+            shorten_ = s;
+        }
+        /**
+         * @brief 获取storten_
+         * 
+         * @return shorten_
+         * @since 1.0
+         * @version 1.0
+         */
+        double Shorten() const
+        {
+            return shorten_;
+        }
+        /**
+         * @brief 去除所有顶点
+         * 
+         * @since 1.0
+         * @version 1.0
+         */
+        void RemoveAll();
+        /**
+         * @brief 添加顶点
+         * 
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @param cmd 指令类型
+         * @since 1.0
+         * @version 1.0
+         */
+        void AddVertex(double x, double y, unsigned cmd);
 
-        void remove_all_dashes();
-        void add_dash(double dash_len, double gap_len);
-        void dash_start(double ds);
+        void Rewind(unsigned pathId);
 
-        void shorten(double s) { m_shorten = s; }
-        double shorten() const { return m_shorten; }
-
-        // Vertex Generator Interface
-        void remove_all();
-        void add_vertex(double x, double y, unsigned cmd);
-
-        // Vertex Source Interface
-        void     rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+        unsigned Vertex(double* x, double* y);
 
     private:
-        vcgen_dash(const vcgen_dash&);
-        const vcgen_dash& operator = (const vcgen_dash&);
+        VCGenDash(const VCGenDash&);
+        const VCGenDash& operator=(const VCGenDash&);
 
-        void calc_dash_start(double ds);
+        void CalcDashStart(double ds);
 
-        double             m_dashes[max_dashes];
-        double             m_total_dash_len;
-        unsigned           m_num_dashes;
-        double             m_dash_start;
-        double             m_shorten;
-        double             m_curr_dash_start;
-        unsigned           m_curr_dash;
-        double             m_curr_rest;
-        const vertex_dist* m_v1;
-        const vertex_dist* m_v2;
+        double dashes_[MAX_DASHES];
+        double totalDashLen_;
+        unsigned numDashes_;
+        double dashStart_;
+        double shorten_;
+        double currDashStart_;
+        unsigned currDash_;
+        double currRest;
+        const VertexDist* vertexDist1_;
+        const VertexDist* vertexDist2_;
 
-        vertex_storage m_src_vertices;
-        unsigned       m_closed;
-        status_e       m_status;
-        unsigned       m_src_vertex;
+        VertexStorage srcVertices_;
+        unsigned closed_;
+        Status status_;
+        unsigned srcVertex_;
     };
 
-
-}
+} // namespace OHOS
 
 #endif
