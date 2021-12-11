@@ -45,8 +45,8 @@ namespace OHOS {
     template <class Source, class Interpolator>
     class SpanImage {
     public:
-        typedef Source source_type;
-        typedef Interpolator interpolator_type;
+        using source_type = Source;
+        using interpolator_type = Interpolator;
 
         SpanImage()
         {

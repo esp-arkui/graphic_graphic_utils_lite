@@ -59,7 +59,7 @@ namespace OHOS {
          * @brief 返回colorStart渐变到colorEnd过程中处于count的颜色
          * @return
          */
-        color_type color() const
+        color_type GetColor() const
         {
             return colorStart.gradient(colorEnd, double(place) / len);
         }

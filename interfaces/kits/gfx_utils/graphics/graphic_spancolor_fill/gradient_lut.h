@@ -26,14 +26,12 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_dda_line.h"
 
-namespace OHOS
-{
+namespace OHOS {
     /**
      *根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
      */
     template <class ColorInterpolator, unsigned ColorLutSize = 256>
-    class GradientLut
-    {
+    class GradientLut {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
@@ -73,32 +71,27 @@ namespace OHOS
         {
             quick_sort(colorProfile, OffsetLess);
             colorProfile.cut_at(remove_duplicates(colorProfile, OffsetEqual));
-            if (colorProfile.size() > 1)
-            {
+            if (colorProfile.size() > 1) {
                 unsigned index;
                 unsigned start = uround(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
                 color_type color = colorProfile[0].color;
-                for (index = 0; index < start; index++)
-                {
+                for (index = 0; index < start; index++) {
                     colorType[index] = color;
                 }
-                for (index = 1; index < colorProfile.size(); index++)
-                {
+                for (index = 1; index < colorProfile.size(); index++) {
                     end = uround(colorProfile[index].offset * colorLutSize_);
                     interpolator_type ci(colorProfile[index - 1].color,
                                          colorProfile[index].color,
                                          end - start + 1);
-                    while (start < end)
-                    {
-                        colorType[start] = ci.color();
+                    while (start < end) {
+                        colorType[start] = ci.GetColor();
                         ++ci;
                         ++start;
                     }
                 }
                 color = colorProfile.last().color;
-                for (; end < colorType.size(); end++)
-                {
+                for (; end < colorType.size(); end++) {
                     colorType[end] = color;
                 }
             }
@@ -121,14 +114,17 @@ namespace OHOS
         }
 
     private:
-        struct ColorPoint
-        {
+        struct ColorPoint {
             double offset;
             color_type color;
 
             ColorPoint()
-            {
-            }
+            {}
+            /**
+             * @brief 入参
+             * @param offset_ (0-1)
+             * @param color_ 添加的颜色
+             */
             ColorPoint(double offset_, const color_type& color_) :
                 offset(offset_), color(color_)
             {
