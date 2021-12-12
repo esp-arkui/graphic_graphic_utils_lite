@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h"
 
 #include <cmath>

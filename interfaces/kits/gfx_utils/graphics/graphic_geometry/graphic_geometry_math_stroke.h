@@ -30,8 +30,7 @@ namespace OHOS {
     /**
      * @brief 线条末端线帽的样式。
      */
-    enum LineCap
-    {
+    enum LineCapEnum {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -43,8 +42,7 @@ namespace OHOS {
     /**
      * @brief 两条线相交时，所创建的拐角类型
      */
-    enum LineJoin
-    {
+    enum LineJoinEnum {
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -53,14 +51,6 @@ namespace OHOS {
         /** 创建斜角 */
         BEVEL_JOIN = 3,
         MITER_JOIN_ROUND = 4
-    };
-
-    enum InnerJoin
-    {
-        INNER_BEVEL,
-        INNER_MITER,
-        INNER_JAG,
-        INNER_ROUND
     };
 
     template <class VertexConsumer>
@@ -75,44 +65,33 @@ namespace OHOS {
             miterLimit_(4.0),
             approxScale_(1.0),
             lineCapEnum(BUTT_CAP),
-            lineJoinEnum(MITER_JOIN),
-            innerJoinEnum(INNER_MITER)
+            lineJoinEnum(MITER_JOIN)
         {
         }
 
         /**
          * @brief SetLineCap 定义线条的结束端点样式
          */
-        void SetLineCap(LineCap lineCapE)
+        void SetLineCap(LineCapEnum lineCapE)
         {
             lineCapEnum = lineCapE;
         }
         /**
          * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
          */
-        void SetLineJoin(LineJoin lineJoinE)
+        void SetLineJoin(LineJoinEnum lineJoinE)
         {
             lineJoinEnum = lineJoinE;
         }
 
-        void SetInnerJoin(InnerJoin innerJoinE)
-        {
-            innerJoinEnum = innerJoinE;
-        }
-
-        LineCap GetLineCap() const
+        LineCapEnum GetLineCap() const
         {
             return lineCapEnum;
         }
 
-        LineJoin GetLineJoin() const
+        LineJoinEnum GetLineJoin() const
         {
             return lineJoinEnum;
-        }
-
-        InnerJoin GetInnerJoin() const
-        {
-            return innerJoinEnum;
         }
 
         /**
@@ -328,7 +307,7 @@ namespace OHOS {
                        const VertexDist& vd2,
                        double dx1, double dy1,
                        double dx2, double dy2,
-                       LineJoin linejoin,
+                       LineJoinEnum linejoin,
                        double mlimit,
                        double dbevel)
         {
@@ -396,9 +375,8 @@ namespace OHOS {
         int widthSign_;
         double miterLimit_;
         double approxScale_;
-        LineCap lineCapEnum;
-        LineJoin lineJoinEnum;
-        InnerJoin innerJoinEnum;
+        LineCapEnum lineCapEnum;
+        LineJoinEnum lineJoinEnum;
     };
 } // namespace OHOS
 

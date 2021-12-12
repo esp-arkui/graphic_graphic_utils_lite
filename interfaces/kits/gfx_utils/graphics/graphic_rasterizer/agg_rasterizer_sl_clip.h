@@ -27,223 +27,398 @@
 #include "gfx_utils/graphics/graphic_common/agg_clip_liang_barsky.h"
 
 namespace OHOS {
-    enum poly_max_coord_e
-    {
-        poly_max_coord = (1 << 30) - 1 //----poly_max_coord
+    /**
+    * 该PolyMaxCoordEnum枚举类型
+    * 定义了多边形最大坐标的值.
+    * @since 1.0
+    * @version 1.0
+    */
+    enum PolyMaxCoordEnum {
+        POLY_MAX_COORD = (1 << 30) - 1 //----poly_max_coord
     };
 
-    struct ras_conv_int {
+    /**
+     * @struct RasterDepictInt
+     * @brief 该RasterDepictInt结构体在对于目标范围内的
+     * 坐标进行裁剪的时候，对于类似坐标间距的3个值或者
+     * 上采样以及下采样等操作做处理。
+     * @since 1.0
+     * @version 1.0
+     */
+    struct RasterDepictInt {
         typedef int coord_type;
-        static GRAPHIC_GEOMETRY_INLINE int mul_div(double a, double b, double c)
+
+        /**
+         * @brief 该函数主要是对于输入的坐标值
+         * 做上采样的处理。
+         * @since 1.0
+         * @version 1.0
+         */
+        static int UpScale(double vUpscale)
         {
-            return Iround(a * b / c);
+            return Iround(vUpscale * POLY_SUBPIXEL_SCALE);
         }
-        static int xi(int v)
+
+        /**
+         * @brief 该函数主要是对于输入的坐标值
+         * 做下采样的处理。
+         * @since 1.0
+         * @version 1.0
+         */
+        static int DownScale(int vDownscale)
         {
-            return v;
+            return vDownscale;
         }
-        static int yi(int v)
+
+        static GRAPHIC_GEOMETRY_INLINE int MultDiv(double deltaA, double deltaB, double dealtaC)
         {
-            return v;
+            return Iround(deltaA * deltaB / dealtaC);
         }
-        static int upscale(double v)
+        static int XInt(int xValue)
         {
-            return Iround(v * POLY_SUBPIXEL_SCALE);
+            return xValue;
         }
-        static int downscale(int v)
+        static int YInt(int yValue)
         {
-            return v;
+            return yValue;
         }
     };
 
-    template <class Conv>
-    class rasterizer_sl_clip {
+    /**
+    * @template<Depict> class RasterizerScanlineClip
+    * @brief Defines 光栅化阶段，交换扫描线处理时，对于
+    * 坐标的裁剪和加工的处理过程.
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Depict>
+    class RasterizerScanlineClip {
     public:
-        typedef Conv conv_type;
-        typedef typename Conv::coord_type coord_type;
-        typedef RectBase<coord_type> rect_type;
-        rasterizer_sl_clip() :
+        using depict_type = Depict;
+        using coord_type = typename Depict::coord_type;
+        using rect_type = RectBase<coord_type>;
+        /**
+        * @brief RasterizerScanlineClip 类的构造函数。.
+        * 初始化裁剪范围，裁剪标志等。
+        * @since 1.0
+        * @version 1.0
+        */
+        RasterizerScanlineClip() :
             m_clip_box(0, 0, 0, 0),
             m_x1(0),
             m_y1(0),
-            m_f1(0),
+            m_clipping_flags(0),
             m_clipping(false)
         {}
 
         //--------------------------------------------------------------------
-        void reset_clipping()
+        void ResetClipping()
         {
             m_clipping = false;
         }
 
-        //--------------------------------------------------------------------
-        void clip_box(coord_type x1, coord_type y1, coord_type x2, coord_type y2)
+        /**
+        * @brief 设置裁剪范围。
+        * @since 1.0
+        * @version 1.0
+        */
+        void ClipBox(coord_type x1, coord_type y1, coord_type x2, coord_type y2)
         {
             m_clip_box = rect_type(x1, y1, x2, y2);
             m_clip_box.Normalize();
             m_clipping = true;
         }
 
-        //--------------------------------------------------------------------
-        void move_to(coord_type x1, coord_type y1)
+        /**
+        * @brief 在RASTERIZER 过程中，增加设置起始点，并且设置
+        * m_clipping_flags的标志。
+        * @since 1.0
+        * @version 1.0
+        */
+        void MoveTo(coord_type x1, coord_type y1)
         {
             m_x1 = x1;
             m_y1 = y1;
-            if (m_clipping)
-                m_f1 = ClippingFlags(x1, y1, m_clip_box);
+            if (m_clipping) {
+                m_clipping_flags = ClippingFlags(x1, y1, m_clip_box);
+            }
         }
 
     private:
+        /**
+        * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
+        * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
+        * 相关的属性设置等。
+        * @since 1.0
+        * @version 1.0
+        */
         template <class Rasterizer>
-        GRAPHIC_GEOMETRY_INLINE void line_clip_y(Rasterizer& ras,
-                                                 coord_type x1, coord_type y1,
-                                                 coord_type x2, coord_type y2,
-                                                 unsigned f1, unsigned f2) const
-        {
-            f1 &= 10;
-            f2 &= 10;
-            if ((f1 | f2) == 0) {
-                // Fully visible
-                ras.line(Conv::xi(x1), Conv::yi(y1), Conv::xi(x2), Conv::yi(y2));
-            } else {
-                if (f1 == f2) {
-                    // Invisible by Y
-                    return;
-                }
-
-                coord_type tx1 = x1;
-                coord_type ty1 = y1;
-                coord_type tx2 = x2;
-                coord_type ty2 = y2;
-
-                if (f1 & 8) // y1 < clip.y1
-                {
-                    tx1 = x1 + Conv::mul_div(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
-                    ty1 = m_clip_box.y1;
-                }
-
-                if (f1 & 2) // y1 > clip.y2
-                {
-                    tx1 = x1 + Conv::mul_div(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
-                    ty1 = m_clip_box.y2;
-                }
-
-                if (f2 & 8) // y2 < clip.y1
-                {
-                    tx2 = x1 + Conv::mul_div(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
-                    ty2 = m_clip_box.y1;
-                }
-
-                if (f2 & 2) // y2 > clip.y2
-                {
-                    tx2 = x1 + Conv::mul_div(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
-                    ty2 = m_clip_box.y2;
-                }
-                ras.line(Conv::xi(tx1), Conv::yi(ty1),
-                         Conv::xi(tx2), Conv::yi(ty2));
-            }
-        }
+        GRAPHIC_GEOMETRY_INLINE void LineClipY(Rasterizer& ras,
+                                               coord_type x1, coord_type y1,
+                                               coord_type x2, coord_type y2,
+                                               unsigned clipFlagsOne, unsigned clipFlagsTwo) const;
 
     public:
+        /**
+        * @brief 在RASTERIZER 过程中，增加设置采样点，并且设置
+        * 采样点设置相关的cover与area的属性等。
+        *         |        |
+        *   0110  |  0010  | 0011
+        *         |        |
+        *  -------+--------+-------- clip_box.y2
+        *         |        |
+        *   0100  |  0000  | 0001
+        *         |        |
+        *  -------+--------+-------- clip_box.y1
+        *         |        |
+        *   1100  |  1000  | 1001
+        *         |        |
+        *   clip_box.x1  clip_box.x2
+        * @since 1.0
+        * @version 1.0
+        */
         template <class Rasterizer>
-        void line_to(Rasterizer& ras, coord_type x2, coord_type y2)
-        {
-            if (m_clipping) {
-                unsigned f2 = ClippingFlags(x2, y2, m_clip_box);
-
-                if ((m_f1 & 10) == (f2 & 10) && (m_f1 & 10) != 0) {
-                    // Invisible by Y
-                    m_x1 = x2;
-                    m_y1 = y2;
-                    m_f1 = f2;
-                    return;
-                }
-
-                coord_type x1 = m_x1;
-                coord_type y1 = m_y1;
-                unsigned f1 = m_f1;
-                coord_type y3, y4;
-                unsigned f3, f4;
-
-                switch (((f1 & 5) << 1) | (f2 & 5)) {
-                    case 0: // Visible by X
-                        line_clip_y(ras, x1, y1, x2, y2, f1, f2);
-                        break;
-
-                    case 1: // x2 > clip.x2
-                        y3 = y1 + Conv::mul_div(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        line_clip_y(ras, x1, y1, m_clip_box.x2, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x2, y3, m_clip_box.x2, y2, f3, f2);
-                        break;
-
-                    case 2: // x1 > clip.x2
-                        y3 = y1 + Conv::mul_div(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        line_clip_y(ras, m_clip_box.x2, y1, m_clip_box.x2, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x2, y3, x2, y2, f3, f2);
-                        break;
-
-                    case 3: // x1 > clip.x2 && x2 > clip.x2
-                        line_clip_y(ras, m_clip_box.x2, y1, m_clip_box.x2, y2, f1, f2);
-                        break;
-
-                    case 4: // x2 < clip.x1
-                        y3 = y1 + Conv::mul_div(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        line_clip_y(ras, x1, y1, m_clip_box.x1, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x1, y3, m_clip_box.x1, y2, f3, f2);
-                        break;
-
-                    case 6: // x1 > clip.x2 && x2 < clip.x1
-                        y3 = y1 + Conv::mul_div(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
-                        y4 = y1 + Conv::mul_div(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        f4 = ClippingFlagsY(y4, m_clip_box);
-                        line_clip_y(ras, m_clip_box.x2, y1, m_clip_box.x2, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x2, y3, m_clip_box.x1, y4, f3, f4);
-                        line_clip_y(ras, m_clip_box.x1, y4, m_clip_box.x1, y2, f4, f2);
-                        break;
-
-                    case 8: // x1 < clip.x1
-                        y3 = y1 + Conv::mul_div(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        line_clip_y(ras, m_clip_box.x1, y1, m_clip_box.x1, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x1, y3, x2, y2, f3, f2);
-                        break;
-
-                    case 9: // x1 < clip.x1 && x2 > clip.x2
-                        y3 = y1 + Conv::mul_div(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
-                        y4 = y1 + Conv::mul_div(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
-                        f3 = ClippingFlagsY(y3, m_clip_box);
-                        f4 = ClippingFlagsY(y4, m_clip_box);
-                        line_clip_y(ras, m_clip_box.x1, y1, m_clip_box.x1, y3, f1, f3);
-                        line_clip_y(ras, m_clip_box.x1, y3, m_clip_box.x2, y4, f3, f4);
-                        line_clip_y(ras, m_clip_box.x2, y4, m_clip_box.x2, y2, f4, f2);
-                        break;
-
-                    case 12: // x1 < clip.x1 && x2 < clip.x1
-                        line_clip_y(ras, m_clip_box.x1, y1, m_clip_box.x1, y2, f1, f2);
-                        break;
-                }
-                m_f1 = f2;
-            } else {
-                ras.line(Conv::xi(m_x1), Conv::yi(m_y1),
-                         Conv::xi(x2), Conv::yi(y2));
-            }
-            m_x1 = x2;
-            m_y1 = y2;
-        }
+        void LineTo(Rasterizer& ras, coord_type x2, coord_type y2);
 
     private:
         rect_type m_clip_box;
         coord_type m_x1;
         coord_type m_y1;
-        unsigned m_f1;
+        unsigned m_clipping_flags;
         bool m_clipping;
     };
 
-    using rasterizer_sl_clip_int = rasterizer_sl_clip<ras_conv_int>;
+    //---------------------------------------------------
+    class RasterizerScanlineNoClip {
+    public:
+        typedef RasterDepictInt conv_type;
+        typedef int coord_type;
+
+        RasterizerScanlineNoClip() :
+            m_x1(0), m_y1(0)
+        {}
+
+        void ResetClipping()
+        {}
+        void ClipBox(coord_type, coord_type, coord_type, coord_type)
+        {}
+        void MoveTo(coord_type x1, coord_type y1)
+        {
+            m_x1 = x1;
+            m_y1 = y1;
+        }
+
+        template <class Rasterizer>
+        void LineTo(Rasterizer& ras, coord_type x2, coord_type y2)
+        {
+            ras.line(m_x1, m_y1, x2, y2);
+            m_x1 = x2;
+            m_y1 = y2;
+        }
+
+    private:
+        int m_x1, m_y1;
+    };
+
+    using RasterizerScanlineClipInt = RasterizerScanlineClip<RasterDepictInt>;
+
+    /**
+       * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
+       * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
+       * 相关的属性设置等。
+       * @since 1.0
+       * @version 1.0
+       */
+    template <class Depict>
+    template <class Rasterizer>
+    void RasterizerScanlineClip<Depict>::
+        LineClipY(Rasterizer& ras, coord_type x1, coord_type y1,
+                  coord_type x2, coord_type y2,
+                  unsigned clipFlagsOne, unsigned clipFlagsTwo) const
+    {
+        clipFlagsOne &= 10;
+        clipFlagsTwo &= 10;
+        if ((clipFlagsOne | clipFlagsTwo) == 0) {
+            /*
+                * 表明坐标x1,y1,x2,y2 全部在范围内,line 操作之
+                */
+            ras.LineOperate(RasterDepictInt::XInt(x1), RasterDepictInt::YInt(y1), RasterDepictInt::XInt(x2), RasterDepictInt::YInt(y2));
+        } else {
+            if (clipFlagsOne == clipFlagsTwo) {
+                /*
+                    * 表明坐标x1,y1,x2,y2 全部在范围外,不操作
+                    */
+                return;
+            }
+
+            coord_type tx1 = x1;
+            coord_type ty1 = y1;
+            coord_type tx2 = x2;
+            coord_type ty2 = y2;
+            /*
+                * 表明坐标y1 < clip.y1
+                */
+            if (clipFlagsOne & 0x08) {
+                tx1 = x1 + Depict::MultDiv(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
+                ty1 = m_clip_box.y1;
+            }
+
+            /*
+                * 表明坐标y1 > clip.y2
+                */
+            if (clipFlagsOne & 0x02) {
+                tx1 = x1 + Depict::MultDiv(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
+                ty1 = m_clip_box.y2;
+            }
+            /*
+                * 表明坐标y1 > clip.y2
+                */
+            if (clipFlagsTwo & 0x08) {
+                tx2 = x1 + Depict::MultDiv(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
+                ty2 = m_clip_box.y1;
+            }
+            /*
+                * 表明坐标y2 > clip.y2
+                */
+            if (clipFlagsTwo & 0x02) {
+                tx2 = x1 + Depict::MultDiv(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
+                ty2 = m_clip_box.y2;
+            }
+            ras.LineOperate(RasterDepictInt::XInt(tx1), RasterDepictInt::YInt(ty1),
+                            RasterDepictInt::XInt(tx2), RasterDepictInt::YInt(ty2));
+        }
+    }
+
+    /**
+       * @brief 在RASTERIZER 过程中，增加设置采样点，并且设置
+       * 采样点设置相关的cover与area的属性等。
+       *         |        |
+       *   0110  |  0010  | 0011
+       *         |        |
+       *  -------+--------+-------- clip_box.y2
+       *         |        |
+       *   0100  |  0000  | 0001
+       *         |        |
+       *  -------+--------+-------- clip_box.y1
+       *         |        |
+       *   1100  |  1000  | 1001
+       *         |        |
+       *   clip_box.x1  clip_box.x2
+       * @since 1.0
+       * @version 1.0
+       */
+    template <class Depict>
+    template <class Rasterizer>
+    void RasterizerScanlineClip<Depict>::LineTo(Rasterizer& ras, coord_type x2, coord_type y2)
+    {
+        if (m_clipping) {
+            unsigned cFlagsLineToPoint = ClippingFlags(x2, y2, m_clip_box);
+
+            if ((m_clipping_flags & 0x0A) == (cFlagsLineToPoint & 0x0A) && (m_clipping_flags & 0x0A) != 0) {
+                /*
+                    * 表明moveto与lineto重合
+                    */
+                m_x1 = x2;
+                m_y1 = y2;
+                m_clipping_flags = cFlagsLineToPoint;
+                return;
+            }
+
+            coord_type x1 = m_x1;
+            coord_type y1 = m_y1;
+            unsigned clipFlagsMoveToPoint = m_clipping_flags;
+            coord_type yPilotOne, yPilotTwo;
+            unsigned yClipFlagsOne, yClipFlagsTwo;
+
+            switch (((clipFlagsMoveToPoint & 0x05) << 1) | (cFlagsLineToPoint & 0x05)) {
+                /*
+                    * 表明 x1, y1, x2, y2 全在clip区域内
+                    */
+                case 0x00:
+                    LineClipY(ras, x1, y1, x2, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x2 > clip.x2
+                    */
+                case 0x01:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    LineClipY(ras, x1, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x2, yPilotOne, m_clip_box.x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x1 > clip.x2
+                    */
+                case 0x02:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    LineClipY(ras, m_clip_box.x2, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x2, yPilotOne, x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    break;
+                    /*
+                    * 表明 x1 > clip.x2 && x2 > clip.x2
+                    */
+                case 0x03:
+                    LineClipY(ras, m_clip_box.x2, y1, m_clip_box.x2, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x2 < clip.x1
+                    */
+                case 0x04:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    LineClipY(ras, x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x1, yPilotOne, m_clip_box.x1, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x1 > clip.x2 && x2 < clip.x1
+                    */
+                case 0x06:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
+                    yPilotTwo = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    yClipFlagsTwo = ClippingFlagsY(yPilotTwo, m_clip_box);
+                    LineClipY(ras, m_clip_box.x2, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x2, yPilotOne, m_clip_box.x1, yPilotTwo, yClipFlagsOne, yClipFlagsTwo);
+                    LineClipY(ras, m_clip_box.x1, yPilotTwo, m_clip_box.x1, y2, yClipFlagsTwo, cFlagsLineToPoint);
+                    break;
+
+                /*
+                    * 表明 x1 < clip.x1
+                    */
+                case 0x08:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    LineClipY(ras, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x1, yPilotOne, x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x1 < clip.x1 && x2 > clip.x2
+                    */
+                case 0x09:
+                    yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
+                    yPilotTwo = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
+                    yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
+                    yClipFlagsTwo = ClippingFlagsY(yPilotTwo, m_clip_box);
+                    LineClipY(ras, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(ras, m_clip_box.x1, yPilotOne, m_clip_box.x2, yPilotTwo, yClipFlagsOne, yClipFlagsTwo);
+                    LineClipY(ras, m_clip_box.x2, yPilotTwo, m_clip_box.x2, y2, yClipFlagsTwo, cFlagsLineToPoint);
+                    break;
+                /*
+                    * 表明 x1 < clip.x1 && x2 < clip.x1
+                    */
+                case 0x0c:
+                    LineClipY(ras, m_clip_box.x1, y1, m_clip_box.x1, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
+                    break;
+            }
+            m_clipping_flags = cFlagsLineToPoint;
+        } else {
+            ras.LineOperate(RasterDepictInt::XInt(m_x1), RasterDepictInt::YInt(m_y1),
+                            RasterDepictInt::XInt(x2), RasterDepictInt::YInt(y2));
+        }
+        m_x1 = x2;
+        m_y1 = y2;
+    }
 } // namespace OHOS
 
 #endif

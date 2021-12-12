@@ -44,8 +44,7 @@ namespace OHOS {
 #define FIXED_VALUE 0.3
 
     struct OrderRgb {
-        enum RgbEnum
-        {
+        enum RgbEnum {
             RED = 0,
             GREEN = 1,
             BLUE = 2,
@@ -54,8 +53,7 @@ namespace OHOS {
     };
 
     struct OrderBgr {
-        enum BgrEnum
-        {
+        enum BgrEnum {
             BLUE = 0,
             GREEN = 1,
             RED = 2,
@@ -64,8 +62,7 @@ namespace OHOS {
     };
 
     struct OrderRgba {
-        enum RgbaEnum
-        {
+        enum RgbaEnum {
             RED = 0,
             GREEN = 1,
             BLUE = 2,
@@ -75,8 +72,7 @@ namespace OHOS {
     };
 
     struct OrderArgb {
-        enum ArgbEnum
-        {
+        enum ArgbEnum {
             ALPHA = 0,
             RED = 1,
             GREEN = 2,
@@ -85,8 +81,7 @@ namespace OHOS {
         };
     };
     struct OrderAbgr {
-        enum AbgrEnum
-        {
+        enum AbgrEnum {
             ALPHA = 0,
             BLUE = 1,
             GREEN = 2,
@@ -95,8 +90,7 @@ namespace OHOS {
         };
     };
     struct OrderBgra {
-        enum BgraEnum
-        {
+        enum BgraEnum {
             BLUE = 0,
             GREEN = 1,
             RED = 2,
@@ -452,8 +446,7 @@ namespace OHOS {
         ValueType blueValue;
         ValueType alphaValue;
 
-        enum BaseScaleEnum
-        {
+        enum BaseScaleEnum {
             BASESHIFT = 8,
             BASESCALE = 1 << BASESHIFT,
             BASEMASK = BASESCALE - 1,

@@ -179,7 +179,7 @@ namespace OHOS {
                 luminance[3] += weight * *colorsPtr;
 
                 //获取下一个y对应颜色
-                colorsPtr = (const value_type*)spanImage::GetSource().NextY();
+                colorsPtr = (const value_type*)spanImage::GetSource().Nexty();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
                 luminance[0] += weight * *colorsPtr++;
                 luminance[1] += weight * *colorsPtr++;

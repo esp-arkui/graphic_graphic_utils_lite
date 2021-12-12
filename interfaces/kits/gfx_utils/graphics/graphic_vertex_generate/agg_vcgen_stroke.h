@@ -21,8 +21,7 @@
 namespace OHOS {
 
     class VCGenStroke {
-        enum Status
-        {
+        enum Status {
             INITIAL,
             READY,
             CAP1,
@@ -42,34 +41,24 @@ namespace OHOS {
 
         VCGenStroke();
 
-        void LineCap(LineCap lc)
+        void LineCap(LineCapEnum lc)
         {
             stroker_.SetLineCap(lc);
         }
 
-        void LineJoin(LineJoin lj)
+        void LineJoin(LineJoinEnum lj)
         {
             stroker_.SetLineJoin(lj);
         }
 
-        void InnerJoin(InnerJoin ij)
-        {
-            stroker_.SetInnerJoin(ij);
-        }
-
-        enum LineCap LineCap() const
+        enum LineCapEnum LineCap() const
         {
             return stroker_.GetLineCap();
         }
 
-        enum LineJoin LineJoin() const
+        enum LineJoinEnum LineJoin() const
         {
             return stroker_.GetLineJoin();
-        }
-
-        enum InnerJoin InnerJoin() const
-        {
-            return stroker_.GetInnerJoin();
         }
 
         void Width(double w)

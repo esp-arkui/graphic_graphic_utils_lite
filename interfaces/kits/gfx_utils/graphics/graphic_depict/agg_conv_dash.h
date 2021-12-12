@@ -1,68 +1,81 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// conv_dash
-//
-//----------------------------------------------------------------------------
-#ifndef AGG_CONV_DASH_INCLUDED
-#define AGG_CONV_DASH_INCLUDED
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+/**
+ * @file graphic_geometry_depict_dash.h
+ *
+ * @brief Defines 构建点划线变换管道
+ * 对于点划线的描画通常都是通过输入dash数组和大小确定曲线的基本面貌
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_DEPICT_DASH_INCLUDED
+#define GRAPHIC_GEOMETRY_DEPICT_DASH_INCLUDED
+
+#include "agg_conv_adaptor_vcgen.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/agg_vcgen_dash.h"
-#include "agg_conv_adaptor_vcgen.h"
 
-namespace OHOS
-{
-
-    //---------------------------------------------------------------conv_dash
-    template<class VertexSource, class Markers=null_markers> 
-    struct conv_dash : public conv_adaptor_vcgen<VertexSource, VCGenDash, Markers>
-    {
+namespace OHOS {
+    /**
+     * @template<VertexSource,Markers> struct DepictDash
+     * @brief 该DepictDash结构体通过dash类对于VertexSource
+     * 进行点划线的具体处理。
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class VertexSource, class Markers = EmptyMarkers>
+    struct DepictDash : public DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers> {
         typedef Markers marker_type;
-        typedef conv_adaptor_vcgen<VertexSource, VCGenDash, Markers> base_type;
+        typedef DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers> base_type;
 
-        conv_dash(VertexSource& vs) : 
-            conv_adaptor_vcgen<VertexSource, VCGenDash, Markers>(vs)
+        DepictDash(VertexSource& vs) :
+            DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers>(vs)
         {
         }
 
-        void remove_all_dashes() 
-        { 
-            base_type::generator().remove_all_dashes(); 
+        void RemoveAllDashes()
+        {
+            base_type::GetGenerator().RemoveAllDashes();
         }
 
-        void add_dash(double dash_len, double gap_len) 
-        { 
-            base_type::generator().AddDash(dash_len, gap_len);
+        void AddDash(double dash_len, double gap_len)
+        {
+            base_type::GetGenerator().AddDash(dash_len, gap_len);
         }
 
-        void dash_start(double ds) 
-        { 
-            base_type::generator().DashStart(ds);
+        void DashStart(double dStart)
+        {
+            base_type::GetGenerator().DashStart(dStart);
         }
 
-        void Shorten(double s) { base_type::generator().Shorten(s); }
-        double Shorten() const { return base_type::generator().Shorten(); }
+        void Shorten(double shortValue)
+        {
+            base_type::GetGenerator().Shorten(shortValue);
+        }
+        double Shorten() const
+        {
+            return base_type::GetGenerator().Shorten();
+        }
 
     private:
-        conv_dash(const conv_dash<VertexSource, Markers>&);
-        const conv_dash<VertexSource, Markers>& 
-            operator = (const conv_dash<VertexSource, Markers>&);
+        DepictDash(const DepictDash<VertexSource, Markers>&);
+        const DepictDash<VertexSource, Markers>&
+            operator=(const DepictDash<VertexSource, Markers>&);
     };
-
-
-}
+} // namespace OHOS
 
 #endif

@@ -29,8 +29,7 @@ namespace OHOS {
     class VertexBlockStorage {
     public:
         // Allocation parameters
-        enum BlockScale
-        {
+        enum BlockScale {
             BLOCK_SHIFT = BlockShift,
             BLOCK_SIZE = 1 << BLOCK_SHIFT,
             BLOCK_MASK = BLOCK_SIZE - 1,

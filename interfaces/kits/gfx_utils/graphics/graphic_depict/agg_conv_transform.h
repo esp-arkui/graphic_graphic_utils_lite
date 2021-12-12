@@ -1,64 +1,82 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// class conv_transform
-//
-//----------------------------------------------------------------------------
-#ifndef AGG_CONV_TRANSFORM_INCLUDED
-#define AGG_CONV_TRANSFORM_INCLUDED
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @file graphic_geometry_depict_transform.h
+ *
+ * @brief Defines 构建顶点矩阵变换管道
+ * 变换矩阵。通过顶点坐标与矩阵的运行，我们可以得到新的坐标
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_DEPICT_TRANSFORM_INCLUDED
+#define GRAPHIC_GEOMETRY_DEPICT_TRANSFORM_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_transform/agg_trans_affine.h"
-
 namespace OHOS {
 
-    //----------------------------------------------------------conv_transform
+    /**
+     * @template<VertexSource,Transformer> class DepictTransform
+     * @brief 该DepictTransform类通过六个变量组成一个2*3的矩阵，
+     * 与坐标计算后得到一个新的坐标。
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSource, class Transformer = TransAffine>
-    class conv_transform {
+    class DepictTransform {
     public:
-        conv_transform(VertexSource& source, Transformer& tr) :
+        /**
+         * @brief DepictTransform类的构造函数。.
+         * 构造参数为VertexSource 以及Transformer属性决定曲线的顶点源。
+         * @since 1.0
+         * @version 1.0
+         */
+        DepictTransform(VertexSource& source, Transformer& tr) :
             m_source(&source), m_trans(&tr)
         {}
-        void attach(VertexSource& source)
+
+        void Attach(VertexSource& source)
         {
             m_source = &source;
         }
 
-        void rewind(unsigned path_id)
+        void Rewind(unsigned path_id)
         {
-            m_source->rewind(path_id);
+            m_source->Rewind(path_id);
         }
 
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
-            unsigned cmd = m_source->vertex(x, y);
+            unsigned cmd = m_source->Vertex(x, y);
             if (IsVertex(cmd)) {
                 m_trans->Transform(x, y);
             }
             return cmd;
         }
 
-        void transformer(Transformer& tr)
+        void GetTransformer(Transformer& tr)
         {
             m_trans = &tr;
         }
 
     private:
-        conv_transform(const conv_transform<VertexSource>&);
-        const conv_transform<VertexSource>&
-            operator=(const conv_transform<VertexSource>&);
+        DepictTransform(const DepictTransform<VertexSource>&);
+        const DepictTransform<VertexSource>&
+            operator=(const DepictTransform<VertexSource>&);
 
         VertexSource* m_source;
         Transformer* m_trans;

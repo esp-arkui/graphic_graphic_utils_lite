@@ -84,7 +84,7 @@ namespace OHOS {
                   unsigned numSteps = 0, bool clockwise = false);
 
         /**
-         * @brief 为正确调整近似级别，应该调用方法approximation_scale()
+         * @brief 为正确调整近似级别，应该调用方法ApproximationScale()
          * @param scale为视口坐标和逻辑坐标之间的比率
          * @return 无
          * @since 1.0

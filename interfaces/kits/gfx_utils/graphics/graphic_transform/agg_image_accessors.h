@@ -118,7 +118,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             ++y_;
             x_ = x0_;
@@ -238,7 +238,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             ++y_;
             x_ = x0_;
@@ -322,7 +322,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -408,7 +408,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             rowPtr_ = pixFormat_->pixPtr(0, y_);
             return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -433,7 +433,7 @@ namespace OHOS {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
 
-        ImageAccessorRepeatY()
+        ImageAccessorRepeaty()
         {}
         explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
             pixFormat_(&pixFormat),
@@ -492,7 +492,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + x_ * PIX_WIDTH;
