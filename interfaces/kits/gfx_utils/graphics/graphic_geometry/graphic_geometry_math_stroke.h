@@ -153,9 +153,9 @@ namespace OHOS {
         /**
          * @brief 计算端点样式
          */
-        void CalcCap(VertexConsumer& vc, const VertexDist& vd0, const VertexDist& vd1, double len)
+        void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, double len)
         {
-            vc.RemoveAll();
+            vertexConsumer.RemoveAll();
 
             double dx1 = (vd1.y - vd0.y) / len;
             double dy1 = (vd1.x - vd0.x) / len;
@@ -170,40 +170,40 @@ namespace OHOS {
                     dx2 = dy1 * widthSign_;
                     dy2 = dx1 * widthSign_;
                 }
-                AddVertex(vc, vd0.x - dx1 - dx2, vd0.y + dy1 - dy2);
-                AddVertex(vc, vd0.x + dx1 - dx2, vd0.y - dy1 - dy2);
+                AddVertex(vertexConsumer, vd0.x - dx1 - dx2, vd0.y + dy1 - dy2);
+                AddVertex(vertexConsumer, vd0.x + dx1 - dx2, vd0.y - dy1 - dy2);
             } else {
-                double da = std::acos(widthAbs_ / (widthAbs_ + 0.125 / approxScale_)) * 2;
-                double a1;
-                int i;
-                int n = int(PI / da);
+                double deltaAngle = std::acos(widthAbs_ / (widthAbs_ + 0.125 / approxScale_)) * 2;
+                double angleStart;
+                int nIndex;
+                int divNumber = int(PI / deltaAngle);
 
-                da = PI / (n + 1);
-                AddVertex(vc, vd0.x - dx1, vd0.y + dy1);
+                deltaAngle = PI / (divNumber + 1);
+                AddVertex(vertexConsumer, vd0.x - dx1, vd0.y + dy1);
                 if (widthSign_ > 0) {
-                    a1 = std::atan2(dy1, -dx1);
-                    a1 += da;
-                    for (i = 0; i < n; i++) {
-                        AddVertex(vc, vd0.x + std::cos(a1) * width_, vd0.y + std::sin(a1) * width_);
-                        a1 += da;
+                    angleStart = std::atan2(dy1, -dx1);
+                    angleStart += deltaAngle;
+                    for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                        AddVertex(vertexConsumer, vd0.x + std::cos(angleStart) * width_, vd0.y + std::sin(angleStart) * width_);
+                        angleStart += deltaAngle;
                     }
                 } else {
-                    a1 = std::atan2(-dy1, dx1);
-                    a1 -= da;
-                    for (i = 0; i < n; i++) {
-                        AddVertex(vc, vd0.x + std::cos(a1) * width_,
-                                  vd0.y + std::sin(a1) * width_);
-                        a1 -= da;
+                    angleStart = std::atan2(-dy1, dx1);
+                    angleStart -= deltaAngle;
+                    for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                        AddVertex(vertexConsumer, vd0.x + std::cos(angleStart) * width_,
+                                  vd0.y + std::sin(angleStart) * width_);
+                        angleStart -= deltaAngle;
                     }
                 }
-                AddVertex(vc, vd0.x + dx1, vd0.y - dy1);
+                AddVertex(vertexConsumer, vd0.x + dx1, vd0.y - dy1);
             }
         }
 
         /**
          * @brief 计算相交和拐角
          */
-        void CalcJoin(VertexConsumer& vc, const VertexDist& vd0, const VertexDist& vd1,
+        void CalcJoin(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1,
                       const VertexDist& v2, double len1, double len2)
         {
             double dx1 = width_ * (vd1.y - vd0.y) / len1;
@@ -211,12 +211,12 @@ namespace OHOS {
             double dx2 = width_ * (v2.y - vd1.y) / len2;
             double dy2 = width_ * (v2.x - vd1.x) / len2;
 
-            vc.RemoveAll();
+            vertexConsumer.RemoveAll();
 
-            double cp = CrossProduct(vd0.x, vd0.y, vd1.x, vd1.y, v2.x, v2.y);
-            if (cp != 0 && (cp > 0) == (width_ > 0)) {
+            double crossProduct = CrossProduct(vd0.x, vd0.y, vd1.x, vd1.y, v2.x, v2.y);
+            if (crossProduct != 0 && (crossProduct > 0) == (width_ > 0)) {
                 double limit = ((len1 < len2) ? len1 : len2) / widthAbs_;
-                CalcMiter(vc, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
+                CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
             } else {
                 double dx = (dx1 + dx2) / 2;
                 double dy = (dy1 + dy2) / 2;
@@ -229,9 +229,9 @@ namespace OHOS {
                                              vd1.x + dx2, vd1.y - dy2,
                                              v2.x + dx2, v2.y - dy2,
                                              &dx, &dy)) {
-                            AddVertex(vc, dx, dy);
+                            AddVertex(vertexConsumer, dx, dy);
                         } else {
-                            AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
+                            AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
                         }
                         return;
                     }
@@ -241,61 +241,62 @@ namespace OHOS {
                     case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
-                        CalcMiter(vc, vd0, vd1, v2, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimit_, dbevel);
+                        CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimit_, dbevel);
                         break;
                     case ROUND_JOIN:
-                        CalcArc(vc, vd1.x, vd1.y, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vertexConsumer, vd1.x, vd1.y, dx1, -dy1, dx2, -dy2);
                         break;
 
                     default:
-                        AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
-                        AddVertex(vc, vd1.x + dx2, vd1.y - dy2);
+                        AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
+                        AddVertex(vertexConsumer, vd1.x + dx2, vd1.y - dy2);
                         break;
                 }
             }
         }
 
     private:
-        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vc, double x, double y)
+        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, double x, double y)
         {
-            vc.Add(coord_type(x, y));
+            vertexConsumer.Add(coord_type(x, y));
         }
 
-        void CalcArc(VertexConsumer& vc,
+        void CalcArc(VertexConsumer& vertexConsumer,
                      double x, double y,
                      double dx1, double dy1,
                      double dx2, double dy2)
         {
-            double a1 = std::atan2(dy1 * widthSign_, dx1 * widthSign_);
-            double a2 = std::atan2(dy2 * widthSign_, dx2 * widthSign_);
-            double da = a1 - a2;
-            int i, n;
+            const float limitScale = 0.125;
+            double angleStart = std::atan2(dy1 * widthSign_, dx1 * widthSign_);
+            double angleEnd = std::atan2(dy2 * widthSign_, dx2 * widthSign_);
+            double deltaAngle = angleStart - angleEnd;
+            int nIndex, divNumber;
 
-            da = std::acos(widthAbs_ / (widthAbs_ + 0.125 / approxScale_)) * 2;
+            deltaAngle = std::acos(widthAbs_ / (widthAbs_ + limitScale / approxScale_)) * 2;
 
-            AddVertex(vc, x + dx1, y + dy1);
+            AddVertex(vertexConsumer, x + dx1, y + dy1);
             if (widthSign_ > 0) {
-                if (a1 > a2)
-                    a2 += 2 * PI;
-                n = int((a2 - a1) / da);
-                da = (a2 - a1) / (n + 1);
-                a1 += da;
-                for (i = 0; i < n; i++) {
-                    AddVertex(vc, x + std::cos(a1) * width_, y + std::sin(a1) * width_);
-                    a1 += da;
+                if (angleStart > angleEnd)
+                    angleEnd += 2 * PI;
+                divNumber = int((angleEnd - angleStart) / deltaAngle);
+                deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
+                angleStart += deltaAngle;
+                for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                    AddVertex(vertexConsumer, x + std::cos(angleStart) * width_, y + std::sin(angleStart) * width_);
+                    angleStart += deltaAngle;
                 }
             } else {
-                if (a1 < a2)
-                    a2 -= 2 * PI;
-                n = int((a1 - a2) / da);
-                da = (a1 - a2) / (n + 1);
-                a1 -= da;
-                for (i = 0; i < n; i++) {
-                    AddVertex(vc, x + std::cos(a1) * width_, y + std::sin(a1) * width_);
-                    a1 -= da;
+                if (angleStart < angleEnd)
+                    angleEnd -= 2 * PI;
+                divNumber = int((angleStart - angleEnd) / deltaAngle);
+                deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
+                angleStart -= deltaAngle;
+                for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                    AddVertex(vertexConsumer, x + std::cos(angleStart) * width_, y + std::sin(angleStart) * width_);
+                    angleStart -= deltaAngle;
                 }
             }
-            AddVertex(vc, x + dx2, y + dy2);
+            AddVertex(vertexConsumer, x + dx2, y + dy2);
         }
 
         /**
