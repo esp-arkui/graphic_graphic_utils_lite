@@ -23,14 +23,7 @@
  * @version 1.0
  */
 
-/**
- * @file graphic_geometry_bounding_rect.h
- *
- * @brief Defines 圆角矩形类.
- *
- * @since 1.0
- * @version 1.0
- */
+
 #ifndef GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
 #define GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
 
@@ -39,7 +32,9 @@
 
 namespace OHOS {
     /**
-     * @brief RoundedRect.
+     * @file graphic_geometry_bounding_rect.h
+     *
+     * @brief Defines 圆角矩形类.
      *
      * @since 1.0
      * @version 1.0

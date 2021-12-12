@@ -23,14 +23,6 @@
  * @version 1.0
  */
 
-/**
- * @file graphic_geometry_vertex_sequence.h
- *
- * @brief Defines 定义VertexSequence类.
- *
- * @since 1.0
- * @version 1.0
- */
 
 #ifndef GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
 #define GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
@@ -41,9 +33,10 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 namespace OHOS {
     /**
-     * @brief Defines a VertexSequence class.
+     * @file graphic_geometry_vertex_sequence.h
      *
-     * @param T Indicates the type of the data in the VertexSequence list.
+     * @brief Defines 定义VertexSequence类.
+     *
      * @since 1.0
      * @version 1.0
      */
