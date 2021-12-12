@@ -29,7 +29,7 @@
 
 namespace OHOS {
 #define LINEARVALUE 0.0031308
-#define SRGBVALUE 0.04045
+#define SRGB_VALUE 0.04045
 #define CARDINAL_NUMBER 12.92
 #define BENCHMARK 0.055
 #define BASE_VALUE 1.055
@@ -124,8 +124,7 @@ namespace OHOS {
     inline double LinearToSrgb(double linearValue)
     {
         return (linearValue <= LINEARVALUE) ?
-                   (linearValue * CARDINAL_NUMBER) :
-                   (BASE_VALUE * pow(linearValue, 1 / POW_VALUE) - BENCHMARK);
+            (linearValue * CARDINAL_NUMBER) : (BASE_VALUE * pow(linearValue, 1 / POW_VALUE) - BENCHMARK);
     }
 
     /**
@@ -137,7 +136,8 @@ namespace OHOS {
      */
     inline double SrgbToLinear(double srgbValue)
     {
-        return (srgbValue <= SRGBVALUE) ? (srgbValue / CARDINAL_NUMBER) : pow((srgbValue + BENCHMARK) / (BASE_VALUE), POW_VALUE);
+        return (srgbValue <= SRGB_VALUE) ?
+            (srgbValue / CARDINAL_NUMBER) : pow((srgbValue + BENCHMARK) / (BASE_VALUE), POW_VALUE);
     }
 } // namespace OHOS
 
