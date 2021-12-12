@@ -132,7 +132,7 @@ namespace OHOS {
 
         const TransAffine& operator *= (const TransAffine& metrix)
         {
-            return Multiply(m);
+            return Multiply(metrix);
         }
 
         /**

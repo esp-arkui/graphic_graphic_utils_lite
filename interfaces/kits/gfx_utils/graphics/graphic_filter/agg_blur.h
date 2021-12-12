@@ -92,8 +92,8 @@ namespace OHOS {
             ColorType      pix;
             ColorType*     stackPixel;
             CalculatorType sum,sumIn,sumOut;
-            unsigned w = img.width();
-            unsigned h = img.height();
+            unsigned w = img.Width();
+            unsigned h = img.Height();
             unsigned wm = w - 1;
             unsigned div = radius * 2 + 1;
             unsigned divSum = (radius + 1) * (radius + 1);

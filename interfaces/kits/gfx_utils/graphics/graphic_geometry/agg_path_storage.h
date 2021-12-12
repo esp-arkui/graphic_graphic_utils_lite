@@ -131,13 +131,13 @@ namespace OHOS {
         if (totalBlocks_) {
             ValueType** coordBLK = croodBlocks_ + totalBlocks_ - 1;
             for(;totalBlocks_ > 0;totalBlocks_--) {
-                pod_allocator<ValueType>::Deallocate(
+                ArrAllocator<ValueType>::Deallocate(
                     *coordBLK,
                     BLOCK_SIZE * 2 + 
                     BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
                 --coordBLK;
             }
-            pod_allocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * 2);
+            ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * 2);
             totalBlocks_ = 0;
             maxBlocks_ = 0;
             croodBlocks_ = 0;

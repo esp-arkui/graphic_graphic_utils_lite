@@ -89,7 +89,7 @@ namespace OHOS {
             srcVertices_.ModifyLast(VertexDist(x, y));
         } else {
             if (IsVertex(cmd)) {
-                srcVertices_.add(VertexDist(x, y));
+                srcVertices_.Add(VertexDist(x, y));
             } else {
                 closed_ = GetCloseFlag(cmd);
             }
@@ -118,7 +118,7 @@ namespace OHOS {
             case INITIAL:
                 Rewind(0);
             case READY:
-                if (numDashes_ < 2 || srcVertices_.size() < 2) {
+                if (numDashes_ < 2 || srcVertices_.Size() < 2) {
                     cmd = PATH_CMD_STOP;
                     break;
                 }
