@@ -30,7 +30,8 @@ namespace OHOS {
     /**
      * @brief 线条末端线帽的样式。
      */
-    enum LineCapEnum {
+    enum LineCapEnum
+    {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -42,7 +43,8 @@ namespace OHOS {
     /**
      * @brief 两条线相交时，所创建的拐角类型
      */
-    enum LineJoinEnum {
+    enum LineJoinEnum
+    {
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -318,7 +320,6 @@ namespace OHOS {
             double lim = widthAbs_ * mlimit;
             bool miterLimitExceeded = true;
             bool intersectionFailed = true;
-
             if (CalcIntersection(vd0.x + dx1, vd0.y - dy1,
                                  vd1.x + dx1, vd1.y - dy1,
                                  vd1.x + dx2, vd1.y - dy2,

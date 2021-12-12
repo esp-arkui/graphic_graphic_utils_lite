@@ -21,7 +21,8 @@
 namespace OHOS {
 
     class VCGenStroke {
-        enum Status {
+        enum Status
+        {
             INITIAL,
             READY,
             CAP1,

@@ -38,7 +38,8 @@ namespace OHOS {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
-        enum {
+        enum
+        {
             colorLutSize_ = ColorLutSize
         };
         GradientLut() :
@@ -87,6 +88,7 @@ namespace OHOS {
                 unsigned start = Uround(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
                 color_type color = colorProfile[0].color;
+
                 /*
                  * 对于colorProfile[0]赋予初始颜色计算.
                  */
@@ -108,7 +110,11 @@ namespace OHOS {
                     }
                 }
                 color = colorProfile.Last().color;
+                /*
+                 * 对于colorProfile last 赋予end颜色..
+                 */
                 for (; end < colorType.Size(); end++) {
+                    color = colorProfile.Last().color;
                     colorType[end] = color;
                 }
             }
@@ -136,8 +142,12 @@ namespace OHOS {
             color_type color;
 
             ColorPoint()
-            {
-            }
+            {}
+            /**
+             * @brief 入参
+             * @param offset_ (0-1)
+             * @param color_ 添加的颜色
+             */
             ColorPoint(double offset_, const color_type& color_) :
                 offset(offset_), color(color_)
             {

@@ -34,7 +34,7 @@ namespace OHOS {
         /**
          * @brief Resize 重新分配计算m_span长度
          * @param span_len 扫描线长度
-         * @return m_span的首地址
+         * @return spans的首地址
          */
         GRAPHIC_GEOMETRY_INLINE color_type* Resize(unsigned span_len)
         {
@@ -42,23 +42,6 @@ namespace OHOS {
                 spans.Resize(((span_len + 255) >> 8) << 8);
             }
             return &spans[0];
-        }
-
-        /**
-         * @brief span 返回扫描线数组首地址
-         * @return
-         */
-        GRAPHIC_GEOMETRY_INLINE color_type* span()
-        {
-            return &spans[0];
-        }
-
-        /**
-         * @brief GetMaxSpansSize 返回扫描线数组长度
-         */
-        GRAPHIC_GEOMETRY_INLINE unsigned GetMaxSpansSize() const
-        {
-            return spans.size();
         }
 
     private:
