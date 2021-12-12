@@ -40,7 +40,7 @@
 #include "securec.h"
 namespace OHOS {
 #ifndef GRAPHIC_GEOMETRY_INT8
-#    define GRAPHIC_GEOMETRY_INT8 signed char
+#define GRAPHIC_GEOMETRY_INT8 signed char
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT8U
@@ -64,15 +64,11 @@ namespace OHOS {
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT64
-#    define GRAPHIC_GEOMETRY_INT64 signed __int64
-#else
-#    define GRAPHIC_GEOMETRY_INT64 signed long long
+#   define GRAPHIC_GEOMETRY_INT64 signed long long
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT64U
-#    define GRAPHIC_GEOMETRY_INT64U unsigned __int64
-#else
-#    define GRAPHIC_GEOMETRY_INT64U unsigned long long
+#   define GRAPHIC_GEOMETRY_INT64U unsigned long long
 #endif
 
 #define GRAPHIC_GEOMETRY_INLINE inline

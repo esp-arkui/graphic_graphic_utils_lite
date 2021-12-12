@@ -23,14 +23,6 @@
  * @version 1.0
  */
 
-/**
- * @file graphic_geometry_path_storage.h
- *
- * @brief Defines oˉêyShortenPath.
- *
- * @since 1.0
- * @version 1.0
- */
 
 #ifndef GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
 #define GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED

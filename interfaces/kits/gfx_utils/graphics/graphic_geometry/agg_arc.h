@@ -13,30 +13,21 @@
  * limitations under the License.
  */
 
-/**
- * @addtogroup GraphicGeometry
- * @{
- *
- * @brief Defines Arc.
- *
- * @since 1.0
- * @version 1.0
- */
 
-/**
- * @file graphic_geometry_arc.h
- *
- * @brief Defines 弧线类.
- *
- * @since 1.0
- * @version 1.0
- */
 #ifndef GRAPHIC_GEOMETRY_ARC_INCLUDED
 #define GRAPHIC_GEOMETRY_ARC_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
+    /**
+     * @file graphic_geometry_arc.h
+     *
+     * @brief Defines 弧线类.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
     class Arc : public HeapBase {
     public:
         Arc() :
@@ -64,16 +55,18 @@ namespace OHOS {
         void Rewind(unsigned);
 
         /**
-         * @brief 设置伸缩比.
-         *
+         * @brief 为正确调整近似级别
+         * @param scale为视口坐标和逻辑坐标之间的比率
+         * @return 无
          * @since 1.0
          * @version 1.0
          */
         void ApproximationScale(double scale);
 
         /**
-         * @brief 获取设置伸缩比.
-         *
+         * @brief 获取近似级别
+         * @param scale为视口坐标和逻辑坐标之间的比率
+         * @return 无
          * @since 1.0
          * @version 1.0
          */
@@ -83,8 +76,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取顶点.
-         * @return 返回连接命令
+         * @brief 在采样阶段调用
+         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @return 无
          * @since 1.0
          * @version 1.0
          */

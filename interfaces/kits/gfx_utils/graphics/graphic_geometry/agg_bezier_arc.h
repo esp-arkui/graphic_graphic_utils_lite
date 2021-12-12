@@ -23,14 +23,7 @@
  * @version 1.0
  */
 
-/**
- * @file graphic_geometry_bezier_arc.h
- *
- * @brief Defines 贝塞尔弧结构类.
- *
- * @since 1.0
- * @version 1.0
- */
+
 
 #ifndef GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 #define GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
@@ -52,7 +45,7 @@ namespace OHOS {
     /**
      * @file graphic_geometry_bezier_arc.h
      *
-     * @brief Defines BezierArc.
+     * @brief Defines 贝塞尔弧结构类.
      *
      * @since 1.0
      * @version 1.0
@@ -99,8 +92,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 取出顶点源用于坐标转换重组通道.
-         * @return 返回命令
+         * @brief 在采样阶段调用
+         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @return 无
          * @since 1.0
          * @version 1.0
          */
@@ -219,8 +213,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 取出顶点源用于坐标转换重组通道.
-         * @return 返回连接命令
+         * @brief 在采样阶段调用
+         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @return 无
          * @since 1.0
          * @version 1.0
          */

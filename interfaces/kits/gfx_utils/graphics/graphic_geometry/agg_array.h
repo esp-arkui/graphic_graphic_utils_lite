@@ -17,7 +17,7 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
+ * @brief Defines arr.
  *
  * @since 1.0
  * @version 1.0
