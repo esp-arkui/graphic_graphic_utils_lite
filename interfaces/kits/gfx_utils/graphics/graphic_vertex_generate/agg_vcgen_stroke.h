@@ -37,26 +37,27 @@ namespace OHOS {
         };
 
     public:
-        using VertexStorage = vertex_sequence<vertex_dist, 6>;
-        using CoordStorage = pod_bvector<point_d, 6>;
+        using VertexStorage = VertexSequence<VertexDist, 6>;
+        using CoordStorage = PodBvector<PointD, 6>;
 
         VCGenStroke();
 
-        void LineCap(LineCap lc)
+        void LineCap(LineCapEnum lc)
         {
             stroker_.SetLineCap(lc);
         }
 
-        void LineJoin(LineJoin lj)
+        void LineJoin(LineJoinEnum lj)
         {
             stroker_.SetLineJoin(lj);
         }
-        enum LineCap LineCap() const
+
+        enum LineCapEnum LineCap() const
         {
             return stroker_.GetLineCap();
         }
 
-        enum LineJoin LineJoin() const
+        enum LineJoinEnum LineJoin() const
         {
             return stroker_.GetLineJoin();
         }

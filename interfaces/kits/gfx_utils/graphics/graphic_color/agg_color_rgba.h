@@ -1,1352 +1,1291 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-//
-// Adaptation for high precision colors has been sponsored by 
-// Liberty Technology Systems, Inc., visit http://lib-sys.com
-//
-// Liberty Technology Systems, Inc. is the provider of
-// PostScript and PDF technology for software developers.
-// 
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_COLOR_RGBA_INCLUDED
-#define AGG_COLOR_RGBA_INCLUDED
+/**
+ * @file graphic_geometry_color_rgba.h
+ *
+ * @brief 颜色格式：Rgba,Rgba32
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_COLOR_RGBA_INCLUDED
+#define GRAPHIC_GEOMETRY_COLOR_RGBA_INCLUDED
 
 #include <cmath>
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_common/agg_gamma_lut.h"
-namespace OHOS
-{
-    // Supported component orders for RGB and RGBA pixel formats
-    //=======================================================================
-    struct order_rgb  { enum rgb_e  { R=0, G=1, B=2, N=3 }; };
-    struct order_bgr  { enum bgr_e  { B=0, G=1, R=2, N=3 }; };
-    struct order_rgba { enum rgba_e { R=0, G=1, B=2, A=3, N=4 }; };
-    struct order_argb { enum argb_e { A=0, R=1, G=2, B=3, N=4 }; };
-    struct order_abgr { enum abgr_e { A=0, B=1, G=2, R=3, N=4 }; };
-    struct order_bgra { enum bgra_e { B=0, G=1, R=2, A=3, N=4 }; };
 
-    // Colorspace tag types.
-    struct linear {};
-    struct sRGB {};
+namespace OHOS {
+#define PURPLE_MIN 380.0
+#define PURPLE_MIDDLE 420.0
+#define PURPLE_MAX 440.0
+#define BLUE_MAX 490.0
+#define CYAN_MAX 510.0
+#define GREEN_MAX 580.0
+#define ORANGE_MAX 645.0
+#define RED_MIN 700.0
+#define RED_MAX 780.0
+#define COEFFICIENT 0.7
+#define FIXED_VALUE 0.3
 
-    //====================================================================rgba
-    struct rgba
-    {
-        typedef double value_type;
-
-        double r;
-        double g;
-        double b;
-        double a;
-
-        //--------------------------------------------------------------------
-        rgba() {}
-
-        //--------------------------------------------------------------------
-        rgba(double r_, double g_, double b_, double a_=1.0) :
-            r(r_), g(g_), b(b_), a(a_) {}
-
-        //--------------------------------------------------------------------
-        rgba(const rgba& c, double a_) : r(c.r), g(c.g), b(c.b), a(a_) {}
-
-        //--------------------------------------------------------------------
-        rgba& clear()
-        {
-            r = g = b = a = 0;
-			return *this;
-        }
-
-        //--------------------------------------------------------------------
-        rgba& transparent()
-        {
-            a = 0;
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        rgba& opacity(double a_)
-        {
-            if (a_ < 0) a = 0;
-            else if (a_ > 1) a = 1;
-            else a = a_;
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        double opacity() const
-        {
-            return a;
-        }
-
-        //--------------------------------------------------------------------
-        rgba& premultiply()
-        {
-            r *= a;
-            g *= a;
-            b *= a;
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        rgba& premultiply(double a_)
-        {
-            if (a <= 0 || a_ <= 0)
-            {
-                r = g = b = a = 0;
-            }
-            else
-            {
-                a_ /= a;
-                r *= a_;
-                g *= a_;
-                b *= a_;
-                a  = a_;
-            }
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        rgba& demultiply()
-        {
-            if (a == 0)
-            {
-                r = g = b = 0;
-            }
-            else
-            {
-                double a_ = 1.0 / a;
-                r *= a_;
-                g *= a_;
-                b *= a_;
-            }
-            return *this;
-        }
-
-
-        //--------------------------------------------------------------------
-        rgba gradient(rgba c, double k) const
-        {
-            rgba ret;
-            ret.r = r + (c.r - r) * k;
-            ret.g = g + (c.g - g) * k;
-            ret.b = b + (c.b - b) * k;
-            ret.a = a + (c.a - a) * k;
-            return ret;
-        }
-
-        rgba& operator+=(const rgba& c)
-        {
-            r += c.r;
-            g += c.g;
-            b += c.b;
-            a += c.a;
-            return *this;
-        }
-
-        rgba& operator*=(double k)
-        {
-            r *= k;
-            g *= k;
-            b *= k;
-            a *= k;
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        static rgba no_color() { return rgba(0,0,0,0); }
-
-        //--------------------------------------------------------------------
-        static rgba from_wavelength(double wl, double gamma = 1.0);
-    
-        //--------------------------------------------------------------------
-        explicit rgba(double wavelen, double gamma=1.0)
-        {
-            *this = from_wavelength(wavelen, gamma);
-        }
-
-    };
-
-    inline rgba operator+(const rgba& a, const rgba& b)
-    {
-        return rgba(a) += b;
-    }
-
-    inline rgba operator*(const rgba& a, double b)
-    {
-        return rgba(a) *= b;
-    }
-
-    //------------------------------------------------------------------------
-    inline rgba rgba::from_wavelength(double wl, double gamma)
-    {
-        rgba t(0.0, 0.0, 0.0);
-
-        if (wl >= 380.0 && wl <= 440.0)
-        {
-            t.r = -1.0 * (wl - 440.0) / (440.0 - 380.0);
-            t.b = 1.0;
-        }
-        else if (wl >= 440.0 && wl <= 490.0)
-        {
-            t.g = (wl - 440.0) / (490.0 - 440.0);
-            t.b = 1.0;
-        }
-        else if (wl >= 490.0 && wl <= 510.0)
-        {
-            t.g = 1.0;
-            t.b = -1.0 * (wl - 510.0) / (510.0 - 490.0);
-        }
-        else if (wl >= 510.0 && wl <= 580.0)
-        {
-            t.r = (wl - 510.0) / (580.0 - 510.0);
-            t.g = 1.0;
-        }
-        else if (wl >= 580.0 && wl <= 645.0)
-        {
-            t.r = 1.0;
-            t.g = -1.0 * (wl - 645.0) / (645.0 - 580.0);
-        }
-        else if (wl >= 645.0 && wl <= 780.0)
-        {
-            t.r = 1.0;
-        }
-
-        double s = 1.0;
-        if (wl > 700.0)       s = 0.3 + 0.7 * (780.0 - wl) / (780.0 - 700.0);
-        else if (wl <  420.0) s = 0.3 + 0.7 * (wl - 380.0) / (420.0 - 380.0);
-
-        t.r = std::pow(t.r * s, gamma);
-        t.g = std::pow(t.g * s, gamma);
-        t.b = std::pow(t.b * s, gamma);
-        return t;
-    }
-
-    inline rgba rgba_pre(double r, double g, double b, double a)
-    {
-        return rgba(r, g, b, a).premultiply();
-    }
-
-    
-    //===================================================================rgba8
-    template<class Colorspace>
-    struct rgba8T
-    {
-        typedef int8u  value_type;
-        typedef int32u calc_type;
-        typedef int32  long_type;
-        enum base_scale_e
-        {
-            base_shift = 8,
-            base_scale = 1 << base_shift,
-            base_mask  = base_scale - 1,
-            base_MSB = 1 << (base_shift - 1)
+    struct OrderRgb {
+        enum RgbEnum {
+            RED = 0,
+            GREEN = 1,
+            BLUE = 2,
+            N = 3
         };
-        typedef rgba8T self_type;
-
-
-        value_type r;
-        value_type g;
-        value_type b;
-        value_type a;
-
-        static void convert(rgba8T<linear>& dst, const rgba8T<sRGB>& src)
-        {
-            dst.r = sRGB_conv<value_type>::rgb_from_sRGB(src.r);
-            dst.g = sRGB_conv<value_type>::rgb_from_sRGB(src.g);
-            dst.b = sRGB_conv<value_type>::rgb_from_sRGB(src.b);
-            dst.a = src.a;
-        }
-
-        static void convert(rgba8T<sRGB>& dst, const rgba8T<linear>& src)
-        {
-            dst.r = sRGB_conv<value_type>::rgb_to_sRGB(src.r);
-            dst.g = sRGB_conv<value_type>::rgb_to_sRGB(src.g);
-            dst.b = sRGB_conv<value_type>::rgb_to_sRGB(src.b);
-            dst.a = src.a;
-        }
-
-        static void convert(rgba8T<linear>& dst, const rgba& src)
-        {
-            dst.r = value_type(uround(src.r * base_mask));
-            dst.g = value_type(uround(src.g * base_mask));
-            dst.b = value_type(uround(src.b * base_mask));
-            dst.a = value_type(uround(src.a * base_mask));
-        }
-
-        static void convert(rgba8T<sRGB>& dst, const rgba& src)
-        {
-            // Use the "float" table.
-            dst.r = sRGB_conv<float>::rgb_to_sRGB(float(src.r));
-            dst.g = sRGB_conv<float>::rgb_to_sRGB(float(src.g));
-            dst.b = sRGB_conv<float>::rgb_to_sRGB(float(src.b));
-            dst.a = sRGB_conv<float>::alpha_to_sRGB(float(src.a));
-        }
-
-        static void convert(rgba& dst, const rgba8T<linear>& src)
-        {
-            dst.r = src.r / 255.0;
-            dst.g = src.g / 255.0;
-            dst.b = src.b / 255.0;
-            dst.a = src.a / 255.0;
-        }
-
-        static void convert(rgba& dst, const rgba8T<sRGB>& src)
-        {
-            // Use the "float" table.
-            dst.r = sRGB_conv<float>::rgb_from_sRGB(src.r);
-            dst.g = sRGB_conv<float>::rgb_from_sRGB(src.g);
-            dst.b = sRGB_conv<float>::rgb_from_sRGB(src.b);
-            dst.a = sRGB_conv<float>::alpha_from_sRGB(src.a);
-        }
-
-        //--------------------------------------------------------------------
-        rgba8T() {}
-
-        //--------------------------------------------------------------------
-        rgba8T(unsigned r_, unsigned g_, unsigned b_, unsigned a_ = base_mask) :
-            r(value_type(r_)), 
-            g(value_type(g_)), 
-            b(value_type(b_)), 
-            a(value_type(a_)) {}
-
-        //--------------------------------------------------------------------
-        rgba8T(const rgba& c)
-        {
-            convert(*this, c);
-        }
-
-        //--------------------------------------------------------------------
-        rgba8T(const self_type& c, unsigned a_) :
-            r(c.r), g(c.g), b(c.b), a(value_type(a_)) {}
-
-        //--------------------------------------------------------------------
-        template<class T>
-        rgba8T(const rgba8T<T>& c)
-        {
-            convert(*this, c);
-        }
-
-        //--------------------------------------------------------------------
-        operator rgba() const 
-        {
-            rgba c;
-            convert(c, *this);
-            return c;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
-        {
-            return double(a) / base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
-        {
-            return value_type(uround(a * base_mask));
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
-        {
-            return 0;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
-        {
-            return base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
-        {
-            return a == 0;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
-        {
-            return a == base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type invert(value_type x) 
-        {
-            return base_mask - x;
-        }
-
-        //--------------------------------------------------------------------
-        // Fixed-point multiply, exact over int8u.
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
-        {
-            calc_type t = a * b + base_MSB;
-            return value_type(((t >> base_shift) + t) >> base_shift);
-        }
-        
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
-        {
-            if (a * b == 0)
-            {
-                return 0;
-            }
-            else if (a >= b)
-            {
-                return base_mask;
-            }
-            else return value_type((a * base_mask + (b >> 1)) / b); 
-        }
-
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downscale(T a) 
-        {
-            return a >> base_shift;
-        }
-
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
-        {
-            return a >> n;
-        }
-
-        //--------------------------------------------------------------------
-        // Fixed-point multiply, exact over int8u.
-        // Specifically for multiplying a color component by a cover.
-        static AGG_INLINE value_type mult_cover(value_type a, cover_type b) 
-        {
-            return multiply(a, b);
-        }
-        
-        //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
-        {
-            return multiply(b, a);
-        }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
-        {
-            return p + q - multiply(p, a);
-        }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
-        {
-            int t = (q - p) * a + base_MSB - (p > q);
-            return value_type(p + (((t >> base_shift) + t) >> base_shift));
-        }
-        
-        //--------------------------------------------------------------------
-        self_type& clear()
-        {
-            r = g = b = a = 0;
-			return *this;
-        }
-        
-        //--------------------------------------------------------------------
-        self_type& transparent()
-        {
-            a = 0;
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        self_type& opacity(double a_)
-        {
-            if (a_ < 0) a = 0;
-            else if (a_ > 1) a = 1;
-            else a = (value_type)uround(a_ * double(base_mask));
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        double opacity() const
-        {
-            return double(a) / double(base_mask);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& premultiply()
-        {
-            if (a != base_mask)
-            {
-                if (a == 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    r = multiply(r, a);
-                    g = multiply(g, a);
-                    b = multiply(b, a);
-                }
-            }
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& premultiply(unsigned a_)
-        {
-            if (a != base_mask || a_ < base_mask)
-            {
-                if (a == 0 || a_ == 0)
-                {
-                    r = g = b = a = 0;
-                }
-                else
-                {
-                    calc_type r_ = (calc_type(r) * a_) / a;
-                    calc_type g_ = (calc_type(g) * a_) / a;
-                    calc_type b_ = (calc_type(b) * a_) / a;
-                    r = value_type((r_ > a_) ? a_ : r_);
-                    g = value_type((g_ > a_) ? a_ : g_);
-                    b = value_type((b_ > a_) ? a_ : b_);
-                    a = value_type(a_);
-                }
-            }
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& demultiply()
-        {
-            if (a < base_mask)
-            {
-                if (a == 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    calc_type r_ = (calc_type(r) * base_mask) / a;
-                    calc_type g_ = (calc_type(g) * base_mask) / a;
-                    calc_type b_ = (calc_type(b) * base_mask) / a;
-                    r = value_type((r_ > calc_type(base_mask)) ? calc_type(base_mask) : r_);
-                    g = value_type((g_ > calc_type(base_mask)) ? calc_type(base_mask) : g_);
-                    b = value_type((b_ > calc_type(base_mask)) ? calc_type(base_mask) : b_);
-                }
-            }
-            return *this;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type gradient(const self_type& c, double k) const
-        {
-            self_type ret;
-            calc_type ik = uround(k * base_mask);
-            ret.r = lerp(r, c.r, ik);
-            ret.g = lerp(g, c.g, ik);
-            ret.b = lerp(b, c.b, ik);
-            ret.a = lerp(a, c.a, ik);
-            return ret;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE void add(const self_type& c, unsigned cover)
-        {
-            calc_type cr, cg, cb, ca;
-            if (cover == cover_mask)
-            {
-                if (c.a == base_mask) 
-                {
-                    *this = c;
-                    return;
-                }
-                else
-                {
-                    cr = r + c.r; 
-                    cg = g + c.g; 
-                    cb = b + c.b; 
-                    ca = a + c.a; 
-                }
-            }
-            else
-            {
-                cr = r + mult_cover(c.r, cover);
-                cg = g + mult_cover(c.g, cover);
-                cb = b + mult_cover(c.b, cover);
-                ca = a + mult_cover(c.a, cover);
-            }
-            r = (value_type)((cr > calc_type(base_mask)) ? calc_type(base_mask) : cr);
-            g = (value_type)((cg > calc_type(base_mask)) ? calc_type(base_mask) : cg);
-            b = (value_type)((cb > calc_type(base_mask)) ? calc_type(base_mask) : cb);
-            a = (value_type)((ca > calc_type(base_mask)) ? calc_type(base_mask) : ca);
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_dir(const GammaLUT& gamma)
-        {
-            r = gamma.dir(r);
-            g = gamma.dir(g);
-            b = gamma.dir(b);
-        }
-
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_inv(const GammaLUT& gamma)
-        {
-            r = gamma.inv(r);
-            g = gamma.inv(g);
-            b = gamma.inv(b);
-        }
-
-        //--------------------------------------------------------------------
-        static self_type no_color() { return self_type(0,0,0,0); }
-
-        //--------------------------------------------------------------------
-        static self_type from_wavelength(double wl, double gamma = 1.0)
-        {
-            return self_type(rgba::from_wavelength(wl, gamma));
-        }
     };
 
-    typedef rgba8T<linear> rgba8;
-    typedef rgba8T<sRGB> srgba8;
-
-
-    //-------------------------------------------------------------rgb8_packed
-    inline rgba8 rgb8_packed(unsigned v)
-    {
-        return rgba8((v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF);
-    }
-
-    //-------------------------------------------------------------bgr8_packed
-    inline rgba8 bgr8_packed(unsigned v)
-    {
-        return rgba8(v & 0xFF, (v >> 8) & 0xFF, (v >> 16) & 0xFF);
-    }
-
-    //------------------------------------------------------------argb8_packed
-    inline rgba8 argb8_packed(unsigned v)
-    {
-        return rgba8((v >> 16) & 0xFF, (v >> 8) & 0xFF, v & 0xFF, v >> 24);
-    }
-
-    //---------------------------------------------------------rgba8_gamma_dir
-    template<class GammaLUT>
-    rgba8 rgba8_gamma_dir(rgba8 c, const GammaLUT& gamma)
-    {
-        return rgba8(gamma.dir(c.r), gamma.dir(c.g), gamma.dir(c.b), c.a);
-    }
-
-    //---------------------------------------------------------rgba8_gamma_inv
-    template<class GammaLUT>
-    rgba8 rgba8_gamma_inv(rgba8 c, const GammaLUT& gamma)
-    {
-        return rgba8(gamma.inv(c.r), gamma.inv(c.g), gamma.inv(c.b), c.a);
-    }
-
-
-
-    //==================================================================rgba16
-    struct rgba16
-    {
-        typedef int16u value_type;
-        typedef int32u calc_type;
-        typedef int64  long_type;
-        enum base_scale_e
-        {
-            base_shift = 16,
-            base_scale = 1 << base_shift,
-            base_mask  = base_scale - 1,
-            base_MSB = 1 << (base_shift - 1)
+    struct OrderBgr {
+        enum BgrEnum {
+            BLUE = 0,
+            GREEN = 1,
+            RED = 2,
+            N = 3
         };
-        typedef rgba16 self_type;
+    };
 
-        value_type r;
-        value_type g;
-        value_type b;
-        value_type a;
+    struct OrderRgba {
+        enum RgbaEnum {
+            RED = 0,
+            GREEN = 1,
+            BLUE = 2,
+            ALPHA = 3,
+            N = 4
+        };
+    };
 
-        //--------------------------------------------------------------------
-        rgba16() {}
+    struct OrderArgb {
+        enum ArgbEnum {
+            ALPHA = 0,
+            RED = 1,
+            GREEN = 2,
+            BLUE = 3,
+            N = 4
+        };
+    };
+    struct OrderAbgr {
+        enum AbgrEnum {
+            ALPHA = 0,
+            BLUE = 1,
+            GREEN = 2,
+            RED = 3,
+            N = 4
+        };
+    };
+    struct OrderBgra {
+        enum BgraEnum {
+            BLUE = 0,
+            GREEN = 1,
+            RED = 2,
+            ALPHA = 3,
+            N = 4
+        };
+    };
 
-        //--------------------------------------------------------------------
-        rgba16(unsigned r_, unsigned g_, unsigned b_, unsigned a_=base_mask) :
-            r(value_type(r_)), 
-            g(value_type(g_)), 
-            b(value_type(b_)), 
-            a(value_type(a_)) {}
+    struct Linear {
+    };
+    struct Srgb {
+    };
 
-        //--------------------------------------------------------------------
-        rgba16(const self_type& c, unsigned a_) :
-            r(c.r), g(c.g), b(c.b), a(value_type(a_)) {}
+    /**
+     * @brief Rgba
+     *
+     * 颜色排列顺序：红、绿、蓝、透明度
+     *
+     * @see Rgba
+     * @since 1.0
+     * @version 1.0
+     */
+    struct Rgba {
+        using ValueType = double;
 
-        //--------------------------------------------------------------------
-        rgba16(const rgba& c) :
-            r((value_type)uround(c.r * double(base_mask))), 
-            g((value_type)uround(c.g * double(base_mask))), 
-            b((value_type)uround(c.b * double(base_mask))), 
-            a((value_type)uround(c.a * double(base_mask))) {}
+        double redValue;
+        double greenValue;
+        double blueValue;
+        double alphaValue;
 
-        //--------------------------------------------------------------------
-        rgba16(const rgba8& c) :
-            r(value_type((value_type(c.r) << 8) | c.r)), 
-            g(value_type((value_type(c.g) << 8) | c.g)), 
-            b(value_type((value_type(c.b) << 8) | c.b)), 
-            a(value_type((value_type(c.a) << 8) | c.a)) {}
+        Rgba()
+        {}
 
-        //--------------------------------------------------------------------
-        rgba16(const srgba8& c) :
-            r(sRGB_conv<value_type>::rgb_from_sRGB(c.r)), 
-            g(sRGB_conv<value_type>::rgb_from_sRGB(c.g)), 
-            b(sRGB_conv<value_type>::rgb_from_sRGB(c.b)), 
-            a(sRGB_conv<value_type>::alpha_from_sRGB(c.a)) {}
+        /**
+         * @brief Rgba构造函数
+         *
+         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba(double red, double green, double blue, double alpha = 1.0) :
+            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        {}
 
-        //--------------------------------------------------------------------
-        operator rgba() const 
+        /**
+         * @brief Rgba构造函数
+         *
+         * @param color是Rgba对象、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba(const Rgba& color, double alpha) :
+            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        {}
+
+        /**
+         * @brief 清除，颜色透明度置0
+         *
+         * @param 无
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Clear()
         {
-            return rgba(
-                r / 65535.0, 
-                g / 65535.0, 
-                b / 65535.0, 
-                a / 65535.0);
-        }
-
-        //--------------------------------------------------------------------
-        operator rgba8() const 
-        {
-            return rgba8(r >> 8, g >> 8, b >> 8, a >> 8);
-        }
-
-        //--------------------------------------------------------------------
-        operator srgba8() const 
-        {
-            // Return (non-premultiplied) sRGB values.
-            return srgba8(
-                sRGB_conv<value_type>::rgb_to_sRGB(r), 
-                sRGB_conv<value_type>::rgb_to_sRGB(g), 
-                sRGB_conv<value_type>::rgb_to_sRGB(b), 
-                sRGB_conv<value_type>::alpha_to_sRGB(a));
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
-        {
-            return double(a) / base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
-        {
-            return value_type(uround(a * base_mask));
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
-        {
-            return 0;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
-        {
-            return base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
-        {
-            return a == 0;
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
-        {
-            return a == base_mask;
-        }
-
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type invert(value_type x) 
-        {
-            return base_mask - x;
-        }
-
-        //--------------------------------------------------------------------
-        // Fixed-point multiply, exact over int16u.
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
-        {
-            calc_type t = a * b + base_MSB;
-            return value_type(((t >> base_shift) + t) >> base_shift);
-        }
-        
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
-        {
-            if (a * b == 0)
-            {
-                return 0;
-            }
-            else if (a >= b)
-            {
-                return base_mask;
-            }
-            else return value_type((a * base_mask + (b >> 1)) / b); 
-        }
-
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downscale(T a) 
-        {
-            return a >> base_shift;
-        }
-
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
-        {
-            return a >> n;
-        }
-
-        //--------------------------------------------------------------------
-        // Fixed-point multiply, almost exact over int16u.
-        // Specifically for multiplying a color component by a cover.
-        static AGG_INLINE value_type mult_cover(value_type a, cover_type b) 
-        {
-            return multiply(a, (b << 8) | b);
-        }
-        
-        //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
-        {
-            return multiply((a << 8) | a, b) >> 8;
-        }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
-        {
-            return p + q - multiply(p, a);
-        }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
-        {
-            int t = (q - p) * a + base_MSB - (p > q);
-            return value_type(p + (((t >> base_shift) + t) >> base_shift));
-        }
-        
-        //--------------------------------------------------------------------
-        self_type& clear()
-        {
-            r = g = b = a = 0;
-			return *this;
-        }
-        
-        //--------------------------------------------------------------------
-        self_type& transparent()
-        {
-            a = 0;
+            redValue = 0;
+            greenValue = 0;
+            blueValue = 0;
+            alphaValue = 0;
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& opacity(double a_)
+        /**
+         * @brief 全透明
+         *
+         * @param 无
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Transparent()
         {
-            if (a_ < 0) a = 0;
-            if (a_ > 1) a = 1;
-            a = value_type(uround(a_ * double(base_mask)));
+            alphaValue = 0;
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        double opacity() const
+        /**
+         * @brief 设置透明度
+         *
+         * @param alpha 透明度
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Opacity(double alpha)
         {
-            return double(a) / double(base_mask);
-        }
-
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& premultiply()
-        {
-            if (a != base_mask) 
-            {
-                if (a == 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    r = multiply(r, a);
-                    g = multiply(g, a);
-                    b = multiply(b, a);
-                }
+            if (alpha < 0) {
+                alphaValue = 0;
+            } else if (alpha > 1) {
+                alphaValue = 1;
+            } else {
+                alphaValue = alpha;
             }
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& premultiply(unsigned a_)
+        /**
+         * @brief 获取透明度
+         *
+         * @param 无
+         * @return 返回透明度
+         * @since 1.0
+         * @version 1.0
+         */
+        double Opacity() const
         {
-            if (a < base_mask || a_ < base_mask)
-            {
-                if (a == 0 || a_ == 0)
-                {
-                    r = g = b = a = 0;
-                }
-                else
-                {
-                    calc_type r_ = (calc_type(r) * a_) / a;
-                    calc_type g_ = (calc_type(g) * a_) / a;
-                    calc_type b_ = (calc_type(b) * a_) / a;
-                    r = value_type((r_ > a_) ? a_ : r_);
-                    g = value_type((g_ > a_) ? a_ : g_);
-                    b = value_type((b_ > a_) ? a_ : b_);
-                    a = value_type(a_);
-                }
+            return alphaValue;
+        }
+
+        /**
+         * @brief 预乘
+         *
+         * @param 无
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Premultiply()
+        {
+            redValue *= alphaValue;
+            greenValue *= alphaValue;
+            blueValue *= alphaValue;
+            return *this;
+        }
+
+        /**
+         * @brief 预乘
+         *
+         * @param alpha 透明度
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Premultiply(double alpha)
+        {
+            if (alphaValue <= 0 || alpha <= 0) {
+                redValue = 0;
+                greenValue = 0;
+                blueValue = 0;
+                alphaValue = 0;
+            } else {
+                alpha /= alphaValue;
+                redValue *= alpha;
+                greenValue *= alpha;
+                blueValue *= alpha;
+                alphaValue = alpha;
             }
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& demultiply()
+        /**
+         * @brief 倍减
+         *
+         * @param 无
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& Demultiply()
         {
-            if (a < base_mask)
-            {
-                if (a == 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    calc_type r_ = (calc_type(r) * base_mask) / a;
-                    calc_type g_ = (calc_type(g) * base_mask) / a;
-                    calc_type b_ = (calc_type(b) * base_mask) / a;
-                    r = value_type((r_ > calc_type(base_mask)) ? calc_type(base_mask) : r_);
-                    g = value_type((g_ > calc_type(base_mask)) ? calc_type(base_mask) : g_);
-                    b = value_type((b_ > calc_type(base_mask)) ? calc_type(base_mask) : b_);
-                }
+            if (alphaValue == 0) {
+                redValue = 0;
+                greenValue = 0;
+                blueValue = 0;
+            } else {
+                double alpha = 1.0 / alphaValue;
+                redValue *= alpha;
+                greenValue *= alpha;
+                blueValue *= alpha;
             }
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type gradient(const self_type& c, double k) const
+        /**
+         * @brief 渐变
+         *
+         * @param rgba为Rgba对象，k为变化系数
+         * @return 返回Rgba对象
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba Gradient(Rgba rgba, double k) const
         {
-            self_type ret;
-            calc_type ik = uround(k * base_mask);
-            ret.r = lerp(r, c.r, ik);
-            ret.g = lerp(g, c.g, ik);
-            ret.b = lerp(b, c.b, ik);
-            ret.a = lerp(a, c.a, ik);
+            Rgba ret;
+            ret.redValue = redValue + (rgba.redValue - redValue) * k;
+            ret.greenValue = greenValue + (rgba.greenValue - greenValue) * k;
+            ret.blueValue = blueValue + (rgba.blueValue - blueValue) * k;
+            ret.alphaValue = alphaValue + (rgba.alphaValue - alphaValue) * k;
             return ret;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void add(const self_type& c, unsigned cover)
+        /**
+         * @brief 重载操作符+=函数
+         *
+         * @param rgba为Rgba对象的引用
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& operator+=(const Rgba& rgba)
         {
-            calc_type cr, cg, cb, ca;
-            if (cover == cover_mask)
-            {
-                if (c.a == base_mask) 
-                {
-                    *this = c;
-                    return;
-                }
-                else
-                {
-                    cr = r + c.r; 
-                    cg = g + c.g; 
-                    cb = b + c.b; 
-                    ca = a + c.a; 
-                }
-            }
-            else
-            {
-                cr = r + mult_cover(c.r, cover);
-                cg = g + mult_cover(c.g, cover);
-                cb = b + mult_cover(c.b, cover);
-                ca = a + mult_cover(c.a, cover);
-            }
-            r = (value_type)((cr > calc_type(base_mask)) ? calc_type(base_mask) : cr);
-            g = (value_type)((cg > calc_type(base_mask)) ? calc_type(base_mask) : cg);
-            b = (value_type)((cb > calc_type(base_mask)) ? calc_type(base_mask) : cb);
-            a = (value_type)((ca > calc_type(base_mask)) ? calc_type(base_mask) : ca);
+            redValue += rgba.redValue;
+            greenValue += rgba.greenValue;
+            blueValue += rgba.blueValue;
+            alphaValue += rgba.alphaValue;
+            return *this;
         }
 
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_dir(const GammaLUT& gamma)
+        /**
+         * @brief 重载操作符*=函数
+         *
+         * @param multiplyValue为相乘的系数
+         * @return 返回Rgba对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba& operator*=(double multiplyValue)
         {
-            r = gamma.dir(r);
-            g = gamma.dir(g);
-            b = gamma.dir(b);
+            redValue *= multiplyValue;
+            greenValue *= multiplyValue;
+            blueValue *= multiplyValue;
+            alphaValue *= multiplyValue;
+            return *this;
         }
 
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_inv(const GammaLUT& gamma)
+        static Rgba NoColor()
         {
-            r = gamma.inv(r);
-            g = gamma.inv(g);
-            b = gamma.inv(b);
+            return Rgba(0, 0, 0, 0);
         }
 
-        //--------------------------------------------------------------------
-        static self_type no_color() { return self_type(0,0,0,0); }
+        /**
+         * @brief 根据波长以及gamma值计算颜色值
+         *
+         * @param waveLength波长，gamma伽马值
+         * @return 返回Rgba对象
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba FromWavelength(double waveLength, double gamma = 1.0);
 
-        //--------------------------------------------------------------------
-        static self_type from_wavelength(double wl, double gamma = 1.0)
+        explicit Rgba(double wavelen, double gamma = 1.0)
         {
-            return self_type(rgba::from_wavelength(wl, gamma));
+            *this = FromWavelength(wavelen, gamma);
         }
     };
 
-
-    //------------------------------------------------------rgba16_gamma_dir
-    template<class GammaLUT>
-    rgba16 rgba16_gamma_dir(rgba16 c, const GammaLUT& gamma)
+    /**
+     * @brief 重载操作符+
+     *
+     * @param rgbaA是Rgba对象的常引用、rgbaB是Rgba对象的常引用
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba operator+(const Rgba& rgbaA, const Rgba& rgbaB)
     {
-        return rgba16(gamma.dir(c.r), gamma.dir(c.g), gamma.dir(c.b), c.a);
+        return Rgba(rgbaA) += rgbaB;
     }
 
-    //------------------------------------------------------rgba16_gamma_inv
-    template<class GammaLUT>
-    rgba16 rgba16_gamma_inv(rgba16 c, const GammaLUT& gamma)
+    /**
+     * @brief 重载操作符*
+     *
+     * @param a是Rgba对象的常引用、multiplyValue是相乘的系数
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba operator*(const Rgba& rgbaA, double multiplyValue)
     {
-        return rgba16(gamma.inv(c.r), gamma.inv(c.g), gamma.inv(c.b), c.a);
+        return Rgba(rgbaA) *= multiplyValue;
     }
 
-    //====================================================================rgba32
-    struct rgba32
+    inline Rgba Rgba::FromWavelength(double waveLength, double gamma)
     {
-        typedef float value_type;
-        typedef double calc_type;
-        typedef double long_type;
-        typedef rgba32 self_type;
+        Rgba rgba(0.0, 0.0, 0.0);
 
-        value_type r;
-        value_type g;
-        value_type b;
-        value_type a;
-
-        //--------------------------------------------------------------------
-        rgba32() {}
-
-        //--------------------------------------------------------------------
-        rgba32(value_type r_, value_type g_, value_type b_, value_type a_= 1) :
-            r(r_), g(g_), b(b_), a(a_) {}
-
-        //--------------------------------------------------------------------
-        rgba32(const self_type& c, float a_) :
-            r(c.r), g(c.g), b(c.b), a(a_) {}
-
-        //--------------------------------------------------------------------
-        rgba32(const rgba& c) :
-            r(value_type(c.r)), g(value_type(c.g)), b(value_type(c.b)), a(value_type(c.a)) {}
-
-        //--------------------------------------------------------------------
-        rgba32(const rgba8& c) :
-            r(value_type(c.r / 255.0)), 
-            g(value_type(c.g / 255.0)), 
-            b(value_type(c.b / 255.0)), 
-            a(value_type(c.a / 255.0)) {}
-
-        //--------------------------------------------------------------------
-        rgba32(const srgba8& c) :
-            r(sRGB_conv<value_type>::rgb_from_sRGB(c.r)), 
-            g(sRGB_conv<value_type>::rgb_from_sRGB(c.g)), 
-            b(sRGB_conv<value_type>::rgb_from_sRGB(c.b)), 
-            a(sRGB_conv<value_type>::alpha_from_sRGB(c.a)) {}
-
-        //--------------------------------------------------------------------
-        rgba32(const rgba16& c) :
-            r(value_type(c.r / 65535.0)), 
-            g(value_type(c.g / 65535.0)), 
-            b(value_type(c.b / 65535.0)), 
-            a(value_type(c.a / 65535.0)) {}
-
-        //--------------------------------------------------------------------
-        operator rgba() const 
-        {
-            return rgba(r, g, b, a);
+        if (waveLength >= PURPLE_MIN && waveLength <= PURPLE_MAX) {
+            rgba.redValue = -1.0 * (waveLength - PURPLE_MAX) / (PURPLE_MAX - PURPLE_MIN);
+            rgba.blueValue = 1.0;
+        } else if (waveLength >= PURPLE_MAX && waveLength <= BLUE_MAX) {
+            rgba.greenValue = (waveLength - PURPLE_MAX) / (BLUE_MAX - PURPLE_MAX);
+            rgba.blueValue = 1.0;
+        } else if (waveLength >= BLUE_MAX && waveLength <= CYAN_MAX) {
+            rgba.greenValue = 1.0;
+            rgba.blueValue = -1.0 * (waveLength - CYAN_MAX) / (CYAN_MAX - BLUE_MAX);
+        } else if (waveLength >= CYAN_MAX && waveLength <= GREEN_MAX) {
+            rgba.redValue = (waveLength - CYAN_MAX) / (GREEN_MAX - CYAN_MAX);
+            rgba.greenValue = 1.0;
+        } else if (waveLength >= GREEN_MAX && waveLength <= ORANGE_MAX) {
+            rgba.redValue = 1.0;
+            rgba.greenValue = -1.0 * (waveLength - ORANGE_MAX) / (ORANGE_MAX - GREEN_MAX);
+        } else if (waveLength >= ORANGE_MAX && waveLength <= RED_MAX) {
+            rgba.redValue = 1.0;
         }
 
-        //--------------------------------------------------------------------
-        operator rgba8() const 
-        {
-            return rgba8(
-                uround(r * 255.0), 
-                uround(g * 255.0), 
-                uround(b * 255.0), 
-                uround(a * 255.0));
+        // 计算比率系数
+        double ratio = 1.0;
+        if (waveLength > RED_MIN) {
+            ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
+        } else if (waveLength < PURPLE_MIDDLE) {
+            ratio = FIXED_VALUE + COEFFICIENT * (waveLength - PURPLE_MIN) / (PURPLE_MIDDLE - PURPLE_MIN);
         }
 
-        //--------------------------------------------------------------------
-        operator srgba8() const 
+        rgba.redValue = std::pow(rgba.redValue * ratio, gamma);
+        rgba.greenValue = std::pow(rgba.greenValue * ratio, gamma);
+        rgba.blueValue = std::pow(rgba.blueValue * ratio, gamma);
+        return rgba;
+    }
+
+    /**
+     * @brief Rgba预乘
+     *
+     * @param redValue红色值、greenValue绿色值、blueValue蓝色值、alphaValue透明度
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba RgbaPre(double redValue, double greenValue, double blueValue, double alphaValue)
+    {
+        return Rgba(redValue, greenValue, blueValue, alphaValue).Premultiply();
+    }
+
+    /**
+     * @brief Rgba8T颜色序列转化
+     *
+     * 颜色排列顺序：红、绿、蓝、透明度
+     *
+     * @see Rgba8T
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class Colorspace>
+    struct Rgba8T {
+        using ValueType = int8u;
+        using CalcType = int32u;
+        using LongType = int32;
+        using SelfType = Rgba8T;
+
+        ValueType redValue;
+        ValueType greenValue;
+        ValueType blueValue;
+        ValueType alphaValue;
+
+        enum BaseScaleEnum {
+            BASESHIFT = 8,
+            BASESCALE = 1 << BASESHIFT,
+            BASEMASK = BASESCALE - 1,
+            BASEMSB = 1 << (BASESHIFT - 1)
+        };
+
+        Rgba8T()
+        {}
+
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
+            redValue(ValueType(red)),
+            greenValue(ValueType(green)),
+            blueValue(ValueType(blue)),
+            alphaValue(ValueType(alpha))
+        {}
+
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba对象的引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(const Rgba& color)
         {
-            return srgba8(
-                sRGB_conv<value_type>::rgb_to_sRGB(r), 
-                sRGB_conv<value_type>::rgb_to_sRGB(g), 
-                sRGB_conv<value_type>::rgb_to_sRGB(b), 
-                sRGB_conv<value_type>::alpha_to_sRGB(a));
+            Convert(*this, color);
         }
 
-        //--------------------------------------------------------------------
-        operator rgba16() const 
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba8T对象的引用，alpha为透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(const SelfType& color, unsigned alpha) :
+            redValue(color.redValue),
+            greenValue(color.greenValue),
+            blueValue(color.blueValue),
+            alphaValue(ValueType(alpha))
+        {}
+
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba8T<T>对象的引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class T>
+        Rgba8T(const Rgba8T<T>& color)
         {
-            return rgba8(
-                uround(r * 65535.0), 
-                uround(g * 65535.0), 
-                uround(b * 65535.0), 
-                uround(a * 65535.0));
+            Convert(*this, color);
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE double to_double(value_type a)
+        /**
+         * @brief 重载Rgba函数
+         *
+         * @param 无
+         * @return 返回Rgba对象
+         * @since 1.0
+         * @version 1.0
+         */
+        operator Rgba() const
         {
-            return a;
+            Rgba color;
+            Convert(color, *this);
+            return color;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type from_double(double a)
+        /**
+         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba8T<Linear>中
+         *
+         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba8T<Srgb>对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba8T<Linear>& dst, const Rgba8T<Srgb>& src)
         {
-            return value_type(a);
+            dst.redValue = SrgbConv<ValueType>::RgbFromSrgb(src.redValue);
+            dst.greenValue = SrgbConv<ValueType>::RgbFromSrgb(src.greenValue);
+            dst.blueValue = SrgbConv<ValueType>::RgbFromSrgb(src.blueValue);
+            dst.alphaValue = src.alphaValue;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type empty_value()
+        /**
+         * @brief 将Rgba8T<Linear>中的颜色值赋值到Rgba8T<Srgb>中
+         *
+         * @param dst为Rgba8T<Srgb>对象的引用，src为Rgba8T<Linear>对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba8T<Srgb>& dst, const Rgba8T<Linear>& src)
+        {
+            dst.redValue = SrgbConv<ValueType>::RgbToSrgb(src.redValue);
+            dst.greenValue = SrgbConv<ValueType>::RgbToSrgb(src.greenValue);
+            dst.blueValue = SrgbConv<ValueType>::RgbToSrgb(src.blueValue);
+            dst.alphaValue = src.alphaValue;
+        }
+
+        /**
+         * @brief 将Rgba中的颜色值赋值到Rgba8T<Linear>中
+         *
+         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
+        {
+            dst.redValue = ValueType(Uround(src.redValue * BASEMASK));
+            dst.greenValue = ValueType(Uround(src.greenValue * BASEMASK));
+            dst.blueValue = ValueType(Uround(src.blueValue * BASEMASK));
+            dst.alphaValue = ValueType(Uround(src.alphaValue * BASEMASK));
+        }
+
+        /**
+         * @brief 将Rgba中的颜色值赋值到Rgba8T<Srgb>中
+         *
+         * @param dst为Rgba8T<Srgb>对象的引用，src为Rgba对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba8T<Srgb>& dst, const Rgba& src)
+        {
+            dst.redValue = SrgbConv<float>::RgbToSrgb(float(src.redValue));
+            dst.greenValue = SrgbConv<float>::RgbToSrgb(float(src.greenValue));
+            dst.blueValue = SrgbConv<float>::RgbToSrgb(float(src.blueValue));
+            dst.alphaValue = SrgbConv<float>::AlphaToSrgb(float(src.alphaValue));
+        }
+
+        /**
+         * @brief 将Rgba8T<Linear>中的颜色值赋值到Rgba中
+         *
+         * @param dst为Rgba对象的引用，src为Rgba8T<Linear>对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba& dst, const Rgba8T<Linear>& src)
+        {
+            dst.redValue = src.redValue / 255.0;
+            dst.greenValue = src.greenValue / 255.0;
+            dst.blueValue = src.blueValue / 255.0;
+            dst.alphaValue = src.alphaValue / 255.0;
+        }
+
+        /**
+         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba中
+         *
+         * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba& dst, const Rgba8T<Srgb>& src)
+        {
+            dst.redValue = SrgbConv<float>::RgbFromSrgb(src.redValue);
+            dst.greenValue = SrgbConv<float>::RgbFromSrgb(src.greenValue);
+            dst.blueValue = SrgbConv<float>::RgbFromSrgb(src.blueValue);
+            dst.alphaValue = SrgbConv<float>::AlphaFromSrgb(src.alphaValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE double ToDouble(ValueType valueType)
+        {
+            return double(valueType) / BASEMASK;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType FromDouble(double value)
+        {
+            return ValueType(Uround(value * BASEMASK));
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
         {
             return 0;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type full_value()
+        static GRAPHIC_GEOMETRY_INLINE ValueType FullValue()
+        {
+            return BASEMASK;
+        }
+
+        GRAPHIC_GEOMETRY_INLINE bool IsTransparent() const
+        {
+            return alphaValue == 0;
+        }
+
+        GRAPHIC_GEOMETRY_INLINE bool IsOpaque() const
+        {
+            return alphaValue == BASEMASK;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Invert(ValueType valueType)
+        {
+            return BASEMASK - valueType;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
+        {
+            CalcType calcType = valueA * valueB + BASEMSB;
+            return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Demultiply(ValueType valueA, ValueType valueB)
+        {
+            if (valueA * valueB == 0) {
+                return 0;
+            } else if (valueA >= valueB) {
+                return BASEMASK;
+            } else {
+                return ValueType((valueA * BASEMASK + (valueB >> 1)) / valueB);
+            }
+        }
+
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downshift(T value, unsigned digit)
+        {
+            return value >> digit;
+        }
+
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downscale(T value)
+        {
+            return value >> BASESHIFT;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType MultCover(ValueType valueA, CoverType coverValue)
+        {
+            return Multiply(valueA, coverValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, ValueType value)
+        {
+            return Multiply(value, coverValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Prelerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        {
+            return valueP + valueQ - Multiply(valueP, valueA);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        {
+            int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
+            return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
+        }
+
+        SelfType& Clear()
+        {
+            redValue = 0;
+            greenValue = 0;
+            blueValue = 0;
+            alphaValue = 0;
+            return *this;
+        }
+
+        SelfType& Transparent()
+        {
+            alphaValue = 0;
+            return *this;
+        }
+
+        /**
+         * @brief 设置透明度
+         *
+         * @param alpha为透明度
+         * @return 返回Rgba8T对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        SelfType& Opacity(double alpha)
+        {
+            if (alpha < 0) {
+                alphaValue = 0;
+            } else if (alpha > 1) {
+                alphaValue = 1;
+            } else {
+                alphaValue = (ValueType)Uround(alpha * double(BASEMASK));
+            }
+            return *this;
+        }
+
+        double Opacity() const
+        {
+            return double(alphaValue) / double(BASEMASK);
+        }
+
+        /**
+         * @brief 预乘
+         *
+         * @param 无
+         * @return 返回Rgba8T对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType& Premultiply()
+        {
+            if (alphaValue != BASEMASK) {
+                if (alphaValue == 0) {
+                    redValue = 0;
+                    greenValue = 0;
+                    blueValue = 0;
+                } else {
+                    redValue = Multiply(redValue, alphaValue);
+                    greenValue = Multiply(greenValue, alphaValue);
+                    blueValue = Multiply(blueValue, alphaValue);
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * @brief 预乘
+         *
+         * @param alpha为透明度
+         * @return 返回Rgba8T对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType& Premultiply(unsigned alpha)
+        {
+            if (alphaValue != BASEMASK || alpha < BASEMASK) {
+                if (alphaValue == 0 || alpha == 0) {
+                    redValue = 0;
+                    greenValue = 0;
+                    blueValue = 0;
+                    alphaValue = 0;
+                } else {
+                    CalcType red = (CalcType(redValue) * alpha) / alphaValue;
+                    CalcType green = (CalcType(greenValue) * alpha) / alphaValue;
+                    CalcType blue = (CalcType(blueValue) * alpha) / alphaValue;
+                    redValue = ValueType((red > alpha) ? alpha : red);
+                    greenValue = ValueType((green > alpha) ? alpha : green);
+                    blueValue = ValueType((blue > alpha) ? alpha : blue);
+                    alphaValue = ValueType(alpha);
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * @brief 倍减
+         *
+         * @param 无
+         * @return 返回Rgba8T对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType& Demultiply()
+        {
+            if (alphaValue < BASEMASK) {
+                if (alphaValue == 0) {
+                    redValue = 0;
+                    greenValue = 0;
+                    blueValue = 0;
+                } else {
+                    // 颜色值 * 255 / 透明度
+                    CalcType red = (CalcType(redValue) * BASEMASK) / alphaValue;
+                    CalcType green = (CalcType(greenValue) * BASEMASK) / alphaValue;
+                    CalcType blue = (CalcType(blueValue) * BASEMASK) / alphaValue;
+                    redValue = ValueType((red > CalcType(BASEMASK)) ? CalcType(BASEMASK) : red);
+                    greenValue = ValueType((green > CalcType(BASEMASK)) ? CalcType(BASEMASK) : green);
+                    blueValue = ValueType((blue > CalcType(BASEMASK)) ? CalcType(BASEMASK) : blue);
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * @brief 渐变，根据变化系数计算出新的Rgba8T对象
+         *
+         * @param color为Rgba8T对象的引用，k为变化系数
+         * @return 返回Rgba8T对象
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, double k) const
+        {
+            SelfType ret;
+            CalcType increaseK = Uround(k * BASEMASK);
+            ret.redValue = Lerp(redValue, color.redValue, increaseK);
+            ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
+            ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);
+            ret.alphaValue = Lerp(alphaValue, color.alphaValue, increaseK);
+            return ret;
+        }
+
+        /**
+         * @brief 根据Rgba8T对象和掩码值计算颜色值
+         *
+         * @param color为Rgba8T对象的常引用，cover为掩码值
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void Add(const SelfType& color, unsigned cover)
+        {
+            CalcType calcRed;
+            CalcType calcGreen;
+            CalcType calcBlue;
+            CalcType calcAlpha;
+            if (cover == COVER_MASK) {
+                if (color.alphaValue == BASEMASK) {
+                    *this = color;
+                    return;
+                } else {
+                    calcRed = redValue + color.redValue;
+                    calcGreen = greenValue + color.greenValue;
+                    calcBlue = blueValue + color.blueValue;
+                    calcAlpha = alphaValue + color.alphaValue;
+                }
+            } else {
+                calcRed = redValue + MultCover(color.redValue, cover);
+                calcGreen = greenValue + MultCover(color.greenValue, cover);
+                calcBlue = blueValue + MultCover(color.blueValue, cover);
+                calcAlpha = alphaValue + MultCover(color.alphaValue, cover);
+            }
+            redValue = (ValueType)((calcRed > CalcType(BASEMASK)) ? CalcType(BASEMASK) : calcRed);
+            greenValue = (ValueType)((calcGreen > CalcType(BASEMASK)) ? CalcType(BASEMASK) : calcGreen);
+            blueValue = (ValueType)((calcBlue > CalcType(BASEMASK)) ? CalcType(BASEMASK) : calcBlue);
+            alphaValue = (ValueType)((calcAlpha > CalcType(BASEMASK)) ? CalcType(BASEMASK) : calcAlpha);
+        }
+
+        template <class GammaLUT>
+        GRAPHIC_GEOMETRY_INLINE void ApplyGammaDir(const GammaLUT& gamma)
+        {
+            redValue = gamma.GetDirTableValue(redValue);
+            greenValue = gamma.GetDirTableValue(greenValue);
+            blueValue = gamma.GetDirTableValue(blueValue);
+        }
+
+        template <class GammaLUT>
+        GRAPHIC_GEOMETRY_INLINE void ApplyGammaInv(const GammaLUT& gamma)
+        {
+            redValue = gamma.GetInverseTableValue(redValue);
+            greenValue = gamma.GetInverseTableValue(greenValue);
+            blueValue = gamma.GetInverseTableValue(blueValue);
+        }
+
+        static SelfType FromWavelength(double waveLength, double gamma = 1.0)
+        {
+            return SelfType(Rgba::FromWavelength(waveLength, gamma));
+        }
+
+        static SelfType NoColor()
+        {
+            return SelfType(0, 0, 0, 0);
+        }
+    };
+
+    using Rgba8 = Rgba8T<Linear>;
+    using Srgba8 = Rgba8T<Srgb>;
+
+    inline Rgba8 Rgb8Packed(unsigned value)
+    {
+        return Rgba8((value >> 0x10) & 0xFF, (value >> 0x08) & 0xFF, value & 0xFF);
+    }
+
+    inline Rgba8 Bgr8Packed(unsigned value)
+    {
+        return Rgba8(value & 0xFF, (value >> 0x08) & 0xFF, (value >> 0x10) & 0xFF);
+    }
+
+    inline Rgba8 Argb8Packed(unsigned value)
+    {
+        return Rgba8((value >> 0x10) & 0xFF, (value >> 0x08) & 0xFF, value & 0xFF, value >> 0x18);
+    }
+
+    template <class GammaLUT>
+    Rgba8 Rgba8GammaDir(Rgba8 color, const GammaLUT& gamma)
+    {
+        return Rgba8(gamma.GetDirTableValue(color.redValue), gamma.GetDirTableValue(color.greenValue),
+                     gamma.GetDirTableValue(color.blueValue), color.alphaValue);
+    }
+
+    template <class GammaLUT>
+    Rgba8 Rgba8GammaInv(Rgba8 color, const GammaLUT& gamma)
+    {
+        return Rgba8(gamma.GetInverseTableValue(color.redValue), gamma.GetInverseTableValue(color.greenValue),
+                     gamma.GetInverseTableValue(color.blueValue), color.alphaValue);
+    }
+
+    /**
+     * @brief Rgba32颜色序列转化
+     *
+     * 颜色排列顺序：红、绿、蓝、透明度
+     *
+     * @see Rgba32
+     * @since 1.0
+     * @version 1.0
+     */
+    struct Rgba32 {
+        using ValueType = float;
+        using CalcType = double;
+        using LongType = double;
+        using SelfType = Rgba32;
+
+        ValueType redValue;
+        ValueType greenValue;
+        ValueType blueValue;
+        ValueType alphaValue;
+
+        Rgba32()
+        {}
+
+        /**
+         * @brief Rgba32构造函数
+         *
+         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba32(ValueType red, ValueType green, ValueType blue, ValueType alpha = 1) :
+            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        {}
+
+        /**
+         * @brief Rgba32构造函数
+         *
+         * @param color为Rgba32对象的常引用、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba32(const SelfType& color, float alpha) :
+            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        {}
+
+        /**
+         * @brief Rgba32构造函数
+         *
+         * @param color为Rgba对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba32(const Rgba& color) :
+            redValue(ValueType(color.redValue)),
+            greenValue(ValueType(color.greenValue)),
+            blueValue(ValueType(color.blueValue)),
+            alphaValue(ValueType(color.alphaValue))
+        {}
+
+        /**
+         * @brief Rgba32构造函数
+         *
+         * @param color为Rgba8对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba32(const Rgba8& color) :
+            redValue(ValueType(color.redValue / 255.0)),
+            greenValue(ValueType(color.greenValue / 255.0)),
+            blueValue(ValueType(color.blueValue / 255.0)),
+            alphaValue(ValueType(color.alphaValue / 255.0))
+        {}
+
+        /**
+         * @brief Rgba32构造函数
+         *
+         * @param color为Srgba8对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba32(const Srgba8& color) :
+            redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
+            greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
+            blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
+            alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
+        {}
+
+        operator Rgba() const
+        {
+            return Rgba(redValue, greenValue, blueValue, alphaValue);
+        }
+
+        operator Rgba8() const
+        {
+            return Rgba8(
+                Uround(redValue * 255.0),
+                Uround(greenValue * 255.0),
+                Uround(blueValue * 255.0),
+                Uround(alphaValue * 255.0));
+        }
+
+        operator Srgba8() const
+        {
+            return Srgba8(
+                SrgbConv<ValueType>::RgbToSrgb(redValue),
+                SrgbConv<ValueType>::RgbToSrgb(greenValue),
+                SrgbConv<ValueType>::RgbToSrgb(blueValue),
+                SrgbConv<ValueType>::AlphaToSrgb(alphaValue));
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType FromDouble(double value)
+        {
+            return ValueType(value);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE double ToDouble(ValueType valueType)
+        {
+            return valueType;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType FullValue()
         {
             return 1;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_transparent() const
+        static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
         {
-            return a <= 0;
+            return 0;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE bool is_opaque() const
+        GRAPHIC_GEOMETRY_INLINE bool IsOpaque() const
         {
-            return a >= 1;
+            return alphaValue >= 1;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type invert(value_type x) 
+        GRAPHIC_GEOMETRY_INLINE bool IsTransparent() const
         {
-            return 1 - x;
+            return alphaValue <= 0;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type multiply(value_type a, value_type b) 
+        static GRAPHIC_GEOMETRY_INLINE ValueType Invert(ValueType valueType)
         {
-            return value_type(a * b);
+            return 1 - valueType;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type demultiply(value_type a, value_type b) 
+        static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
         {
-            return (b == 0) ? 0 : value_type(a / b);
+            return ValueType(valueA * valueB);
         }
 
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downscale(T a) 
+        static GRAPHIC_GEOMETRY_INLINE ValueType Demultiply(ValueType valueA, ValueType valueB)
         {
-            return a;
+            return (valueA == 0) ? 0 : ValueType(valueA / valueB);
         }
 
-        //--------------------------------------------------------------------
-        template<typename T>
-        static AGG_INLINE T downshift(T a, unsigned n) 
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downscale(T value)
         {
-            return n > 0 ? a / (1 << n) : a;
+            return value;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE value_type mult_cover(value_type a, cover_type b) 
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downshift(T value, unsigned digit)
         {
-            return value_type(a * b / cover_mask);
+            return digit > 0 ? value / (1 << digit) : value;
         }
 
-        //--------------------------------------------------------------------
-        static AGG_INLINE cover_type scale_cover(cover_type a, value_type b) 
+        static GRAPHIC_GEOMETRY_INLINE ValueType MultCover(ValueType valueType, CoverType coverValue)
         {
-            return cover_type(uround(a * b));
+            return ValueType(valueType * coverValue / COVER_MASK);
         }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a, assuming q is premultiplied by a.
-        static AGG_INLINE value_type prelerp(value_type p, value_type q, value_type a) 
+
+        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, ValueType valueType)
         {
-            return (1 - a) * p + q; // more accurate than "p + q - p * a"
+            return CoverType(Uround(coverValue * valueType));
         }
-        
-        //--------------------------------------------------------------------
-        // Interpolate p to q by a.
-        static AGG_INLINE value_type lerp(value_type p, value_type q, value_type a) 
+
+        // valueP valueQ中插值，ratio为比例
+        static GRAPHIC_GEOMETRY_INLINE ValueType Prelerp(ValueType valueP, ValueType valueQ, ValueType ratio)
         {
-			// The form "p + a * (q - p)" avoids a multiplication, but may produce an 
-			// inaccurate result. For example, "p + (q - p)" may not be exactly equal 
-			// to q. Therefore, stick to the basic expression, which at least produces 
-			// the correct result at either extreme.
-			return (1 - a) * p + a * q;
+            return (1 - ratio) * valueP + valueQ;
         }
-        
-        //--------------------------------------------------------------------
-        self_type& clear()
+
+        // valueP valueQ中插值，ratio为比例
+        static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType ratio)
         {
-            r = g = b = a = 0;
-			return *this;
+            return (1 - ratio) * valueP + ratio * valueQ;
         }
-        
-        //--------------------------------------------------------------------
-        self_type& transparent()
+
+        SelfType& Clear()
         {
-            a = 0;
+            redValue = 0;
+            greenValue = 0;
+            blueValue = 0;
+            alphaValue = 0;
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& opacity(double a_)
+        SelfType& Transparent()
         {
-            if (a_ < 0) a = 0;
-            else if (a_ > 1) a = 1;
-            else a = value_type(a_);
+            alphaValue = 0;
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        double opacity() const
+        GRAPHIC_GEOMETRY_INLINE SelfType& Opacity(double alpha)
         {
-            return a;
+            if (alpha < 0) {
+                alphaValue = 0;
+            } else if (alpha > 1) {
+                alphaValue = 1;
+            } else {
+                alphaValue = ValueType(alpha);
+            }
+            return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& premultiply()
+        double Opacity() const
         {
-            if (a < 1)
-            {
-                if (a <= 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    r *= a;
-                    g *= a;
-                    b *= a;
+            return alphaValue;
+        }
+
+        GRAPHIC_GEOMETRY_INLINE SelfType& Premultiply()
+        {
+            if (alphaValue < 1) {
+                if (alphaValue <= 0) {
+                    redValue = 0;
+                    greenValue = 0;
+                    blueValue = 0;
+                } else {
+                    redValue *= alphaValue;
+                    greenValue *= alphaValue;
+                    blueValue *= alphaValue;
                 }
             }
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type& demultiply()
+        GRAPHIC_GEOMETRY_INLINE SelfType& Demultiply()
         {
-            if (a < 1)
-            {
-                if (a <= 0)
-                {
-                    r = g = b = 0;
-                }
-                else
-                {
-                    r /= a;
-                    g /= a;
-                    b /= a;
+            if (alphaValue < 1) {
+                if (alphaValue <= 0) {
+                    redValue = 0;
+                    greenValue = 0;
+                    blueValue = 0;
+                } else {
+                    redValue /= alphaValue;
+                    greenValue /= alphaValue;
+                    blueValue /= alphaValue;
                 }
             }
             return *this;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE self_type gradient(const self_type& c, double k) const
+        /**
+         * @brief 根据Rgba32对象和系数计算新的Rgba32对象
+         *
+         * @param color为Rgba32对象的常引用，k为比例
+         * @return 返回Rgba32对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, double k) const
         {
-            self_type ret;
-            ret.r = value_type(r + (c.r - r) * k);
-            ret.g = value_type(g + (c.g - g) * k);
-            ret.b = value_type(b + (c.b - b) * k);
-            ret.a = value_type(a + (c.a - a) * k);
+            SelfType ret;
+            ret.redValue = ValueType(redValue + (color.redValue - redValue) * k);
+            ret.greenValue = ValueType(greenValue + (color.greenValue - greenValue) * k);
+            ret.blueValue = ValueType(blueValue + (color.blueValue - blueValue) * k);
+            ret.alphaValue = ValueType(alphaValue + (color.alphaValue - alphaValue) * k);
             return ret;
         }
 
-        //--------------------------------------------------------------------
-        AGG_INLINE void add(const self_type& c, unsigned cover)
+        /**
+         * @brief 根据Rgba32对象和掩码值计算颜色值
+         *
+         * @param color为Rgba32对象的常引用，cover为掩码值
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE void Add(const SelfType& color, unsigned cover)
         {
-            if (cover == cover_mask)
-            {
-                if (c.is_opaque()) 
-                {
-                    *this = c;
+            if (cover == COVER_MASK) {
+                if (color.IsOpaque()) {
+                    *this = color;
                     return;
+                } else {
+                    redValue += color.redValue;
+                    greenValue += color.greenValue;
+                    blueValue += color.blueValue;
+                    alphaValue += color.alphaValue;
                 }
-                else
-                {
-                    r += c.r; 
-                    g += c.g; 
-                    b += c.b; 
-                    a += c.a; 
-                }
+            } else {
+                redValue += MultCover(color.redValue, cover);
+                greenValue += MultCover(color.greenValue, cover);
+                blueValue += MultCover(color.blueValue, cover);
+                alphaValue += MultCover(color.alphaValue, cover);
             }
-            else
-            {
-                r += mult_cover(c.r, cover);
-                g += mult_cover(c.g, cover);
-                b += mult_cover(c.b, cover);
-                a += mult_cover(c.a, cover);
+            if (alphaValue > 1) {
+                alphaValue = 1;
             }
-            if (a > 1) a = 1;
-            if (r > a) r = a;
-            if (g > a) g = a;
-            if (b > a) b = a;
+            if (redValue > alphaValue) {
+                redValue = alphaValue;
+            }
+            if (greenValue > alphaValue) {
+                greenValue = alphaValue;
+            }
+            if (blueValue > alphaValue) {
+                blueValue = alphaValue;
+            }
         }
 
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_dir(const GammaLUT& gamma)
+        template <class GammaLUT>
+        GRAPHIC_GEOMETRY_INLINE void ApplyGammaDir(const GammaLUT& gamma)
         {
-            r = gamma.dir(r);
-            g = gamma.dir(g);
-            b = gamma.dir(b);
+            redValue = gamma.GetDirTableValue(redValue);
+            greenValue = gamma.GetDirTableValue(greenValue);
+            blueValue = gamma.GetDirTableValue(blueValue);
         }
 
-        //--------------------------------------------------------------------
-        template<class GammaLUT>
-        AGG_INLINE void apply_gamma_inv(const GammaLUT& gamma)
+        template <class GammaLUT>
+        GRAPHIC_GEOMETRY_INLINE void ApplyGammaInv(const GammaLUT& gamma)
         {
-            r = gamma.inv(r);
-            g = gamma.inv(g);
-            b = gamma.inv(b);
+            redValue = gamma.GetInverseTableValue(redValue);
+            greenValue = gamma.GetInverseTableValue(greenValue);
+            blueValue = gamma.GetInverseTableValue(blueValue);
         }
 
-        //--------------------------------------------------------------------
-        static self_type no_color() { return self_type(0,0,0,0); }
-
-        //--------------------------------------------------------------------
-        static self_type from_wavelength(double wl, double gamma = 1)
+        static SelfType FromWavelength(double waveLength, double gamma = 1)
         {
-            return self_type(rgba::from_wavelength(wl, gamma));
+            return SelfType(Rgba::FromWavelength(waveLength, gamma));
+        }
+
+        static SelfType NoColor()
+        {
+            return SelfType(0, 0, 0, 0);
         }
     };
-}
-
-
+} // namespace OHOS
 
 #endif

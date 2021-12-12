@@ -1,75 +1,172 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// Rounded rectangle vertex generator
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_ROUNDED_RECT_INCLUDED
-#define AGG_ROUNDED_RECT_INCLUDED
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines RoundedRect.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+/**
+ * @file graphic_geometry_bounding_rect.h
+ *
+ * @brief Defines 圆角矩形类.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+#ifndef GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
+#define GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
 
 #include "agg_arc.h"
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
 namespace OHOS {
-    //------------------------------------------------------------rounded_rect
-    //
-    // See Implemantation agg_rounded_rect.cpp
-    //
-    class rounded_rect {
+    /**
+     * @brief RoundedRect.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    class RoundedRect : public HeapBase {
     public:
-        rounded_rect()
-        {
-        }
-        rounded_rect(double x1, double y1, double x2, double y2, double r);
+        /**
+         * @brief 构造圆角矩形.
+         *
+         * @param x1,y1 矩形左上角顶点,x2,y2 矩形右下角顶点,r 圆角半径.
+         * @since 1.0
+         * @version 1.0
+         */
+        RoundedRect(double x1, double y1, double x2, double y2, double r);
 
-        void rect(double x1, double y1, double x2, double y2);
-        void radius(double r);
-        void radius(double rx, double ry);
-        void radius(double rx_bottom, double ry_bottom, double rx_top, double ry_top);
-        void radius(double rx1, double ry1, double rx2, double ry2,
+        RoundedRect()
+        {}
+
+        /**
+         * @brief 设置圆角矩形顶点圆弧的横向半径与纵向半径.
+         *
+         * @param rx横向半径,纵向半径.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Radius(double rx, double ry);
+
+        /**
+         * @brief 设置圆角矩形四个顶点圆弧的横向半径与纵向半径.
+         *
+         * @param rxBottom下方两个点横向半径,ryBottom下方两个点纵向半径,rxTop上方两个点横向半径,ryTop上方两个点纵向半径.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Radius(double rxBottom, double ryBottom, double rxTop, double ryTop);
+
+        /**
+         * @brief 分别设置圆角矩形四个顶点圆弧的横向半径与纵向半径.
+         *
+         * @param 分别对应四个顶点,rx 横向半径,ry 纵向半径.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Radius(double rx1, double ry1, double rx2, double ry2,
                     double rx3, double ry3, double rx4, double ry4);
-        void normalize_radius();
 
-        void SetApproximationScale(double s)
+        /**
+         * @brief 设置顶点弧形的伸缩比
+         *
+         * @param 伸缩比.
+         * @since 1.0
+         * @version 1.0
+         */
+        void ApproximationScale(double scale)
         {
-            m_arc.SetApproximationScale(s);
-        }
-        double GetApproximationScale() const
-        {
-            return m_arc.GetApproximationScale();
+            arc_.ApproximationScale(scale);
         }
 
+        /**
+         * @brief 设置矩形的左上角与右下角两个顶点.
+         *
+         * @param x1与y1左上角顶点,x2与y2右下角顶点.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Rect(double x1, double y1, double x2, double y2);
+
+        /**
+         * @brief 设置圆角矩形顶点圆弧的半径.
+         *
+         * @param r 半径.
+         * @since 1.0
+         * @version 1.0
+         */
+        void Radius(double r);
+
+        /**
+         * @brief 规范化圆角矩形的弧形半径.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        void NormalizeRadius();
+
+        /**
+         * @brief 回到最开始步骤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Rewind(unsigned);
+
+        /**
+         * @brief 获取顶点弧形的伸缩比
+         * @return 伸缩比.
+         * @since 1.0
+         * @version 1.0
+         */
+        double ApproximationScale() const
+        {
+            return arc_.ApproximationScale();
+        }
+
+        /**
+         * @brief 取出顶点源用于坐标转换重组通道.
+         * @param x,y 顶点源
+         * @return 连接命令
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned Vertex(double* x, double* y);
 
     private:
-        double m_x1;
-        double m_y1;
-        double m_x2;
-        double m_y2;
-        double m_rx1;
-        double m_ry1;
-        double m_rx2;
-        double m_ry2;
-        double m_rx3;
-        double m_ry3;
-        double m_rx4;
-        double m_ry4;
         unsigned status_;
-        arc m_arc;
+        Arc arc_;
+        double x1_;
+        double y1_;
+        double x2_;
+        double y2_;
+        double rx1_;
+        double ry1_;
+        double rx2_;
+        double ry2_;
+        double rx3_;
+        double ry3_;
+        double rx4_;
+        double ry4_;
     };
 
 } // namespace OHOS

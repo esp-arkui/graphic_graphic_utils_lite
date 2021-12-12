@@ -1,120 +1,158 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
-//
-// classes conv_curve
-//
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_CONV_CURVE_INCLUDED
-#define AGG_CONV_CURVE_INCLUDED
+/**
+ * @file graphic_geometry_depict_curve.h
+ *
+ * @brief Defines 构建曲线变换管道
+ * 对于曲线的描画通常都是使用一系列的短小的线段来近似的，这是描画曲线的唯一高效的方法
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_DEPICT_CURVE_INCLUDED
+#define GRAPHIC_GEOMETRY_DEPICT_CURVE_INCLUDED
 
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_curves.h"
 
 namespace OHOS {
-
-    //---------------------------------------------------------------conv_curve
-    // Curve converter class. Any path storage can have Bezier curves defined
-    // by their control points. There're two types of curves supported: curve3
-    // and curve4. Curve3 is a conic Bezier curve with 2 endpoints and 1 control
-    // point. Curve4 has 2 control points (4 points in total) and can be used
-    // to interpolate more complicated curves. Curve4, unlike curve3 can be used
-    // to approximate arcs, both circular and elliptical. Curves are approximated
-    // with straight lines and one of the approaches is just to store the whole
-    // sequence of vertices that approximate our curve. It takes additional
-    // memory, and at the same time the consecutive vertices can be calculated
-    // on demand.
-    //
-    // Initially, path storages are not suppose to keep all the vertices of the
-    // curves (although, nothing prevents us from doing so). Instead, path_storage
-    // keeps only vertices, needed to calculate a curve on demand. Those vertices
-    // are marked with special commands. So, if the path_storage contains curves
-    // (which are not real curves yet), and we render this storage directly,
-    // all we will see is only 2 or 3 straight line segments (for curve3 and
-    // curve4 respectively). If we need to see real curves drawn we need to
-    // include this class into the conversion pipeline.
-    //
-    // Class conv_curve recognizes commands path_cmd_curve3 and path_cmd_curve4
-    // and converts these vertices into a move_to/line_to sequence.
-    //-----------------------------------------------------------------------
+    /**
+     * @template<VertexSource,Curve3,Curve4> class DepictCurve
+     * @brief 该DepictCurve类通过PATH_CMD_CURVE3 and PATH_CMD_CURVE4
+     * 命令计算生成curve曲线点并且将生成的点利用转换管道保存到
+     * move_to/line_to vertex sequence 中
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSource,
-              class Curve3 = curve3,
-              class Curve4 = curve4>
-    class conv_curve {
+              class Curve3 = Curve3,
+              class Curve4 = Curve4>
+    class DepictCurve {
     public:
         typedef Curve3 curve3_type;
         typedef Curve4 curve4_type;
-        typedef conv_curve<VertexSource, Curve3, Curve4> self_type;
+        typedef DepictCurve<VertexSource, Curve3, Curve4> self_type;
 
-        explicit conv_curve(VertexSource& source) :
+        /**
+         * @brief DepictCurve类的构造函数。.
+         * 构造参数为VertexSource 属性决定曲线的顶点源。
+         * @since 1.0
+         * @version 1.0
+         */
+        explicit DepictCurve(VertexSource& source) :
             m_source(&source), m_last_x(0.0), m_last_y(0.0)
-        {}
-        void attach(VertexSource& source)
+        {
+        }
+
+        void Attach(VertexSource& source)
         {
             m_source = &source;
         }
 
-        void approximation_method(curve_approximation_method_e v)
+        /**
+         * @brief 近似估算曲线的方法。.
+         * 定义估算二次或者三次（贝塞尔）曲线的方法有2种。
+         * 一种是curve_inc,即通过curve曲线递增的方法估算
+         * 二种是curve_div 即通过将curve曲线 等分为N个div段
+         * @since 1.0
+         * @version 1.0
+         */
+        void ApproximationMethod(CurveApproximationMethodEnum curvApproxiMethod)
         {
-            m_curve3.approximation_method(v);
-            m_curve4.approximation_method(v);
+            m_curve3.ApproximationMethod(curvApproxiMethod);
+            m_curve4.ApproximationMethod(curvApproxiMethod);
         }
 
-        curve_approximation_method_e approximation_method() const
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
-            return m_curve4.approximation_method();
+            return m_curve4.ApproximationMethod();
         }
 
-        void approximation_scale(double s)
+        /**
+         * @brief 最终决定估算的精度。.
+         * 在实际应用中，我们需要从点的世界坐标转换到屏幕坐标，因此总会存在一定的缩放因子。
+         * 曲线通常是在世界坐标系中处理的，而进行估算时又要转换为像素值。
+         * 一般看起来会是这样的：m_curved.approximation_scale(m_transform.scale());
+         * 这里，m_transform 是一个仿型映射的矩阵，里面包含了所有的转换，包括视点和缩放。
+         * @since 1.0
+         * @version 1.0
+         */
+        void ApproximationScale(double aScale)
         {
-            m_curve3.SetApproximationScale(s);
-            m_curve4.SetApproximationScale(s);
+            m_curve3.SetApproximationScale(aScale);
+            m_curve4.SetApproximationScale(aScale);
         }
 
-        double approximation_scale() const
+        double ApproximationScale() const
         {
-            return m_curve4.approximation_scale();
+            return m_curve4.ApproximationScale();
         }
 
-        void angle_tolerance(double v)
+        /**
+         * @brief 以弧度来设置角度估算值。这个值越少，在曲线的转弯处的估算就越精确。
+         * 不过，如果设置为0，那么表示完全 不考虑角度条件。
+         * @since 1.0
+         * @version 1.0
+         */
+        void AngleTolerance(double angleRate)
         {
-            m_curve3.angle_tolerance(v);
-            m_curve4.angle_tolerance(v);
+            m_curve3.AngleTolerance(angleRate);
+            m_curve4.AngleTolerance(angleRate);
         }
 
-        double angle_tolerance() const
+        double AngleTolerance() const
         {
-            return m_curve4.angle_tolerance();
+            return m_curve4.AngleTolerance();
         }
 
-        void cusp_limit(double v)
+        /**
+         * @brief 一个以弧度来设置的角度。如果是0，
+         * 那么只有真正的尖端(cusp)才会有 bevel cut。如果大于0，
+         * 那么它会限制曲线的弯曲度，值越大，曲线锐利的转弯处被切得就越少。
+         * 一般，这个值不应该大于10-15度。。
+         * @since 1.0
+         * @version 1.0
+         */
+        void CuspLimit(double v)
         {
-            m_curve3.cusp_limit(v);
-            m_curve4.cusp_limit(v);
+            m_curve3.CuspLimit(v);
+            m_curve4.CuspLimit(v);
         }
 
-        double cusp_limit() const
+        double CuspLimit() const
         {
-            return m_curve4.cusp_limit();
+            return m_curve4.CuspLimit();
         }
+        /*
+        * 重置某段路径的状态属性
+        * @path_id 是某段路径id，从0计算
+        * @since 1.0
+        * @version 1.0
+        */
+        void Rewind(unsigned path_id);
 
-        void rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+        /*
+        * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+        * @since 1.0
+        * @version 1.0
+        */
+        unsigned Vertex(double* x, double* y);
 
     private:
-        conv_curve(const self_type&);
+        DepictCurve(const self_type&);
         const self_type& operator=(const self_type&);
 
         VertexSource* m_source;
@@ -124,71 +162,80 @@ namespace OHOS {
         curve4_type m_curve4;
     };
 
-    //------------------------------------------------------------------------
-    template <class VertexSource, class Curve3, class Curve4>
-    void conv_curve<VertexSource, Curve3, Curve4>::rewind(unsigned path_id)
-    {
-        m_source->Rewind(path_id);
-        m_last_x = 0.0;
-        m_last_y = 0.0;
-        m_curve3.reset();
-        m_curve4.reset();
-    }
-
-    //------------------------------------------------------------------------
-    template <class VertexSource, class Curve3, class Curve4>
-    unsigned conv_curve<VertexSource, Curve3, Curve4>::vertex(double* x, double* y)
-    {
-        if (!is_stop(m_curve3.vertex(x, y))) {
-            m_last_x = *x;
-            m_last_y = *y;
-            return path_cmd_line_to;
+    /*
+        * 重置某段路径的状态属性
+        * @path_id 是某段路径id，从0计算
+        * @since 1.0
+        * @version 1.0
+        */
+        template<class VertexSource, class Curve3, class Curve4>
+        void DepictCurve<VertexSource, Curve3, Curve4>::Rewind(unsigned path_id)
+        {
+            m_source->Rewind(path_id);
+            m_last_x = 0.0;
+            m_last_y = 0.0;
+            m_curve3.Reset();
+            m_curve4.Reset();
         }
 
-        if (!is_stop(m_curve4.vertex(x, y))) {
-            m_last_x = *x;
-            m_last_y = *y;
-            return path_cmd_line_to;
-        }
+        /*
+        * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+        * @since 1.0
+        * @version 1.0
+        */
+        template<class VertexSource, class Curve3, class Curve4>
+        unsigned DepictCurve<VertexSource, Curve3, Curve4>::Vertex(double* x, double* y)
+        {
+            if (!IsStop(m_curve3.Vertex(x, y)))
+            {
+                m_last_x = *x;
+                m_last_y = *y;
+                return PATH_CMD_LINE_TO;
+            }
 
-        double ct2_x = 0;
-        double ct2_y = 0;
-        double end_x = 0;
-        double end_y = 0;
+            if (!IsStop(m_curve4.Vertex(x, y)))
+            {
+                m_last_x = *x;
+                m_last_y = *y;
+                return PATH_CMD_LINE_TO;
+            }
 
-        unsigned cmd = m_source->Vertex(x, y);
-        switch (cmd) {
-            case path_cmd_curve3:
+            double ct2_x = 0;
+            double ct2_y = 0;
+            double end_x = 0;
+            double end_y = 0;
+
+            unsigned cmd = m_source->Vertex(x, y);
+            switch (cmd)
+            {
+            case PATH_CMD_CURVE3:
                 m_source->Vertex(&end_x, &end_y);
 
-                m_curve3.init(m_last_x, m_last_y,
-                              *x, *y,
-                              end_x, end_y);
+                m_curve3.Init(m_last_x, m_last_y,*x, *y,
+                            end_x, end_y);
 
-                m_curve3.vertex(x, y); // First call returns path_cmd_move_to
-                m_curve3.vertex(x, y); // This is the first vertex of the curve
-                cmd = path_cmd_line_to;
+                m_curve3.Vertex(x, y);    // First call returns path_cmd_move_to
+                m_curve3.Vertex(x, y);    // This is the first vertex of the curve
+                cmd = PATH_CMD_LINE_TO;
                 break;
 
-            case path_cmd_curve4:
+            case PATH_CMD_CURVE4:
                 m_source->Vertex(&ct2_x, &ct2_y);
                 m_source->Vertex(&end_x, &end_y);
 
-                m_curve4.init(m_last_x, m_last_y,
-                              *x, *y,
-                              ct2_x, ct2_y,
-                              end_x, end_y);
+                m_curve4.Init(m_last_x, m_last_y,*x, *y,
+                            ct2_x, ct2_y,
+                            end_x, end_y);
 
-                m_curve4.vertex(x, y); // First call returns path_cmd_move_to
-                m_curve4.vertex(x, y); // This is the first vertex of the curve
-                cmd = path_cmd_line_to;
+                m_curve4.Vertex(x, y);    // First call returns path_cmd_move_to
+                m_curve4.Vertex(x, y);    // This is the first vertex of the curve
+                cmd = PATH_CMD_LINE_TO;
                 break;
+            }
+            m_last_x = *x;
+            m_last_y = *y;
+            return cmd;
         }
-        m_last_x = *x;
-        m_last_y = *y;
-        return cmd;
-    }
-
 } // namespace OHOS
 
 #endif

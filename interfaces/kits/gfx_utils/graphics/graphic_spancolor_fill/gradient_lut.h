@@ -54,7 +54,7 @@ namespace OHOS {
         */
         void RemoveAll()
         {
-            colorProfile.remove_all();
+            colorProfile.RemoveAll();
         }
 
         /**
@@ -66,7 +66,7 @@ namespace OHOS {
          */
         void AddColor(double offset, const color_type& color)
         {
-            colorProfile.add(ColorPoint(offset, color));
+            colorProfile.Add(ColorPoint(offset, color));
         }
 
         /**
@@ -81,11 +81,11 @@ namespace OHOS {
             /*
              * 对于渐变颜色数组记性快速排序
              */
-            quick_sort(colorProfile, OffsetLess);
-            colorProfile.cut_at(remove_duplicates(colorProfile, OffsetEqual));
-            if (colorProfile.size() > 1) {
+            QuickSort(colorProfile, OffsetLess);
+            colorProfile.CutAt(RemoveDuplicates(colorProfile, OffsetEqual));
+            if (colorProfile.Size() > 1) {
                 unsigned index;
-                unsigned start = uround(colorProfile[0].offset * colorLutSize_);
+                unsigned start = Uround(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
                 color_type color = colorProfile[0].color;
 
@@ -98,9 +98,8 @@ namespace OHOS {
                 /*
                  * 从1到colorProfile.size() 间进行插值颜色计算.
                  */
-
-                for (index = 1; index < colorProfile.size(); index++) {
-                    end = uround(colorProfile[index].offset * colorLutSize_);
+                for (index = 1; index < colorProfile.Size(); index++) {
+                    end = Uround(colorProfile[index].offset * colorLutSize_);
                     interpolator_type ci(colorProfile[index - 1].color,
                                          colorProfile[index].color,
                                          end - start + 1);
@@ -110,13 +109,12 @@ namespace OHOS {
                         ++start;
                     }
                 }
-                color = colorProfile.last().color;
-
+                color = colorProfile.Last().color;
                 /*
                  * 对于colorProfile last 赋予end颜色..
                  */
-
-                for (; end < colorType.size(); end++) {
+                for (; end < colorType.Size(); end++) {
+                    color = colorProfile.Last().color;
                     colorType[end] = color;
                 }
             }
@@ -124,8 +122,6 @@ namespace OHOS {
 
         /**
          * @brief size 返回color_lut_type的size
-         * @since 1.0
-         * @version 1.0
          */
         static unsigned size()
         {
@@ -134,8 +130,6 @@ namespace OHOS {
 
         /**
          * @brief 重写[]运算符
-         * @since 1.0
-         * @version 1.0
          */
         const color_type& operator[](unsigned i) const
         {
@@ -186,10 +180,10 @@ namespace OHOS {
             return colorPoint1.offset == colorPoint2.offset;
         }
 
-        using colorProfileType = OHOS::pod_bvector<ColorPoint, 4>;
+        using colorProfileType = OHOS::PodBvector<ColorPoint, 4>;
         colorProfileType colorProfile;
 
-        using colorLutType = OHOS::pod_array<color_type>;
+        using colorLutType = OHOS::PodArray<color_type>;
         colorLutType colorType;
     };
 } // namespace OHOS

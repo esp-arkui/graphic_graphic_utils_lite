@@ -16,32 +16,30 @@
 #define GRAPHIC_TRANS_AFFINE_INCLUDED
 
 #include <cmath>
+
 #include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace OHOS
-{
-    const double affineEpsilon = 1e-14; 
+namespace OHOS {
+    const double affineEpsilon = 1e-14;
 
-    
-    struct TransAffine
-    {
+    struct TransAffine {
         double scaleX, shearY, shearX, scaleY, translateX, translateY;
 
         TransAffine() :
             scaleX(1.0), shearY(0.0), shearX(0.0), scaleY(1.0), translateX(0.0), translateY(0.0)
         {}
 
-        TransAffine(double v0, double v1, double v2, 
-                     double v3, double v4, double v5) :
-            scaleX(v0), shearY(v1), shearX(v2), scaleY(v3), translateX(v4), translateY(v5)
+        TransAffine(double v0, double v1, double v2,
+                    double v3, double v4, double v5) :
+            scaleX(v0),
+            shearY(v1), shearX(v2), scaleY(v3), translateX(v4), translateY(v5)
         {}
 
-        TransAffine(double x1, double y1, double x2, double y2, 
-                     const double* parl)
+        TransAffine(double x1, double y1, double x2, double y2,
+                    const double* parl)
         {
             RectToParl(x1, y1, x2, y2, parl);
         }
-
 
         /**
          * @brief 将原平行四边形转换为目标平行四边形
@@ -51,8 +49,8 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        const TransAffine& ParlToParl(const double* src, 
-                                         const double* dst);
+        const TransAffine& ParlToParl(const double* src,
+                                      const double* dst);
         /**
          * @brief 将原矩形转换为目标平行四边形
          * 
@@ -64,11 +62,9 @@ namespace OHOS
          * @since 1.0
          * @version 1.0
          */
-        const TransAffine& RectToParl(double x1, double y1, 
-                                         double x2, double y2, 
-                                         const double* parl);
-
- 
+        const TransAffine& RectToParl(double x1, double y1,
+                                      double x2, double y2,
+                                      const double* parl);
 
         /**
          * @brief 重置矩阵
@@ -122,7 +118,6 @@ namespace OHOS
          */
         const TransAffine& Multiply(const TransAffine& m);
 
-
         /**
          * @brief 矩阵翻转
          * 
@@ -131,13 +126,10 @@ namespace OHOS
          */
         const TransAffine& Invert();
 
- 
-        const TransAffine& operator *= (const TransAffine& m)
+        const TransAffine& operator*=(const TransAffine& m)
         {
             return Multiply(m);
         }
-
-
 
         /**
          * @brief 对x,y进行转换
@@ -149,7 +141,6 @@ namespace OHOS
          */
         void Transform(double* x, double* y) const;
 
- 
         /**
          * @brief 逆变换
          * 
@@ -157,10 +148,8 @@ namespace OHOS
          * @param y y轴坐标
          * @since 1.0
          * @version 1.0
-         */ 
+         */
         void InverseTransform(double* x, double* y) const;
-
-
 
         /**
          * @brief 计算行列式的倒数
@@ -207,7 +196,6 @@ namespace OHOS
         *y = tmp * shearY + *y * scaleY + translateY;
     }
 
-
     //------------------------------------------------------------------------
     inline void TransAffine::InverseTransform(double* x, double* y) const
     {
@@ -218,26 +206,24 @@ namespace OHOS
         *y = b * scaleX - a * shearY;
     }
 
-  
-
     //------------------------------------------------------------------------
-    inline const TransAffine& TransAffine::Translate(double x, double y) 
-    { 
+    inline const TransAffine& TransAffine::Translate(double x, double y)
+    {
         translateX += x;
-        translateY += y; 
+        translateY += y;
         return *this;
     }
 
     //------------------------------------------------------------------------
-    inline const TransAffine& TransAffine::Rotate(double a) 
+    inline const TransAffine& TransAffine::Rotate(double a)
     {
-        double ca = std::cos(a); 
+        double ca = std::cos(a);
         double sa = std::sin(a);
         double t0 = scaleX * ca - shearY * sa;
         double t2 = shearX * ca - scaleY * sa;
         double t4 = translateX * ca - translateY * sa;
         shearY = scaleX * sa + shearY * ca;
-        scaleY = shearX * sa + scaleY * ca; 
+        scaleY = shearX * sa + scaleY * ca;
         translateY = translateX * sa + translateY * ca;
         scaleX = t0;
         shearX = t2;
@@ -245,12 +231,11 @@ namespace OHOS
         return *this;
     }
 
-    
     //------------------------------------------------------------------------
-    inline const TransAffine& TransAffine::Scale(double x, double y) 
+    inline const TransAffine& TransAffine::Scale(double x, double y)
     {
         double mm0 = x; // Possible hint for the optimizer
-        double mm3 = y; 
+        double mm3 = y;
         scaleX *= mm0;
         shearX *= mm0;
         translateX *= mm0;
@@ -261,7 +246,7 @@ namespace OHOS
     }
 
     //------------------------------------------------------------------------
-    inline const TransAffine& TransAffine::Scale(double s) 
+    inline const TransAffine& TransAffine::Scale(double s)
     {
         double m = s; // Possible hint for the optimizer
         scaleX *= m;
@@ -273,45 +258,37 @@ namespace OHOS
         return *this;
     }
 
-
     inline void TransAffine::ScalingAbs(double* x, double* y) const
     {
         *x = std::sqrt(scaleX * scaleX + shearX * shearX);
         *y = std::sqrt(shearY * shearY + scaleY * scaleY);
     }
 
-
-    class TransAffineRotation : public TransAffine
-    {
+    class TransAffineRotation : public TransAffine {
     public:
-        TransAffineRotation(double a) : 
-          TransAffine(std::cos(a), std::sin(a), -std::sin(a), std::cos(a), 0.0, 0.0)
+        TransAffineRotation(double a) :
+            TransAffine(std::cos(a), std::sin(a), -std::sin(a), std::cos(a), 0.0, 0.0)
         {}
     };
 
-
-    class TransAffineScaling : public TransAffine
-    {
+    class TransAffineScaling : public TransAffine {
     public:
-        TransAffineScaling(double x, double y) : 
-          TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
+        TransAffineScaling(double x, double y) :
+            TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
         {}
 
-        TransAffineScaling(double s) : 
-          TransAffine(s, 0.0, 0.0, s, 0.0, 0.0)
+        TransAffineScaling(double s) :
+            TransAffine(s, 0.0, 0.0, s, 0.0, 0.0)
         {}
     };
 
-    class TransAffineTranslation : public TransAffine
-    {
+    class TransAffineTranslation : public TransAffine {
     public:
-        TransAffineTranslation(double x, double y) : 
-          TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
+        TransAffineTranslation(double x, double y) :
+            TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
         {}
     };
 
-}
-
+} // namespace OHOS
 
 #endif
-

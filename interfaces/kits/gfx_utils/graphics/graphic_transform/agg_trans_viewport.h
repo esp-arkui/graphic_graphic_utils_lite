@@ -138,7 +138,7 @@ namespace OHOS
         { 
             return alignX_; 
         }
-        double AlignY() const 
+        double Aligny() const 
         { 
             return alignY_; 
         }

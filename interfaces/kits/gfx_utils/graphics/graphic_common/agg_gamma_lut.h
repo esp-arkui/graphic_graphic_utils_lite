@@ -1,307 +1,358 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-//
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_GAMMA_LUT_INCLUDED
-#define AGG_GAMMA_LUT_INCLUDED
+/**
+ * @file graphic_geometry_gamma_lut.h
+ *
+ * @brief gamma校正查找表、Srgb查找表、Srgb转化类
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_GAMMA_LUT_INCLUDED
+#define GRAPHIC_GEOMETRY_GAMMA_LUT_INCLUDED
 
 #include <cmath>
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+
 #include "agg_gamma_functions.h"
+#include "gfx_utils/graphics/graphic_common/agg_basics.h"
 
-namespace OHOS
-{
-    template<class LoResT=int8u, 
-             class HiResT=int8u, 
-             unsigned GammaShift=8, 
-             unsigned HiResShift=8> class gamma_lut
-    {
+namespace OHOS {
+#define TABLESIZE 256
+#define TABLESIZE_HALF 128
+#define TABLESIZE_QURATER 64
+#define TABLESIZE_EIGHTH 32
+#define TABLESIZE_ONE_SIXTEENTH 16
+#define TABLESIZE_ONE_THIRTYTWO 8
+#define TABLESIZE_ONE_SIXTHFOUR 4
+#define TABLESIZE_ONE_ONETWENTYEIGHT 2
+#define TABLESIZE_ONE_TWOFIFTYSIX 1
+#define MOVEBIT 8
+#define HALF 0.5
+#define SRGBVALUE 255.0
+#define RGB16MAX 65535.0
+
+    /**
+     * @brief Srgb查找类
+     *
+     * @see SrgbLutBase
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class LinearType>
+    class SrgbLutBase {
     public:
-        typedef gamma_lut<LoResT, HiResT, GammaShift, HiResShift> self_type;
-
-        enum gamma_scale_e
+        /**
+         * @brief 根据下标查找dirTable_中的颜色值
+         * @param index为下标值
+         * @return LinearType
+         * @since 1.0
+         * @version 1.0
+         */
+        LinearType GetDirTableValue(int8u index) const
         {
-            gamma_shift = GammaShift,
-            gamma_size  = 1 << gamma_shift,
-            gamma_mask  = gamma_size - 1
-        };
-
-        enum hi_res_scale_e
-        {
-            hi_res_shift = HiResShift,
-            hi_res_size  = 1 << hi_res_shift,
-            hi_res_mask  = hi_res_size - 1
-        };
-
-        ~gamma_lut()
-        {
-            pod_allocator<LoResT>::deallocate(m_inv_gamma, hi_res_size);
-            pod_allocator<HiResT>::deallocate(m_dir_gamma, gamma_size);
+            return dirTable_[index];
         }
 
-        gamma_lut() : 
-            m_gamma(1.0), 
-            m_dir_gamma(pod_allocator<HiResT>::allocate(gamma_size)),
-            m_inv_gamma(pod_allocator<LoResT>::allocate(hi_res_size))
+        /**
+         * @brief 根据lineValue值查找颜色值
+         * @param lineValue为线性颜色值
+         * @return 返回int8u类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        int8u GetInverseTableValue(LinearType lineValue) const
         {
-            unsigned i;
-            for(i = 0; i < gamma_size; i++)
-            {
-                m_dir_gamma[i] = HiResT(i << (hi_res_shift - gamma_shift));
+            // 折半查找
+            int8u value = 0;
+            if (lineValue > inverseTable_[TABLESIZE_HALF]) {
+                value = TABLESIZE_HALF;
             }
-
-            for(i = 0; i < hi_res_size; i++)
-            {
-                m_inv_gamma[i] = LoResT(i >> (hi_res_shift - gamma_shift));
+            if (lineValue > inverseTable_[value + TABLESIZE_QURATER]) {
+                value += TABLESIZE_QURATER;
             }
-        }
-
-        gamma_lut(double g) :
-            m_gamma(1.0), 
-            m_dir_gamma(pod_allocator<HiResT>::allocate(gamma_size)),
-            m_inv_gamma(pod_allocator<LoResT>::allocate(hi_res_size))
-        {
-            gamma(g);
-        }
-
-        void gamma(double g) 
-        {
-            m_gamma = g;
-
-            unsigned i;
-            for(i = 0; i < gamma_size; i++)
-            {
-                m_dir_gamma[i] = (HiResT)
-                    uround(std::pow(i / double(gamma_mask), m_gamma) * double(hi_res_mask));
+            if (lineValue > inverseTable_[value + TABLESIZE_EIGHTH]) {
+                value += TABLESIZE_EIGHTH;
             }
-
-            double inv_g = 1.0 / g;
-            for(i = 0; i < hi_res_size; i++)
-            {
-                m_inv_gamma[i] = (LoResT)
-                    uround(std::pow(i / double(hi_res_mask), inv_g) * double(gamma_mask));
+            if (lineValue > inverseTable_[value + TABLESIZE_ONE_SIXTEENTH]) {
+                value += TABLESIZE_ONE_SIXTEENTH;
             }
-        }
-
-        double gamma() const
-        {
-            return m_gamma;
-        }
-
-        HiResT dir(LoResT v) const 
-        { 
-            return m_dir_gamma[unsigned(v)]; 
-        }
-
-        LoResT inv(HiResT v) const 
-        { 
-            return m_inv_gamma[unsigned(v)];
-        }
-
-    private:
-        gamma_lut(const self_type&);
-        const self_type& operator = (const self_type&);
-
-        double m_gamma;
-        HiResT* m_dir_gamma;
-        LoResT* m_inv_gamma;
-    };
-
-    //
-    // sRGB support classes
-    //
-
-    // Optimized sRGB lookup table. The direct conversion (sRGB to linear) 
-    // is a straightforward lookup. The inverse conversion (linear to sRGB) 
-    // is implemented using binary search.
-    template<class LinearType>
-    class sRGB_lut_base
-    {
-    public:
-        LinearType dir(int8u v) const
-        {
-            return m_dir_table[v];
-        }
-
-        int8u inv(LinearType v) const
-        {
-            // Unrolled binary search.
-            int8u x = 0;
-            if (v > m_inv_table[128]) x = 128;
-            if (v > m_inv_table[x + 64]) x += 64;
-            if (v > m_inv_table[x + 32]) x += 32;
-            if (v > m_inv_table[x + 16]) x += 16;
-            if (v > m_inv_table[x + 8]) x += 8;
-            if (v > m_inv_table[x + 4]) x += 4;
-            if (v > m_inv_table[x + 2]) x += 2;
-            if (v > m_inv_table[x + 1]) x += 1;
-            return x;
+            if (lineValue > inverseTable_[value + TABLESIZE_ONE_THIRTYTWO]) {
+                value += TABLESIZE_ONE_THIRTYTWO;
+            }
+            if (lineValue > inverseTable_[value + TABLESIZE_ONE_SIXTHFOUR]) {
+                value += TABLESIZE_ONE_SIXTHFOUR;
+            }
+            if (lineValue > inverseTable_[value + TABLESIZE_ONE_ONETWENTYEIGHT]) {
+                value += TABLESIZE_ONE_ONETWENTYEIGHT;
+            }
+            if (lineValue > inverseTable_[value + TABLESIZE_ONE_TWOFIFTYSIX]) {
+                value += TABLESIZE_ONE_TWOFIFTYSIX;
+            }
+            return value;
         }
 
     protected:
-        LinearType m_dir_table[256];
-        LinearType m_inv_table[256];
+        LinearType dirTable_[TABLESIZE];
+        LinearType inverseTable_[TABLESIZE];
 
-        // Only derived classes may instantiate.
-        sRGB_lut_base() 
-        {
-        }
+        SrgbLutBase()
+        {}
     };
 
+    template <class LinearType>
+    class SrgbLut;
 
-    // sRGB_lut - implements sRGB conversion for the various types.
-    // Base template is undefined, specializations are provided below.
-    template<class LinearType>
-    class sRGB_lut;
-
-    template<>
-    class sRGB_lut<float> : public sRGB_lut_base<float>
-    {
+    /**
+     * @brief Srgb查找类、float类型
+     *
+     * @see SrgbLut
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbLut<float> : public SrgbLutBase<float> {
     public:
-		sRGB_lut()
-		{
-			// Generate lookup tables.
-			m_dir_table[0] = 0;
-			m_inv_table[0] = 0;
-			for (unsigned i = 1; i <= 255; ++i)
-			{
-				// Floating-point RGB is in range [0,1].
-				m_dir_table[i] = float(sRGB_to_linear(i / 255.0));
-				m_inv_table[i] = float(sRGB_to_linear((i - 0.5) / 255.0));
-			}
-		}
-    };
-
-    template<>
-    class sRGB_lut<int16u> : public sRGB_lut_base<int16u>
-    {
-    public:
-        sRGB_lut()
+        SrgbLut()
         {
-            // Generate lookup tables.
-            m_dir_table[0] = 0;
-            m_inv_table[0] = 0;
-            for (int i = 1; i <= 255; ++i)
-            {
-                // 16-bit RGB is in range [0,65535].
-                m_dir_table[i] = uround(65535.0 * sRGB_to_linear(i / 255.0));
-                m_inv_table[i] = uround(65535.0 * sRGB_to_linear((i - 0.5) / 255.0));
+            // 生成查找表
+            dirTable_[0] = 0;
+            inverseTable_[0] = 0;
+            for (unsigned i = 1; i <= 255; ++i) {
+                // 浮点RGB范围在[0,1]内。
+                dirTable_[i] = float(SrgbToLinear(i / SRGBVALUE));
+                inverseTable_[i] = float(SrgbToLinear((i - HALF) / SRGBVALUE));
             }
         }
     };
 
-    template<>
-    class sRGB_lut<int8u> : public sRGB_lut_base<int8u>
-    {
+    /**
+     * @brief Srgb查找类、int16u类型
+     *
+     * @see SrgbLut
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbLut<int16u> : public SrgbLutBase<int16u> {
     public:
-        sRGB_lut()
+        SrgbLut()
         {
-            // Generate lookup tables. 
-            m_dir_table[0] = 0;
-            m_inv_table[0] = 0;
-            for (int i = 1; i <= 255; ++i)
-            {
-                // 8-bit RGB is handled with simple bidirectional lookup tables.
-                m_dir_table[i] = uround(255.0 * sRGB_to_linear(i / 255.0));
-                m_inv_table[i] = uround(255.0 * linear_to_sRGB(i / 255.0));
+            // 生成查找表
+            dirTable_[0] = 0;
+            inverseTable_[0] = 0;
+            for (int i = 1; i <= 255; ++i) {
+                // 16位RGB范围在[0，65535]内。
+                dirTable_[i] = Uround(RGB16MAX * SrgbToLinear(i / SRGBVALUE));
+                inverseTable_[i] = Uround(RGB16MAX * SrgbToLinear((i - HALF) / SRGBVALUE));
             }
-        }
-
-        int8u inv(int8u v) const
-        {
-            // In this case, the inverse transform is a simple lookup.
-            return m_inv_table[v];
         }
     };
 
-    // Common base class for sRGB_conv objects. Defines an internal 
-    // sRGB_lut object so that users don't have to.
-    template<class T>
-    class sRGB_conv_base
-    {
+    /**
+     * @brief Srgb查找类、int8u类型
+     *
+     * @see SrgbLut
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbLut<int8u> : public SrgbLutBase<int8u> {
     public:
-        static T rgb_from_sRGB(int8u x)
+        SrgbLut()
         {
-            return lut.dir(x);
+            // 生成查找表
+            dirTable_[0] = 0;
+            inverseTable_[0] = 0;
+            for (int i = 1; i <= 255; ++i) {
+                // 8位RGB由简单的双向查找表处理。
+                dirTable_[i] = Uround(SRGBVALUE * SrgbToLinear(i / SRGBVALUE));
+                inverseTable_[i] = Uround(SRGBVALUE * LinearToSrgb(i / SRGBVALUE));
+            }
         }
 
-        static int8u rgb_to_sRGB(T x)
+        /**
+         * @brief 根据下标查找inverseTable_中的颜色值
+         * @param index为下标值
+         * @return 返回int8u类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        int8u GetInverseTableValue(int8u index) const
         {
-            return lut.inv(x);
+            // 在这种情况下，逆变换是一个简单的查找。
+            return inverseTable_[index];
+        }
+    };
+
+    /**
+     * @brief Srgb转化类，添加说明
+     *
+     * @see SrgbConvBase
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T>
+    class SrgbConvBase {
+    public:
+        /**
+         * @brief 由Srgb值转为Rgb值
+         * @param srgb为Srgb类型
+         * @return 返回Rgb类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        static T RgbFromSrgb(int8u srgb)
+        {
+            return lut_.GetDirTableValue(srgb);
+        }
+
+        /**
+         * @brief 由Rgb值转为Srgb值
+         * @param rgb为Rgb类型
+         * @return 返回Srgb类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int8u RgbToSrgb(T rgb)
+        {
+            return lut_.GetInverseTableValue(rgb);
         }
 
     private:
-        static sRGB_lut<T> lut;
+        static SrgbLut<T> lut_;
     };
 
-    // Definition of sRGB_conv_base::lut. Due to the fact that this a template, 
-    // we don't need to place the definition in a cpp file. Hurrah.
-    template<class T>
-    sRGB_lut<T> sRGB_conv_base<T>::lut;
+    template <class T>
+    SrgbLut<T> SrgbConvBase<T>::lut_;
 
-    // Wrapper for sRGB-linear conversion. 
-    // Base template is undefined, specializations are provided below.
-    template<class T>
-    class sRGB_conv;
+    template <class T>
+    class SrgbConv;
 
-    template<>
-    class sRGB_conv<float> : public sRGB_conv_base<float>
-    {
+    /**
+     * @brief SrgbConv转化类、float类型
+     *
+     * @see SrgbConv
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbConv<float> : public SrgbConvBase<float> {
     public:
-        static float alpha_from_sRGB(int8u x)
+        /**
+         * @brief 由Alpha值转为Srgb值
+         * @param alphaValue为Alpha值
+         * @return 返回Srgb类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int8u AlphaToSrgb(float alphaValue)
         {
-            static const double y = 1 / 255.0;
-            return float(x * y);
+            if (alphaValue < 0) {
+                return 0;
+            }
+            if (alphaValue > 1) {
+                return 255;
+            }
+            return int8u(HALF + alphaValue * 255);
         }
 
-        static int8u alpha_to_sRGB(float x)
+        /**
+         * @brief 由Srgb值转为Alpha值
+         * @param srgbValue为Srgb值
+         * @return 返回Alpha值
+         * @since 1.0
+         * @version 1.0
+         */
+        static float AlphaFromSrgb(int8u srgbValue)
         {
-            if (x < 0) return 0;
-            if (x > 1) return 255;
-            return int8u(0.5 + x * 255);
+            static const double y = 1 / SRGBVALUE;
+            return float(srgbValue * y);
         }
     };
 
-    template<>
-    class sRGB_conv<int16u> : public sRGB_conv_base<int16u>
-    {
+    /**
+     * @brief SrgbConv转化类、int16u类型
+     *
+     * @see SrgbConv
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbConv<int16u> : public SrgbConvBase<int16u> {
     public:
-        static int16u alpha_from_sRGB(int8u x)
+        /**
+         * @brief 由Alpha值转为Srgb值
+         * @param alphaValue为Alpha值
+         * @return 返回Srgb类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int8u AlphaToSrgb(int16u alphaValue)
         {
-            return (x << 8) | x;
+            return alphaValue >> MOVEBIT;
         }
 
-        static int8u alpha_to_sRGB(int16u x)
+        /**
+         * @brief 由Srgb值转为Alpha值
+         * @param srgbValue为Srgb值
+         * @return 返回Alpha值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int16u AlphaFromSrgb(int8u srgbValue)
         {
-            return x >> 8;
+            return (srgbValue << MOVEBIT) | srgbValue;
         }
     };
 
-    template<>
-    class sRGB_conv<int8u> : public sRGB_conv_base<int8u>
-    {
+    /**
+     * @brief SrgbConv转化类、int8u类型
+     *
+     * @see SrgbConv
+     * @since 1.0
+     * @version 1.0
+     */
+    template <>
+    class SrgbConv<int8u> : public SrgbConvBase<int8u> {
     public:
-        static int8u alpha_from_sRGB(int8u x)
+        /**
+         * @brief 由Srgb值转为Alpha值
+         * @param srgbValue为Srgb值
+         * @return 返回Alpha值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int8u AlphaFromSrgb(int8u srgbValue)
         {
-            return x;
+            return srgbValue;
         }
 
-        static int8u alpha_to_sRGB(int8u x)
+        /**
+         * @brief 由Alpha值转为Srgb值
+         * @param alphaValue为Alpha值
+         * @return 返回Srgb类型的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        static int8u AlphaToSrgb(int8u alphaValue)
         {
-            return x;
+            return alphaValue;
         }
     };
-}
+} // namespace OHOS
 
 #endif

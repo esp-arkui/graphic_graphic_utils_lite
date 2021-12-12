@@ -1,360 +1,336 @@
-//----------------------------------------------------------------------------
-// Anti-Grain Geometry - Version 2.4
-// Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
-// Copyright (C) 2005 Tony Juricic (tonygeek@yahoo.com)
-//
-// Permission to copy, use, modify, sell and distribute this software
-// is granted provided this copyright notice appears in all copies.
-// This software is provided "as is" without express or implied
-// warranty, and with no claim as to its suitability for any purpose.
-//
-//----------------------------------------------------------------------------
-// Contact: mcseem@antigrain.com
-//          mcseemagg@yahoo.com
-//          http://www.antigrain.com
-//----------------------------------------------------------------------------
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-#ifndef AGG_CURVES_INCLUDED
-#define AGG_CURVES_INCLUDED
+/**
+ * @file graphic_geometry_curves.h
+ *
+ * @brief 贝塞尔曲线
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_CURVES_INCLUDED
+#define GRAPHIC_GEOMETRY_CURVES_INCLUDED
 
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
-namespace OHOS
-{
-    // See Implementation agg_curves.cpp
-
-    //--------------------------------------------curve_approximation_method_e
-    enum curve_approximation_method_e
+namespace OHOS {
+    enum CurveApproximationMethodEnum
     {
-        curve_inc,
-        curve_div
+        CURVEINC,
+        CURVEDIV
     };
 
-    //--------------------------------------------------------------curve3_inc
-    class curve3_inc
-    {
+    class Curve3Inc {
     public:
-        curve3_inc() :
-            m_num_steps(0), m_step(0), m_scale(1.0)
+        Curve3Inc() :
+            numSteps_(0), step_(0), scale_(1.0)
+        {}
+
+        Curve3Inc(double x1, double y1,
+                  double x2, double y2,
+                  double x3, double y3) :
+            numSteps_(0),
+            step_(0), scale_(1.0)
         {
+            Init(x1, y1, x2, y2, x3, y3);
         }
 
-        curve3_inc(double x1, double y1,
-                   double x2, double y2,
-                   double x3, double y3) :
-            m_num_steps(0),
-            m_step(0), m_scale(1.0)
-        {
-            init(x1, y1, x2, y2, x3, y3);
-        }
-
-        void reset()
-        {
-            m_num_steps = 0;
-            m_step = -1;
-        }
-        void init(double x1, double y1,
+        void Init(double x1, double y1,
                   double x2, double y2,
                   double x3, double y3);
 
-        void approximation_method(curve_approximation_method_e)
+        void Reset()
         {
-        }
-        curve_approximation_method_e approximation_method() const
-        {
-            return curve_inc;
+            numSteps_ = 0;
+            step_ = -1;
         }
 
-        void SetApproximationScale(double s);
-        double GetApproximationScale() const;
-
-        void angle_tolerance(double)
+        void ApproximationMethod(CurveApproximationMethodEnum)
+        {}
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
+            return CURVEINC;
         }
-        double angle_tolerance() const
+
+        void ApproximationScale(double scale);
+        double ApproximationScale() const;
+
+        void AngleTolerance(double)
+        {}
+        double AngleTolerance() const
         {
             return 0.0;
         }
 
-        void cusp_limit(double)
-        {
-        }
-        double cusp_limit() const
+        void CuspLimit(double)
+        {}
+        double CuspLimit() const
         {
             return 0.0;
         }
 
-        void rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+        void Rewind(unsigned pathId);
+        unsigned Vertex(double* x, double* y);
 
     private:
-        int m_num_steps;
-        int m_step;
-        double m_scale;
-        double m_start_x;
-        double m_start_y;
-        double m_end_x;
-        double m_end_y;
-        double m_fx;
-        double m_fy;
-        double m_dfx;
-        double m_dfy;
-        double m_ddfx;
-        double m_ddfy;
-        double m_saved_fx;
-        double m_saved_fy;
-        double m_saved_dfx;
-        double m_saved_dfy;
+        int numSteps_;
+        int step_;
+        double scale_;
+        double startX_;
+        double startY_;
+        double endX_;
+        double endY_;
+        double fx_;
+        double fy_;
+        double dfx_;
+        double dfy_;
+        double ddfx_;
+        double ddfy_;
+        double savedFx_;
+        double savedFy_;
+        double savedDfx_;
+        double savedDfy_;
     };
 
-    //-------------------------------------------------------------curve3_div
-    class curve3_div
-    {
+    class Curve3Div {
     public:
-        curve3_div() :
-            m_approximation_scale(1.0),
-            m_angle_tolerance(0.0),
-            m_count(0)
-        {
-        }
+        Curve3Div() :
+            approximationScale_(1.0), angleTolerance_(0.0), count_(0)
+        {}
 
-        curve3_div(double x1, double y1,
-                   double x2, double y2,
-                   double x3, double y3) :
-            m_approximation_scale(1.0),
-            m_angle_tolerance(0.0),
-            m_count(0)
-        {
-            init(x1, y1, x2, y2, x3, y3);
-        }
-
-        void reset()
-        {
-            m_points.remove_all();
-            m_count = 0;
-        }
-        void init(double x1, double y1,
+        Curve3Div(double x1, double y1,
                   double x2, double y2,
-                  double x3, double y3);
-
-        void approximation_method(curve_approximation_method_e)
+                  double x3, double y3) :
+            approximationScale_(1.0),
+            angleTolerance_(0.0), count_(0)
         {
-        }
-        curve_approximation_method_e approximation_method() const
-        {
-            return curve_div;
+            Init(x1, y1, x2, y2, x3, y3);
         }
 
-        void SetApproximationScale(double s)
+        void Init(double x1, double y1, double x2, double y2, double x3, double y3);
+
+        void Reset()
         {
-            m_approximation_scale = s;
-        }
-        double GetApproximationScale() const
-        {
-            return m_approximation_scale;
+            points_.RemoveAll();
+            count_ = 0;
         }
 
-        void angle_tolerance(double a)
+        void ApproximationMethod(CurveApproximationMethodEnum)
+        {}
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
-            m_angle_tolerance = a;
-        }
-        double angle_tolerance() const
-        {
-            return m_angle_tolerance;
+            return CURVEDIV;
         }
 
-        void cusp_limit(double)
+        void ApproximationScale(double scale)
         {
+            approximationScale_ = scale;
         }
-        double cusp_limit() const
+        double ApproximationScale() const
+        {
+            return approximationScale_;
+        }
+
+        void AngleTolerance(double angle)
+        {
+            angleTolerance_ = angle;
+        }
+        double AngleTolerance() const
+        {
+            return angleTolerance_;
+        }
+
+        void CuspLimit(double)
+        {}
+        double CuspLimit() const
         {
             return 0.0;
         }
 
-        void rewind(unsigned)
+        void Rewind(unsigned)
         {
-            m_count = 0;
+            count_ = 0;
         }
 
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
-            if (m_count >= m_points.size())
-                return path_cmd_stop;
-            const point_d& p = m_points[m_count++];
-            *x = p.x;
-            *y = p.y;
-            return (m_count == 1) ? path_cmd_move_to : path_cmd_line_to;
+            if (count_ >= points_.Size()) {
+                return PATH_CMD_STOP;
+            }
+            const PointD& point = points_[count_++];
+            *x = point.x;
+            *y = point.y;
+            return (count_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO;
         }
 
     private:
-        void bezier(double x1, double y1,
+        void Bezier(double x1, double y1,
                     double x2, double y2,
                     double x3, double y3);
-        void recursive_bezier(double x1, double y1,
-                              double x2, double y2,
-                              double x3, double y3,
-                              unsigned level);
+        void RecursiveBezier(double x1, double y1,
+                             double x2, double y2,
+                             double x3, double y3,
+                             unsigned level);
 
-        double m_approximation_scale;
-        double m_distance_tolerance_square;
-        double m_angle_tolerance;
-        unsigned m_count;
-        pod_bvector<point_d> m_points;
+        double approximationScale_;
+        double distanceToleranceSquare_;
+        double angleTolerance_;
+        unsigned count_;
+        PodBvector<PointD> points_;
     };
 
-    //-------------------------------------------------------------curve4_points
-    struct curve4_points
-    {
-        double cp[8];
-        curve4_points()
+    struct Curve4Points {
+        double cpArray[8];
+
+        Curve4Points()
+        {}
+        Curve4Points(double x1, double y1,
+                     double x2, double y2,
+                     double x3, double y3,
+                     double x4, double y4)
         {
+            cpArray[0] = x1;
+            cpArray[1] = y1;
+            cpArray[2] = x2;
+            cpArray[3] = y2;
+            cpArray[4] = x3;
+            cpArray[5] = y3;
+            cpArray[6] = x4;
+            cpArray[7] = y4;
         }
-        curve4_points(double x1, double y1,
-                      double x2, double y2,
-                      double x3, double y3,
-                      double x4, double y4)
-        {
-            cp[0] = x1;
-            cp[1] = y1;
-            cp[2] = x2;
-            cp[3] = y2;
-            cp[4] = x3;
-            cp[5] = y3;
-            cp[6] = x4;
-            cp[7] = y4;
-        }
-        void init(double x1, double y1,
+
+        void Init(double x1, double y1,
                   double x2, double y2,
                   double x3, double y3,
                   double x4, double y4)
         {
-            cp[0] = x1;
-            cp[1] = y1;
-            cp[2] = x2;
-            cp[3] = y2;
-            cp[4] = x3;
-            cp[5] = y3;
-            cp[6] = x4;
-            cp[7] = y4;
+            cpArray[0] = x1;
+            cpArray[1] = y1;
+            cpArray[2] = x2;
+            cpArray[3] = y2;
+            cpArray[4] = x3;
+            cpArray[5] = y3;
+            cpArray[6] = x4;
+            cpArray[7] = y4;
         }
+
         double operator[](unsigned i) const
         {
-            return cp[i];
+            return cpArray[i];
         }
         double& operator[](unsigned i)
         {
-            return cp[i];
+            return cpArray[i];
         }
     };
 
-    //-------------------------------------------------------------curve4_inc
-    class curve4_inc
-    {
+    class Curve4Inc {
     public:
-        curve4_inc() :
-            m_num_steps(0), m_step(0), m_scale(1.0)
-        {
-        }
+        Curve4Inc() :
+            numSteps_(0), step_(0), scale_(1.0)
+        {}
 
-        curve4_inc(double x1, double y1,
-                   double x2, double y2,
-                   double x3, double y3,
-                   double x4, double y4) :
-            m_num_steps(0),
-            m_step(0), m_scale(1.0)
-        {
-            init(x1, y1, x2, y2, x3, y3, x4, y4);
-        }
-
-        curve4_inc(const curve4_points& cp) :
-            m_num_steps(0), m_step(0), m_scale(1.0)
-        {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
-        }
-
-        void reset()
-        {
-            m_num_steps = 0;
-            m_step = -1;
-        }
-        void init(double x1, double y1,
+        Curve4Inc(double x1, double y1,
                   double x2, double y2,
                   double x3, double y3,
-                  double x4, double y4);
-
-        void init(const curve4_points& cp)
+                  double x4, double y4) :
+            numSteps_(0),
+            step_(0), scale_(1.0)
         {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
+            Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        void approximation_method(curve_approximation_method_e)
+        Curve4Inc(const Curve4Points& curve4Points) :
+            numSteps_(0), step_(0), scale_(1.0)
         {
-        }
-        curve_approximation_method_e approximation_method() const
-        {
-            return curve_inc;
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void SetApproximationScale(double s);
-        double GetApproximationScale() const;
-
-        void angle_tolerance(double)
+        void Init(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
+        void Init(const Curve4Points& curve4Points)
         {
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
-        double angle_tolerance() const
+
+        void Reset()
+        {
+            numSteps_ = 0;
+            step_ = -1;
+        }
+
+        void ApproximationMethod(CurveApproximationMethodEnum)
+        {}
+        CurveApproximationMethodEnum ApproximationMethod() const
+        {
+            return CURVEINC;
+        }
+
+        void ApproximationScale(double scale);
+        double ApproximationScale() const;
+
+        void AngleTolerance(double)
+        {}
+        double AngleTolerance() const
         {
             return 0.0;
         }
 
-        void cusp_limit(double)
-        {
-        }
-        double cusp_limit() const
+        void CuspLimit(double)
+        {}
+        double CuspLimit() const
         {
             return 0.0;
         }
 
-        void rewind(unsigned path_id);
-        unsigned vertex(double* x, double* y);
+        void Rewind(unsigned pathId);
+        unsigned Vertex(double* x, double* y);
 
     private:
-        int m_num_steps;
-        int m_step;
-        double m_scale;
-        double m_start_x;
-        double m_start_y;
-        double m_end_x;
-        double m_end_y;
-        double m_fx;
-        double m_fy;
-        double m_dfx;
-        double m_dfy;
-        double m_ddfx;
-        double m_ddfy;
-        double m_dddfx;
-        double m_dddfy;
-        double m_saved_fx;
-        double m_saved_fy;
-        double m_saved_dfx;
-        double m_saved_dfy;
-        double m_saved_ddfx;
-        double m_saved_ddfy;
+        int numSteps_;
+        int step_;
+        double scale_;
+        double startX_;
+        double startY_;
+        double endX_;
+        double endY_;
+        double fx_;
+        double fy_;
+        double dfx_;
+        double dfy_;
+        double ddfx_;
+        double ddfy_;
+        double dddfx_;
+        double dddfy_;
+        double savedFx_;
+        double savedFy_;
+        double savedDfx_;
+        double savedDfy_;
+        double savedDdfx_;
+        double savedDdfy_;
     };
 
-    //-------------------------------------------------------catrom_to_bezier
-    inline curve4_points catrom_to_bezier(double x1, double y1,
-                                          double x2, double y2,
-                                          double x3, double y3,
-                                          double x4, double y4)
+    inline Curve4Points CatromToBezier(double x1, double y1,
+                                       double x2, double y2,
+                                       double x3, double y3,
+                                       double x4, double y4)
     {
-        // Trans. matrix Catmull-Rom to Bezier
-        //
-        //  0       1       0       0
-        //  -1/6    1       1/6     0
-        //  0       1/6     1       -1/6
-        //  0       0       1       0
-        //
-        return curve4_points(
+        return Curve4Points(
             x2,
             y2,
             (-x1 + 6 * x2 + x3) / 6,
@@ -365,28 +341,18 @@ namespace OHOS
             y3);
     }
 
-    //-----------------------------------------------------------------------
-    inline curve4_points
-        catrom_to_bezier(const curve4_points& cp)
+    inline Curve4Points CatromToBezier(const Curve4Points& curve4Points)
     {
-        return catrom_to_bezier(cp[0], cp[1], cp[2], cp[3],
-                                cp[4], cp[5], cp[6], cp[7]);
+        return CatromToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                              curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
 
-    //-----------------------------------------------------ubspline_to_bezier
-    inline curve4_points ubspline_to_bezier(double x1, double y1,
-                                            double x2, double y2,
-                                            double x3, double y3,
-                                            double x4, double y4)
+    inline Curve4Points UbsplineToBezier(double x1, double y1,
+                                         double x2, double y2,
+                                         double x3, double y3,
+                                         double x4, double y4)
     {
-        // Trans. matrix Uniform BSpline to Bezier
-        //
-        //  1/6     4/6     1/6     0
-        //  0       4/6     2/6     0
-        //  0       2/6     4/6     0
-        //  0       1/6     4/6     1/6
-        //
-        return curve4_points(
+        return Curve4Points(
             (x1 + 4 * x2 + x3) / 6,
             (y1 + 4 * y2 + y3) / 6,
             (4 * x2 + 2 * x3) / 6,
@@ -397,28 +363,18 @@ namespace OHOS
             (y2 + 4 * y3 + y4) / 6);
     }
 
-    //-----------------------------------------------------------------------
-    inline curve4_points
-        ubspline_to_bezier(const curve4_points& cp)
+    inline Curve4Points UbsplineToBezier(const Curve4Points& curve4Points)
     {
-        return ubspline_to_bezier(cp[0], cp[1], cp[2], cp[3],
-                                  cp[4], cp[5], cp[6], cp[7]);
+        return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                                curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
 
-    //------------------------------------------------------hermite_to_bezier
-    inline curve4_points hermite_to_bezier(double x1, double y1,
-                                           double x2, double y2,
-                                           double x3, double y3,
-                                           double x4, double y4)
+    inline Curve4Points HermiteToBezier(double x1, double y1,
+                                        double x2, double y2,
+                                        double x3, double y3,
+                                        double x4, double y4)
     {
-        // Trans. matrix Hermite to Bezier
-        //
-        //  1       0       0       0
-        //  1       0       1/3     0
-        //  0       1       0       -1/3
-        //  0       1       0       0
-        //
-        return curve4_points(
+        return Curve4Points(
             x1,
             y1,
             (3 * x1 + x3) / 3,
@@ -429,351 +385,338 @@ namespace OHOS
             y2);
     }
 
-    //-----------------------------------------------------------------------
-    inline curve4_points
-        hermite_to_bezier(const curve4_points& cp)
+    inline Curve4Points HermiteToBezier(const Curve4Points& curve4Points)
     {
-        return hermite_to_bezier(cp[0], cp[1], cp[2], cp[3],
-                                 cp[4], cp[5], cp[6], cp[7]);
+        return HermiteToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                               curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
 
-    //-------------------------------------------------------------curve4_div
-    class curve4_div
-    {
+    class Curve4Div {
     public:
-        curve4_div() :
-            m_approximation_scale(1.0),
-            m_angle_tolerance(0.0),
-            m_cusp_limit(0.0),
-            m_count(0)
+        Curve4Div() :
+            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
+        {}
+
+        Curve4Div(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) :
+            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {
+            Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        curve4_div(double x1, double y1,
-                   double x2, double y2,
-                   double x3, double y3,
-                   double x4, double y4) :
-            m_approximation_scale(1.0),
-            m_angle_tolerance(0.0),
-            m_cusp_limit(0.0),
-            m_count(0)
+        Curve4Div(const Curve4Points& curve4Points) :
+            approximationScale_(1.0),
+            angleTolerance_(0.0),
+            count_(0)
         {
-            init(x1, y1, x2, y2, x3, y3, x4, y4);
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        curve4_div(const curve4_points& cp) :
-            m_approximation_scale(1.0),
-            m_angle_tolerance(0.0),
-            m_count(0)
-        {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
-        }
-
-        void reset()
-        {
-            m_points.remove_all();
-            m_count = 0;
-        }
-        void init(double x1, double y1,
+        void Init(double x1, double y1,
                   double x2, double y2,
                   double x3, double y3,
                   double x4, double y4);
 
-        void init(const curve4_points& cp)
+        void Init(const Curve4Points& curve4Points)
         {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void approximation_method(curve_approximation_method_e)
+        void Reset()
         {
+            points_.RemoveAll();
+            count_ = 0;
         }
 
-        curve_approximation_method_e approximation_method() const
+        void ApproximationMethod(CurveApproximationMethodEnum)
+        {}
+
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
-            return curve_div;
+            return CURVEDIV;
         }
 
-        void SetApproximationScale(double s)
+        void ApproximationScale(double scale)
         {
-            m_approximation_scale = s;
+            approximationScale_ = scale;
         }
-        double GetApproximationScale() const
+        double ApproximationScale() const
         {
-            return m_approximation_scale;
-        }
-
-        void angle_tolerance(double a)
-        {
-            m_angle_tolerance = a;
-        }
-        double angle_tolerance() const
-        {
-            return m_angle_tolerance;
+            return approximationScale_;
         }
 
-        void cusp_limit(double v)
+        void AngleTolerance(double a)
         {
-            m_cusp_limit = (v == 0.0) ? 0.0 : pi - v;
+            angleTolerance_ = a;
+        }
+        double AngleTolerance() const
+        {
+            return angleTolerance_;
         }
 
-        double cusp_limit() const
+        void CuspLimit(double angleValue)
         {
-            return (m_cusp_limit == 0.0) ? 0.0 : pi - m_cusp_limit;
+            cuspLimit_ = (angleValue == 0.0) ? 0.0 : PI - angleValue;
         }
 
-        void rewind(unsigned)
+        double CuspLimit() const
         {
-            m_count = 0;
+            return (cuspLimit_ == 0.0) ? 0.0 : PI - cuspLimit_;
         }
 
-        unsigned vertex(double* x, double* y)
+        void Rewind(unsigned)
         {
-            if (m_count >= m_points.size())
-                return path_cmd_stop;
-            const point_d& p = m_points[m_count++];
+            count_ = 0;
+        }
+
+        unsigned Vertex(double* x, double* y)
+        {
+            if (count_ >= points_.Size()) {
+                return PATH_CMD_STOP;
+            }
+            const PointD& p = points_[count_++];
             *x = p.x;
             *y = p.y;
-            return (m_count == 1) ? path_cmd_move_to : path_cmd_line_to;
+            return (count_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO;
         }
 
     private:
-        void bezier(double x1, double y1,
+        void Bezier(double x1, double y1,
                     double x2, double y2,
                     double x3, double y3,
                     double x4, double y4);
 
-        void recursive_bezier(double x1, double y1,
-                              double x2, double y2,
-                              double x3, double y3,
-                              double x4, double y4,
-                              unsigned level);
+        void RecursiveBezier(double x1, double y1,
+                             double x2, double y2,
+                             double x3, double y3,
+                             double x4, double y4,
+                             unsigned level);
 
-        double m_approximation_scale;
-        double m_distance_tolerance_square;
-        double m_angle_tolerance;
-        double m_cusp_limit;
-        unsigned m_count;
-        pod_bvector<point_d> m_points;
+        double approximationScale_;
+        double distanceToleranceSquare_;
+        double angleTolerance_;
+        double cuspLimit_;
+        unsigned count_;
+        PodBvector<PointD> points_;
     };
 
-    //-----------------------------------------------------------------curve3
-    class curve3
-    {
+    /**
+     * @brief 二次贝塞尔曲线
+     *
+     * 根据起点、拐点、终点三个点，绘制出一条曲线
+     *
+     * @see Curve3
+     * @since 1.0
+     * @version 1.0
+     */
+    class Curve3 {
     public:
-        curve3() :
-            m_approximation_method(curve_div)
+        Curve3() :
+            approximationMethod_(CURVEDIV)
+        {}
+
+        Curve3(double x1, double y1, double x2, double y2, double x3, double y3) :
+            approximationMethod_(CURVEDIV)
         {
-        }
-        curve3(double x1, double y1,
-               double x2, double y2,
-               double x3, double y3) :
-            m_approximation_method(curve_div)
-        {
-            init(x1, y1, x2, y2, x3, y3);
+            Init(x1, y1, x2, y2, x3, y3);
         }
 
-        void reset()
+        void Init(double x1, double y1, double x2, double y2, double x3, double y3)
         {
-            m_curve_inc.reset();
-            m_curve_div.reset();
-        }
-
-        void init(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3)
-        {
-            if (m_approximation_method == curve_inc)
-            {
-                m_curve_inc.init(x1, y1, x2, y2, x3, y3);
-            }
-            else
-            {
-                m_curve_div.init(x1, y1, x2, y2, x3, y3);
+            if (approximationMethod_ == CURVEINC) {
+                curveInc_.Init(x1, y1, x2, y2, x3, y3);
+            } else {
+                curveDiv_.Init(x1, y1, x2, y2, x3, y3);
             }
         }
 
-        void approximation_method(curve_approximation_method_e v)
+        void Reset()
         {
-            m_approximation_method = v;
+            curveInc_.Reset();
+            curveDiv_.Reset();
         }
 
-        curve_approximation_method_e approximation_method() const
+        void ApproximationMethod(CurveApproximationMethodEnum curveApproximationMethod)
         {
-            return m_approximation_method;
+            approximationMethod_ = curveApproximationMethod;
         }
 
-        void SetApproximationScale(double s)
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
-            m_curve_inc.SetApproximationScale(s);
-            m_curve_div.SetApproximationScale(s);
+            return approximationMethod_;
         }
 
-        double GetApproximationScale() const
+        void SetApproximationScale(double scale)
         {
-            return m_curve_inc.GetApproximationScale();
+            curveInc_.ApproximationScale(scale);
+            curveDiv_.ApproximationScale(scale);
         }
 
-        void angle_tolerance(double a)
+        double ApproximationScale() const
         {
-            m_curve_div.angle_tolerance(a);
+            return curveInc_.ApproximationScale();
         }
 
-        double angle_tolerance() const
+        void AngleTolerance(double angle)
         {
-            return m_curve_div.angle_tolerance();
+            curveDiv_.AngleTolerance(angle);
         }
 
-        void cusp_limit(double v)
+        double AngleTolerance() const
         {
-            m_curve_div.cusp_limit(v);
+            return curveDiv_.AngleTolerance();
         }
 
-        double cusp_limit() const
+        void CuspLimit(double angleValue)
         {
-            return m_curve_div.cusp_limit();
+            curveDiv_.CuspLimit(angleValue);
         }
 
-        void rewind(unsigned path_id)
+        double CuspLimit() const
         {
-            if (m_approximation_method == curve_inc)
-            {
-                m_curve_inc.rewind(path_id);
+            return curveDiv_.CuspLimit();
+        }
+
+        void Rewind(unsigned pathId)
+        {
+            if (approximationMethod_ == CURVEINC) {
+                curveInc_.Rewind(pathId);
+            } else {
+                curveDiv_.Rewind(pathId);
             }
-            else
-            {
-                m_curve_div.rewind(path_id);
-            }
         }
 
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
-            if (m_approximation_method == curve_inc)
-            {
-                return m_curve_inc.vertex(x, y);
+            if (approximationMethod_ == CURVEINC) {
+                return curveInc_.Vertex(x, y);
             }
-            return m_curve_div.vertex(x, y);
+            return curveDiv_.Vertex(x, y);
         }
 
     private:
-        curve3_inc m_curve_inc;
-        curve3_div m_curve_div;
-        curve_approximation_method_e m_approximation_method;
+        Curve3Inc curveInc_;
+        Curve3Div curveDiv_;
+        CurveApproximationMethodEnum approximationMethod_;
     };
 
-    //-----------------------------------------------------------------curve4
-    class curve4
-    {
+    /**
+     * @brief 三次贝塞尔曲线
+     *
+     * 根据起点、控制点、终点绘制出一条曲线
+     *
+     * @see Curve4
+     * @since 1.0
+     * @version 1.0
+     */
+    class Curve4 {
     public:
-        curve4() :
-            m_approximation_method(curve_div)
-        {
-        }
-        curve4(double x1, double y1,
+        Curve4() :
+            approximationMethod_(CURVEDIV)
+        {}
+
+        Curve4(double x1, double y1,
                double x2, double y2,
                double x3, double y3,
                double x4, double y4) :
-            m_approximation_method(curve_div)
+            approximationMethod_(CURVEDIV)
         {
-            init(x1, y1, x2, y2, x3, y3, x4, y4);
+            Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        curve4(const curve4_points& cp) :
-            m_approximation_method(curve_div)
+        Curve4(const Curve4Points& curve4Points) :
+            approximationMethod_(CURVEDIV)
         {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void reset()
-        {
-            m_curve_inc.reset();
-            m_curve_div.reset();
-        }
-
-        void init(double x1, double y1,
+        void Init(double x1, double y1,
                   double x2, double y2,
                   double x3, double y3,
                   double x4, double y4)
         {
-            if (m_approximation_method == curve_inc)
-            {
-                m_curve_inc.init(x1, y1, x2, y2, x3, y3, x4, y4);
-            }
-            else
-            {
-                m_curve_div.init(x1, y1, x2, y2, x3, y3, x4, y4);
+            if (approximationMethod_ == CURVEINC) {
+                curveInc_.Init(x1, y1, x2, y2, x3, y3, x4, y4);
+            } else {
+                curveDiv_.Init(x1, y1, x2, y2, x3, y3, x4, y4);
             }
         }
 
-        void init(const curve4_points& cp)
+        void Init(const Curve4Points& curve4Points)
         {
-            init(cp[0], cp[1], cp[2], cp[3], cp[4], cp[5], cp[6], cp[7]);
+            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void approximation_method(curve_approximation_method_e v)
+        void Reset()
         {
-            m_approximation_method = v;
+            curveInc_.Reset();
+            curveDiv_.Reset();
         }
 
-        curve_approximation_method_e approximation_method() const
+        void ApproximationMethod(CurveApproximationMethodEnum curveApproximationMethod)
         {
-            return m_approximation_method;
+            approximationMethod_ = curveApproximationMethod;
         }
 
-        void SetApproximationScale(double s)
+        CurveApproximationMethodEnum ApproximationMethod() const
         {
-            m_curve_inc.SetApproximationScale(s);
-            m_curve_div.SetApproximationScale(s);
-        }
-        double GetApproximationScale() const
-        {
-            return m_curve_inc.GetApproximationScale();
+            return approximationMethod_;
         }
 
-        void angle_tolerance(double v)
+        void SetApproximationScale(double scale)
         {
-            m_curve_div.angle_tolerance(v);
+            curveInc_.ApproximationScale(scale);
+            curveDiv_.ApproximationScale(scale);
+        }
+        double ApproximationScale() const
+        {
+            return curveInc_.ApproximationScale();
         }
 
-        double angle_tolerance() const
+        void AngleTolerance(double angleValue)
         {
-            return m_curve_div.angle_tolerance();
+            curveDiv_.AngleTolerance(angleValue);
         }
 
-        void cusp_limit(double v)
+        double AngleTolerance() const
         {
-            m_curve_div.cusp_limit(v);
+            return curveDiv_.AngleTolerance();
         }
 
-        double cusp_limit() const
+        void CuspLimit(double angleValue)
         {
-            return m_curve_div.cusp_limit();
+            curveDiv_.CuspLimit(angleValue);
         }
 
-        void rewind(unsigned path_id)
+        double CuspLimit() const
         {
-            if (m_approximation_method == curve_inc)
-            {
-                m_curve_inc.rewind(path_id);
+            return curveDiv_.CuspLimit();
+        }
+
+        void Rewind(unsigned pathId)
+        {
+            if (approximationMethod_ == CURVEINC) {
+                curveInc_.Rewind(pathId);
+            } else {
+                curveDiv_.Rewind(pathId);
             }
-            else
-            {
-                m_curve_div.rewind(path_id);
-            }
         }
 
-        unsigned vertex(double* x, double* y)
+        unsigned Vertex(double* x, double* y)
         {
-            if (m_approximation_method == curve_inc)
-            {
-                return m_curve_inc.vertex(x, y);
+            if (approximationMethod_ == CURVEINC) {
+                return curveInc_.Vertex(x, y);
             }
-            return m_curve_div.vertex(x, y);
+            return curveDiv_.Vertex(x, y);
         }
 
     private:
-        curve4_inc m_curve_inc;
-        curve4_div m_curve_div;
-        curve_approximation_method_e m_approximation_method;
+        Curve4Inc curveInc_;
+        Curve4Div curveDiv_;
+        CurveApproximationMethodEnum approximationMethod_;
     };
 
 } // namespace OHOS

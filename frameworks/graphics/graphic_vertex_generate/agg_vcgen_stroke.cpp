@@ -34,7 +34,7 @@ namespace OHOS {
     //------------------------------------------------------------------------
     void VCGenStroke::RemoveAll()
     {
-        srcVertices_.remove_all();
+        srcVertices_.RemoveAll();
         closed_ = 0;
         status_ = INITIAL;
     }
@@ -43,13 +43,13 @@ namespace OHOS {
     void VCGenStroke::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
-        if (is_move_to(cmd)) {
-            srcVertices_.modify_last(vertex_dist(x, y));
+        if (IsMoveTo(cmd)) {
+            srcVertices_.ModifyLast(VertexDist(x, y));
         } else {
-            if (is_vertex(cmd)) {
-                srcVertices_.add(vertex_dist(x, y));
+            if (IsVertex(cmd)) {
+                srcVertices_.Add(VertexDist(x, y));
             } else {
-                closed_ = get_close_flag(cmd);
+                closed_ = GetCloseFlag(cmd);
             }
         }
     }
@@ -58,9 +58,9 @@ namespace OHOS {
     void VCGenStroke::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
-            srcVertices_.close(closed_ != 0);
-            shorten_path(srcVertices_, shorten_, closed_);
-            if (srcVertices_.size() < 3) {
+            srcVertices_.Close(closed_ != 0);
+            ShortenPath(srcVertices_, shorten_, closed_);
+            if (srcVertices_.Size() < 3) {
                 closed_ = 0;
             }
         }
@@ -72,14 +72,14 @@ namespace OHOS {
     //------------------------------------------------------------------------
     unsigned VCGenStroke::Vertex(double* x, double* y)
     {
-        unsigned cmd = path_cmd_line_to;
-        while (!is_stop(cmd)) {
+        unsigned cmd = PATH_CMD_LINE_TO;
+        while (!IsStop(cmd)) {
             switch (status_) {
                 case INITIAL:
                     Rewind(0);
                 case READY:
-                    if (srcVertices_.size() < 2 + unsigned(closed_ != 0)) {
-                        cmd = path_cmd_stop;
+                    if (srcVertices_.Size() < 2 + unsigned(closed_ != 0)) {
+                        cmd = PATH_CMD_STOP;
                         break;
                     }
                     if (closed_) {
@@ -87,7 +87,7 @@ namespace OHOS {
                     } else {
                         status_ = CAP1;
                     }
-                    cmd = path_cmd_move_to;
+                    cmd = PATH_CMD_MOVE_TO;
                     srcVertex_ = 0;
                     outVertex_ = 0;
                     break;
@@ -103,32 +103,32 @@ namespace OHOS {
                     break;
                 case CAP2:
                     stroker_.CalcCap(outVertices_,
-                                     srcVertices_[srcVertices_.size() - 1],
-                                     srcVertices_[srcVertices_.size() - 2],
-                                     srcVertices_[srcVertices_.size() - 2].dist);
+                                     srcVertices_[srcVertices_.Size() - 1],
+                                     srcVertices_[srcVertices_.Size() - 2],
+                                     srcVertices_[srcVertices_.Size() - 2].dist);
                     prevStatus_ = OUTLINE2;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
                     break;
                 case OUTLINE1:
                     if (closed_) {
-                        if (srcVertex_ >= srcVertices_.size()) {
+                        if (srcVertex_ >= srcVertices_.Size()) {
                             prevStatus_ = CLOSE_FIRST;
                             status_ = END_POLY1;
                             break;
                         }
                     } else {
-                        if (srcVertex_ >= srcVertices_.size() - 1) {
+                        if (srcVertex_ >= srcVertices_.Size() - 1) {
                             status_ = CAP2;
                             break;
                         }
                     }
                     stroker_.CalcJoin(outVertices_,
-                                      srcVertices_.prev(srcVertex_),
-                                      srcVertices_.curr(srcVertex_),
-                                      srcVertices_.next(srcVertex_),
-                                      srcVertices_.prev(srcVertex_).dist,
-                                      srcVertices_.curr(srcVertex_).dist);
+                                      srcVertices_.Prev(srcVertex_),
+                                      srcVertices_.Curr(srcVertex_),
+                                      srcVertices_.Next(srcVertex_),
+                                      srcVertices_.Prev(srcVertex_).dist,
+                                      srcVertices_.Curr(srcVertex_).dist);
                     ++srcVertex_;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
@@ -136,7 +136,7 @@ namespace OHOS {
                     break;
                 case CLOSE_FIRST:
                     status_ = OUTLINE2;
-                    cmd = path_cmd_move_to;
+                    cmd = PATH_CMD_MOVE_TO;
                 case OUTLINE2:
                     if (srcVertex_ <= unsigned(closed_ == 0)) {
                         status_ = END_POLY2;
@@ -145,20 +145,20 @@ namespace OHOS {
                     }
                     --srcVertex_;
                     stroker_.CalcJoin(outVertices_,
-                                      srcVertices_.next(srcVertex_),
-                                      srcVertices_.curr(srcVertex_),
-                                      srcVertices_.prev(srcVertex_),
-                                      srcVertices_.curr(srcVertex_).dist,
-                                      srcVertices_.prev(srcVertex_).dist);
+                                      srcVertices_.Next(srcVertex_),
+                                      srcVertices_.Curr(srcVertex_),
+                                      srcVertices_.Prev(srcVertex_),
+                                      srcVertices_.Curr(srcVertex_).dist,
+                                      srcVertices_.Prev(srcVertex_).dist);
                     outVertex_ = 0;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
                     break;
                 case OUT_VERTICES:
-                    if (outVertex_ >= outVertices_.size()) {
+                    if (outVertex_ >= outVertices_.Size()) {
                         status_ = prevStatus_;
                     } else {
-                        const point_d& c = outVertices_[outVertex_++];
+                        const PointD& c = outVertices_[outVertex_++];
                         *x = c.x;
                         *y = c.y;
                         return cmd;
@@ -166,12 +166,12 @@ namespace OHOS {
                     break;
                 case END_POLY1:
                     status_ = prevStatus_;
-                    return path_cmd_end_poly | path_flags_close | path_flags_ccw;
+                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
                 case END_POLY2:
                     status_ = prevStatus_;
-                    return path_cmd_end_poly | path_flags_close | path_flags_cw;
+                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CW;
                 case STOP:
-                    cmd = path_cmd_stop;
+                    cmd = PATH_CMD_STOP;
                     break;
             }
         }

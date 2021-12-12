@@ -14,156 +14,273 @@
  */
 
 /**
-* @file agg_rasterizer_cells_aa.h
+* @file agg_RasterizerCellsAntiAlias.h
 * @brief Defines 光栅细胞（防走样）
 * @since 1.0
 * @version 1.0
 */
 
-
 //----------------------------------------------------------------------------
-#ifndef GRAPHIC_RASTERIZER_CELLS_AA_INCLUDED
-#define GRAPHIC_RASTERIZER_CELLS_AA_INCLUDED
+#ifndef GRAPHIC_RasterizerCellsAntiAlias_INCLUDED
+#define GRAPHIC_RasterizerCellsAntiAlias_INCLUDED
 
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 #include <limits>
+
 #include "gfx_utils/graphics/graphic_common/agg_math.h"
 #include "gfx_utils/graphics/graphic_geometry/agg_array.h"
 
+namespace OHOS {
 
-namespace OHOS
-{
-
-    //-----------------------------------------------------------------cell_aa
+    //-----------------------------------------------------------------CellBuildAntiAlias
     //像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
-    struct cell_aa
-    {
+    struct CellBuildAntiAlias {
         int x;
         int y;
         int cover;
         int area;
 
-        void initial()
+        void Initial()
         {
             x = (std::numeric_limits<int>::max)();
             y = (std::numeric_limits<int>::max)();
             cover = 0;
-            area  = 0;
+            area = 0;
         }
 
-        void style(const cell_aa&) {}
+        void Style(const CellBuildAntiAlias&)
+        {}
 
-        int not_equal(int ex, int ey, const cell_aa&) const
+        int NotEqual(int ex, int ey, const CellBuildAntiAlias&) const
         {
             return ((unsigned)ex - (unsigned)x) | ((unsigned)ey - (unsigned)y);
         }
     };
 
-    template<class Cell>
-    class rasterizer_cells_aa
-    {
-        enum cell_block_scale_e
-        {
-            cell_block_shift = 12,
-            cell_block_size  = 1 << cell_block_shift,
-            cell_block_mask  = cell_block_size - 1,
-            cell_block_pool  = 256
-        };
-
-        struct sorted_y
-        {
+    template <class Cell>
+    class RasterizerCellsAntiAlias {
+        struct SortedYLevel {
             unsigned start;
             unsigned num;
         };
 
+        /**
+        * @brief 构建'细胞单元'的偏移以及mask掩码,细胞池容量等
+        * @since 1.0
+        * @version 1.0
+        */
+        enum CellBlockScaleEnum {
+            CELL_BLOCK_SHIFT = 12,
+            CELL_BLOCK_SIZE = 1 << CELL_BLOCK_SHIFT,
+            CELL_BLOCK_MASK = CELL_BLOCK_SIZE - 1,
+            CELL_BLOCK_POOL = 256
+        };
+
     public:
-        typedef Cell cell_type;
-        typedef rasterizer_cells_aa<Cell> self_type;
+        using cell_type = Cell;
+        using self_type = RasterizerCellsAntiAlias<Cell>;
 
-        ~rasterizer_cells_aa();
-        rasterizer_cells_aa(unsigned cell_block_limit=1024);
+        ~RasterizerCellsAntiAlias();
 
-        void reset();
-        void style(const cell_type& style_cell);
-        void line(int x1, int y1, int x2, int y2);
+        /**
+                 * @brief RasterizerCellsAntiAlias 类的构造函数。.
+                 * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
+                 * @since 1.0
+                 * @version 1.0
+                 */
+        RasterizerCellsAntiAlias(unsigned cell_block_limit = 1024);
 
-        int min_x() const { return m_min_x; }
-        int min_y() const { return m_min_y; }
-        int max_x() const { return m_max_x; }
-        int max_y() const { return m_max_y; }
+        /**
+                 * 重新初始化设置 m_num_blocks,m_max_blocks,m_curr_block等属性。
+                 * @since 1.0
+                 * @version 1.0
+                 */
+        void Reset();
+        void Style(const cell_type& style_cell);
 
-        void sort_cells();
+        /**
+         * @brief 根据传入的2个坐标点（均带有子像素），
+         * 构建光栅化单元细胞点的过程，先从y向再从x向。
+         * @since 1.0
+         * @version 1.0
+         */
+        void LineOperate(int x1, int y1, int x2, int y2);
 
-        unsigned total_cells() const 
+        /**
+         * @brief 光栅化过程构建图元的坐标范围。
+         * @since 1.0
+         * @version 1.0
+         */
+        int MinX() const
+        {
+            return m_min_x;
+        }
+        int Miny() const
+        {
+            return m_min_y;
+        }
+        int MaxX() const
+        {
+            return m_max_x;
+        }
+        int Maxy() const
+        {
+            return m_max_y;
+        }
+
+        /**
+         * @brief 光栅化过程中对于所有的cells单元进行按照
+         * 从左向右，自上而下的顺序进行排序处理。
+         * @since 1.0
+         * @version 1.0
+         */
+        void SortAllCells();
+
+        unsigned TotalCells() const
         {
             return m_num_cells;
         }
 
-        unsigned scanline_num_cells(unsigned y) const 
-        { 
-            return m_sorted_y[y - m_min_y].num; 
+        /**
+         * @brief 光栅化过程中根据y的坐标高度值计算得到
+         * cells的总数。
+         * @since 1.0
+         * @version 1.0
+         */
+        unsigned ScanlineNumCells(unsigned yLevel) const
+        {
+            return m_sorted_y[yLevel - m_min_y].num;
         }
 
-        const cell_type* const* scanline_cells(unsigned y) const
-        { 
-            return m_sorted_cells.data() + m_sorted_y[y - m_min_y].start; 
+        /**
+         * @brief 光栅化过程中根据y的坐标高度值计算得到
+         * 排序后的cells数组的首地址。
+         * @since 1.0
+         * @version 1.0
+         */
+        const cell_type* const* ScanlineCells(unsigned yLevel) const
+        {
+            return m_sorted_cells.Data() + m_sorted_y[yLevel - m_min_y].start;
         }
 
-        bool sorted() const { return m_sorted; }
+        bool GetSorted() const
+        {
+            return m_sorted;
+        }
 
     private:
-        rasterizer_cells_aa(const self_type&);
-        const self_type& operator = (const self_type&);
+        RasterizerCellsAntiAlias(const self_type&);
+        const self_type& operator=(const self_type&);
 
-        void set_curr_cell(int x, int y);
-        void add_curr_cell();
-        void render_hline(int ey, int x1, int y1, int x2, int y2);
-        void allocate_block();
-        
+        /**
+         * @brief 光栅化过程中设置当前的cell单元。
+         * @since 1.0
+         * @version 1.0
+         */
+        void SetCurrentCell(int x, int y);
+        /**
+         * @brief 光栅化过程中添加当前的cell单元。
+         * @since 1.0
+         * @version 1.0
+         */
+        void AddCurrentCell();
+
+        /**
+         * @brief 光栅化过程中根据ey的坐标高度值,横向从x1到x2,
+         * 纵向从子像素掩码y1到子像素掩码y2的cell单元的填充过程。
+         * @since 1.0
+         * @version 1.0
+         */
+        void RenderHorizonline(int ey, int x1, int submask_flags_y1, int x2, int submask_flags_y2);
+
+        /**
+         * @brief 光栅化过程中为cells分配数组空间。
+         * @since 1.0
+         * @version 1.0
+         */
+        void AllocateBlock();
+
     private:
-        unsigned                m_num_blocks;
-        unsigned                m_max_blocks;
-        unsigned                m_curr_block;
-        unsigned                m_num_cells;
-	unsigned                m_cell_block_limit;
-        cell_type**             m_cells;
-        cell_type*              m_curr_cell_ptr;
-        pod_vector<cell_type*>  m_sorted_cells;
-        pod_vector<sorted_y>    m_sorted_y;
-        cell_type               m_curr_cell;
-        cell_type               m_style_cell;
-        int                     m_min_x;
-        int                     m_min_y;
-        int                     m_max_x;
-        int                     m_max_y;
-        bool                    m_sorted;
+        unsigned m_num_blocks;
+        unsigned m_max_blocks;
+        unsigned m_curr_block;
+        unsigned m_num_cells;
+        unsigned m_cell_block_limit;
+        cell_type** m_cells;
+        cell_type* m_curr_cell_ptr;
+        PodVector<cell_type*> m_sorted_cells;
+        PodVector<SortedYLevel> m_sorted_y;
+        cell_type m_curr_cell;
+        cell_type m_style_cell;
+        int m_min_x;
+        int m_min_y;
+        int m_max_x;
+        int m_max_y;
+        bool m_sorted;
+    };
+
+    //------------------------------------------------------scanline_hit_test
+    class scanline_hit_test {
+    public:
+        scanline_hit_test(int x) :
+            m_x(x), m_hit(false)
+        {}
+
+        void reset_spans()
+        {}
+        void finalize(int)
+        {}
+        void add_cell(int x, int)
+        {
+            if (m_x == x)
+                m_hit = true;
+        }
+        void add_span(int x, int len, int)
+        {
+            if (m_x >= x && m_x < x + len)
+                m_hit = true;
+        }
+        unsigned num_spans() const
+        {
+            return 1;
+        }
+        bool hit() const
+        {
+            return m_hit;
+        }
+
+    private:
+        int m_x;
+        bool m_hit;
     };
 
     //------------------------------------------------------------------------
-    template<class Cell> 
-    rasterizer_cells_aa<Cell>::~rasterizer_cells_aa()
+    template <class Cell>
+    RasterizerCellsAntiAlias<Cell>::~RasterizerCellsAntiAlias()
     {
-        if(m_num_blocks)
-        {
+        if (m_num_blocks) {
             cell_type** ptr = m_cells + m_num_blocks - 1;
-            while(m_num_blocks--)
-            {
-                pod_allocator<cell_type>::deallocate(*ptr, cell_block_size);
+            while (m_num_blocks--) {
+                ArrAllocator<cell_type>::Deallocate(*ptr, CELL_BLOCK_SIZE);
                 ptr--;
             }
-            pod_allocator<cell_type*>::deallocate(m_cells, m_max_blocks);
+            ArrAllocator<cell_type*>::Deallocate(m_cells, m_max_blocks);
         }
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    rasterizer_cells_aa<Cell>::rasterizer_cells_aa(unsigned cell_block_limit) :
+    /* @brief RasterizerCellsAntiAlias 类的构造函数。.
+    * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
         m_num_blocks(0),
         m_max_blocks(0),
         m_curr_block(0),
         m_num_cells(0),
-	m_cell_block_limit(cell_block_limit),
+        m_cell_block_limit(cell_block_limit),
         m_cells(0),
         m_curr_cell_ptr(0),
         m_sorted_cells(),
@@ -174,18 +291,22 @@ namespace OHOS
         m_max_y((std::numeric_limits<int>::min)()),
         m_sorted(false)
     {
-        m_style_cell.initial();
-        m_curr_cell.initial();
+        m_style_cell.Initial();
+        m_curr_cell.Initial();
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    void rasterizer_cells_aa<Cell>::reset()
+    /**
+    * 重新初始化设置 m_num_blocks,m_max_blocks,m_curr_block等属性。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    void RasterizerCellsAntiAlias<Cell>::Reset()
     {
-        m_num_cells = 0; 
+        m_num_cells = 0;
         m_curr_block = 0;
-        m_curr_cell.initial();
-        m_style_cell.initial();
+        m_curr_cell.Initial();
+        m_style_cell.Initial();
         m_sorted = false;
         m_min_x = (std::numeric_limits<int>::max)();
         m_min_y = (std::numeric_limits<int>::max)();
@@ -193,476 +314,553 @@ namespace OHOS
         m_max_y = (std::numeric_limits<int>::min)();
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::add_curr_cell()
+    /**
+    * @brief 光栅化过程中添加当前的cell单元。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::AddCurrentCell()
     {
-        if(m_curr_cell.area | m_curr_cell.cover)
-        {
-            if((m_num_cells & cell_block_mask) == 0)
-            {
-                if(m_num_blocks >= m_cell_block_limit) return;
-                allocate_block();
+        bool areaCoverFlags = m_curr_cell.area | m_curr_cell.cover;
+        if (areaCoverFlags) {
+            //达到CELL_BLOCK_MASK的数后，重新开辟分配内存
+            if ((m_num_cells & CELL_BLOCK_MASK) == 0) {
+                //超过内存块限制大小，默认1024limit
+                if (m_num_blocks >= m_cell_block_limit) {
+                    return;
+                }
+                AllocateBlock();
             }
             *m_curr_cell_ptr++ = m_curr_cell;
             ++m_num_cells;
         }
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::set_curr_cell(int x, int y)
+    /**
+    * @brief 光栅化过程中设置当前的cell单元。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::SetCurrentCell(int x, int y)
     {
-        if(m_curr_cell.not_equal(x, y, m_style_cell))
-        {
-            add_curr_cell();
-            m_curr_cell.style(m_style_cell);
-            m_curr_cell.x     = x;
-            m_curr_cell.y     = y;
+        if (m_curr_cell.NotEqual(x, y, m_style_cell)) {
+            AddCurrentCell();
+            m_curr_cell.Style(m_style_cell);
+            m_curr_cell.x = x;
+            m_curr_cell.y = y;
             m_curr_cell.cover = 0;
-            m_curr_cell.area  = 0;
+            m_curr_cell.area = 0;
         }
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::render_hline(int ey, 
-                                                            int x1, int y1, 
-                                                            int x2, int y2)
+    /**
+    * @brief 光栅化过程中根据ey的坐标高度值,横向以1/256像素为单位的x1到x2,
+    * 纵向从子像素掩码y1到子像素掩码y2的cell单元的填充过程。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::RenderHorizonline(
+        int ey, int x1, int poly_subpixel_mask_y1, int x2, int poly_subpixel_mask_y2)
     {
-        int ex1 = x1 >> poly_subpixel_shift;
-        int ex2 = x2 >> poly_subpixel_shift;
-        int fx1 = x1 & poly_subpixel_mask;
-        int fx2 = x2 & poly_subpixel_mask;
+        /*
+         * 从以1/256像素为单位的点中取出后8位的掩码值,即颜色掩码
+         */
+        int submask_flags_x1 = x1 & POLY_SUBPIXEL_MASK;
+        int submask_flags_x2 = x2 & POLY_SUBPIXEL_MASK;
+        /*
+         * 从以1/256像素为单位的点中取出前24位的坐标
+         */
+        int pixel_x1 = x1 >> POLY_SUBPIXEL_SHIFT;
+        int pixel_x2 = x2 >> POLY_SUBPIXEL_SHIFT;
 
-        int delta, p, first;
+        int delta, deltay_mask, first;
         long long dx;
-        int incr, lift, mod, rem;
-
-        if(y1 == y2)
-        {
-            set_curr_cell(ex2, ey);
+        int increase, lift_dx_mask, mod_dx_mask, rem_dx_mask;
+        /*
+         * 2个点的颜色mask掩码相同，直接添加设置返回。
+         */
+        if (poly_subpixel_mask_y2 == poly_subpixel_mask_y1) {
+            SetCurrentCell(pixel_x2, ey);
             return;
         }
 
-        if(ex1 == ex2)
-        {
-            delta = y2 - y1;
+        /*
+         * 2个点的像素坐标相同，直接算作一个cell。
+         */
+        if (pixel_x1 == pixel_x2) {
+            delta = poly_subpixel_mask_y2 - poly_subpixel_mask_y1;
             m_curr_cell.cover += delta;
-            m_curr_cell.area  += (fx1 + fx2) * delta;
+            m_curr_cell.area += (submask_flags_x1 + submask_flags_x2) * delta;
             return;
         }
+        /*
+         * hline 过程开始，渲染组织相同邻接的cells区域
+         */
+        first = POLY_SUBPIXEL_SCALE;
+        increase = 1;
 
-        p     = (poly_subpixel_scale - fx1) * (y2 - y1);
-        first = poly_subpixel_scale;
-        incr  = 1;
-
+        /*
+         *从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
+         */
+        deltay_mask = (POLY_SUBPIXEL_SCALE - submask_flags_x1) * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1);
         dx = (long long)x2 - (long long)x1;
 
-        if(dx < 0)
-        {
-            p     = fx1 * (y2 - y1);
+        if (dx < 0) {
             first = 0;
-            incr  = -1;
-            dx    = -dx;
+            increase = -1;
+            dx = -dx;
+            deltay_mask = submask_flags_x1 * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1);
         }
 
-        delta = (int)(p / dx);
-        mod   = (int)(p % dx);
+        delta = (int)(deltay_mask / dx);
+        mod_dx_mask = (int)(deltay_mask % dx);
 
-        if(mod < 0)
-        {
+        if (mod_dx_mask < 0) {
+            mod_dx_mask += dx;
             delta--;
-            mod += dx;
         }
-
+        /*
+         *submask_flags_x1+ (0->first)过程
+         */
+        m_curr_cell.area += (submask_flags_x1 + first) * delta;
         m_curr_cell.cover += delta;
-        m_curr_cell.area  += (fx1 + first) * delta;
 
-        ex1 += incr;
-        set_curr_cell(ex1, ey);
-        y1  += delta;
+        pixel_x1 += increase;
+        SetCurrentCell(pixel_x1, ey);
+        poly_subpixel_mask_y1 += delta;
 
-        if(ex1 != ex2)
-        {
-            p     = poly_subpixel_scale * (y2 - y1 + delta);
-            lift  = (int)(p / dx);
-            rem   = (int)(p % dx);
+        if (pixel_x1 != pixel_x2) {
+            /*
+             *delta_subpixel x（ 0 到 POLY_SUBPIXEL_SCALE）  到 ( delta_subpixel_scale_y + delta)
+             */
+            deltay_mask = POLY_SUBPIXEL_SCALE * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1 + delta);
+            rem_dx_mask = (int)(deltay_mask % dx);
+            lift_dx_mask = (int)(deltay_mask / dx);
 
-            if (rem < 0)
-            {
-                lift--;
-                rem += dx;
+            if (rem_dx_mask < 0) {
+                lift_dx_mask--;
+                rem_dx_mask += dx;
             }
 
-            mod -= dx;
+            mod_dx_mask -= dx;
 
-            while (ex1 != ex2)
-            {
-                delta = lift;
-                mod  += rem;
-                if(mod >= 0)
-                {
-                    mod -= dx;
+            while (pixel_x1 != pixel_x2) {
+                delta = lift_dx_mask;
+                mod_dx_mask += rem_dx_mask;
+                if (mod_dx_mask >= 0) {
+                    mod_dx_mask -= dx;
                     delta++;
                 }
 
+                m_curr_cell.area += POLY_SUBPIXEL_SCALE * delta;
                 m_curr_cell.cover += delta;
-                m_curr_cell.area  += poly_subpixel_scale * delta;
-                y1  += delta;
-                ex1 += incr;
-                set_curr_cell(ex1, ey);
+                poly_subpixel_mask_y1 += delta;
+                pixel_x1 += increase;
+                SetCurrentCell(pixel_x1, ey);
             }
         }
-        delta = y2 - y1;
+        delta = poly_subpixel_mask_y2 - poly_subpixel_mask_y1;
         m_curr_cell.cover += delta;
-        m_curr_cell.area  += (fx2 + poly_subpixel_scale - first) * delta;
+        //再从 first 到  POLY_SUBPIXEL_SCALE 过程
+        m_curr_cell.area += (submask_flags_x2 + POLY_SUBPIXEL_SCALE - first) * delta;
     }
 
     //------------------------------------------------------------------------
-    template<class Cell> 
-    AGG_INLINE void rasterizer_cells_aa<Cell>::style(const cell_type& style_cell)
-    { 
-        m_style_cell.style(style_cell); 
-    }
-
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    void rasterizer_cells_aa<Cell>::line(int x1, int y1, int x2, int y2)
+    template <class Cell>
+    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::Style(const cell_type& style_cell)
     {
-        enum dx_limit_e { dx_limit = 16384 << poly_subpixel_shift };
+        m_style_cell.style(style_cell);
+    }
+
+    /**
+    * @brief 根据传入的2个坐标点（均带有子像素），
+    * 构建光栅化单元细胞点的过程，先从y向再从x向。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    void RasterizerCellsAntiAlias<Cell>::LineOperate(int x1, int y1, int x2, int y2)
+    {
+        const int constitution = 16384;
+        enum DxLimitEnum { DX_LIMIT = constitution << POLY_SUBPIXEL_SHIFT };
 
         long long dx = (long long)x2 - (long long)x1;
-
-        if(dx >= dx_limit || dx <= -dx_limit)
-        {
+        /*
+         * 若 dx 超出了限制范围，则采取折中处理的方法计算Line的过程。
+         */
+        if (dx >= DX_LIMIT || dx <= -DX_LIMIT) {
             int cx = (int)(((long long)x1 + (long long)x2) >> 1);
             int cy = (int)(((long long)y1 + (long long)y2) >> 1);
-            line(x1, y1, cx, cy);
-            line(cx, cy, x2, y2);
+            LineOperate(x1, y1, cx, cy);
+            LineOperate(cx, cy, x2, y2);
         }
-
+        /*
+         * 从以1/256像素为单位的点中取出前24位的坐标
+         */
         long long dy = (long long)y2 - (long long)y1;
-        int ex1 = x1 >> poly_subpixel_shift;
-        int ex2 = x2 >> poly_subpixel_shift;
-        int ey1 = y1 >> poly_subpixel_shift;
-        int ey2 = y2 >> poly_subpixel_shift;
-        int fy1 = y1 & poly_subpixel_mask;
-        int fy2 = y2 & poly_subpixel_mask;
+        int ex1 = x1 >> POLY_SUBPIXEL_SHIFT;
+        int ex2 = x2 >> POLY_SUBPIXEL_SHIFT;
+        int ey1 = y1 >> POLY_SUBPIXEL_SHIFT;
+        int ey2 = y2 >> POLY_SUBPIXEL_SHIFT;
+        /*
+         * 从1/256像素为单位的点中取出后8位的掩码值,即颜色掩码
+         */
+        int submask_flags_y1 = y1 & POLY_SUBPIXEL_MASK;
+        int submask_flags_y2 = y2 & POLY_SUBPIXEL_MASK;
 
         int x_from, x_to;
-        int rem, mod, lift, delta, first, incr;
-        long long p;
+        int rem_dy_mask, mod_dy_mask, lift_dy_mask, delta, first, increase;
+        long long deltax_mask;
+        /*
+         * outline 范围
+         */
+        if (ex1 < m_min_x)
+            m_min_x = ex1;
+        if (ex1 > m_max_x)
+            m_max_x = ex1;
+        if (ey1 < m_min_y)
+            m_min_y = ey1;
+        if (ey1 > m_max_y)
+            m_max_y = ey1;
+        if (ex2 < m_min_x)
+            m_min_x = ex2;
+        if (ex2 > m_max_x)
+            m_max_x = ex2;
+        if (ey2 < m_min_y)
+            m_min_y = ey2;
+        if (ey2 > m_max_y)
+            m_max_y = ey2;
 
-        if(ex1 < m_min_x) m_min_x = ex1;
-        if(ex1 > m_max_x) m_max_x = ex1;
-        if(ey1 < m_min_y) m_min_y = ey1;
-        if(ey1 > m_max_y) m_max_y = ey1;
-        if(ex2 < m_min_x) m_min_x = ex2;
-        if(ex2 > m_max_x) m_max_x = ex2;
-        if(ey2 < m_min_y) m_min_y = ey2;
-        if(ey2 > m_max_y) m_max_y = ey2;
+        SetCurrentCell(ex1, ey1);
 
-        set_curr_cell(ex1, ey1);
-
-        //everything is on a single hline
-        if(ey1 == ey2)
-        {
-            render_hline(ey1, x1, fy1, x2, fy2);
+        /*
+         * 2个点的Y值相同，则直接水平渲染组织处理，
+         * 水平坐标间距是从以1/256像素为单位的x1->x2,
+         * 颜色掩码间距是从submask_flags_y1 到 submask_flags_y2
+         */
+        if (ey1 == ey2) {
+            RenderHorizonline(ey1, x1, submask_flags_y1, x2, submask_flags_y2);
             return;
         }
-
-        incr  = 1;
-        if(dx == 0)
-        {
-            int ex = x1 >> poly_subpixel_shift;
-            int two_fx = (x1 - (ex << poly_subpixel_shift)) << 1;
+        /*
+         * 垂直线的处理,要计算start->end cells ,然后计算这个线
+         * 上面的通用属性 area->cover,针对于每个y值来说，
+         * 只存在一个cell，因此不再调用 RenderHorizonline()
+         */
+        increase = 1;
+        //  Vertical line
+        if (dx == 0) {
+            /*
+             * 从以1/256像素为单位的点中取出前24位的坐标
+             */
+            int ex = x1 >> POLY_SUBPIXEL_SHIFT;
+            /*
+             * 取出小数点数，且占用2个空间
+             */
+            int two_fx = (x1 - (ex << POLY_SUBPIXEL_SHIFT)) << 1;
             int area;
-
-            first = poly_subpixel_scale;
-            if(dy < 0)
-            {
+            //256
+            first = POLY_SUBPIXEL_SCALE;
+            if (dy < 0) {
                 first = 0;
-                incr  = -1;
+                increase = -1;
             }
 
             x_from = x1;
-
-            //render_hline(ey1, x_from, fy1, x_from, first);
-            delta = first - fy1;
+            /*
+             * 从 submask_flags_y1 到  first 过程
+             *RenderHorizonline(pixel_y1, x_from, submask_flags_y1, x_from, first);
+             *颜色mask是从 submask_flags_y1->first
+             */
+            delta = first - submask_flags_y1;
             m_curr_cell.cover += delta;
-            m_curr_cell.area  += two_fx * delta;
+            m_curr_cell.area += two_fx * delta;
 
-            ey1 += incr;
-            set_curr_cell(ex, ey1);
-
-            delta = first + first - poly_subpixel_scale;
+            ey1 += increase;
+            SetCurrentCell(ex, ey1);
+            /*
+             * 颜色mask是从 (poly_subpixel_scale - first) -> first 的过程
+             */
+            delta = first + first - POLY_SUBPIXEL_SCALE;
             area = two_fx * delta;
-            while(ey1 != ey2)
-            {
-                //render_hline(ey1, x_from, poly_subpixel_scale - first, x_from, first);
+            while (ey1 != ey2) {
+                //从 poly_subpixel_scale - first 到  first
+                //RenderHorizonline(pixel_y1, x_from, poly_subpixel_scale - first, x_from, first);
                 m_curr_cell.cover = delta;
-                m_curr_cell.area  = area;
-                ey1 += incr;
-                set_curr_cell(ex, ey1);
+                m_curr_cell.area = area;
+                ey1 += increase;
+                SetCurrentCell(ex, ey1);
             }
-            //render_hline(ey1, x_from, poly_subpixel_scale - first, x_from, fy2);
-            delta = fy2 - poly_subpixel_scale + first;
+            /*
+             * 颜色mask是从poly_subpixel_scale - first 到  submask_flags_y2 的过程
+             *
+             * RenderHorizonline(pixel_y1, x_from, poly_subpixel_scale - first, x_from, submask_flags_y2);
+             */
+            delta = submask_flags_y2 - POLY_SUBPIXEL_SCALE + first;
             m_curr_cell.cover += delta;
-            m_curr_cell.area  += two_fx * delta;
+            m_curr_cell.area += two_fx * delta;
             return;
         }
-
         //ok, we have to render several hlines
-        p     = (poly_subpixel_scale - fy1) * dx;
-        first = poly_subpixel_scale;
+        //dx* mask 差值
+        /*
+         * 颜色mask是从submask_flags_y1 到  POLY_SUBPIXEL_SCALE 的过程
+         */
+        deltax_mask = (POLY_SUBPIXEL_SCALE - submask_flags_y1) * dx;
+        first = POLY_SUBPIXEL_SCALE;
 
-        if(dy < 0)
-        {
-            p     = fy1 * dx;
+        if (dy < 0) {
+            deltax_mask = submask_flags_y1 * dx;
             first = 0;
-            incr  = -1;
-            dy    = -dy;
+            increase = -1;
+            dy = -dy;
         }
 
-        delta = (int)(p / dy);
-        mod   = (int)(p % dy);
+        delta = (int)(deltax_mask / dy);
+        mod_dy_mask = (int)(deltax_mask % dy);
 
-        if(mod < 0)
-        {
+        if (mod_dy_mask < 0) {
             delta--;
-            mod += dy;
+            mod_dy_mask += dy;
         }
 
         x_from = x1 + delta;
-        render_hline(ey1, x1, fy1, x_from, first);
+        RenderHorizonline(ey1, x1, submask_flags_y1, x_from, first);
 
-        ey1 += incr;
-        set_curr_cell(x_from >> poly_subpixel_shift, ey1);
+        ey1 += increase;
+        SetCurrentCell(x_from >> POLY_SUBPIXEL_SHIFT, ey1);
 
-        if(ey1 != ey2)
-        {
-            p     = poly_subpixel_scale * dx;
-            lift  = (int)(p / dy);
-            rem   = (int)(p % dy);
+        if (ey1 != ey2) {
+            deltax_mask = POLY_SUBPIXEL_SCALE * dx;
+            lift_dy_mask = (int)(deltax_mask / dy);
+            rem_dy_mask = (int)(deltax_mask % dy);
 
-            if(rem < 0)
-            {
-                lift--;
-                rem += dy;
+            if (rem_dy_mask < 0) {
+                lift_dy_mask--;
+                rem_dy_mask += dy;
             }
-            mod -= dy;
+            mod_dy_mask -= dy;
 
-            while(ey1 != ey2)
-            {
-                delta = lift;
-                mod  += rem;
-                if (mod >= 0)
-                {
-                    mod -= dy;
+            while (ey1 != ey2) {
+                delta = lift_dy_mask;
+                mod_dy_mask += rem_dy_mask;
+                if (mod_dy_mask >= 0) {
+                    mod_dy_mask -= dy;
                     delta++;
                 }
 
                 x_to = x_from + delta;
-                render_hline(ey1, x_from, poly_subpixel_scale - first, x_to, first);
+                RenderHorizonline(ey1, x_from, POLY_SUBPIXEL_SCALE - first, x_to, first);
                 x_from = x_to;
 
-                ey1 += incr;
-                set_curr_cell(x_from >> poly_subpixel_shift, ey1);
+                ey1 += increase;
+                SetCurrentCell(x_from >> POLY_SUBPIXEL_SHIFT, ey1);
             }
         }
-        render_hline(ey1, x_from, poly_subpixel_scale - first, x2, fy2);
+        RenderHorizonline(ey1, x_from, POLY_SUBPIXEL_SCALE - first, x2, submask_flags_y2);
     }
 
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    void rasterizer_cells_aa<Cell>::allocate_block()
+    /**
+    * @brief 光栅化过程中为cells分配数组空间。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    void RasterizerCellsAntiAlias<Cell>::AllocateBlock()
     {
-        if(m_curr_block >= m_num_blocks)
-        {
-            if(m_num_blocks >= m_max_blocks)
-            {
-                cell_type** new_cells = 
-                    pod_allocator<cell_type*>::allocate(m_max_blocks + 
-                                                        cell_block_pool);
+        if (m_curr_block >= m_num_blocks) {
+            if (m_num_blocks >= m_max_blocks) {
+                cell_type** new_cells =
+                    ArrAllocator<cell_type*>::Allocate(m_max_blocks +
+                                                       CELL_BLOCK_POOL);
 
-                if(m_cells)
-                {
+                if (m_cells) {
                     std::memcpy(new_cells, m_cells, m_max_blocks * sizeof(cell_type*));
-                    pod_allocator<cell_type*>::deallocate(m_cells, m_max_blocks);
+                    ArrAllocator<cell_type*>::Deallocate(m_cells, m_max_blocks);
                 }
                 m_cells = new_cells;
-                m_max_blocks += cell_block_pool;
+                m_max_blocks += CELL_BLOCK_POOL;
             }
 
-            m_cells[m_num_blocks++] = 
-                pod_allocator<cell_type>::allocate(cell_block_size);
-
+            m_cells[m_num_blocks++] =
+                ArrAllocator<cell_type>::Allocate(CELL_BLOCK_SIZE);
         }
         m_curr_cell_ptr = m_cells[m_curr_block++];
     }
 
-
-
-    //------------------------------------------------------------------------
-    template <class T> static AGG_INLINE void swap_cells(T* a, T* b)
+    /**
+    * @brief 光栅化过程中cells单元的交换。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class T>
+    GRAPHIC_GEOMETRY_INLINE void SwapCells(T* oneCells, T* twoCells)
     {
-        T temp = *a;
-        *a = *b;
-        *b = temp;
+        T tempCells = *oneCells;
+        *oneCells = *twoCells;
+        *twoCells = tempCells;
     }
 
-
-    //------------------------------------------------------------------------
-    enum
+    /**
+    * @brief 光栅化过程中对于所有的cells单元进行快速排序处理。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    void QsortCells(Cell** start, unsigned num)
     {
-        qsort_threshold = 9
-    };
-
-
-    //------------------------------------------------------------------------
-    template<class Cell>
-    void qsort_cells(Cell** start, unsigned num)
-    {
-        Cell**  stack[80];
-        Cell*** top; 
-        Cell**  limit;
-        Cell**  base;
+        const int QSORT_THRESHOLD = 9;
+        const int stackSize = 80;
+        Cell** stack[stackSize];
+        Cell*** top;
+        Cell** limit;
+        Cell** base;
 
         limit = start + num;
-        base  = start;
-        top   = stack;
+        base = start;
+        top = stack;
 
-        for (;;)
-        {
+        while (1) {
             int len = int(limit - base);
 
             Cell** i;
             Cell** j;
             Cell** pivot;
 
-            if(len > qsort_threshold)
-            {
-                // we use base + len/2 as the pivot
+            if (len > QSORT_THRESHOLD) {
+                /*
+                 * 先交换 base + len / 2 as the pivot
+                 */
                 pivot = base + len / 2;
-                swap_cells(base, pivot);
+                SwapCells(base, pivot);
 
                 i = base + 1;
                 j = limit - 1;
 
-                // now ensure that *i <= *base <= *j 
-                if((*j)->x < (*i)->x)
-                {
-                    swap_cells(i, j);
+                /*
+                 * 排序保证   *i的值 <= *base 的值 <= *j 的值
+                 */
+                if ((*j)->x < (*i)->x) {
+                    SwapCells(i, j);
                 }
 
-                if((*base)->x < (*i)->x)
-                {
-                    swap_cells(base, i);
+                if ((*base)->x < (*i)->x) {
+                    SwapCells(base, i);
                 }
 
-                if((*j)->x < (*base)->x)
-                {
-                    swap_cells(base, j);
+                if ((*j)->x < (*base)->x) {
+                    SwapCells(base, j);
                 }
 
-                for(;;)
-                {
+                while (1) {
                     int x = (*base)->x;
-                    do i++; while( (*i)->x < x );
-                    do j--; while( x < (*j)->x );
+                    do {
+                        i++;
+                    } while ((*i)->x < x);
+                    do {
+                        j--;
+                    } while (x < (*j)->x);
 
-                    if(i > j)
-                    {
+                    if (i > j) {
                         break;
                     }
-
-                    swap_cells(i, j);
+                    SwapCells(i, j);
                 }
 
-                swap_cells(base, j);
-
-                // now, push the largest sub-array
-                if(j - base > limit - i)
-                {
+                SwapCells(base, j);
+                /*
+                 * push 压入了最大的子数组sub-array
+                 */
+                if (j - base > limit - i) {
                     top[0] = base;
                     top[1] = j;
-                    base   = i;
-                }
-                else
-                {
+                    base = i;
+                } else {
                     top[0] = i;
                     top[1] = limit;
-                    limit  = j;
+                    limit = j;
                 }
                 top += 2;
-            }
-            else
-            {
-                // the sub-array is small, perform insertion sort
+            } else {
+                /*
+                 * 当 sub-array 子数组变小时使用执行插入排序
+                 */
                 j = base;
                 i = j + 1;
 
-                for(; i < limit; j = i, i++)
-                {
-                    for(; j[1]->x < (*j)->x; j--)
-                    {
-                        swap_cells(j + 1, j);
-                        if (j == base)
-                        {
+                for (; i < limit; j = i, i++) {
+                    for (; j[1]->x < (*j)->x; j--) {
+                        SwapCells(j + 1, j);
+                        if (j == base) {
                             break;
                         }
                     }
                 }
 
-                if(top > stack)
-                {
-                    top  -= 2;
-                    base  = top[0];
+                if (top > stack) {
+                    top -= 2;
+                    base = top[0];
                     limit = top[1];
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
         }
     }
 
-
-    //------------------------------------------------------------------------
-    template<class Cell> 
-    void rasterizer_cells_aa<Cell>::sort_cells()
+    /**
+    * @brief 光栅化过程中对于所有的cells单元进行按照
+    * 从左向右，自上而下的顺序进行排序处理。
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class Cell>
+    void RasterizerCellsAntiAlias<Cell>::SortAllCells()
     {
-        if(m_sorted) return; //Perform sort only the first time.
+        if (m_sorted)
+            return; //Perform sort only the first time.
 
-        add_curr_cell();
-        m_curr_cell.x     = (std::numeric_limits<int>::max)();
-        m_curr_cell.y     = (std::numeric_limits<int>::max)();
+        AddCurrentCell();
+        m_curr_cell.x = (std::numeric_limits<int>::max)();
+        m_curr_cell.y = (std::numeric_limits<int>::max)();
         m_curr_cell.cover = 0;
-        m_curr_cell.area  = 0;
+        m_curr_cell.area = 0;
 
-        if(m_num_cells == 0) return;
+        if (m_num_cells == 0)
+            return;
 
+        // DBG: Check to see if min/max works well.
+        //for(unsigned nc = 0; nc < m_num_cells; nc++)
+        //{
+        //    cell_type* cell = m_cells[nc >> cell_block_shift] + (nc & cell_block_mask);
+        //    if(cell->x < m_min_x ||
+        //       cell->y < m_min_y ||
+        //       cell->x > m_max_x ||
+        //       cell->y > m_max_y)
+        //    {
+        //        cell = cell; // Breakpoint here
+        //    }
+        //}
         // Allocate the array of cell pointers
-        m_sorted_cells.allocate(m_num_cells, 16);
+        m_sorted_cells.Allocate(m_num_cells, 16);
 
         // Allocate and zero the Y array
-        m_sorted_y.allocate(m_max_y - m_min_y + 1, 16);
-        m_sorted_y.zero();
+        m_sorted_y.Allocate(m_max_y - m_min_y + 1, 16);
+        m_sorted_y.CleanData();
 
         // Create the Y-histogram (count the numbers of cells for each Y)
         cell_type** block_ptr = m_cells;
-        cell_type*  cell_ptr;
+        cell_type* cell_ptr;
         unsigned nb = m_num_cells;
         unsigned i;
-        while(nb)
-        {
+        while (nb) {
             cell_ptr = *block_ptr++;
-            i = (nb > cell_block_size) ? unsigned(cell_block_size) : nb;
+            i = (nb > CELL_BLOCK_SIZE) ? unsigned(CELL_BLOCK_SIZE) : nb;
             nb -= i;
-            while(i--) 
-            {
+            while (i--) {
                 m_sorted_y[cell_ptr->y - m_min_y].start++;
                 ++cell_ptr;
             }
@@ -670,8 +868,7 @@ namespace OHOS
 
         // Convert the Y-histogram into the array of starting indexes
         unsigned start = 0;
-        for(i = 0; i < m_sorted_y.size(); i++)
-        {
+        for (i = 0; i < m_sorted_y.Size(); i++) {
             unsigned v = m_sorted_y[i].start;
             m_sorted_y[i].start = start;
             start += v;
@@ -680,59 +877,28 @@ namespace OHOS
         // Fill the cell pointer array sorted by Y
         block_ptr = m_cells;
         nb = m_num_cells;
-        while(nb)
-        {
+        while (nb) {
             cell_ptr = *block_ptr++;
-            i = (nb > cell_block_size) ? unsigned(cell_block_size) : nb;
+            i = (nb > CELL_BLOCK_SIZE) ? unsigned(CELL_BLOCK_SIZE) : nb;
             nb -= i;
-            while(i--)
-            {
-                sorted_y& curr_y = m_sorted_y[cell_ptr->y - m_min_y];
+            while (i--) {
+                SortedYLevel& curr_y = m_sorted_y[cell_ptr->y - m_min_y];
                 m_sorted_cells[curr_y.start + curr_y.num] = cell_ptr;
                 ++curr_y.num;
                 ++cell_ptr;
             }
         }
-        
+
         // Finally arrange the X-arrays
-        for(i = 0; i < m_sorted_y.size(); i++)
-        {
-            const sorted_y& curr_y = m_sorted_y[i];
-            if(curr_y.num)
-            {
-                qsort_cells(m_sorted_cells.data() + curr_y.start, curr_y.num);
+        for (i = 0; i < m_sorted_y.Size(); i++) {
+            const SortedYLevel& curr_y = m_sorted_y[i];
+            if (curr_y.num) {
+                QsortCells(m_sorted_cells.Data() + curr_y.start, curr_y.num);
             }
         }
         m_sorted = true;
     }
 
-
-
-    //------------------------------------------------------scanline_hit_test
-    class scanline_hit_test
-    {
-    public:
-        scanline_hit_test(int x) : m_x(x), m_hit(false) {}
-
-        void reset_spans() {}
-        void finalize(int) {}
-        void add_cell(int x, int)
-        {
-            if(m_x == x) m_hit = true;
-        }
-        void add_span(int x, int len, int)
-        {
-            if(m_x >= x && m_x < x+len) m_hit = true;
-        }
-        unsigned num_spans() const { return 1; }
-        bool hit() const { return m_hit; }
-
-    private:
-        int  m_x;
-        bool m_hit;
-    };
-
-
-}
+} // namespace OHOS
 
 #endif
