@@ -19,7 +19,14 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
 
 namespace OHOS {
-    class VCGenDash {
+
+    /**
+     * @brief dash线段生成器
+     * @since 1.0
+     * @version 1.0
+     */
+    class VCGenDash
+    {
         enum MaxDashes
         {
             MAX_DASHES = 32
@@ -39,14 +46,12 @@ namespace OHOS {
         VCGenDash();
         /**
          * @brief 去除所有破折号
-         * 
          * @since 1.0
          * @version 1.0
          */
         void RemoveAllDashes();
         /**
          * @brief 添加破折号
-         * 
          * @param dashLen 线段长度
          * @param gapLen 缺口长度
          * @since 1.0
@@ -55,7 +60,6 @@ namespace OHOS {
         void AddDash(double dashLen, double gapLen);
         /**
          * @brief 设定dashStart_
-         * 
          * @param 设定值
          * @since 1.0
          * @version 1.0
@@ -63,7 +67,6 @@ namespace OHOS {
         void DashStart(double ds);
         /**
          * @brief 设定shorten_
-         * 
          * @param 设定值
          * @since 1.0
          * @version 1.0
@@ -74,7 +77,6 @@ namespace OHOS {
         }
         /**
          * @brief 获取storten_
-         * 
          * @return shorten_
          * @since 1.0
          * @version 1.0
@@ -85,14 +87,12 @@ namespace OHOS {
         }
         /**
          * @brief 去除所有顶点
-         * 
          * @since 1.0
          * @version 1.0
          */
         void RemoveAll();
         /**
          * @brief 添加顶点
-         * 
          * @param x x轴坐标
          * @param y y轴坐标
          * @param cmd 指令类型

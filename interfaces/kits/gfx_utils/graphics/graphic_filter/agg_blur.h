@@ -77,55 +77,47 @@ namespace OHOS {
     template <class ColorType, class CalculatorType>
     class StackBlur {
     public:
-        //--------------------------------------------------------------------
+        /**
+         * @brief x轴方向进行模糊
+         * @since 1.0
+         * @version 1.0
+         */
         template <class Img>
         void BlurX(Img& img, unsigned radius)
         {
             if (radius < 1) {
                 return;
             }
-
-            unsigned x, y, xp, i;
-            unsigned stack_ptr;
-            unsigned stackStart;
-
-            ColorType pix;
-            ColorType* stackPixel;
-            CalculatorType sum;
-            CalculatorType sumIn;
-            CalculatorType sumOut;
-
-            unsigned w = img.Width();
-            unsigned h = img.Height();
+            unsigned x, y, xp, i,stackPtr,stackStart;
+            ColorType      pix;
+            ColorType*     stackPixel;
+            CalculatorType sum,sumIn,sumOut;
+            unsigned w = img.width();
+            unsigned h = img.height();
             unsigned wm = w - 1;
             unsigned div = radius * 2 + 1;
-
             unsigned divSum = (radius + 1) * (radius + 1);
             unsigned mulSum = 0;
             unsigned shrSum = 0;
             unsigned maxVal = ColorType::BASEMASK;
-
             if (maxVal <= 255 && radius < 255) {
                 mulSum = StackBlurTables<int>::stackBlur8Mul[radius];
                 shrSum = StackBlurTables<int>::stackBlur8Shr[radius];
             }
-
             buffer_.Allocate(w, 128);
             stack_.Allocate(div, 32);
-
-            for (y = 0; y < h; y++) {
+            for(y = 0; y < h; y++) {
                 sum.Clear();
                 sumIn.Clear();
                 sumOut.Clear();
-
                 pix = img.Pixel(0, y);
-                for (i = 0; i <= radius; i++) {
+                for(i = 0; i <= radius; i++) {
                     stack_[i] = pix;
                     sum.Add(pix, i + 1);
                     sumOut.Add(pix);
                 }
-                for (i = 1; i <= radius; i++) {
-                    if (i > wm) {
+                for(i = 1; i <= radius; i++) {
+                    if (i>wm) {
                         pix = img.Pixel(wm, y);
                     } else {
                         pix = img.Pixel(i, y);
@@ -134,60 +126,55 @@ namespace OHOS {
                     sum.Add(pix, radius + 1 - i);
                     sumIn.Add(pix);
                 }
-
-                stack_ptr = radius;
-                for (x = 0; x < w; x++) {
+                stackPtr = radius;
+                for(x = 0; x < w; x++) {
                     if (mulSum) {
                         sum.CalculatePixel(buffer_[x], mulSum, shrSum);
-                    } else {
+                    } else {        
                         sum.CalculatePixel(buffer_[x], divSum);
                     }
-
                     sum.Sub(sumOut);
-
-                    stackStart = stack_ptr + div - radius;
+                    stackStart = stackPtr + div - radius;
                     if (stackStart >= div) {
                         stackStart -= div;
                     }
                     stackPixel = &stack_[stackStart];
-
                     sumOut.Sub(*stackPixel);
-
                     xp = x + radius + 1;
                     if (xp > wm) {
                         xp = wm;
                     }
                     pix = img.Pixel(xp, y);
-
                     *stackPixel = pix;
-
                     sumIn.Add(pix);
                     sum.Add(sumIn);
-
-                    ++stack_ptr;
-                    if (stack_ptr >= div) {
-                        stack_ptr = 0;
+                    ++stackPtr;
+                    if (stackPtr >= div) {
+                        stackPtr = 0;
                     }
-                    stackPixel = &stack_[stack_ptr];
-
+                    stackPixel = &stack_[stackPtr];
                     sumOut.Add(*stackPixel);
                     sumIn.Sub(*stackPixel);
                 }
                 img.CopyColorHspan(0, y, w, &buffer_[0]);
             }
         }
-
-        //--------------------------------------------------------------------
-        template <class Img>
-        void BlurY(Img& img, unsigned radius)
+        /**
+         * @brief Y轴方向进行模糊
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class Img> void BlurY(Img& img, unsigned radius)
         {
             PixfmtTransposer<Img> img2(img);
             BlurX(img2, radius);
         }
-
-        //--------------------------------------------------------------------
-        template <class Img>
-        void Blur(Img& img, unsigned radius)
+        /**
+         * @brief 模糊
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class Img> void Blur(Img& img, unsigned radius)
         {
             BlurX(img, radius);
             PixfmtTransposer<Img> img2(img);
@@ -203,12 +190,21 @@ namespace OHOS {
     template <class ValueType = unsigned>
     struct StackBlurCalcRGBA {
         ValueType redValue, greenValue, blueValue, alphaValue;
-
+		/**
+         * @brief 清空颜色值
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE void Clear()
         {
             redValue = greenValue = blueValue = alphaValue = 0;
         }
-
+		/**
+         * @brief 颜色值相加
+         * @param v 像素的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
         template <class ArgT>
         GRAPHIC_GEOMETRY_INLINE void Add(const ArgT& v)
         {
@@ -217,35 +213,56 @@ namespace OHOS {
             blueValue += v.blueValue;
             alphaValue += v.alphaValue;
         }
-
-        template <class ArgT>
-        GRAPHIC_GEOMETRY_INLINE void Add(const ArgT& v, unsigned k)
+        /**
+         * @brief 像素颜色值加权添加
+         * @param v 像素的颜色值
+         * @param k 权值
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class ArgT> GRAPHIC_GEOMETRY_INLINE void Add(const ArgT& v, unsigned k)
         {
             redValue += v.redValue * k;
             greenValue += v.greenValue * k;
             blueValue += v.blueValue * k;
             alphaValue += v.alphaValue * k;
         }
-
-        template <class ArgT>
-        GRAPHIC_GEOMETRY_INLINE void Sub(const ArgT& v)
+        /**
+         * @brief 减去像素的颜色值
+         * @param v 像素的颜色值
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class ArgT> GRAPHIC_GEOMETRY_INLINE void Sub(const ArgT& v)
         {
             redValue -= v.redValue;
             greenValue -= v.greenValue;
             blueValue -= v.blueValue;
             alphaValue -= v.alphaValue;
         }
-
-        template <class ArgT>
-        GRAPHIC_GEOMETRY_INLINE void CalculatePixel(ArgT& v, unsigned div)
+        /**
+         * @brief 颜色值求平均数
+         * @param v 像素颜色值
+         * @param div 除数
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class ArgT> GRAPHIC_GEOMETRY_INLINE void CalculatePixel(ArgT& v, unsigned div)
         {
             v.redValue = ValueType(redValue / div);
             v.greenValue = ValueType(greenValue / div);
             v.blueValue = ValueType(blueValue / div);
             v.alphaValue = ValueType(alphaValue / div);
         }
-
-        template <class ArgT>
+        /**
+         * @brief 像素颜色值加权平均
+         * @param v 像素颜色值
+         * @param mul 权值
+         * @param shr 右移位数
+         * @since 1.0
+         * @version 1.0
+         */
+        template<class ArgT> 
         GRAPHIC_GEOMETRY_INLINE void CalculatePixel(ArgT& v, unsigned mul, unsigned shr)
         {
             v.redValue = ValueType((redValue * mul) >> shr);

@@ -16,7 +16,6 @@
 
 namespace OHOS {
 
-    //------------------------------------------------------------------------
     const TransAffine& TransAffine::ParlToParl(const double* src,
                                                const double* dst)
     {
@@ -33,7 +32,6 @@ namespace OHOS {
         return *this;
     }
 
-    //------------------------------------------------------------------------
     const TransAffine& TransAffine::RectToParl(double x1, double y1,
                                                double x2, double y2,
                                                const double* parl)
@@ -49,22 +47,20 @@ namespace OHOS {
         return *this;
     }
 
-    //------------------------------------------------------------------------
-    const TransAffine& TransAffine::Multiply(const TransAffine& m)
+    const TransAffine& TransAffine::Multiply(const TransAffine& metrix)
     {
-        double t0 = scaleX * m.scaleX + shearY * m.shearX;
-        double t2 = shearX * m.scaleX + scaleY * m.shearX;
-        double t4 = translateX * m.scaleX + translateY * m.shearX + m.translateX;
-        shearY = scaleX * m.shearY + shearY * m.scaleY;
-        scaleY = shearX * m.shearY + scaleY * m.scaleY;
-        translateY = translateX * m.shearY + translateY * m.scaleY + m.translateY;
+        double t0 = scaleX * metrix.scaleX + shearY * metrix.shearX;
+        double t2 = shearX * metrix.scaleX + scaleY * metrix.shearX;
+        double t4 = translateX * metrix.scaleX + translateY * metrix.shearX + metrix.translateX;
+        shearY = scaleX * metrix.shearY + shearY * metrix.scaleY;
+        scaleY = shearX * metrix.shearY + scaleY * metrix.scaleY;
+        translateY = translateX * metrix.shearY + translateY * metrix.scaleY + metrix.translateY;
         scaleX = t0;
         shearX = t2;
         translateX = t4;
         return *this;
     }
 
-    //------------------------------------------------------------------------
     const TransAffine& TransAffine::Invert()
     {
         double d = DeterminantReciprocal();
@@ -82,7 +78,6 @@ namespace OHOS {
         return *this;
     }
 
-    //------------------------------------------------------------------------
     const TransAffine& TransAffine::Reset()
     {
         scaleX = scaleY = 1.0;
@@ -90,7 +85,7 @@ namespace OHOS {
         return *this;
     }
 
-    //------------------------------------------------------------------------
+    
     bool TransAffine::IsIdentity(double epsilon) const
     {
         return IsEqualEps(scaleX, 1.0, epsilon) &&
