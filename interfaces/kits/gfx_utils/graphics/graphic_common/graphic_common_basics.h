@@ -40,7 +40,7 @@
 #include "securec.h"
 namespace OHOS {
 #ifndef GRAPHIC_GEOMETRY_INT8
-#define GRAPHIC_GEOMETRY_INT8 signed char
+#    define GRAPHIC_GEOMETRY_INT8 signed char
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT8U
@@ -64,20 +64,20 @@ namespace OHOS {
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT64
-#   define GRAPHIC_GEOMETRY_INT64 signed long long
+#    define GRAPHIC_GEOMETRY_INT64 signed long long
 #endif
 
 #ifndef GRAPHIC_GEOMETRY_INT64U
-#   define GRAPHIC_GEOMETRY_INT64U unsigned long long
+#    define GRAPHIC_GEOMETRY_INT64U unsigned long long
 #endif
 
 #define GRAPHIC_GEOMETRY_INLINE inline
 
     /**
- * @brief 填充规则.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 填充规则.
+     * @since 1.0
+     * @version 1.0
+     */
     enum FillingRuleEnum
     {
         FILL_NON_ZERO,
@@ -85,10 +85,10 @@ namespace OHOS {
     };
 
     /**
- * @brief 子像素的偏移以及掩码标志.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 子像素的偏移以及掩码标志.
+     * @since 1.0
+     * @version 1.0
+     */
     enum PolySubpixelScaleEnum
     {
         POLY_SUBPIXEL_SHIFT = 8,
@@ -97,10 +97,10 @@ namespace OHOS {
     };
 
     /**
- * @brief 覆盖率的弹性处理.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 覆盖率的弹性处理.
+     * @since 1.0
+     * @version 1.0
+     */
     enum CoverScaleEnum
     {
         COVER_SHIFT = 8,
@@ -164,6 +164,57 @@ namespace OHOS {
 
     const double PI = 3.14159265358979323846;
 
+    /**
+     * @brief 平角的度数
+     */
+    const double BOXER = 180.0;
+
+    /**
+     * @brief 颜色的最大值
+     */
+    const unsigned MAX_COLOR_NUM = 255;
+
+    /**
+     * @brief 默认最大斜接
+     */
+    const unsigned DEFAULTMITERLIMIT = 10;
+
+    /**
+     * 一般步幅是宽度的四倍
+     */
+    const int STRIDE_FACTOR = 4;
+    const int PXSIZE2STRIDE_FACTOR = 3;
+
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  SIN45= 0.7071068;
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  COS45= 0.7071068;
+
+    /**
+     * @brief 两倍
+     */
+    const int  TWO_TIMES= 2;
+
+    /**
+     * @brief 一次走两步
+     */
+    const int TWO_STEP = 2;
+
+    /**
+     *下标
+     */
+    const int  INDEX_ZERO= 0;
+    const int  INDEX_ONE= 1;
+    const int  INDEX_TWO= 2;
+    const int  INDEX_THREE= 3;
+    const int  INDEX_FOUR= 4;
+    const int  INDEX_FIVE= 5;
+    const int  INDEX_SIX= 6;
+
     using int8 = GRAPHIC_GEOMETRY_INT8;
     using int8u = GRAPHIC_GEOMETRY_INT8U;
     using int16 = GRAPHIC_GEOMETRY_INT16;
@@ -175,7 +226,7 @@ namespace OHOS {
 
 #if defined(GRAPHIC_GEOMETRY_FISTP)
 #    pragma warning(push)
-#    pragma warning(disable : 4035) // Disable warning "no return value"
+#    pragma warning(disable : 4035)              // Disable warning "no return value"
     GRAPHIC_GEOMETRY_INLINE int Iround(double v) //-------iround
     {
         int t;
@@ -369,7 +420,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve3(unsigned val) //TODO 函数名修改
+    inline bool IsCurve3(unsigned val) // TODO 函数名修改
     {
         return PATH_CMD_CURVE3 == val;
     }
@@ -379,7 +430,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve4(unsigned val) //TODO 函数名修改
+    inline bool IsCurve4(unsigned val) // TODO 函数名修改
     {
         return PATH_CMD_CURVE4 == val;
     }
@@ -419,7 +470,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCw(unsigned val) //TODO 函数名修改
+    inline bool IsCw(unsigned val) // TODO 函数名修改
     {
         return 0 != (val & PATH_FLAGS_CW);
     }
@@ -544,10 +595,10 @@ namespace OHOS {
     using CoverType = unsigned char;
 
     /**
-    * @brief 定义矩形类.
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 定义矩形类.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     struct RectBase {
         using ValueType = T;
@@ -557,16 +608,15 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_) :
-            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
         /**
-        * @brief 规范化矩形.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 规范化矩形.
+         * @since 1.0
+         * @version 1.0
+         */
         const SelfType& Normalize()
         {
             T t;
@@ -592,10 +642,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 坐标裁剪到指定范围内.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 坐标裁剪到指定范围内.
+         * @since 1.0
+         * @version 1.0
+         */
         bool Clip(const SelfType& rect)
         {
             if (x2 > rect.x2) {
@@ -614,30 +664,30 @@ namespace OHOS {
         }
 
         /**
-        * @brief 坐标是否有效.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 坐标是否有效.
+         * @since 1.0
+         * @version 1.0
+         */
         bool IsValid() const
         {
             return y1 <= y2 && x1 <= x2;
         }
 
         /**
-        * @brief 坐标的有效范围.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 坐标的有效范围.
+         * @since 1.0
+         * @version 1.0
+         */
         bool Overlaps(const SelfType& rect) const
         {
             return !(rect.y1 > y2 || rect.y2 < y1 || rect.x1 > x2 || rect.x2 < x1);
         }
 
         /**
-        * @brief 判断坐标在指定范围内.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 判断坐标在指定范围内.
+         * @since 1.0
+         * @version 1.0
+         */
         bool HitTest(T x, T y) const
         {
             return (y >= y1 && y <= y2 && x >= x1 && x <= x2);
@@ -645,13 +695,13 @@ namespace OHOS {
     };
 
     /**
-    * @brief 获取两矩形是否相交区域.
-    *
-    * @param rect1,rect2 两个矩形.
-    * @return Returns 相交的矩形.
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 获取两矩形是否相交区域.
+     *
+     * @param rect1,rect2 两个矩形.
+     * @return Returns 相交的矩形.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Rect>
     inline Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
     {
@@ -672,13 +722,13 @@ namespace OHOS {
     }
 
     /**
-    * @brief 获取两矩形的并集区域.
-    *
-    * @param rect1,rect2 两个矩形.
-    * @return Returns 并集区域的矩形.
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 获取两矩形的并集区域.
+     *
+     * @param rect1,rect2 两个矩形.
+     * @return Returns 并集区域的矩形.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Rect>
     inline Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
     {
@@ -698,7 +748,7 @@ namespace OHOS {
         return rect;
     }
     using RectI = RectBase<int>;
-    //using RectF = RectBase<float>;
+    // using RectF = RectBase<float>;
     using RectD = RectBase<double>;
 
     template <class T>
@@ -708,11 +758,10 @@ namespace OHOS {
         T y;
         PointBase()
         {}
-        PointBase(T x_, T y_) :
-            x(x_), y(y_)
+        PointBase(T x_, T y_) : x(x_), y(y_)
         {}
     };
-    //using PointF = PointBase<float>;
+    // using PointF = PointBase<float>;
     using PointD = PointBase<double>;
     using PointI = PointBase<int>;
     template <class T>
@@ -723,8 +772,7 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) :
-            x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
         {}
     };
 
@@ -738,8 +786,7 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
@@ -750,8 +797,7 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
