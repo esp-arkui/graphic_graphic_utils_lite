@@ -28,16 +28,15 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 
 namespace OHOS {
-    enum CurveApproximationMethodEnum
-    {
+    enum CurveApproximationMethodEnum {
         CURVEINC,
         CURVEDIV
     };
 
     class Curve3Inc {
     public:
-        Curve3Inc() :
-            numSteps_(0), step_(0), scale_(1.0)
+        Curve3Inc()
+            :numSteps_(0), step_(0), scale_(1.0)
         {}
 
         Curve3Inc(double x1, double y1,
@@ -203,14 +202,14 @@ namespace OHOS {
                      double x3, double y3,
                      double x4, double y4)
         {
-            cpArray[0] = x1;
-            cpArray[1] = y1;
-            cpArray[2] = x2;
-            cpArray[3] = y2;
-            cpArray[4] = x3;
-            cpArray[5] = y3;
-            cpArray[6] = x4;
-            cpArray[7] = y4;
+            cpArray[OHOS::INDEX_ZERO] = x1;
+            cpArray[OHOS::INDEX_ONE] = y1;
+            cpArray[OHOS::INDEX_TWO] = x2;
+            cpArray[OHOS::INDEX_THREE] = y2;
+            cpArray[OHOS::INDEX_FOUR] = x3;
+            cpArray[OHOS::INDEX_FIVE] = y3;
+            cpArray[OHOS::INDEX_SIX] = x4;
+            cpArray[OHOS::INDEX_SEVEN] = y4;
         }
 
         void Init(double x1, double y1,
@@ -218,14 +217,14 @@ namespace OHOS {
                   double x3, double y3,
                   double x4, double y4)
         {
-            cpArray[0] = x1;
-            cpArray[1] = y1;
-            cpArray[2] = x2;
-            cpArray[3] = y2;
-            cpArray[4] = x3;
-            cpArray[5] = y3;
-            cpArray[6] = x4;
-            cpArray[7] = y4;
+            cpArray[OHOS::INDEX_ZERO] = x1;
+            cpArray[OHOS::INDEX_ONE] = y1;
+            cpArray[OHOS::INDEX_TWO] = x2;
+            cpArray[OHOS::INDEX_THREE] = y2;
+            cpArray[OHOS::INDEX_FOUR] = x3;
+            cpArray[OHOS::INDEX_FIVE] = y3;
+            cpArray[OHOS::INDEX_SIX] = x4;
+            cpArray[OHOS::INDEX_SEVEN] = y4;
         }
 
         double operator[](unsigned i) const
@@ -244,10 +243,8 @@ namespace OHOS {
             numSteps_(0), step_(0), scale_(1.0)
         {}
 
-        Curve4Inc(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3,
-                  double x4, double y4) :
+        Curve4Inc(double x1, double y1, double x2, double y2,
+                  double x3, double y3, double x4, double y4) :
             numSteps_(0),
             step_(0), scale_(1.0)
         {
@@ -333,10 +330,10 @@ namespace OHOS {
         return Curve4Points(
             x2,
             y2,
-            (-x1 + 6 * x2 + x3) / 6,
-            (-y1 + 6 * y2 + y3) / 6,
-            (x2 + 6 * x3 - x4) / 6,
-            (y2 + 6 * y3 - y4) / 6,
+            (-x1 + OHOS::SIX_TIMES * x2 + x3) / OHOS::SIX_TIMES,
+            (-y1 + OHOS::SIX_TIMES * y2 + y3) / OHOS::SIX_TIMES,
+            (x2 + OHOS::SIX_TIMES * x3 - x4) / OHOS::SIX_TIMES,
+            (y2 + OHOS::SIX_TIMES * y3 - y4) / OHOS::SIX_TIMES,
             x3,
             y3);
     }
@@ -353,14 +350,14 @@ namespace OHOS {
                                          double x4, double y4)
     {
         return Curve4Points(
-            (x1 + 4 * x2 + x3) / 6,
-            (y1 + 4 * y2 + y3) / 6,
-            (4 * x2 + 2 * x3) / 6,
-            (4 * y2 + 2 * y3) / 6,
-            (2 * x2 + 4 * x3) / 6,
-            (2 * y2 + 4 * y3) / 6,
-            (x2 + 4 * x3 + x4) / 6,
-            (y2 + 4 * y3 + y4) / 6);
+            (x1 + OHOS::FOUR_TIMES * x2 + x3) / OHOS::SIX_TIMES,
+            (y1 + OHOS::FOUR_TIMES * y2 + y3) / OHOS::SIX_TIMES,
+            (OHOS::FOUR_TIMES * x2 + OHOS::TWO_TIMES * x3) / OHOS::SIX_TIMES,
+            (OHOS::FOUR_TIMES * y2 + OHOS::TWO_TIMES * y3) / OHOS::SIX_TIMES,
+            (OHOS::TWO_TIMES * x2 + OHOS::FOUR_TIMES * x3) / OHOS::SIX_TIMES,
+            (OHOS::TWO_TIMES * y2 + OHOS::FOUR_TIMES * y3) / OHOS::SIX_TIMES,
+            (x2 + OHOS::FOUR_TIMES * x3 + x4) / OHOS::SIX_TIMES,
+            (y2 + OHOS::FOUR_TIMES * y3 + y4) / OHOS::SIX_TIMES);
     }
 
     inline Curve4Points UbsplineToBezier(const Curve4Points& curve4Points)
@@ -377,18 +374,20 @@ namespace OHOS {
         return Curve4Points(
             x1,
             y1,
-            (3 * x1 + x3) / 3,
-            (3 * y1 + y3) / 3,
-            (3 * x2 - x4) / 3,
-            (3 * y2 - y4) / 3,
+            (OHOS::THREE_TIMES * x1 + x3) / OHOS::THREE_TIMES,
+            (OHOS::THREE_TIMES * y1 + y3) / OHOS::THREE_TIMES,
+            (OHOS::THREE_TIMES * x2 - x4) / OHOS::THREE_TIMES,
+            (OHOS::THREE_TIMES * y2 - y4) / OHOS::THREE_TIMES,
             x2,
             y2);
     }
 
     inline Curve4Points HermiteToBezier(const Curve4Points& curve4Points)
     {
-        return HermiteToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
-                               curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
+        return HermiteToBezier(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
+                                   curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                                   curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                                   curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
     }
 
     class Curve4Div {
@@ -408,8 +407,10 @@ namespace OHOS {
             angleTolerance_(0.0),
             count_(0)
         {
-            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
-                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
+            Init(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
+                    curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                    curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                    curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
         }
 
         void Init(double x1, double y1,
@@ -419,8 +420,10 @@ namespace OHOS {
 
         void Init(const Curve4Points& curve4Points)
         {
-            Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
-                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
+            Init(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
+                    curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                    curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                    curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
         }
 
         void Reset()
@@ -718,7 +721,6 @@ namespace OHOS {
         Curve4Div curveDiv_;
         CurveApproximationMethodEnum approximationMethod_;
     };
-
 } // namespace OHOS
 
 #endif

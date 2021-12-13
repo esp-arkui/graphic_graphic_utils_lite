@@ -14,7 +14,7 @@
  */
 
 /**
- * @file graphic_geometry_gamma_functions.h
+ * @file graphic_common_gamma_functions.h
  *
  * @brief gamma校正方法
  *
@@ -51,12 +51,8 @@ namespace OHOS {
      */
     class GammaPower {
     public:
-        GammaPower() :
-            gamma_(1.0)
-        {}
-        GammaPower(double gamma) :
-            gamma_(gamma)
-        {}
+        GammaPower() : gamma_(1.0) {}
+        GammaPower(double gamma) : gamma_(gamma) {}
 
         void Gamma(double gamma)
         {
@@ -85,12 +81,8 @@ namespace OHOS {
      */
     class GammaMultiply {
     public:
-        GammaMultiply() :
-            multiply_(1.0)
-        {}
-        GammaMultiply(double value) :
-            multiply_(value)
-        {}
+        GammaMultiply() : multiply_(1.0) {}
+        GammaMultiply(double value) : multiply_(value) {}
 
         void Value(double value)
         {

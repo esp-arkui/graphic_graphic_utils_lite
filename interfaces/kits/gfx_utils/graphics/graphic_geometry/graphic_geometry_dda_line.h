@@ -39,8 +39,8 @@ namespace OHOS {
         Dda2LineInterpolator()
         {}
 
-        Dda2LineInterpolator(int coordinate1, int coordinate2, int count) :
-            count_(count <= 0 ? 1 : count),
+        Dda2LineInterpolator(int coordinate1, int coordinate2, int count)
+            :count_(count <= 0 ? 1 : count),
             left_((coordinate2 - coordinate1) / count_),
             remainder_((coordinate2 - coordinate1) % count_),
             modulo_(remainder_),
@@ -86,7 +86,6 @@ namespace OHOS {
         int modulo_;
         int coordinate_;
     };
-
 } // namespace OHOS
 
 #endif

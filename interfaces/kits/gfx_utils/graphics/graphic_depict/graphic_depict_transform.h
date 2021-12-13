@@ -28,7 +28,6 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_transform/graphic_transform_affine.h"
 namespace OHOS {
-
     /**
      * @template<VertexSource,Transformer> class DepictTransform
      * @brief 该DepictTransform类通过六个变量组成一个2*3的矩阵，
@@ -45,8 +44,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        DepictTransform(VertexSource& source, Transformer& tr) :
-            m_source(&source), m_trans(&tr)
+        DepictTransform(VertexSource& source, Transformer& tr)
+            : m_source(&source), m_trans(&tr)
         {}
 
         void Attach(VertexSource& source)
@@ -75,13 +74,10 @@ namespace OHOS {
 
     private:
         DepictTransform(const DepictTransform<VertexSource>&);
-        const DepictTransform<VertexSource>&
-            operator=(const DepictTransform<VertexSource>&);
-
+        const DepictTransform<VertexSource>& operator = (const DepictTransform<VertexSource>&);
         VertexSource* m_source;
         Transformer* m_trans;
     };
-
 } // namespace OHOS
 
 #endif

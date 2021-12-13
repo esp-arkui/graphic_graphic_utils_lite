@@ -35,10 +35,8 @@ namespace OHOS {
         {
         }
         SpanPatternRgba(PatternSource& source,
-                        unsigned offset_x, unsigned offset_y) :
-            patternSource(&source),
-            offsetX(offset_x),
-            offsetY(offset_y)
+                        unsigned offset_x, unsigned offset_y)
+            : patternSource(&source), offsetX(offset_x), offsetY(offset_y)
         {
         }
         /**
@@ -56,24 +54,24 @@ namespace OHOS {
          */
         void Generate(colorType* span, int x, int y, unsigned len)
         {
-            //z坐标加上x，y的偏移量
+            // z坐标加上x，y的偏移量
             x += offsetX;
             y += offsetY;
-            //从对应的image_accessors模板中取出对应像素
+            // 从对应的image_accessors模板中取出对应像素
             const valueType* color = (const valueType*)patternSource->Span(x, y, len);
             for (; len; --len, color = (const valueType*)patternSource->NextX(), ++span) {
                 if (color) {
-                    //从source_type取出相应像素。
+                    // 从source_type取出相应像素。
                     span->redValue = color[orderType::RED];
                     span->greenValue = color[orderType::GREEN];
                     span->blueValue = color[orderType::BLUE];
                     span->alphaValue = color[orderType::ALPHA];
                 } else {
-                    //默认的颜色黑色不透明
+                    // 默认的颜色黑色不透明
                     span->redValue = 0;
                     span->greenValue = 0;
                     span->blueValue = 0;
-                    span->alphaValue = 255; //0-透明255-不透明
+                    span->alphaValue = 255; // 0-透明255-不透明
                 }
             }
         }

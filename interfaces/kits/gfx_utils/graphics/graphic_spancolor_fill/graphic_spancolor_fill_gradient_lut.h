@@ -27,6 +27,7 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h"
 
 namespace OHOS {
+    const unsigned COLOR_PROFILE_SIZE = 4;
     /**
     * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
     * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
@@ -38,12 +39,10 @@ namespace OHOS {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
-        enum
-        {
+        enum {
             colorLutSize_ = ColorLutSize
         };
-        GradientLut() :
-            colorType(colorLutSize_)
+        GradientLut() : colorType(colorLutSize_)
         {
         }
 
@@ -148,8 +147,7 @@ namespace OHOS {
              * @param offset_ (0-1)
              * @param color_ 添加的颜色
              */
-            ColorPoint(double offset_, const color_type& color_) :
-                offset(offset_), color(color_)
+            ColorPoint(double offset_, const color_type& color_) : offset(offset_), color(color_)
             {
                 if (offset < 0.0)
                     offset = 0.0;
@@ -180,7 +178,7 @@ namespace OHOS {
             return colorPoint1.offset == colorPoint2.offset;
         }
 
-        using colorProfileType = OHOS::PodBvector<ColorPoint, 4>;
+        using colorProfileType = OHOS::PodBvector<ColorPoint, COLOR_PROFILE_SIZE>;
         colorProfileType colorProfile;
 
         using colorLutType = OHOS::PodArray<color_type>;
