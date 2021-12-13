@@ -47,8 +47,8 @@ namespace OHOS {
     public:
         using ValueType = T;
 
-        PodVector() :
-            size_(0), capacity_(0), data_(0)
+        PodVector()
+            : size_(0), capacity_(0), data_(0)
         {}
 
         /**
@@ -353,14 +353,14 @@ namespace OHOS {
     }
 
     template <class T>
-    PodVector<T>::PodVector(unsigned cap, unsigned extraTail) :
-        size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
+    PodVector<T>::PodVector(unsigned cap, unsigned extraTail)
+        : size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
     {
     }
 
     template <class T>
-    PodVector<T>::PodVector(const PodVector<T>& v) :
-        size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
+    PodVector<T>::PodVector(const PodVector<T>& v)
+        : size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
     {
         memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
     }
@@ -381,7 +381,12 @@ namespace OHOS {
         byteSize = byteSize / sizeof(T);
         Allocate(byteSize);
         if (byteSize) {
-            memcpy_s(data_, byteSize * sizeof(T), data, byteSize * sizeof(T));
+            int status = memcpy_s(data_, byteSize * sizeof(T), data, byteSize * sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
         }
     }
 
@@ -389,7 +394,12 @@ namespace OHOS {
     void PodVector<T>::Serialize(int8u* ptr) const
     {
         if (size_) {
-            memcpy_s(ptr, size_ * sizeof(T), data_, size_ * sizeof(T));
+            int status = memcpy_s(ptr, size_ * sizeof(T), data_, size_ * sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
         }
     }
 
@@ -399,11 +409,15 @@ namespace OHOS {
         if (pos >= size_) {
             data_[size_] = val;
         } else {
-            memmove_s(data_ + pos + 1, (size_ - pos) * sizeof(T), data_ + pos, (size_ - pos) * sizeof(T));
+            int status = memmove_s(data_ + pos + 1, (size_ - pos) * sizeof(T), data_ + pos, (size_ - pos) * sizeof(T));
+            if (!status)
+            {
+                printf("%s","内存出错");
+                return;
+            }
             data_[pos] = val;
         }
         ++size_;
     }
-
 } // namespace OHOS
 #endif

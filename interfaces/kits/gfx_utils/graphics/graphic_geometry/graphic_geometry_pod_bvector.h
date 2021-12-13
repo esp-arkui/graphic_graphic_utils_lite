@@ -34,7 +34,6 @@
 #include "securec.h"
 
 namespace OHOS {
-
     /**
      * @brief Defines PodBvector.
      *
@@ -44,8 +43,7 @@ namespace OHOS {
     template <class T, unsigned S = 6>
     class PodBvector : public HeapBase {
     public:
-        enum BlockScaleEnum
-        {
+        enum BlockScaleEnum {
             BLOCK_SHIFT = S,
             BLOCK_SIZE = 1 << BLOCK_SHIFT,
             BLOCK_MASK = BLOCK_SIZE - 1
@@ -408,11 +406,11 @@ namespace OHOS {
         void Allocatelock(unsigned nb);
         T* DataPtr();
 
-        unsigned size_;        //元素个数
-        unsigned numBlocks_;   //块数量
-        unsigned maxBlocks_;   //最大块数
-        T** blocks_;           //所有块的首地址
-        unsigned blockPtrInc_; //每个块的大小
+        unsigned size_;        // 元素个数
+        unsigned numBlocks_;   // 块数量
+        unsigned maxBlocks_;   // 最大块数
+        T** blocks_;           // 所有块的首地址
+        unsigned blockPtrInc_; // 每个块的大小
     };
 
     template <class T, unsigned S>
@@ -446,29 +444,34 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector() :
-        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
+    PodBvector<T, S>::PodBvector()
+        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
     {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector(unsigned blockPtrInc) :
-        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
+    PodBvector<T, S>::PodBvector(unsigned blockPtrInc)
+        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
     {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector(const PodBvector<T, S>& v) :
-        size_(v.size_),
-        numBlocks_(v.numBlocks_),
-        maxBlocks_(v.maxBlocks_),
-        blocks_(v.maxBlocks_ ? ArrAllocator<T*>::Allocate(v.maxBlocks_) : 0),
-        blockPtrInc_(v.blockPtrInc_)
+    PodBvector<T, S>::PodBvector(const PodBvector<T, S>& v)
+        : size_(v.size_),
+          numBlocks_(v.numBlocks_),
+          maxBlocks_(v.maxBlocks_),
+          blocks_(v.maxBlocks_ ? ArrAllocator<T*>::Allocate(v.maxBlocks_) : 0),
+          blockPtrInc_(v.blockPtrInc_)
     {
         unsigned i;
         for (i = 0; i < v.numBlocks_; ++i) {
             blocks_[i] = ArrAllocator<T>::Allocate(BLOCK_SIZE);
-            memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
+            int status = memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return;
+            }
         }
     }
 
@@ -480,7 +483,12 @@ namespace OHOS {
             AllocateBlock(i);
         }
         for (i = 0; i < v.numBlocks_; ++i) {
-            memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
+            int status = memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
         }
         size_ = v.size_;
         return *this;
@@ -493,8 +501,12 @@ namespace OHOS {
             T** newBlocks = ArrAllocator<T*>::Allocate(maxBlocks_ + blockPtrInc_);
 
             if (blocks_) {
-                memcpy_s(newBlocks, (maxBlocks_ + blockPtrInc_), blocks_, numBlocks_ * sizeof(T*));
-                //memcpy(newBlocks, blocks_, numBlocks_ * sizeof(T*));
+                int status = memcpy_s(newBlocks, (maxBlocks_ + blockPtrInc_), blocks_, numBlocks_ * sizeof(T*));
+                if (!status)
+                {
+                    printf("%s", "内存出错");
+                    return ;
+                }
                 ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
             }
             blocks_ = newBlocks;
@@ -507,7 +519,7 @@ namespace OHOS {
     template <class T, unsigned S>
     inline T* PodBvector<T, S>::DataPtr()
     {
-        unsigned blockNum = size_ >> BLOCK_SHIFT; //解释含义
+        unsigned blockNum = size_ >> BLOCK_SHIFT; // 解释含义
         if (blockNum >= numBlocks_) {
             AllocateBlock(blockNum);
         }
@@ -569,8 +581,12 @@ namespace OHOS {
     {
         unsigned i;
         for (i = 0; i < size_; i++) {
-            memcpy_s(ptr, sizeof(T), &(*this)[i], sizeof(T));
-
+            int status = memcpy_s(ptr, sizeof(T), &(*this)[i], sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
             ptr += sizeof(T);
         }
     }
@@ -582,8 +598,12 @@ namespace OHOS {
         byteSize /= sizeof(T);
         for (unsigned i = 0; i < byteSize; ++i) {
             T* ptr = DataPtr();
-            memcpy_s(ptr, sizeof(T), data, sizeof(T));
-
+            int status = memcpy_s(ptr, sizeof(T), data, sizeof(T));
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
             ++size_;
             data += sizeof(T);
         }
@@ -597,15 +617,21 @@ namespace OHOS {
         }
 
         byteSize /= sizeof(T);
+        int status;
         for (unsigned i = 0; i < byteSize; ++i) {
             if (start + i < size_) {
-                memcpy_s(&((*this)[start + i]), sizeof(T), data, sizeof(T));
+                status = memcpy_s(&((*this)[start + i]), sizeof(T), data, sizeof(T));
             } else {
                 T* ptr = DataPtr();
-                memcpy_s(ptr, sizeof(T), data, sizeof(T));
+                status = memcpy_s(ptr, sizeof(T), data, sizeof(T));
                 ++size_;
             }
             data += sizeof(T);
+            if (!status)
+            {
+                printf("%s", "内存出错");
+                return ;
+            }
         }
     }
 
