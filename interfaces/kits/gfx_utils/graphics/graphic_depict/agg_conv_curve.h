@@ -25,8 +25,8 @@
 #ifndef GRAPHIC_GEOMETRY_DEPICT_CURVE_INCLUDED
 #define GRAPHIC_GEOMETRY_DEPICT_CURVE_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
-#include "gfx_utils/graphics/graphic_geometry/agg_curves.h"
+#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h"
 
 namespace OHOS {
     /**

@@ -29,7 +29,7 @@
 #include <cstddef>
 #include <cstring>
 #include "securec.h"
-#include "gfx_utils/graphics/graphic_common/agg_basics.h"
+#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/heap_base.h"
 
 namespace OHOS {
