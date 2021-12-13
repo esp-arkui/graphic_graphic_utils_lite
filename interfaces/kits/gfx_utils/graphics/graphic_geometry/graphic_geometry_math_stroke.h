@@ -23,8 +23,8 @@
 #ifndef STROKE_MATH_INCLUDED
 #define STROKE_MATH_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/agg_math.h"
-#include "gfx_utils/graphics/graphic_geometry/agg_vertex_sequence.h"
+#include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
+#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h"
 
 namespace OHOS {
     /**
