@@ -62,11 +62,11 @@ namespace OHOS {
         POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE - 1
     };
 
-/**
- * @brief 覆盖率的弹性处理.
- * @since 1.0
- * @version 1.0
- */
+    /**
+     * @brief 覆盖率的弹性处理.
+     * @since 1.0
+     * @version 1.0
+     */
     enum CoverScaleEnum {
         COVER_SHIFT = 8,
         COVER_SIZE = 1 << COVER_SHIFT,
@@ -138,30 +138,109 @@ namespace OHOS {
     using int64 = signed long long;
     using int64u = unsigned long long;
 
+    /**
+     * @brief 圆周率
+     */
     const double PI = 3.14159265358979323846;
-    const int CURVERENUMSTEP = 4;
-    const double HALFNUM = 0.5;
-    const double DOUBLENUM = 2.0;
-    const double RADDALETAELPS = 0.125;
-    /* 贝塞尔弧角度极限值 */
-    const double BEZIER_ARC_ANGLE_EPSILON = 0.01;
-    const double BEZIER_ARC_DELTAX = 4.0;
-    const double BEZIER_ARC_EQUAL_DIVISION = 3.0;
-    const double BEZIER_ARC_RADIICHECK = 10.0;
-    const int16u BEZIER_ARC_POINTS = 4;
-    const int16u BEZIER_ARC_SETUP = 2;
-    const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
-    const double CURVES_NUM_STEP_LEN = 0.25;
+    /**
+     * @brief 半圆弧角度
+     */
+    const double RAD_BASE = 180.0;
 
-    const int INDEX_ZERO = 0;
-    const int INDEX_ONE = 1;
-    const int INDEX_TWO = 2;
-    const int INDEX_THREE = 3;
-    const int INDEX_FOUR = 4;
-    const int INDEX_FIVE = 5;
-    const int INDEX_SIX = 6;
-	const double RAD_BASE = 180.0;
     const double ROUND_BASE = 0.5;
+
+    /**
+     * @brief 平角的度数
+     */
+    const double BOXER = 180.0;
+
+    /**
+     * @brief 颜色的最大值
+     */
+    const unsigned MAX_COLOR_NUM = 255;
+
+    /**
+     * @brief 颜色的最大值的一半
+     */
+    const unsigned HALF_COLOR_NUM = 128;
+
+    /**
+     * @brief 颜色的最大值的八分之一
+     */
+    const unsigned EIGHTH_COLOR_NUM = 32;
+
+    /**
+     * @brief 默认最大斜接
+     */
+    const unsigned DEFAULTMITERLIMIT = 10;
+
+    /**
+     * 一般步幅是宽度的四倍
+     */
+    const int STRIDE_FACTOR = 4;
+    const int PXSIZE2STRIDE_FACTOR = 3;
+
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  SIN45= 0.7071068;
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  COS45= 0.7071068;
+
+    /**
+     * @brief 两倍
+     */
+    const int  TWO_TIMES= 2;
+
+    /**
+     * @brief 三倍
+     */
+    const int  THREE_TIMES= 3;
+
+    /**
+     * @brief 四倍
+     */
+    const int  FOUR_TIMES= 4;
+
+    /**
+     * @brief 六倍
+     */
+
+    const int  SIX_TIMES= 6;
+
+    /**
+     * @brief 一次走两步
+     */
+    const int TWO_STEP = 2;
+
+    const double HALFNUM = 0.5;
+
+    const double DOUBLENUM = 2.0;
+
+    const double RADDALETAELPS = 0.125;
+
+    //const int16u BEZIER_ARC_POINTS = 4;
+    //const int16u BEZIER_ARC_SETUP = 2;
+    //const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
+    //const double CURVES_NUM_STEP_LEN = 0.25;
+
+    /**
+     *下标
+     */
+    const int  INDEX_ZERO= 0;
+    const int  INDEX_ONE= 1;
+    const int  INDEX_TWO= 2;
+    const int  INDEX_THREE= 3;
+    const int  INDEX_FOUR= 4;
+    const int  INDEX_FIVE= 5;
+    const int  INDEX_SIX= 6;
+    const int  INDEX_SEVEN= 7;
+
+
+
+
 #if defined(GRAPHIC_GEOMETRY_FISTP)
 #    pragma warning(push)
 #    pragma warning(disable : 4035)
@@ -552,10 +631,10 @@ namespace OHOS {
         RectBase()
         {}
         /**
-        * @brief 规范化矩形.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 规范化矩形.
+         * @since 1.0
+         * @version 1.0
+         */
         const SelfType& Normalize()
         {
             T t;

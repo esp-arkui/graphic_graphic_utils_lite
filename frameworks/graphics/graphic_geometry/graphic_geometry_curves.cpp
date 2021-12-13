@@ -23,7 +23,7 @@ namespace OHOS {
     const double CURVECOLLINEARITYEPSILON = 1e-30;
     const double CURVEANGLETOLERANCEEPSILON = 0.01;
     const int CURVERECURSIONLIMIT = 32;
-
+    const double CURVES_NUM_STEP_LEN = 0.25;
     double Curve3Inc::ApproximationScale() const
     {
         return scale_;
@@ -255,8 +255,9 @@ namespace OHOS {
 #else
         numSteps_ = Uround(len);
 #endif
-        if (numSteps_ < CURVERENUMSTEP) {
-            numSteps_ = CURVERENUMSTEP;
+        const int cuvereNumStep = 4;
+        if (numSteps_ < cuvereNumStep) {
+            numSteps_ = cuvereNumStep;
         }
 
         double subdivideStep = 1.0 / numSteps_;

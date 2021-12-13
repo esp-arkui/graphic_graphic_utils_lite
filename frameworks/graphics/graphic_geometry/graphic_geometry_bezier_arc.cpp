@@ -18,6 +18,20 @@
 #include <cmath>
 
 namespace OHOS {
+    const int16u BEZIER_ARC_SETUP = 2;
+
+    const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
+
+    const int16u BEZIER_ARC_POINTS = 4;
+    /* 贝塞尔弧角度极限值 */
+    const double BEZIER_ARC_ANGLE_EPSILON = 0.01;
+
+    const double BEZIER_ARC_DELTAX = 4.0;
+
+    const double BEZIER_ARC_EQUAL_DIVISION = 3.0;
+
+    const double BEZIER_ARC_RADIICHECK = 10.0;
+
     void ArcToBezier(double cx, double cy, double rx, double ry,
                      double startAngle, double sweepAngle,
                      double* curve)

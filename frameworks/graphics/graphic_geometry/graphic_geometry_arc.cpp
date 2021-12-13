@@ -16,6 +16,7 @@
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h>
 
 namespace OHOS {
+const int CURVERENUMSTEP = 4;
 Arc::Arc(double centerX, double centerY,
          double rx, double ry,
          double start_, double end_,

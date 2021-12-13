@@ -20,7 +20,6 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h"
 namespace OHOS {
-
     /**
     * @template<class VertexSource,class Markers> struct DepictStroke
     * @brief 该结构体主要是进行轮廓轮廓线条包括点划线变换的模板结构体.
@@ -40,8 +39,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        DepictStroke(VertexSource& vs) :
-            DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>(vs)
+        DepictStroke(VertexSource& vs)
+            :DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>(vs)
         {
         }
         /*
