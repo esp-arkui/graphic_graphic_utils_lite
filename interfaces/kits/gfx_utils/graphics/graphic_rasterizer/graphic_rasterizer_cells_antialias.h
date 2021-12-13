@@ -20,9 +20,9 @@
 * @version 1.0
 */
 
-//----------------------------------------------------------------------------
-#ifndef GRAPHIC_RasterizerCellsAntiAlias_INCLUDED
-#define GRAPHIC_RasterizerCellsAntiAlias_INCLUDED
+// ----------------------------------------------------------------------------
+#ifndef GRAPHIC_RASTERIZERCELLSANTIALIAS_INCLUDED
+#define GRAPHIC_RASTERIZERCELLSANTIALIAS_INCLUDED
 
 #include <cstdlib>
 #include <cstring>
@@ -32,9 +32,8 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 
 namespace OHOS {
-
-    //-----------------------------------------------------------------CellBuildAntiAlias
-    //像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
+    // -----------------------------------------------------------------CellBuildAntiAlias
+    // 像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
     struct CellBuildAntiAlias {
         int x;
         int y;
@@ -220,11 +219,11 @@ namespace OHOS {
         bool m_sorted;
     };
 
-    //------------------------------------------------------scanline_hit_test
+    // ------------------------------------------------------scanline_hit_test
     class scanline_hit_test {
     public:
-        scanline_hit_test(int x) :
-            m_x(x), m_hit(false)
+        scanline_hit_test(int x)
+        : m_x(x), m_hit(false)
         {}
 
         void reset_spans()
@@ -255,7 +254,7 @@ namespace OHOS {
         bool m_hit;
     };
 
-    //------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     template <class Cell>
     RasterizerCellsAntiAlias<Cell>::~RasterizerCellsAntiAlias()
     {
@@ -275,8 +274,8 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Cell>
-    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
-        m_num_blocks(0),
+    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit)
+        : m_num_blocks(0),
         m_max_blocks(0),
         m_curr_block(0),
         m_num_cells(0),
@@ -324,9 +323,9 @@ namespace OHOS {
     {
         bool areaCoverFlags = m_curr_cell.area | m_curr_cell.cover;
         if (areaCoverFlags) {
-            //达到CELL_BLOCK_MASK的数后，重新开辟分配内存
+            // 达到CELL_BLOCK_MASK的数后，重新开辟分配内存
             if ((m_num_cells & CELL_BLOCK_MASK) == 0) {
-                //超过内存块限制大小，默认1024limit
+                // 超过内存块限制大小，默认1024limit
                 if (m_num_blocks >= m_cell_block_limit) {
                     return;
                 }
@@ -403,7 +402,7 @@ namespace OHOS {
         increase = 1;
 
         /*
-         *从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
+         * 从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
          */
         deltay_mask = (POLY_SUBPIXEL_SCALE - submask_flags_x1) * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1);
         dx = (long long)x2 - (long long)x1;
@@ -423,7 +422,7 @@ namespace OHOS {
             delta--;
         }
         /*
-         *submask_flags_x1+ (0->first)过程
+         * submask_flags_x1+ (0->first)过程
          */
         m_curr_cell.area += (submask_flags_x1 + first) * delta;
         m_curr_cell.cover += delta;
@@ -434,7 +433,7 @@ namespace OHOS {
 
         if (pixel_x1 != pixel_x2) {
             /*
-             *delta_subpixel x（ 0 到 POLY_SUBPIXEL_SCALE）  到 ( delta_subpixel_scale_y + delta)
+             * delta_subpixel x（ 0 到 POLY_SUBPIXEL_SCALE）  到 ( delta_subpixel_scale_y + delta)
              */
             deltay_mask = POLY_SUBPIXEL_SCALE * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1 + delta);
             rem_dx_mask = (int)(deltay_mask % dx);
@@ -464,11 +463,11 @@ namespace OHOS {
         }
         delta = poly_subpixel_mask_y2 - poly_subpixel_mask_y1;
         m_curr_cell.cover += delta;
-        //再从 first 到  POLY_SUBPIXEL_SCALE 过程
+        // 再从 first 到  POLY_SUBPIXEL_SCALE 过程
         m_curr_cell.area += (submask_flags_x2 + POLY_SUBPIXEL_SCALE - first) * delta;
     }
 
-    //------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     template <class Cell>
     GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::Style(const cell_type& style_cell)
     {
@@ -562,7 +561,7 @@ namespace OHOS {
              */
             int two_fx = (x1 - (ex << POLY_SUBPIXEL_SHIFT)) << 1;
             int area;
-            //256
+            // 256
             first = POLY_SUBPIXEL_SCALE;
             if (dy < 0) {
                 first = 0;
@@ -572,8 +571,8 @@ namespace OHOS {
             x_from = x1;
             /*
              * 从 submask_flags_y1 到  first 过程
-             *RenderHorizonline(pixel_y1, x_from, submask_flags_y1, x_from, first);
-             *颜色mask是从 submask_flags_y1->first
+             * RenderHorizonline(pixel_y1, x_from, submask_flags_y1, x_from, first);
+             * 颜色mask是从 submask_flags_y1->first
              */
             delta = first - submask_flags_y1;
             m_curr_cell.cover += delta;
@@ -587,8 +586,7 @@ namespace OHOS {
             delta = first + first - POLY_SUBPIXEL_SCALE;
             area = two_fx * delta;
             while (ey1 != ey2) {
-                //从 poly_subpixel_scale - first 到  first
-                //RenderHorizonline(pixel_y1, x_from, poly_subpixel_scale - first, x_from, first);
+                // 从 poly_subpixel_scale - first 到  first
                 m_curr_cell.cover = delta;
                 m_curr_cell.area = area;
                 ey1 += increase;
@@ -604,8 +602,8 @@ namespace OHOS {
             m_curr_cell.area += two_fx * delta;
             return;
         }
-        //ok, we have to render several hlines
-        //dx* mask 差值
+        // ok, we have to render several hlines
+        // dx* mask 差值
         /*
          * 颜色mask是从submask_flags_y1 到  POLY_SUBPIXEL_SCALE 的过程
          */
@@ -791,13 +789,14 @@ namespace OHOS {
                 j = base;
                 i = j + 1;
 
-                for (; i < limit; j = i, i++) {
+                for (; i < limit; i++) {
                     for (; j[1]->x < (*j)->x; j--) {
                         SwapCells(j + 1, j);
                         if (j == base) {
                             break;
                         }
                     }
+                    j = i;
                 }
 
                 if (top > stack) {
@@ -821,7 +820,7 @@ namespace OHOS {
     void RasterizerCellsAntiAlias<Cell>::SortAllCells()
     {
         if (m_sorted)
-            return; //Perform sort only the first time.
+            return; // Perform sort only the first time.
 
         AddCurrentCell();
         m_curr_cell.x = (std::numeric_limits<int>::max)();
@@ -832,18 +831,6 @@ namespace OHOS {
         if (m_num_cells == 0)
             return;
 
-        // DBG: Check to see if min/max works well.
-        //for(unsigned nc = 0; nc < m_num_cells; nc++)
-        //{
-        //    cell_type* cell = m_cells[nc >> cell_block_shift] + (nc & cell_block_mask);
-        //    if(cell->x < m_min_x ||
-        //       cell->y < m_min_y ||
-        //       cell->x > m_max_x ||
-        //       cell->y > m_max_y)
-        //    {
-        //        cell = cell; // Breakpoint here
-        //    }
-        //}
         // Allocate the array of cell pointers
         m_sorted_cells.Allocate(m_num_cells, 16);
 
@@ -898,7 +885,6 @@ namespace OHOS {
         }
         m_sorted = true;
     }
-
 } // namespace OHOS
 
 #endif

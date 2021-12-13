@@ -257,8 +257,8 @@ namespace OHOS {
     const int  INDEX_FIVE= 5;
     const int  INDEX_SIX= 6;
     const int  INDEX_SEVEN= 7;
-
-
+    const int  INDEX_TEN= 10;
+    const int  INDEX_HUNDRED= 100;
 
 
 #if defined(GRAPHIC_GEOMETRY_FISTP)

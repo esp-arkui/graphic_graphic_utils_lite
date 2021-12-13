@@ -175,7 +175,6 @@ namespace OHOS {
         double rx4_;
         double ry4_;
     };
-
 } // namespace OHOS
 
 #endif
