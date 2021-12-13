@@ -175,6 +175,16 @@ namespace OHOS {
     const unsigned MAX_COLOR_NUM = 255;
 
     /**
+     * @brief 颜色的最大值的一半
+     */
+    const unsigned HALF_COLOR_NUM = 128;
+
+    /**
+     * @brief 颜色的最大值的八分之一
+     */
+    const unsigned EIGHTH_COLOR_NUM = 32;
+
+    /**
      * @brief 默认最大斜接
      */
     const unsigned DEFAULTMITERLIMIT = 10;
@@ -200,6 +210,22 @@ namespace OHOS {
     const int  TWO_TIMES= 2;
 
     /**
+     * @brief 三倍
+     */
+    const int  THREE_TIMES= 3;
+
+    /**
+     * @brief 四倍
+     */
+    const int  FOUR_TIMES= 4;
+
+    /**
+     * @brief 六倍
+     */
+
+    const int  SIX_TIMES= 6;
+
+    /**
      * @brief 一次走两步
      */
     const int TWO_STEP = 2;
@@ -214,6 +240,7 @@ namespace OHOS {
     const int  INDEX_FOUR= 4;
     const int  INDEX_FIVE= 5;
     const int  INDEX_SIX= 6;
+    const int  INDEX_SEVEN= 7;
 
     using int8 = GRAPHIC_GEOMETRY_INT8;
     using int8u = GRAPHIC_GEOMETRY_INT8U;
