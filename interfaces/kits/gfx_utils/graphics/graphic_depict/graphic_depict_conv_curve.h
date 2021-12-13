@@ -52,8 +52,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit DepictCurve(VertexSource& source) :
-            m_source(&source), m_last_x(0.0), m_last_y(0.0)
+        explicit DepictCurve(VertexSource& source)
+            : m_source(&source), m_last_x(0.0), m_last_y(0.0)
         {
         }
 
@@ -186,15 +186,13 @@ namespace OHOS {
         template<class VertexSource, class Curve3, class Curve4>
         unsigned DepictCurve<VertexSource, Curve3, Curve4>::Vertex(double* x, double* y)
         {
-            if (!IsStop(m_curve3.Vertex(x, y)))
-            {
+            if (!IsStop(m_curve3.Vertex(x, y))) {
                 m_last_x = *x;
                 m_last_y = *y;
                 return PATH_CMD_LINE_TO;
             }
 
-            if (!IsStop(m_curve4.Vertex(x, y)))
-            {
+            if (!IsStop(m_curve4.Vertex(x, y))) {
                 m_last_x = *x;
                 m_last_y = *y;
                 return PATH_CMD_LINE_TO;
@@ -206,31 +204,27 @@ namespace OHOS {
             double end_y = 0;
 
             unsigned cmd = m_source->Vertex(x, y);
-            switch (cmd)
-            {
-            case PATH_CMD_CURVE3:
-                m_source->Vertex(&end_x, &end_y);
+            switch (cmd) {
+                case PATH_CMD_CURVE3:
+                    m_source->Vertex(&end_x, &end_y);
 
-                m_curve3.Init(m_last_x, m_last_y,*x, *y,
-                            end_x, end_y);
+                    m_curve3.Init(m_last_x, m_last_y, *x, *y, end_x, end_y);
 
-                m_curve3.Vertex(x, y);    // First call returns path_cmd_move_to
-                m_curve3.Vertex(x, y);    // This is the first vertex of the curve
-                cmd = PATH_CMD_LINE_TO;
-                break;
+                    m_curve3.Vertex(x, y);    // First call returns path_cmd_move_to
+                    m_curve3.Vertex(x, y);    // This is the first vertex of the curve
+                    cmd = PATH_CMD_LINE_TO;
+                    break;
 
-            case PATH_CMD_CURVE4:
-                m_source->Vertex(&ct2_x, &ct2_y);
-                m_source->Vertex(&end_x, &end_y);
+                case PATH_CMD_CURVE4:
+                    m_source->Vertex(&ct2_x, &ct2_y);
+                    m_source->Vertex(&end_x, &end_y);
 
-                m_curve4.Init(m_last_x, m_last_y,*x, *y,
-                            ct2_x, ct2_y,
-                            end_x, end_y);
+                    m_curve4.Init(m_last_x, m_last_y, *x, *y, ct2_x, ct2_y, end_x, end_y);
 
-                m_curve4.Vertex(x, y);    // First call returns path_cmd_move_to
-                m_curve4.Vertex(x, y);    // This is the first vertex of the curve
-                cmd = PATH_CMD_LINE_TO;
-                break;
+                    m_curve4.Vertex(x, y);    // First call returns path_cmd_move_to
+                    m_curve4.Vertex(x, y);    // This is the first vertex of the curve
+                    cmd = PATH_CMD_LINE_TO;
+                    break;
             }
             m_last_x = *x;
             m_last_y = *y;

@@ -23,15 +23,13 @@
  * @version 1.0
  */
 
-
-
 #ifndef GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 #define GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 
 #include "gfx_utils/graphics/graphic_depict/graphic_depict_transform.h"
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
-    const int BEZIER_ARC_VERTEX_NUM = 26; //贝塞尔弧顶点坐标数
+    const int BEZIER_ARC_VERTEX_NUM = 26; // 贝塞尔弧顶点坐标数
     /**
      * @brief 弧形转换为贝塞尔曲线.
      *
@@ -52,8 +50,8 @@ namespace OHOS {
      */
     class BezierArc : public HeapBase {
     public:
-        BezierArc() :
-            vertex_(BEZIER_ARC_VERTEX_NUM), numVertices_(0), cmd_(PATH_CMD_LINE_TO)
+        BezierArc()
+            :vertex_(BEZIER_ARC_VERTEX_NUM), numVertices_(0), cmd_(PATH_CMD_LINE_TO)
         {}
 
         /**
@@ -105,8 +103,8 @@ namespace OHOS {
             }
             *x = vertices_[vertex_];
             *y = vertices_[vertex_ + 1];
-            vertex_ = vertex_ + 2;
-            if (vertex_ == 2) {
+            vertex_ = vertex_ + OHOS::TWO_STEP;
+            if (vertex_ == OHOS::TWO_STEP) {
                 return unsigned(PATH_CMD_MOVE_TO);
             } else {
                 return cmd_;
@@ -177,8 +175,8 @@ namespace OHOS {
                      double y1,
                      double rx, double ry,
                      double angle,
-                     bool largeArcFlag, //大弧线标志
-                     bool sweepFlag,    //扫掠角标志
+                     bool largeArcFlag, // 大弧线标志
+                     bool sweepFlag,    // 扫掠角标志
                      double x2, double y2) :
             arc_(),
             radiiOK_(false)
@@ -260,7 +258,6 @@ namespace OHOS {
         BezierArc arc_;
         bool radiiOK_;
     };
-
 } // namespace OHOS
 
 #endif

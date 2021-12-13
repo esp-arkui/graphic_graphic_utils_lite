@@ -39,70 +39,35 @@
 
 #include "securec.h"
 namespace OHOS {
-#ifndef GRAPHIC_GEOMETRY_INT8
-#define GRAPHIC_GEOMETRY_INT8 signed char
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT8U
-#    define GRAPHIC_GEOMETRY_INT8U unsigned char
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT16
-#    define GRAPHIC_GEOMETRY_INT16 short
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT16U
-#    define GRAPHIC_GEOMETRY_INT16U unsigned short
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT32
-#    define GRAPHIC_GEOMETRY_INT32 int
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT32U
-#    define GRAPHIC_GEOMETRY_INT32U unsigned
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT64
-#   define GRAPHIC_GEOMETRY_INT64 signed long long
-#endif
-
-#ifndef GRAPHIC_GEOMETRY_INT64U
-#   define GRAPHIC_GEOMETRY_INT64U unsigned long long
-#endif
-
 #define GRAPHIC_GEOMETRY_INLINE inline
 
-    /**
+/**
  * @brief 填充规则.
  * @since 1.0
  * @version 1.0
  */
-    enum FillingRuleEnum
-    {
+    enum FillingRuleEnum {
         FILL_NON_ZERO,
         FILL_EVEN_ODD
     };
 
-    /**
+/**
  * @brief 子像素的偏移以及掩码标志.
  * @since 1.0
  * @version 1.0
  */
-    enum PolySubpixelScaleEnum
-    {
+    enum PolySubpixelScaleEnum {
         POLY_SUBPIXEL_SHIFT = 8,
         POLY_SUBPIXEL_SCALE = 1 << POLY_SUBPIXEL_SHIFT,
         POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE - 1
     };
 
     /**
- * @brief 覆盖率的弹性处理.
- * @since 1.0
- * @version 1.0
- */
-    enum CoverScaleEnum
-    {
+     * @brief 覆盖率的弹性处理.
+     * @since 1.0
+     * @version 1.0
+     */
+    enum CoverScaleEnum {
         COVER_SHIFT = 8,
         COVER_SIZE = 1 << COVER_SHIFT,
         COVER_MASK = COVER_SIZE - 1,
@@ -110,98 +75,181 @@ namespace OHOS {
         COVER_FULL = COVER_MASK
     };
 
-    enum PathCommandsEnum
-    {
+    enum PathCommandsEnum {
         PATH_CMD_STOP = 0,
         PATH_CMD_MOVE_TO = 1,
         PATH_CMD_LINE_TO = 2,
-        PATH_CMD_CURVE3 = 3,      //二次曲线命令
-        PATH_CMD_CURVE4 = 4,      //三次曲线命令
-        PATH_CMD_CURVEN = 5,      //曲线命令
-        PATH_CMD_CARROM = 6,      //二次曲线命令
-        PATH_CMD_UBSPLINE = 7,    //曲线命令
-        PATH_CMD_END_POLY = 0x0F, //多边形闭合
+        PATH_CMD_CURVE3 = 3,      // 二次曲线命令
+        PATH_CMD_CURVE4 = 4,      // 三次曲线命令
+        PATH_CMD_CURVEN = 5,      // 曲线命令
+        PATH_CMD_CARROM = 6,      // 二次曲线命令
+        PATH_CMD_UBSPLINE = 7,    // 曲线命令
+        PATH_CMD_END_POLY = 0x0F, // 多边形闭合
         PATH_CMD_MASK = 0x0F
     };
 
-    enum PathFlagsEnum
-    {
+    enum PathFlagsEnum {
         PATH_FLAGS_NONE = 0,
-        PATH_FLAGS_CCW = 0x10, //顺时针
-        PATH_FLAGS_CW = 0x20,  //逆时针
+        PATH_FLAGS_CCW = 0x10, // 顺时针
+        PATH_FLAGS_CW = 0x20,  // 逆时针
         PATH_FLAGS_CLOSE = 0x40,
         PATH_FLAGS_MASK = 0xF0
     };
 
-    enum cover_scale_e
-    {
-        cover_shift = 8,               //----cover_shift
-        cover_size = 1 << cover_shift, //----cover_size
-        cover_mask = cover_size - 1,   //----cover_mask
-        cover_none = 0,                //----cover_none
-        cover_full = cover_mask        //----cover_full
+    enum cover_scale_e {
+        cover_shift = 8,
+        cover_size = 1 << cover_shift,
+        cover_mask = cover_size - 1,
+        cover_none = 0,
+        cover_full = cover_mask
     };
 
-    enum poly_subpixel_scale_e
-    {
-        poly_subpixel_shift = 8,                        //----poly_subpixel_shift
-        poly_subpixel_scale = 1 << poly_subpixel_shift, //----poly_subpixel_scale
-        poly_subpixel_mask = poly_subpixel_scale - 1    //----poly_subpixel_mask
+    enum poly_subpixel_scale_e {
+        poly_subpixel_shift = 8,
+        poly_subpixel_scale = 1 << poly_subpixel_shift,
+        poly_subpixel_mask = poly_subpixel_scale - 1
     };
 
-    enum gradient_subpixel_scale_e
-    {
+    enum gradient_subpixel_scale_e {
         gradient_subpixel_shift = 4,
         gradient_subpixel_scale = 1 << gradient_subpixel_shift,
         gradient_subpixel_mask = gradient_subpixel_scale - 1
     };
 
-    enum filling_rule_e
-    {
+    enum filling_rule_e {
         fill_non_zero,
         fill_even_odd
     };
 
-    const double PI = 3.14159265358979323846;
-    const double INFINITE_SIMAL = 1e-16;
-    const double WIDTH = 0.5;
-    const double WIDTH_ABS = 0.5;
-    const double WIDTH_EPS = 0.5/1024.0;
-    const double WIDTH_SIGN = 1;
-    const double MITER_LIMIT = 4.0;
-    const double APPROX_SCALE = 1.0;
-    const double CIRCLE_CENTER_X = 0.0;
-    const double CIRCLE_CENTER_Y = 0.0;
-    const double CIRCLE_RADIUS_X = 1.0;
-    const double CIRCLE_RADIUS_Y = 1.0;
-    const double SCALE = 1.0;
-    const double NUM = 4;
-    const double STEP = 0;
-    const double CLOCKWISE = false;
-    const double CONSTANT_1 = 0.125;
-    const double CONSTANT_2 = 2.0;
-    const double CONSTANT_3 = 2;
-    const double CONSTANT_4 = 0.5;
-    const double CONSTANT_5 = 1024.0;
+    /* 共线的四种情况 */
+    enum RecursiveBezierEnum {
+        COLLINEAR = 0,
+        COLLINEAR1,
+        COLLINEAR2,
+        COLLINEAR3
+    };
 
-    using int8 = GRAPHIC_GEOMETRY_INT8;
-    using int8u = GRAPHIC_GEOMETRY_INT8U;
-    using int16 = GRAPHIC_GEOMETRY_INT16;
-    using int16u = GRAPHIC_GEOMETRY_INT16U;
-    using int32 = GRAPHIC_GEOMETRY_INT32;
-    using int32u = GRAPHIC_GEOMETRY_INT32U;
-    using int64 = GRAPHIC_GEOMETRY_INT64;
-    using int64u = GRAPHIC_GEOMETRY_INT64U;
+    using int8 = signed char;
+    using int8u = unsigned char;
+    using int16 = short;
+    using int16u = unsigned short;
+    using int32 = int;
+    using int32u = unsigned;
+    using int64 = signed long long;
+    using int64u = unsigned long long;
+
+    /**
+     * @brief 圆周率
+     */
+    const double PI = 3.14159265358979323846;
+    /**
+     * @brief 半圆弧角度
+     */
+    const double RAD_BASE = 180.0;
+
+    const double ROUND_BASE = 0.5;
+
+    /**
+     * @brief 平角的度数
+     */
+    const double BOXER = 180.0;
+
+    /**
+     * @brief 颜色的最大值
+     */
+    const unsigned MAX_COLOR_NUM = 255;
+
+    /**
+     * @brief 颜色的最大值的一半
+     */
+    const unsigned HALF_COLOR_NUM = 128;
+
+    /**
+     * @brief 颜色的最大值的八分之一
+     */
+    const unsigned EIGHTH_COLOR_NUM = 32;
+
+    /**
+     * @brief 默认最大斜接
+     */
+    const unsigned DEFAULTMITERLIMIT = 10;
+
+    /**
+     * 一般步幅是宽度的四倍
+     */
+    const int STRIDE_FACTOR = 4;
+    const int PXSIZE2STRIDE_FACTOR = 3;
+
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  SIN45= 0.7071068;
+    /**
+     * @brief 1/√2 即1 除以 √2
+     */
+    const double  COS45= 0.7071068;
+
+    /**
+     * @brief 两倍
+     */
+    const int  TWO_TIMES= 2;
+
+    /**
+     * @brief 三倍
+     */
+    const int  THREE_TIMES= 3;
+
+    /**
+     * @brief 四倍
+     */
+    const int  FOUR_TIMES= 4;
+
+    /**
+     * @brief 六倍
+     */
+
+    const int  SIX_TIMES= 6;
+
+    /**
+     * @brief 一次走两步
+     */
+    const int TWO_STEP = 2;
+
+    const double HALFNUM = 0.5;
+
+    const double DOUBLENUM = 2.0;
+
+    const double RADDALETAELPS = 0.125;
+
+    //const int16u BEZIER_ARC_POINTS = 4;
+    //const int16u BEZIER_ARC_SETUP = 2;
+    //const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
+    //const double CURVES_NUM_STEP_LEN = 0.25;
+
+    /**
+     *下标
+     */
+    const int  INDEX_ZERO= 0;
+    const int  INDEX_ONE= 1;
+    const int  INDEX_TWO= 2;
+    const int  INDEX_THREE= 3;
+    const int  INDEX_FOUR= 4;
+    const int  INDEX_FIVE= 5;
+    const int  INDEX_SIX= 6;
+    const int  INDEX_SEVEN= 7;
+
+
+
 
 #if defined(GRAPHIC_GEOMETRY_FISTP)
 #    pragma warning(push)
-#    pragma warning(disable : 4035) // Disable warning "no return value"
-    GRAPHIC_GEOMETRY_INLINE int Iround(double v) //-------iround
+#    pragma warning(disable : 4035)
+    GRAPHIC_GEOMETRY_INLINE int Iround(double v)
     {
         int t;
         __asm fld qword ptr[v] __asm fistp dword ptr[t] __asm mov eax, dword ptr[t]
     }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uround(double v) //-------uround
+    GRAPHIC_GEOMETRY_INLINE unsigned Uround(double v)
     {
         unsigned t;
         __asm fld qword ptr[v] __asm fistp dword ptr[t] __asm mov eax, dword ptr[t]
@@ -211,7 +259,7 @@ namespace OHOS {
     {
         return int(Floor(val));
     }
-    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val) //-------ufloor
+    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val)
     {
         return unsigned(Floor(val));
     }
@@ -219,7 +267,7 @@ namespace OHOS {
     {
         return int(Ceil(val));
     }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val) //--------uceil
+    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
     {
         return unsigned(Ceil(val));
     }
@@ -259,11 +307,11 @@ namespace OHOS {
     }
     GRAPHIC_GEOMETRY_INLINE int Iround(double val)
     {
-        return int((val < 0.0) ? val - 0.5 : val + 0.5);
+        return int((val < 0.0) ? val - ROUND_BASE : val + ROUND_BASE);
     }
     GRAPHIC_GEOMETRY_INLINE int Uround(double val)
     {
-        return unsigned(val + 0.5);
+        return unsigned(val + ROUND_BASE);
     }
     GRAPHIC_GEOMETRY_INLINE int Ifloor(double val)
     {
@@ -280,11 +328,11 @@ namespace OHOS {
      *
      * @param val1,val2 两个数,epsilon 误差.
      * @return Returns 两个数是否相近.
-     *@since 1.0
+     * @since 1.0
      * @version 1.0
      */
     template <class T>
-    inline bool IsEqualEps(T val1, T val2, T epsilon)
+    bool IsEqualEps(T val1, T val2, T epsilon)
     {
         bool neg1 = val1 < 0.0;
         bool neg2 = val2 < 0.0;
@@ -312,7 +360,7 @@ namespace OHOS {
      */
     inline double Rad2Deg(double val)
     {
-        return val * 180.0 / PI;
+        return val * RAD_BASE / PI;
     }
     /**
      * @brief 度转弧度.
@@ -321,7 +369,7 @@ namespace OHOS {
      */
     inline double Deg2Rad(double val)
     {
-        return val * PI / 180.0;
+        return val * PI / RAD_BASE;
     }
 
     /**
@@ -389,7 +437,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve3(unsigned val) //TODO 函数名修改
+    inline bool IsCurve3(unsigned val)
     {
         return PATH_CMD_CURVE3 == val;
     }
@@ -399,7 +447,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve4(unsigned val) //TODO 函数名修改
+    inline bool IsCurve4(unsigned val)
     {
         return PATH_CMD_CURVE4 == val;
     }
@@ -439,7 +487,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCw(unsigned val) //TODO 函数名修改
+    inline bool IsCw(unsigned val)
     {
         return 0 != (val & PATH_FLAGS_CW);
     }
@@ -577,16 +625,16 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_) :
-            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_)
+            : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
         /**
-        * @brief 规范化矩形.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 规范化矩形.
+         * @since 1.0
+         * @version 1.0
+         */
         const SelfType& Normalize()
         {
             T t;
@@ -673,7 +721,7 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Rect>
-    inline Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
+    Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
     {
         Rect rect = rect1;
         if (rect.x2 > rect2.x2) {
@@ -700,7 +748,7 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Rect>
-    inline Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
+    Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
     {
         Rect rect = rect1;
         if (rect.x2 < rect2.x2) {
@@ -718,7 +766,6 @@ namespace OHOS {
         return rect;
     }
     using RectI = RectBase<int>;
-    //using RectF = RectBase<float>;
     using RectD = RectBase<double>;
 
     template <class T>
@@ -728,11 +775,9 @@ namespace OHOS {
         T y;
         PointBase()
         {}
-        PointBase(T x_, T y_) :
-            x(x_), y(y_)
+        PointBase(T x_, T y_) : x(x_), y(y_)
         {}
     };
-    //using PointF = PointBase<float>;
     using PointD = PointBase<double>;
     using PointI = PointBase<int>;
     template <class T>
@@ -743,8 +788,7 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) :
-            x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
         {}
     };
 
@@ -758,8 +802,7 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
@@ -770,12 +813,11 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
-
 } // namespace OHOS
+
 #endif
 
 #endif
