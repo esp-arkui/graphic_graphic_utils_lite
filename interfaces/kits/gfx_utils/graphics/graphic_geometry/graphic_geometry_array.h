@@ -25,11 +25,10 @@
 
 #ifndef GRAPHIC_GEOMETRY_ARRAY_INCLUDED
 #define GRAPHIC_GEOMETRY_ARRAY_INCLUDED
-#include "graphic_geometry_range_adapter.h"
 #include "graphic_geometry_pod_array.h"
 #include "graphic_geometry_pod_auto_array.h"
 #include "graphic_geometry_pod_auto_vector.h"
 #include "graphic_geometry_pod_bvector.h"
 #include "graphic_geometry_pod_vector.h"
-#include "agg_block_allocater.h"
+#include "graphic_geometry_range_adapter.h"
 #endif
