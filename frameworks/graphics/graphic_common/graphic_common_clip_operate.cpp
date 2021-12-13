@@ -13,7 +13,7 @@
 * limitations under the License.
 */
 
-#include <gfx_utils/graphics/graphic_common/graphic_common_clip_barsky.h>
+#include <gfx_utils/graphics/graphic_common/graphic_common_clip_operate.h>
 
 #include <cmath>
 

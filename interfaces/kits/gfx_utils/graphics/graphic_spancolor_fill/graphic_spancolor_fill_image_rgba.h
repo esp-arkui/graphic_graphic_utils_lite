@@ -26,7 +26,7 @@
 #include "gfx_utils/graphics/graphic_color/graphic_color_rgba.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
-#include "graphic_spancolor_fill_span_interpolator.h"
+#include "graphic_spancolor_fill_interpolator.h"
 namespace OHOS {
     enum ImageRgbaScale {
         IMAGE_RGBA_SHIFT = 14,

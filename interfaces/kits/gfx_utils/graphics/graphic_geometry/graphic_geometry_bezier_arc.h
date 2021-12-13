@@ -28,7 +28,7 @@
 #ifndef GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 #define GRAPHIC_GEOMETRY_BEZIER_ARC_INCLUDED
 
-#include "gfx_utils/graphics/graphic_depict/graphic_depict_conv_transform.h"
+#include "gfx_utils/graphics/graphic_depict/graphic_depict_transform.h"
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
     const int BEZIER_ARC_VERTEX_NUM = 26; //贝塞尔弧顶点坐标数

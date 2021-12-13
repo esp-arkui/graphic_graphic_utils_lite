@@ -16,7 +16,7 @@
 #ifndef AGG_CONV_STROKE_INCLUDED
 #define AGG_CONV_STROKE_INCLUDED
 
-#include "graphic_depict_conv_adaptor_vcgen.h"
+#include "graphic_depict_adaptor_vertex_generate.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h"
 namespace OHOS {

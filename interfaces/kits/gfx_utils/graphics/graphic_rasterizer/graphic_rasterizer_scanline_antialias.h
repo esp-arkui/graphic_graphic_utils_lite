@@ -23,8 +23,8 @@
 #ifndef GRAPHIC_GEOMETRY_RASTERIZER_SCANLINE_ANTIALIAS_INCLUDED
 #define GRAPHIC_GEOMETRY_RASTERIZER_SCANLINE_ANTIALIAS_INCLUDED
 
-#include "graphic_rasterizer_cells_aa.h"
-#include "graphic_rasterizer_sl_clip.h"
+#include "graphic_rasterizer_cells_antialias.h"
+#include "graphic_rasterizer_scanline_clip.h"
 
 namespace OHOS {
     /**
