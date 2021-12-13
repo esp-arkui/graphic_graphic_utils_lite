@@ -221,13 +221,6 @@ namespace OHOS {
         return scale_;
     }
 
-#if defined(_MSC_VER) && _MSC_VER <= 1200
-    static double MSC60FixICE(double value)
-    {
-        return value;
-    }
-#endif
-
     void Curve4Inc::Init(double x1, double y1,
                          double x2, double y2,
                          double x3, double y3,
@@ -250,11 +243,7 @@ namespace OHOS {
                       std::sqrt(deltaX3 * deltaX3 + deltaY3 * deltaY3)) *
                      CURVES_NUM_STEP_LEN * scale_;
 
-#if defined(_MSC_VER) && _MSC_VER <= 1200
-        numSteps_ = Uround(MSC60FixICE(len));
-#else
         numSteps_ = Uround(len);
-#endif
         const int cuvereNumStep = 4;
         if (numSteps_ < cuvereNumStep) {
             numSteps_ = cuvereNumStep;
@@ -547,5 +536,4 @@ namespace OHOS {
         RecursiveBezier(x1, y1, x2, y2, x3, y3, x4, y4, 0);
         points_.Add(PointD(x4, y4));
     }
-
 } // namespace OHOS

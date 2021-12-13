@@ -148,8 +148,7 @@ namespace OHOS {
         unsigned Vertex(double* x, double* y);
 
     private:
-        enum RoundRectVertexStatus
-        {
+        enum RoundRectVertexStatus {
             VERTEX_STATUS = 0,
             VERTEX_STATUS1,
             VERTEX_STATUS2,

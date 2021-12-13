@@ -18,16 +18,16 @@ namespace OHOS {
     const TransAffine& TransAffine::ParlToParl(const double* src,
                                                const double* dst)
     {
-        scaleX = src[parlIndex2] - src[parlIndex0];
-        shearY = src[parlIndex3] - src[parlIndex1];
-        shearX = src[parlIndex4] - src[parlIndex0];
-        scaleY = src[parlIndex5] - src[parlIndex1];
-        translateX = src[parlIndex0];
-        translateY = src[parlIndex1];
+        scaleX = src[INDEX_TWO] - src[INDEX_ZERO];
+        shearY = src[INDEX_THREE] - src[INDEX_ONE];
+        shearX = src[INDEX_FOUR] - src[INDEX_ZERO];
+        scaleY = src[INDEX_FIVE] - src[INDEX_ONE];
+        translateX = src[INDEX_ZERO];
+        translateY = src[INDEX_ONE];
         Invert();
-        Multiply(TransAffine(dst[parlIndex2] - dst[parlIndex0], dst[parlIndex3] - dst[parlIndex1],
-                             dst[parlIndex4] - dst[parlIndex0], dst[parlIndex5] - dst[parlIndex1],
-                             dst[parlIndex0], dst[parlIndex1]));
+        Multiply(TransAffine(dst[INDEX_TWO] - dst[INDEX_ZERO], dst[INDEX_THREE] - dst[INDEX_ONE],
+                             dst[INDEX_FOUR] - dst[INDEX_ZERO], dst[INDEX_FIVE] - dst[INDEX_ONE],
+                             dst[INDEX_ZERO], dst[INDEX_ONE]));
         return *this;
     }
 
@@ -35,13 +35,14 @@ namespace OHOS {
                                                double x2, double y2,
                                                const double* parl)
     {
+        const int parlIndexSize = 6;
         double src[parlIndexSize];
-        src[parlIndex0] = x1;
-        src[parlIndex1] = y1;
-        src[parlIndex2] = x2;
-        src[parlIndex3] = y1;
-        src[parlIndex4] = x2;
-        src[parlIndex5] = y2;
+        src[INDEX_ZERO] = x1;
+        src[INDEX_ONE] = y1;
+        src[INDEX_TWO] = x2;
+        src[INDEX_THREE] = y1;
+        src[INDEX_FOUR] = x2;
+        src[INDEX_FIVE] = y2;
         ParlToParl(src, parl);
         return *this;
     }

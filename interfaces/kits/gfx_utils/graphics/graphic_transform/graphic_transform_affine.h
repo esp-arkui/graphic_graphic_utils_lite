@@ -21,13 +21,7 @@
 
 namespace OHOS {
     const double affineEpsilon = 1e-14;
-    const int16u parlIndex0 = 0;
-    const int16u parlIndex1 = 1;
-    const int16u parlIndex2 = 2;
-    const int16u parlIndex3 = 3;
-    const int16u parlIndex4 = 4;
-    const int16u parlIndex5 = 5;
-    const int16u parlIndexSize = 6;
+
     /**
      * @brief 图源映射变换
      * @since 1.0
@@ -40,17 +34,14 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        TransAffine()
-        : scaleX(1.0),shearY(0.0),shearX(0.0),scaleY(1.0),translateX(0.0),translateY(0.0)
-        {}
+        TransAffine() : scaleX(1.0),shearY(0.0),shearX(0.0),scaleY(1.0),translateX(0.0),translateY(0.0) {}
         /**
          * @brief 自定义矩阵
          * @since 1.0
          * @version 1.0
          */
         TransAffine(double v0, double v1, double v2, double v3, double v4, double v5)
-        : scaleX(v0), shearY(v1), shearX(v2), scaleY(v3), translateX(v4), translateY(v5)
-        {}
+            : scaleX(v0), shearY(v1), shearX(v2), scaleY(v3), translateX(v4), translateY(v5) {}
         /**
          * @brief 用于将矩形转换为平行四边形
          * @since 1.0
@@ -193,7 +184,6 @@ namespace OHOS {
         void ScalingAbs(double* x, double* y) const;
     };
 
-    //------------------------------------------------------------------------
     inline void TransAffine::Transform(double* x, double* y) const
     {
         double tmp = *x;
@@ -201,7 +191,6 @@ namespace OHOS {
         *y = tmp * shearY + *y * scaleY + translateY;
     }
 
-    //------------------------------------------------------------------------
     inline void TransAffine::InverseTransform(double* x, double* y) const
     {
         double reciprocal = DeterminantReciprocal();
@@ -271,7 +260,7 @@ namespace OHOS {
     class TransAffineRotation : public TransAffine {
     public:
         TransAffineRotation(double angle)
-        : TransAffine(std::cos(angle), std::sin(angle), -std::sin(angle), std::cos(angle), 0.0, 0.0)
+            : TransAffine(std::cos(angle), std::sin(angle), -std::sin(angle), std::cos(angle), 0.0, 0.0)
         {}
     };
 
@@ -282,12 +271,10 @@ namespace OHOS {
      */
     class TransAffineScaling : public TransAffine {
     public:
-        TransAffineScaling(double x, double y)
-        : TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
+        TransAffineScaling(double x, double y) : TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
         {}
 
-        TransAffineScaling(double scale)
-        : TransAffine(scale, 0.0, 0.0, scale, 0.0, 0.0)
+        TransAffineScaling(double scale) : TransAffine(scale, 0.0, 0.0, scale, 0.0, 0.0)
         {}
     };
     /**
@@ -297,8 +284,7 @@ namespace OHOS {
      */
     class TransAffineTranslation : public TransAffine {
     public:
-        TransAffineTranslation(double x, double y)
-        : TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
+        TransAffineTranslation(double x, double y) : TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
         {}
     };
 } // namespace OHOS

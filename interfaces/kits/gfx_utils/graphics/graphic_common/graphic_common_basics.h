@@ -120,9 +120,9 @@ namespace OHOS {
         fill_non_zero,
         fill_even_odd
     };
+
     /* 共线的四种情况 */
-    enum RecursiveBezierEnum
-    {
+    enum RecursiveBezierEnum {
         COLLINEAR = 0,
         COLLINEAR1,
         COLLINEAR2,

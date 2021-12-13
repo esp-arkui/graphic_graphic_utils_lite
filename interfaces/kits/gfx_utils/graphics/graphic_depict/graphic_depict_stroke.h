@@ -40,7 +40,7 @@ namespace OHOS {
         * @version 1.0
         */
         DepictStroke(VertexSource& vs)
-            :DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>(vs)
+            : DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>(vs)
         {
         }
         /*
