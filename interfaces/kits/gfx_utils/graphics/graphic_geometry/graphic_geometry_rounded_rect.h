@@ -148,6 +148,18 @@ namespace OHOS {
         unsigned Vertex(double* x, double* y);
 
     private:
+        enum RoundRectVertexStatus {
+            VERTEX_STATUS = 0,
+            VERTEX_STATUS1,
+            VERTEX_STATUS2,
+            VERTEX_STATUS3,
+            VERTEX_STATUS4,
+            VERTEX_STATUS5,
+            VERTEX_STATUS6,
+            VERTEX_STATUS7,
+            VERTEX_STATUS8
+        };
+
         unsigned status_;
         Arc arc_;
         double x1_;

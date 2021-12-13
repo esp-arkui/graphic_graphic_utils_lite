@@ -1,11 +1,10 @@
 
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
 
-#include <cmath>
 
 namespace OHOS {
-    RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r) :
-        x1_(x1), y1_(y1), x2_(x2), y2_(y2),
+    RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r)
+        :x1_(x1), y1_(y1), x2_(x2), y2_(y2),
         rx1_(r), ry1_(r), rx2_(r), ry2_(r),
         rx3_(r), ry3_(r), rx4_(r), ry4_(r)
     {
@@ -76,9 +75,8 @@ namespace OHOS {
         double dx = std::fabs(y2_ - y1_);
         double dy = std::fabs(x2_ - x1_);
 
+        double t = dx / (rx1_ + rx2_);
         double k = 1.0;
-        double t;
-        t = dx / (rx1_ + rx2_);
         if (t < k)
             k = t;
         t = dx / (rx3_ + rx4_);
@@ -112,12 +110,12 @@ namespace OHOS {
     {
         unsigned cmd = PATH_CMD_STOP;
         switch (status_) {
-            case 0:
-                arc_.Init(x1_ + rx1_, y1_ + ry1_, rx1_, ry1_, PI, PI + PI * 0.5);
+            case VERTEX_STATUS:
+                arc_.Init(x1_ + rx1_, y1_ + ry1_, rx1_, ry1_, PI, PI + PI * HALFNUM);
                 arc_.Rewind(0);
                 status_++;
 
-            case 1:
+            case VERTEX_STATUS1:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
                     status_++;
@@ -125,12 +123,12 @@ namespace OHOS {
                     return cmd;
                 }
 
-            case 2:
-                arc_.Init(x2_ - rx2_, y1_ + ry2_, rx2_, ry2_, PI + PI * 0.5, 0.0);
+            case VERTEX_STATUS2:
+                arc_.Init(x2_ - rx2_, y1_ + ry2_, rx2_, ry2_, PI + PI * HALFNUM, 0.0);
                 arc_.Rewind(0);
                 status_++;
 
-            case 3:
+            case VERTEX_STATUS3:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
                     status_++;
@@ -138,13 +136,13 @@ namespace OHOS {
                     return PATH_CMD_LINE_TO;
                 }
 
-            case 4:
+            case VERTEX_STATUS4:
                 arc_.Init(x2_ - rx3_, y2_ - ry3_, rx3_, ry3_,
-                          0.0, PI * 0.5);
+                          0.0, PI * HALFNUM);
                 arc_.Rewind(0);
                 status_++;
 
-            case 5:
+            case VERTEX_STATUS5:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
                     status_++;
@@ -152,12 +150,12 @@ namespace OHOS {
                     return PATH_CMD_LINE_TO;
                 }
 
-            case 6:
-                arc_.Init(x1_ + rx4_, y2_ - ry4_, rx4_, ry4_, PI * 0.5, PI);
+            case VERTEX_STATUS6:
+                arc_.Init(x1_ + rx4_, y2_ - ry4_, rx4_, ry4_, PI * HALFNUM, PI);
                 arc_.Rewind(0);
                 status_++;
 
-            case 7:
+            case VERTEX_STATUS7:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
                     status_++;
@@ -165,7 +163,7 @@ namespace OHOS {
                     return PATH_CMD_LINE_TO;
                 }
 
-            case 8:
+            case VERTEX_STATUS8:
                 cmd = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
                 status_++;
                 break;

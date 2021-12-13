@@ -20,14 +20,18 @@
 * @version 1.0
 */
 
-#ifndef GRAPHIC_SPAN_image_rgba_RGBA_INCLUDED
-#define GRAPHIC_SPAN_image_rgba_RGBA_INCLUDED
+#ifndef GRAPHIC_SPANCOLOR_FILL_IMAGE_RGBA_INCLUDED
+#define GRAPHIC_SPANCOLOR_FILL_IMAGE_RGBA_INCLUDED
 
 #include "gfx_utils/graphics/graphic_color/graphic_color_rgba.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 #include "graphic_spancolor_fill_interpolator.h"
 namespace OHOS {
+    const double COORD_OFFSET = 0.5;
+    const unsigned PIXEL_TIMES = 2;
+    const unsigned LUMINANCE_SIZE = 4;
+
     enum ImageRgbaScale {
         IMAGE_RGBA_SHIFT = 14,
         IMAGE_RGBA_SCALE = 1 << IMAGE_RGBA_SHIFT,
@@ -59,9 +63,7 @@ namespace OHOS {
          * @brief 构造函数传参
          */
         SpanImage(source_type& src,
-                  interpolator_type& interpolator) :
-            src_(&src),
-            interpolator_(&interpolator)
+                  interpolator_type& interpolator) : src_(&src), interpolator_(&interpolator)
         {
         }
 
@@ -110,8 +112,7 @@ namespace OHOS {
         SpanImageRgba()
         {
         }
-        SpanImageRgba(source_type& src, interpolator_type& interpolator) :
-            spanImage(src, interpolator)
+        SpanImageRgba(source_type& src, interpolator_type& interpolator) : spanImage(src, interpolator)
         {
         }
 
@@ -124,9 +125,9 @@ namespace OHOS {
          */
         void Generate(color_type* span, int x, int y, unsigned len)
         {
-            spanImage::GetInterpolator().Begin(x + 0.5, y + 0.5, len);
+            spanImage::GetInterpolator().Begin(x + COORD_OFFSET, y + COORD_OFFSET, len);
 
-            long_type luminance[4];
+            long_type luminance[LUMINANCE_SIZE];
             const value_type* colorsPtr;
 
             do {
@@ -138,8 +139,8 @@ namespace OHOS {
                  */
                 spanImage::GetInterpolator().Coordinates(&x_hr, &y_hr);
 
-                x_hr -= IMAGE_SUBPIXEL_SCALE / 2;
-                y_hr -= IMAGE_SUBPIXEL_SCALE / 2;
+                x_hr -= IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
+                y_hr -= IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
 
                 int spanX = x_hr >> IMAGE_SUBPIXEL_SHIFT;
                 int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
@@ -148,10 +149,10 @@ namespace OHOS {
                 /**
                  * 设置图像色彩值 r g b a 像素值的
                  */
-                luminance[0] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                luminance[1] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                luminance[2] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
-                luminance[3] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / 2;
+                luminance[INDEX_ZERO] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
+                luminance[INDEX_ONE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
+                luminance[INDEX_TWO] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
+                luminance[INDEX_THREE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
 
                 /**
                  * 获取图像像素点坐标
@@ -162,47 +163,50 @@ namespace OHOS {
                 /**
                  * 获取需要插值的颜色指针
                  */
-                colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, 2);
+                colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, PIXEL_TIMES);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
                          (IMAGE_SUBPIXEL_SCALE - y_hr);
-                luminance[0] += weight * *colorsPtr++;
-                luminance[1] += weight * *colorsPtr++;
-                luminance[2] += weight * *colorsPtr++;
-                luminance[3] += weight * *colorsPtr;
+                luminance[INDEX_ZERO] += weight * *colorsPtr++;
+                luminance[INDEX_ONE] += weight * *colorsPtr++;
+                luminance[INDEX_TWO] += weight * *colorsPtr++;
+                luminance[INDEX_THREE] += weight * *colorsPtr;
 
-                //获取下一个x对应颜色
+                // 获取下一个x对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().NextX();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
-                luminance[0] += weight * *colorsPtr++;
-                luminance[1] += weight * *colorsPtr++;
-                luminance[2] += weight * *colorsPtr++;
-                luminance[3] += weight * *colorsPtr;
+                luminance[INDEX_ZERO] += weight * *colorsPtr++;
+                luminance[INDEX_ONE] += weight * *colorsPtr++;
+                luminance[INDEX_TWO] += weight * *colorsPtr++;
+                luminance[INDEX_THREE] += weight * *colorsPtr;
 
-                //获取下一个y对应颜色
+                // 获取下一个y对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().Nexty();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
-                luminance[0] += weight * *colorsPtr++;
-                luminance[1] += weight * *colorsPtr++;
-                luminance[2] += weight * *colorsPtr++;
-                luminance[3] += weight * *colorsPtr;
+                luminance[INDEX_ZERO] += weight * *colorsPtr++;
+                luminance[INDEX_ONE] += weight * *colorsPtr++;
+                luminance[INDEX_TWO] += weight * *colorsPtr++;
+                luminance[INDEX_THREE] += weight * *colorsPtr;
 
-                //获取下一个x对应颜色
+                // 获取下一个x对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().NextX();
 
                 weight = x_hr * y_hr;
-                luminance[0] += weight * *colorsPtr++;
-                luminance[1] += weight * *colorsPtr++;
-                luminance[2] += weight * *colorsPtr++;
-                luminance[3] += weight * *colorsPtr;
+                luminance[INDEX_ZERO] += weight * *colorsPtr++;
+                luminance[INDEX_ONE] += weight * *colorsPtr++;
+                luminance[INDEX_TWO] += weight * *colorsPtr++;
+                luminance[INDEX_THREE] += weight * *colorsPtr;
 
-                span->redValue = value_type(color_type::Downshift(luminance[order_type::RED], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->greenValue = value_type(color_type::Downshift(luminance[order_type::GREEN], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->blueValue = value_type(color_type::Downshift(luminance[order_type::BLUE], IMAGE_SUBPIXEL_SHIFT * 2));
-                span->alphaValue = value_type(color_type::Downshift(luminance[order_type::ALPHA], IMAGE_SUBPIXEL_SHIFT * 2));
+                span->redValue = value_type(
+                    color_type::Downshift(luminance[order_type::RED], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
+                span->greenValue = value_type(
+                    color_type::Downshift(luminance[order_type::GREEN], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
+                span->blueValue = value_type(
+                    color_type::Downshift(luminance[order_type::BLUE], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
+                span->alphaValue = value_type(
+                    color_type::Downshift(luminance[order_type::ALPHA], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
 
                 ++span;
                 ++spanImage::GetInterpolator();
-
             } while (--len);
         }
     };

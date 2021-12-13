@@ -30,8 +30,7 @@ namespace OHOS {
      */
     class Arc : public HeapBase {
     public:
-        Arc()
-            :scale_(1.0), initialized_(false)
+        Arc() : scale_(1.0), initialized_(false)
         {
         }
 
@@ -72,7 +71,7 @@ namespace OHOS {
          */
         double ApproximationScale() const
         {
-            return scale_; // 解释含义，参照已有的
+            return scale_;
         }
 
         /**

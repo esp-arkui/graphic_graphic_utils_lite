@@ -14,7 +14,7 @@
  */
 
 /**
- * @file graphic_geometry_gamma_lut.h
+ * @file graphic_common_gamma_lut.h
  *
  * @brief gamma校正查找表、Srgb查找表、Srgb转化类
  *
@@ -32,6 +32,7 @@
 
 namespace OHOS {
 #define TABLESIZE 256
+#define TABLEBOUNDARY 255
 #define TABLESIZE_HALF 128
 #define TABLESIZE_QURATER 64
 #define TABLESIZE_EIGHTH 32
@@ -44,6 +45,7 @@ namespace OHOS {
 #define HALF 0.5
 #define SRGBVALUE 255.0
 #define RGB16MAX 65535.0
+#define ALPHAMAX 255
 
     /**
      * @brief Srgb查找类
@@ -131,7 +133,7 @@ namespace OHOS {
             // 生成查找表
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
-            for (unsigned i = 1; i <= 255; ++i) {
+            for (unsigned i = 1; i <= TABLEBOUNDARY; ++i) {
                 // 浮点RGB范围在[0,1]内。
                 dirTable_[i] = float(SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = float(SrgbToLinear((i - HALF) / SRGBVALUE));
@@ -154,7 +156,7 @@ namespace OHOS {
             // 生成查找表
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
-            for (int i = 1; i <= 255; ++i) {
+            for (int i = 1; i <= TABLEBOUNDARY; ++i) {
                 // 16位RGB范围在[0，65535]内。
                 dirTable_[i] = Uround(RGB16MAX * SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = Uround(RGB16MAX * SrgbToLinear((i - HALF) / SRGBVALUE));
@@ -177,7 +179,7 @@ namespace OHOS {
             // 生成查找表
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
-            for (int i = 1; i <= 255; ++i) {
+            for (int i = 1; i <= TABLEBOUNDARY; ++i) {
                 // 8位RGB由简单的双向查找表处理。
                 dirTable_[i] = Uround(SRGBVALUE * SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = Uround(SRGBVALUE * LinearToSrgb(i / SRGBVALUE));
@@ -265,9 +267,9 @@ namespace OHOS {
                 return 0;
             }
             if (alphaValue > 1) {
-                return 255;
+                return ALPHAMAX;
             }
-            return int8u(HALF + alphaValue * 255);
+            return int8u(HALF + alphaValue * ALPHAMAX);
         }
 
         /**

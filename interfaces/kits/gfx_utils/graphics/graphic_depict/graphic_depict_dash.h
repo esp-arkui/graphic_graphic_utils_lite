@@ -42,8 +42,7 @@ namespace OHOS {
         typedef Markers marker_type;
         typedef DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers> base_type;
 
-        DepictDash(VertexSource& vs) :
-            DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers>(vs)
+        DepictDash(VertexSource& vs) : DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers>(vs)
         {
         }
 
