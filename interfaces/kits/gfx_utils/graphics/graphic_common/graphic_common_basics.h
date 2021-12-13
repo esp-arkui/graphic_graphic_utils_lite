@@ -142,6 +142,26 @@ namespace OHOS {
      * @brief 圆周率
      */
     const double PI = 3.14159265358979323846;
+    const double INFINITE_SIMAL = 1e-16;
+    const double WIDTH = 0.5;
+    const double WIDTH_ABS = 0.5;
+    const double WIDTH_EPS = 0.5/1024.0;
+    const double WIDTH_SIGN = 1;
+    const double MITER_LIMIT = 4.0;
+    const double APPROX_SCALE = 1.0;
+    const double CIRCLE_CENTER_X = 0.0;
+    const double CIRCLE_CENTER_Y = 0.0;
+    const double CIRCLE_RADIUS_X = 1.0;
+    const double CIRCLE_RADIUS_Y = 1.0;
+    const double SCALE = 1.0;
+    const double NUM = 4;
+    const double STEP = 0;
+    const double CLOCKWISE = false;
+    const double CONSTANT_1 = 0.125;
+    const double CONSTANT_2 = 2.0;
+    const double CONSTANT_3 = 2;
+    const double CONSTANT_4 = 0.5;
+    const double CONSTANT_5 = 1024.0;
     /**
      * @brief 半圆弧角度
      */
