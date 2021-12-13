@@ -54,8 +54,16 @@ shared_library("graphic_utils") {
     "frameworks/style.cpp",
     "frameworks/transform.cpp",
     "frameworks/version.cpp",
+    "frameworks/graphics/graphic_common/graphic_common_clip_operate.cpp",
+    "frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp",
+    "frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp",
+    "frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp",
+    "frameworks/graphics/graphic_geometry/graphic_geometry_rounded_rect.cpp",
+    "frameworks/graphics/graphic_transform/graphic_transform_trans_affine.cpp",
+    "frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.cpp",
+    "frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.cpp",
   ]
-  include_dirs = [ "frameworks" ]
+  include_dirs = [ "frameworks","interfaces/kits" ]
   public_configs = [ ":graphic_utils_public_config" ]
   deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
   public_deps =
