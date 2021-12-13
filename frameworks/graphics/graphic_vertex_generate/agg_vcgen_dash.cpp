@@ -20,22 +20,19 @@
 #include "gfx_utils/graphics/graphic_geometry/agg_shorten_path.h"
 
 namespace OHOS {
-
-    //------------------------------------------------------------------------
-    VCGenDash::VCGenDash() :
-        totalDashLen_(0.0),
-        numDashes_(0),
-        dashStart_(0.0),
-        shorten_(0.0),
-        currDashStart_(0.0),
-        currDash_(0),
-        srcVertices_(),
-        closed_(0),
-        status_(INITIAL),
-        srcVertex_(0)
+    VCGenDash::VCGenDash() 
+    : totalDashLen_(0.0),
+      numDashes_(0),
+      dashStart_(0.0),
+      shorten_(0.0),
+      currDashStart_(0.0),
+      currDash_(0),
+      srcVertices_(),
+      closed_(0),
+      status_(INITIAL),
+      srcVertex_(0)
     {}
 
-    //------------------------------------------------------------------------
     void VCGenDash::RemoveAllDashes()
     {
         totalDashLen_ = 0.0;
@@ -44,7 +41,6 @@ namespace OHOS {
         currDash_ = 0;
     }
 
-    //------------------------------------------------------------------------
     void VCGenDash::AddDash(double dashLen, double gapLen)
     {
         if (numDashes_ < MAX_DASHES) {
@@ -54,19 +50,17 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void VCGenDash::DashStart(double ds)
     {
         dashStart_ = ds;
         CalcDashStart(std::fabs(ds));
     }
 
-    //------------------------------------------------------------------------
     void VCGenDash::CalcDashStart(double ds)
     {
         currDash_ = 0;
         currDashStart_ = 0.0;
-        for (; ds > 0.0;) {
+        for(;ds > 0.0;) {
             if (ds > dashes_[currDash_]) {
                 ds -= dashes_[currDash_];
                 ++currDash_;
@@ -80,8 +74,7 @@ namespace OHOS {
             }
         }
     }
-
-    //------------------------------------------------------------------------
+ 
     void VCGenDash::RemoveAll()
     {
         status_ = INITIAL;
@@ -89,7 +82,6 @@ namespace OHOS {
         closed_ = 0;
     }
 
-    //------------------------------------------------------------------------
     void VCGenDash::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
@@ -104,7 +96,7 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
+    
     void VCGenDash::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
@@ -115,41 +107,43 @@ namespace OHOS {
         srcVertex_ = 0;
     }
 
-    //------------------------------------------------------------------------
+
     unsigned VCGenDash::Vertex(double* x, double* y)
     {
         unsigned cmd = PATH_CMD_MOVE_TO;
-        while (!IsStop(cmd)) {
-            switch (status_) {
-                case INITIAL:
-                    Rewind(0);
-
-                case READY:
-                    if (numDashes_ < 2 || srcVertices_.Size() < 2) {
-                        cmd = PATH_CMD_STOP;
-                        break;
+        while(!IsStop(cmd))
+        {
+            switch(status_)
+            {
+            case INITIAL:
+                Rewind(0);
+            case READY:
+                if (numDashes_ < 2 || srcVertices_.Size() < 2) {
+                    cmd = PATH_CMD_STOP;
+                    break;
+                }
+                status_ = POLYLINE;
+                srcVertex_ = 1;
+                vertexDist1_ = &srcVertices_[0];
+                vertexDist2_ = &srcVertices_[1];
+                currRest = vertexDist1_->dist;
+                *x = vertexDist1_->x;
+                *y = vertexDist1_->y;
+                if (dashStart_ >= 0.0) {
+                    CalcDashStart(dashStart_);
+                }
+                return PATH_CMD_MOVE_TO;
+            case POLYLINE:
+                {
+                    double dashRest = dashes_[currDash_] - currDashStart_;
+                    unsigned cmd;
+                    if (currDash_ & 1) {
+                        cmd = PATH_CMD_MOVE_TO;
+                    } else {
+                        cmd = PATH_CMD_LINE_TO;
                     }
-                    status_ = POLYLINE;
-                    srcVertex_ = 1;
-                    vertexDist1_ = &srcVertices_[0];
-                    vertexDist2_ = &srcVertices_[1];
-                    currRest = vertexDist1_->dist;
-                    *x = vertexDist1_->x;
-                    *y = vertexDist1_->y;
-                    if (dashStart_ >= 0.0) {
-                        CalcDashStart(dashStart_);
-                    }
-                    return PATH_CMD_MOVE_TO;
-
-                case POLYLINE: {
-                    double dash_rest = dashes_[currDash_] - currDashStart_;
-
-                    unsigned cmd = (currDash_ & 1) ?
-                                       PATH_CMD_MOVE_TO :
-                                       PATH_CMD_LINE_TO;
-
-                    if (currRest > dash_rest) {
-                        currRest -= dash_rest;
+                    if (currRest > dashRest) {
+                        currRest -= dashRest;
                         ++currDash_;
                         if (currDash_ >= numDashes_) {
                             currDash_ = 0;
@@ -168,7 +162,6 @@ namespace OHOS {
                             if (srcVertex_ > srcVertices_.Size()) {
                                 status_ = STOP;
                             } else {
-                                int n = 0;
                                 if (srcVertex_ >= srcVertices_.Size()) {
                                     vertexDist2_ = &srcVertices_[0];
                                 } else {
@@ -184,11 +177,11 @@ namespace OHOS {
                         }
                     }
                     return cmd;
-                } break;
-
-                case STOP:
-                    cmd = PATH_CMD_STOP;
-                    break;
+                }
+                break;
+            case STOP:
+                cmd = PATH_CMD_STOP;
+                break;
             }
         }
         return PATH_CMD_STOP;

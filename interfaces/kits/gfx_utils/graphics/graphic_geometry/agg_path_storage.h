@@ -24,9 +24,15 @@
 
 namespace OHOS {
 
-    //----------------------------------------------------VertexBlockStorage
-    template <class ValueType, unsigned BlockShift = 8, unsigned BlockPool = 256>
-    class VertexBlockStorage {
+    /**
+     * @brief 顶点源数据块
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class ValueType, unsigned BlockShift=8, unsigned BlockPool=256>
+    class VertexBlockStorage
+    {
     public:
         // Allocation parameters
         enum BlockScale {
@@ -50,7 +56,6 @@ namespace OHOS {
         void RemoveAll();
         /**
          * @brief 释放空间
-         * 
          * @since 1.0
          * @version 1.0
          */
@@ -67,7 +72,6 @@ namespace OHOS {
         void AddVertex(double x, double y, unsigned cmd);
         /**
          * @brief 返回最后一条指令
-         * 
          * @return 返回最后一条指令类型
          * @since 1.0
          * @version 1.0
@@ -75,7 +79,6 @@ namespace OHOS {
         unsigned LastCommand() const;
         /**
          * @brief 返回最后一个顶点的坐标
-         * 
          * @param x 用于获取最后一个顶点x轴坐标
          * @param y 用于获取最后一个顶点y轴坐标
          * @return 返回该顶点对应的指令类型
@@ -85,7 +88,6 @@ namespace OHOS {
         unsigned LastVertex(double* x, double* y) const;
         /**
          * @brief 返回顶点数量
-         * 
          * @return 返回顶点数量
          * @since 1.0
          * @version 1.0
@@ -93,7 +95,6 @@ namespace OHOS {
         unsigned TotalVertices() const;
         /**
          * @brief 获取特定的顶点的坐标
-         * 
          * @param idx 顶点下标
          * @param x 用于获取顶点x轴坐标
          * @param y 用于获取顶点y轴坐标
@@ -104,7 +105,6 @@ namespace OHOS {
         unsigned Vertex(unsigned idx, double* x, double* y) const;
         /**
          * @brief 获取特定的顶点对应的指令类型
-         * 
          * @param idx 顶点下标
          * @return 返回该顶点对应的指令类型
          * @since 1.0
@@ -129,13 +129,13 @@ namespace OHOS {
     void VertexBlockStorage<ValueType, S, P>::FreeAll()
     {
         if (totalBlocks_) {
-            ValueType** coord_blk = croodBlocks_ + totalBlocks_ - 1;
-            for (; totalBlocks_ > 0; totalBlocks_--) {
+            ValueType** coordBLK = croodBlocks_ + totalBlocks_ - 1;
+            for(;totalBlocks_ > 0;totalBlocks_--) {
                 ArrAllocator<ValueType>::Deallocate(
-                    *coord_blk,
-                    BLOCK_SIZE * 2 +
-                        BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
-                --coord_blk;
+                    *coordBLK,
+                    BLOCK_SIZE * 2 + 
+                    BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
+                --coordBLK;
             }
             ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * 2);
             totalBlocks_ = 0;
@@ -261,7 +261,7 @@ namespace OHOS {
     void VertexBlockStorage<ValueType, S, P>::AllocateBlock(unsigned nb)
     {
         if (nb >= maxBlocks_) {
-            ValueType** new_coords =
+            ValueType** new_coords = 
                 ArrAllocator<ValueType*>::Allocate((maxBlocks_ + BLOCK_POOL) * 2);
 
             unsigned char** new_cmds =
@@ -401,7 +401,6 @@ namespace OHOS {
         }
         /**
          * @brief 释放空间
-         * 
          * @since 1.0
          * @version 1.0
          */
@@ -413,7 +412,6 @@ namespace OHOS {
 
         /**
          * @brief 开始新的路径
-         * 
          * @return 返回顶点数量
          * @since 1.0
          * @version 1.0
@@ -421,7 +419,6 @@ namespace OHOS {
         unsigned StartNewPath();
         /**
          * @brief 移动一个点到设定的坐标
-         * 
          * @param x 顶点x轴坐标
          * @param y 顶点y轴坐标
          * @since 1.0
@@ -431,7 +428,6 @@ namespace OHOS {
 
         /**
          * @brief 连线连到输入的坐标
-         * 
          * @param x 顶点x轴坐标
          * @param y 顶点y轴坐标
          * @since 1.0
@@ -441,7 +437,6 @@ namespace OHOS {
 
         /**
          * @brief 画弧线
-         * 
          * @param rx 长短半轴
          * @param ry 长短半轴
          * @param angle 角度
@@ -463,7 +458,6 @@ namespace OHOS {
 
         /**
          * @brief 返回顶点数量
-         * 
          * @return 返回顶点数量
          * @since 1.0
          * @version 1.0
@@ -472,7 +466,6 @@ namespace OHOS {
 
         /**
          * @brief 返回最后一个顶点的坐标
-         * 
          * @param x 用于获取最后一个顶点x轴坐标
          * @param y 用于获取最后一个顶点y轴坐标
          * @return 返回该顶点对应的指令类型
@@ -482,7 +475,6 @@ namespace OHOS {
         unsigned LastVertex(double* x, double* y) const;
         /**
          * @brief 获取特定的顶点的坐标
-         * 
          * @param idx 顶点下标
          * @param x 用于获取顶点x轴坐标
          * @param y 用于获取顶点y轴坐标
@@ -494,7 +486,6 @@ namespace OHOS {
 
         /**
          * @brief 迭代器回退到某一个顶点
-         * 
          * @param pathId 回退的顶点序号
          * @since 1.0
          * @version 1.0
@@ -503,7 +494,6 @@ namespace OHOS {
 
         /**
          * @brief 获取下一个顶点的坐标
-         * 
          * @param x 用于获取顶点x轴坐标
          * @param y 用于获取顶点y轴坐标
          * @return 返回下一个顶点对应的指令类型
@@ -514,7 +504,6 @@ namespace OHOS {
 
         /**
          * @brief 连接路径
-         * 
          * @param vs 要连接的顶点源
          * @param pathId 连接位置
          * @since 1.0
@@ -533,7 +522,6 @@ namespace OHOS {
 
         /**
          * @brief 将顶点源加入到已有的源
-         * 
          * @param vs 要加入的顶点源
          * @param pathId 加入的位置
          * @since 1.0
@@ -568,7 +556,7 @@ namespace OHOS {
                         vertices_.AddVertex(x, y, cmd);
                     }
                 }
-                for (; !IsStop(cmd = vs.Vertex(&x, &y));) {
+                for(;!IsStop(cmd = vs.Vertex(&x, &y));) {
                     unsigned int c;
                     if (IsMoveTo(cmd)) {
                         c = unsigned(PATH_CMD_LINE_TO);
@@ -582,7 +570,6 @@ namespace OHOS {
 
         /**
          * @brief 连接路径
-         * 
          * @param data 要连接的顶点源
          * @param numPoints 顶点数
          * @param closed 是否闭合
@@ -600,7 +587,6 @@ namespace OHOS {
 
         /**
          * @brief 将顶点源加入到已有的源
-         * 
          * @param data 要加入的顶点源
          * @param pathId 加入的位置
          * @param numPoints 顶点数
