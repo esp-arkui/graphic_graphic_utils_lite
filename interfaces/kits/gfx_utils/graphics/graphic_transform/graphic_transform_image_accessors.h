@@ -18,8 +18,13 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-
-    template <class PixelFormatType>
+    /**
+     * @brief 带拷贝的图像存取器
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType> 
     class ImageAccessorClone {
     public:
         typedef typename PixelFormatType::ColorType color_type;
@@ -37,7 +42,6 @@ namespace OHOS {
         {}
         /**
          * @brief 关联像素集
-         * 
          * @param pixFormat 需要关联的像素集
          * @since 1.0
          * @version 1.0
@@ -49,16 +53,15 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 获取坐标为(x_,y_)的像素地址
-         * 
-         * @return 坐标为(x_,y_)的像素地址
+         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
+         * @return 坐标为(xPixel_,yPixel_)的像素地址
          * @since 1.0
          * @version 1.0
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
         {
-            int x = x_;
-            int y = y_;
+            int x = xPixel_;
+            int y = yPixel_;
             if (x < 0) {
                 x = 0;
             }
@@ -77,7 +80,6 @@ namespace OHOS {
     public:
         /**
          * @brief 获取像素地址
-         * 
          * @param x x轴坐标
          * @param y y轴坐标
          * @param len 线段长度
@@ -87,10 +89,10 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
         {
-            x_ = x0_ = x;
-            y_ = y;
-            if (x >= 0 && x + len <= (int)pixFormat_->Width() &&
-                y >= 0 && y < (int)pixFormat_->Height()) {
+            xPixel_ = xSpanPixel_ = x;
+            yPixel_ = y;
+            if (x >= 0 && x+len <= (int)pixFormat_->Width() &&
+               y >= 0 && y < (int)pixFormat_->Height() ) {
                 return pixPtr_ = pixFormat_->PixPtr(x, y);
             }
             pixPtr_ = 0;
@@ -98,7 +100,6 @@ namespace OHOS {
         }
         /**
          * @brief 像素地址增加一个像素宽度
-         * 
          * @return 坐标为改变后的像素地址
          * @since 1.0
          * @version 1.0
@@ -108,23 +109,22 @@ namespace OHOS {
             if (pixPtr_) {
                 return pixPtr_ += PIX_WIDTH;
             }
-            ++x_;
+            ++xPixel_;
             return Pixel();
         }
         /**
          * @brief 像素地址增加一个像素高度
-         * 
          * @return 坐标为改变后的像素地址
          * @since 1.0
          * @version 1.0
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
-            ++y_;
-            x_ = x0_;
-            if (pixPtr_ != 0 &&
-                y_ >= 0 && y_ < (int)pixFormat_->Height()) {
-                return pixPtr_ = pixFormat_->PixPtr(x_, y_);
+            ++yPixel_;
+            xPixel_ = xSpanPixel_;
+            if (pixPtr_ != 0 && 
+               yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+                return pixPtr_ = pixFormat_->PixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
             return Pixel();
@@ -132,12 +132,16 @@ namespace OHOS {
 
     private:
         const PixelFormatType* pixFormat_;
-        int x_, x0_, y_;
+        int xPixel_, xSpanPixel_, yPixel_;
         const int8u* pixPtr_;
     };
 
-    template <class PixelFormatType>
-    class ImageAccessorNoRepeat {
+    /**
+     * @brief 图像存取器
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType> class ImageAccessorNoRepeat {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
@@ -147,18 +151,17 @@ namespace OHOS {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
 
-        ImageAccessorNoRepeat()
+        ImageAccessorNoRepeat() 
         {}
-        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat)
+        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat)
+        : pixFormat_(&pixFormat)
         {}
         /**
-     * @brief 关联像素集
-     * 
-     * @param pixFormat 需要关联的像素集
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 关联像素集
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
         void Attach(PixelFormatType& pixFormat)
         {
             pixFormat_ = &pixFormat;
@@ -166,16 +169,15 @@ namespace OHOS {
 
     private:
         /**
-     * @brief 获取坐标为(x_,y_)的像素地址
-     * 
-     * @return 坐标为(x_,y_)的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
+         * @return 坐标为(xPixel_,yPixel_)的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
         {
-            int x = x_;
-            int y = y_;
+            int x = xPixel_;
+            int y = yPixel_;
             if (x < 0) {
                 x = 0;
             }
@@ -196,55 +198,52 @@ namespace OHOS {
 
     public:
         /**
-     * @brief 获取像素地址
-     * 
-     * @param x x轴坐标
-     * @param y y轴坐标
-     * @param len 线段长度
-     * @return 坐标像素地址
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取像素地址
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @param len 线段长度
+         * @return 坐标像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
         {
-            x_ = x0_ = x;
-            y_ = y;
-            if (x >= 0 && x + len <= (int)pixFormat_->Width() &&
-                y >= 0 && y < (int)pixFormat_->Height()) {
+            xPixel_ = xSpanPixel_ = x;
+            yPixel_ = y;
+            if (x >= 0 && x+len <= (int)pixFormat_->Width() &&
+            y >= 0 && y < (int)pixFormat_->Height()) {
                 return pixPtr_ = pixFormat_->PixPtr(x, y);
             }
             pixPtr_ = 0;
             return Pixel();
         }
         /**
-     * @brief 像素地址增加一个像素宽度
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 像素地址增加一个像素宽度
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
         {
             if (pixPtr_ != 0) {
                 return pixPtr_ += PIX_WIDTH;
             }
-            ++x_;
+            ++xPixel_;
             return Pixel();
         }
         /**
-     * @brief 像素地址增加一个像素高度
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+         * @brief 像素地址增加一个像素高度
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
         {
-            ++y_;
-            x_ = x0_;
+            ++yPixel_;
+            xPixel_ = xSpanPixel_;
             if (pixPtr_ != 0 &&
-                y_ >= 0 && y_ < (int)pixFormat_->height()) {
-                return pixPtr_ = pixFormat_->pixPtr(x_, y_);
+            yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+                return pixPtr_ = pixFormat_->pixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
             return Pixel();
@@ -252,20 +251,23 @@ namespace OHOS {
 
     private:
         const PixelFormatType* pixFormat_;
-        int x_, x0_, y_;
+        int xPixel_, xSpanPixel_, yPixel_;
         const int8u* pixPtr_;
     };
 
-    template <class PixelFormat, class WrapX, class WrapY>
-    class ImageAccessorWrap {
+    /**
+     * @brief 带换行功能的图像存取器
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType, class WrapX, class WrapY> class ImageAccessorWrap {
     public:
-        typedef PixelFormat PixelFormatType;
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
         typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth
-        {
-            PIX_WIDTH = PixelFormatType::PIX_WIDTH
+        enum PixWidth { 
+            PIX_WIDTH = PixelFormatType::PIX_WIDTH 
         };
 
         ImageAccessorWrap()
@@ -277,25 +279,23 @@ namespace OHOS {
         {}
 
         /**
-     * @brief 关联像素集
-     * 
-     * @param pixFormat 需要关联的像素集
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 关联像素集
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
         void Attach(PixelFormatType& pixFormat)
         {
             pixFormat_ = &pixFormat;
         }
         /**
-     * @brief 获取像素地址带换行
-     * 
-     * @param x x轴坐标
-     * @param y y轴坐标
-     * @return 坐标像素地址
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 获取像素地址带换行
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @return 坐标像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned)
         {
             x_ = x;
@@ -303,12 +303,11 @@ namespace OHOS {
             return rowPtr_ + wrapX_(x) * PIX_WIDTH;
         }
         /**
-     * @brief 像素地址增加一个像素宽度附带换行功能
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 像素地址增加一个像素宽度附带换行功能
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
         GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
         {
             int x = ++wrapX_;
@@ -316,13 +315,12 @@ namespace OHOS {
         }
 
         /**
-     * @brief 像素地址增加一个像素高度附带换行功能
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+         * @brief 像素地址增加一个像素高度附带换行功能
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -336,16 +334,20 @@ namespace OHOS {
         WrapY wrapY_;
     };
 
-    template <class PixelFormat, class WrapX>
-    class ImageAccessorRepeatX {
+
+    /**
+     * @brief 图像在x轴重复的图像存取器
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType, class WrapX> class ImageAccessorRepeatX {
     public:
-        typedef PixelFormat PixelFormatType;
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
         typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth
-        {
-            PIX_WIDTH = PixelFormatType::PIX_WIDTH
+        enum PixWidth { 
+            PIX_WIDTH = PixelFormatType::PIX_WIDTH 
         };
 
         ImageAccessorRepeatX()
@@ -355,93 +357,7 @@ namespace OHOS {
             wrapX_(pixFormat.Width())
         {}
         /**
-     * @brief 关联像素集
-     * 
-     * @param pixFormat 需要关联的像素集
-     * @since 1.0
-     * @version 1.0
-     */
-        void Attach(PixelFormatType& pixFormat)
-        {
-            pixFormat_ = &pixFormat;
-        }
-        /**
-     * @brief 获取像素地址
-     * 
-     * @param x x轴坐标
-     * @param y y轴坐标
-     * @param len 线段长度
-     * @return 坐标像素地址
-     * @since 1.0
-     * @version 1.0
-     */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
-        {
-            x_ = x;
-            y_ = y;
-            if (y >= (int)pixFormat_->Height()) {
-                y = pixFormat_->Height() - 1;
-                return NULL;
-            }
-            rowPtr_ = pixFormat_->PixPtr(0, y);
-            return rowPtr_ + wrapX_(x) * PIX_WIDTH;
-        }
-        /**
-     * @brief 像素地址增加一个像素宽度
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
-        {
-            if (y_ >= (int)pixFormat_->Height()) {
-                return NULL;
-            }
-            int x = ++wrapX_;
-            return rowPtr_ + x * PIX_WIDTH;
-        }
-        /**
-     * @brief 像素地址增加一个像素高度
-     * 
-     * @return 坐标为改变后的像素地址
-     * @since 1.0
-     * @version 1.0
-     */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
-        {
-            rowPtr_ = pixFormat_->pixPtr(0, y_);
-            return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
-        }
-
-    private:
-        const PixelFormatType* pixFormat_;
-        const int8u* rowPtr_;
-        int x_;
-        int y_;
-        WrapX wrapX_;
-    };
-
-    template <class PixelFormatType, class WrapY>
-    class ImageAccessorRepeatY {
-    public:
-        typedef typename PixelFormatType::ColorType color_type;
-        typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth
-        {
-            PIX_WIDTH = PixelFormatType::PIX_WIDTH
-        };
-
-        ImageAccessorRepeaty()
-        {}
-        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
-            wrapY_(pixFormat.Height())
-        {}
-        /**
          * @brief 关联像素集
-         * 
          * @param pixFormat 需要关联的像素集
          * @since 1.0
          * @version 1.0
@@ -452,7 +368,91 @@ namespace OHOS {
         }
         /**
          * @brief 获取像素地址
-         * 
+         * @param x x轴坐标
+         * @param y y轴坐标
+         * @param len 线段长度
+         * @return 坐标像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        {
+            xPixel_ = x;
+            yPixel_ = y;
+            if (y >= (int)pixFormat_->Height()) {
+                y = pixFormat_->Height() - 1;
+                return NULL;
+            }
+            rowPtr_ = pixFormat_->PixPtr(0, y);
+            return rowPtr_ + wrapX_(x) * PIX_WIDTH;
+        }
+        /**
+         * @brief 像素地址增加一个像素宽度
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        {
+            if (yPixel_ >= (int)pixFormat_->Height()) {
+                return NULL;
+            }
+            int x = ++wrapX_;
+            return rowPtr_ + x * PIX_WIDTH;
+        }
+        /**
+         * @brief 像素地址增加一个像素高度
+         * @return 坐标为改变后的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        {
+            rowPtr_ = pixFormat_->pixPtr(0, yPixel_);
+            return rowPtr_ + wrapX_(xPixel_) * PIX_WIDTH;
+        }
+
+    private:
+        const PixelFormatType* pixFormat_;
+        const int8u* rowPtr_;
+        int xPixel_;
+        int yPixel_;
+        WrapX wrapX_;
+    };
+    /**
+     * @brief 图像在y轴重复的图像存取器
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType, class WrapY> class ImageAccessorRepeatY {
+    public:
+        typedef typename PixelFormatType::ColorType color_type;
+        typedef typename PixelFormatType::OrderType order_type;
+        typedef typename PixelFormatType::ValueType value_type;
+        enum PixWidth
+        {
+            PIX_WIDTH = PixelFormatType::PIX_WIDTH
+        };
+
+        ImageAccessorRepeatY()
+        {}
+        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
+            pixFormat_(&pixFormat),
+            wrapY_(pixFormat.Height())
+        {}
+        /**
+         * @brief 关联像素集
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
+        void Attach(PixelFormatType& pixFormat)
+        {
+            pixFormat_ = &pixFormat;
+        }
+        /**
+         * @brief 获取像素地址
          * @param x x轴坐标
          * @param y y轴坐标
          * @return 坐标像素地址
@@ -461,7 +461,7 @@ namespace OHOS {
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned)
         {
-            x_ = x;
+            xPixel_ = x;
             if (x >= (int)pixFormat_->Width()) {
                 x = pixFormat_->Width() - 1;
                 return NULL;
@@ -471,14 +471,13 @@ namespace OHOS {
         }
         /**
          * @brief 像素地址增加一个像素宽度
-         * 
          * @return 坐标为改变后的像素地址
          * @since 1.0
          * @version 1.0
          */
         GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
         {
-            int x = ++x_;
+            int x = ++xPixel_;
             if (x >= (int)pixFormat_->Width()) {
                 x = pixFormat_->Width() - 1;
                 return NULL;
@@ -487,7 +486,6 @@ namespace OHOS {
         }
         /**
          * @brief 像素地址增加一个像素高度
-         * 
          * @return 坐标为改变后的像素地址
          * @since 1.0
          * @version 1.0
@@ -495,13 +493,13 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
-            return rowPtr_ + x_ * PIX_WIDTH;
+            return rowPtr_ + xPixel_ * PIX_WIDTH;
         }
 
     private:
         const PixelFormatType* pixFormat_;
         const int8u* rowPtr_;
-        int x_;
+        int xPixel_;
         WrapY wrapY_;
     };
 
