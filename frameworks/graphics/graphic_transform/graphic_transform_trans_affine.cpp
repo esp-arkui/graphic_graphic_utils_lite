@@ -15,20 +15,19 @@
 #include "gfx_utils/graphics/graphic_transform/graphic_transform_affine.h"
 
 namespace OHOS {
-
     const TransAffine& TransAffine::ParlToParl(const double* src,
                                                const double* dst)
     {
-        scaleX = src[2] - src[0];
-        shearY = src[3] - src[1];
-        shearX = src[4] - src[0];
-        scaleY = src[5] - src[1];
-        translateX = src[0];
-        translateY = src[1];
+        scaleX = src[parlIndex2] - src[parlIndex0];
+        shearY = src[parlIndex3] - src[parlIndex1];
+        shearX = src[parlIndex4] - src[parlIndex0];
+        scaleY = src[parlIndex5] - src[parlIndex1];
+        translateX = src[parlIndex0];
+        translateY = src[parlIndex1];
         Invert();
-        Multiply(TransAffine(dst[2] - dst[0], dst[3] - dst[1],
-                             dst[4] - dst[0], dst[5] - dst[1],
-                             dst[0], dst[1]));
+        Multiply(TransAffine(dst[parlIndex2] - dst[parlIndex0], dst[parlIndex3] - dst[parlIndex1],
+                             dst[parlIndex4] - dst[parlIndex0], dst[parlIndex5] - dst[parlIndex1],
+                             dst[parlIndex0], dst[parlIndex1]));
         return *this;
     }
 
@@ -36,13 +35,13 @@ namespace OHOS {
                                                double x2, double y2,
                                                const double* parl)
     {
-        double src[6];
-        src[0] = x1;
-        src[1] = y1;
-        src[2] = x2;
-        src[3] = y1;
-        src[4] = x2;
-        src[5] = y2;
+        double src[parlIndexSize];
+        src[parlIndex0] = x1;
+        src[parlIndex1] = y1;
+        src[parlIndex2] = x2;
+        src[parlIndex3] = y1;
+        src[parlIndex4] = x2;
+        src[parlIndex5] = y2;
         ParlToParl(src, parl);
         return *this;
     }
@@ -96,7 +95,6 @@ namespace OHOS {
                IsEqualEps(translateY, 0.0, epsilon);
     }
 
-    //------------------------------------------------------------------------
     bool TransAffine::IsValid(double epsilon) const
     {
         return std::fabs(scaleX) > epsilon && std::fabs(scaleY) > epsilon;

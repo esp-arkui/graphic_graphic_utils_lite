@@ -13,25 +13,21 @@
  * limitations under the License.
  */
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h"
-
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-
-    //------------------------------------------------------------------------
-    VCGenStroke::VCGenStroke() :
-        stroker_(),
-        srcVertices_(),
-        outVertices_(),
-        shorten_(0.0),
-        closed_(0),
-        status_(INITIAL),
-        srcVertex_(0),
-        outVertex_(0)
+    VCGenStroke::VCGenStroke()
+        :stroker_(),
+         srcVertices_(),
+         outVertices_(),
+         shorten_(0.0),
+         closed_(0),
+         status_(INITIAL),
+         srcVertex_(0),
+         outVertex_(0)
     {
     }
 
-    //------------------------------------------------------------------------
     void VCGenStroke::RemoveAll()
     {
         srcVertices_.RemoveAll();
@@ -39,7 +35,6 @@ namespace OHOS {
         status_ = INITIAL;
     }
 
-    //------------------------------------------------------------------------
     void VCGenStroke::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
@@ -54,13 +49,13 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     void VCGenStroke::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
             srcVertices_.Close(closed_ != 0);
             ShortenPath(srcVertices_, shorten_, closed_);
-            if (srcVertices_.Size() < 3) {
+            const unsigned verticeNum = 3;
+            if (srcVertices_.Size() < verticeNum) {
                 closed_ = 0;
             }
         }
@@ -69,16 +64,16 @@ namespace OHOS {
         outVertex_ = 0;
     }
 
-    //------------------------------------------------------------------------
     unsigned VCGenStroke::Vertex(double* x, double* y)
     {
+        const unsigned verticesNum = 2;
         unsigned cmd = PATH_CMD_LINE_TO;
         while (!IsStop(cmd)) {
             switch (status_) {
                 case INITIAL:
                     Rewind(0);
                 case READY:
-                    if (srcVertices_.Size() < 2 + unsigned(closed_ != 0)) {
+                    if (srcVertices_.Size() < verticesNum + unsigned(closed_ != 0)) {
                         cmd = PATH_CMD_STOP;
                         break;
                     }
@@ -104,24 +99,21 @@ namespace OHOS {
                 case CAP2:
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[srcVertices_.Size() - 1],
-                                     srcVertices_[srcVertices_.Size() - 2],
-                                     srcVertices_[srcVertices_.Size() - 2].dist);
+                                     srcVertices_[srcVertices_.Size() - verticesNum],
+                                     srcVertices_[srcVertices_.Size() - verticesNum].dist);
                     prevStatus_ = OUTLINE2;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
                     break;
                 case OUTLINE1:
-                    if (closed_) {
-                        if (srcVertex_ >= srcVertices_.Size()) {
-                            prevStatus_ = CLOSE_FIRST;
-                            status_ = END_POLY1;
-                            break;
-                        }
-                    } else {
-                        if (srcVertex_ >= srcVertices_.Size() - 1) {
-                            status_ = CAP2;
-                            break;
-                        }
+                    if (closed_ && srcVertex_ >= srcVertices_.Size()) {
+                        prevStatus_ = CLOSE_FIRST;
+                        status_ = END_POLY1;
+                        break;
+                    }
+                    if(!closed_ && srcVertex_ >= srcVertices_.Size() - 1){
+                        status_ = CAP2;
+                        break;
                     }
                     stroker_.CalcJoin(outVertices_,
                                       srcVertices_.Prev(srcVertex_),

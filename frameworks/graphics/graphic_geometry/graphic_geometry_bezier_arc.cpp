@@ -18,34 +18,31 @@
 #include <cmath>
 
 namespace OHOS {
-    /* 贝塞尔弧角度极限值 */
-    const double BEZIER_ARC_ANGLE_EPSILON = 0.01;
-
     void ArcToBezier(double cx, double cy, double rx, double ry,
                      double startAngle, double sweepAngle,
                      double* curve)
     {
-        double y0 = std::sin(sweepAngle / 2.0);
-        double x0 = std::cos(sweepAngle / 2.0);
-        double tx = (1.0 - x0) * 4.0 / 3.0;
+        double y0 = std::sin(sweepAngle / DOUBLENUM);
+        double x0 = std::cos(sweepAngle / DOUBLENUM);
+        double tx = (1.0 - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
         double ty = y0 - tx * x0 / y0;
-        double px[4];
-        double py[4];
-        px[0] = x0;
-        py[0] = -y0;
-        px[1] = x0 + tx;
-        py[1] = -ty;
-        px[2] = x0 + tx;
-        py[2] = ty;
-        px[3] = x0;
-        py[3] = y0;
+        double px[BEZIER_ARC_POINTS];
+        double py[BEZIER_ARC_POINTS];
+        px[INDEX_ZERO] = x0;
+        py[INDEX_ZERO] = -y0;
+        px[INDEX_ONE] = x0 + tx;
+        py[INDEX_ONE] = -ty;
+        px[INDEX_TWO] = x0 + tx;
+        py[INDEX_TWO] = ty;
+        px[INDEX_THREE] = x0;
+        py[INDEX_THREE] = y0;
 
-        double cosVal = std::cos(startAngle + sweepAngle / 2.0);
-        double sinVal = std::sin(startAngle + sweepAngle / 2.0);
+        double cosVal = std::cos(startAngle + sweepAngle / DOUBLENUM);
+        double sinVal = std::sin(startAngle + sweepAngle / DOUBLENUM);
 
-        for (unsigned i = 0; i < 4; i++) {
-            curve[i * 2] = cx + rx * (px[i] * cosVal - py[i] * sinVal);
-            curve[i * 2 + 1] = cy + ry * (px[i] * sinVal + py[i] * cosVal);
+        for (unsigned i = 0; i < BEZIER_ARC_POINTS; i++) {
+            curve[i * BEZIER_ARC_SETUP] = cx + rx * (px[i] * cosVal - py[i] * sinVal);
+            curve[i * BEZIER_ARC_SETUP + 1] = cy + ry * (px[i] * sinVal + py[i] * cosVal);
         }
     }
 
@@ -54,53 +51,53 @@ namespace OHOS {
                          double startAngle,
                          double sweepAngle)
     {
-        startAngle = std::fmod(startAngle, 2.0 * PI);
-        if (sweepAngle <= -2.0 * PI) {
-            sweepAngle = -2.0 * PI;
+        startAngle = std::fmod(startAngle, DOUBLENUM * PI);
+        if (sweepAngle <= -DOUBLENUM * PI) {
+            sweepAngle = -DOUBLENUM * PI;
         }
-        if (sweepAngle >= 2.0 * PI) {
-            sweepAngle = 2.0 * PI;
+        if (sweepAngle >= DOUBLENUM * PI) {
+            sweepAngle = DOUBLENUM * PI;
         }
         if (std::fabs(sweepAngle) < 1e-10) {
-            numVertices_ = 4;
+            numVertices_ = BEZIER_ARC_POINTS;
             cmd_ = PATH_CMD_LINE_TO;
-            vertices_[0] = x + rx * std::cos(startAngle);
-            vertices_[1] = y + ry * std::sin(startAngle);
-            vertices_[2] = x + rx * std::cos(startAngle + sweepAngle);
-            vertices_[3] = y + ry * std::sin(startAngle + sweepAngle);
+            vertices_[INDEX_ZERO] = x + rx * std::cos(startAngle);
+            vertices_[INDEX_ONE] = y + ry * std::sin(startAngle);
+            vertices_[INDEX_TWO] = x + rx * std::cos(startAngle + sweepAngle);
+            vertices_[INDEX_THREE] = y + ry * std::sin(startAngle + sweepAngle);
             return;
         }
 
         double prevSweep;
         double totalSweep = 0.0;
         double localSweep = 0.0;
-        numVertices_ = 2;
+        numVertices_ = BEZIER_ARC_SETUP;
         cmd_ = PATH_CMD_CURVE4;
         bool done = false;
         do {
             if (0.0 > sweepAngle) {
                 prevSweep = totalSweep;
-                totalSweep -= PI * 0.5;
-                localSweep = -PI * 0.5;
+                totalSweep -= PI * HALFNUM;
+                localSweep = -PI * HALFNUM;
                 if (totalSweep <= sweepAngle + BEZIER_ARC_ANGLE_EPSILON) {
                     localSweep = sweepAngle - prevSweep;
                     done = true;
                 }
             } else {
                 prevSweep = totalSweep;
-                totalSweep += PI * 0.5;
-                localSweep = PI * 0.5;
+                totalSweep += PI * HALFNUM;
+                localSweep = PI * HALFNUM;
                 if (totalSweep >= sweepAngle - BEZIER_ARC_ANGLE_EPSILON) {
                     localSweep = sweepAngle - prevSweep;
                     done = true;
                 }
             }
 
-            ArcToBezier(x, y, rx, ry, startAngle, localSweep, vertices_ + numVertices_ - 2);
+            ArcToBezier(x, y, rx, ry, startAngle, localSweep, vertices_ + numVertices_ - BEZIER_ARC_SETUP);
 
             startAngle += localSweep;
-            numVertices_ += 6;
-        } while (numVertices_ < 26 && !done);
+            numVertices_ += BEZIER_ARC_VERTICES_SIZE_STEP;
+        } while (numVertices_ < BEZIER_ARC_VERTEX_NUM && !done);
     }
 
     void BezierArcSvg::Init(double x0, double y0,
@@ -118,8 +115,8 @@ namespace OHOS {
         }
         radiiOK_ = true;
 
-        double delatY2 = (y0 - y2) / 2.0;
-        double delatX2 = (x0 - x2) / 2.0;
+        double delatY2 = (y0 - y2) / DOUBLENUM;
+        double delatX2 = (x0 - x2) / DOUBLENUM;
 
         double sinA = std::sin(angle);
         double cosA = std::cos(angle);
@@ -138,7 +135,7 @@ namespace OHOS {
             rx = std::sqrt(radiiCheck) * rx;
             pry = ry * ry;
             prx = rx * rx;
-            if (10.0 < radiiCheck) {
+            if (radiiCheck > BEZIER_ARC_RADIICHECK) {
                 radiiOK_ = false;
             }
         }
@@ -148,8 +145,8 @@ namespace OHOS {
         double cx1 = coef * ((rx * y1) / ry);
         double cy1 = coef * -((ry * x1) / rx);
 
-        double sx2 = (x0 + x2) / 2.0;
-        double sy2 = (y0 + y2) / 2.0;
+        double sx2 = (x0 + x2) / DOUBLENUM;
+        double sy2 = (y0 + y2) / DOUBLENUM;
         double cx = sx2 + (cosA * cx1 - sinA * cy1);
         double cy = sy2 + (sinA * cx1 + cosA * cy1);
 
@@ -180,20 +177,20 @@ namespace OHOS {
         }
         double sweepAngle = sign * std::acos(v);
         if (!sweepFlag && sweepAngle > 0) {
-            sweepAngle -= PI * 2.0;
+            sweepAngle -= PI * DOUBLENUM;
         } else if (sweepFlag && sweepAngle < 0) {
-            sweepAngle += PI * 2.0;
+            sweepAngle += PI * DOUBLENUM;
         }
         arc_.Init(0.0, 0.0, rx, ry, startAngle, sweepAngle);
         TransAffine mtx = TransAffineRotation(angle);
         mtx *= TransAffineTranslation(cx, cy);
-        for (unsigned i = 2; i < arc_.Nuvertices() - 2; i += 2) {
+        for (unsigned i = BEZIER_ARC_SETUP; i < arc_.Nuvertices() - BEZIER_ARC_SETUP; i += BEZIER_ARC_SETUP) {
             mtx.Transform(arc_.Vertices() + i, arc_.Vertices() + i + 1);
         }
         arc_.Vertices()[0] = x0;
         arc_.Vertices()[1] = y0;
-        if (arc_.Nuvertices() > 2) {
-            arc_.Vertices()[arc_.Nuvertices() - 2] = x2;
+        if (arc_.Nuvertices() > BEZIER_ARC_SETUP) {
+            arc_.Vertices()[arc_.Nuvertices() - BEZIER_ARC_SETUP] = x2;
             arc_.Vertices()[arc_.Nuvertices() - 1] = y2;
         }
     }

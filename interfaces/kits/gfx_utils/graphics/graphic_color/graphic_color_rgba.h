@@ -42,6 +42,7 @@ namespace OHOS {
 #define RED_MAX 780.0
 #define COEFFICIENT 0.7
 #define FIXED_VALUE 0.3
+#define COLOR_CONVERT 255.0
 
     struct OrderRgb {
         enum RgbEnum {
@@ -132,8 +133,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(double red, double green, double blue, double alpha = 1.0) :
-            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        Rgba(double red, double green, double blue, double alpha = 1.0)
+            : redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
         {}
 
         /**
@@ -144,8 +145,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(const Rgba& color, double alpha) :
-            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        Rgba(const Rgba& color, double alpha)
+            : redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
         {}
 
         /**
@@ -464,11 +465,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
-            redValue(ValueType(red)),
-            greenValue(ValueType(green)),
-            blueValue(ValueType(blue)),
-            alphaValue(ValueType(alpha))
+        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK)
+            : redValue(ValueType(red)),
+              greenValue(ValueType(green)),
+              blueValue(ValueType(blue)),
+              alphaValue(ValueType(alpha))
         {}
 
         /**
@@ -492,11 +493,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(const SelfType& color, unsigned alpha) :
-            redValue(color.redValue),
-            greenValue(color.greenValue),
-            blueValue(color.blueValue),
-            alphaValue(ValueType(alpha))
+        Rgba8T(const SelfType& color, unsigned alpha)
+            : redValue(color.redValue),
+              greenValue(color.greenValue),
+              blueValue(color.blueValue),
+              alphaValue(ValueType(alpha))
         {}
 
         /**
@@ -602,10 +603,10 @@ namespace OHOS {
          */
         static void Convert(Rgba& dst, const Rgba8T<Linear>& src)
         {
-            dst.redValue = src.redValue / 255.0;
-            dst.greenValue = src.greenValue / 255.0;
-            dst.blueValue = src.blueValue / 255.0;
-            dst.alphaValue = src.alphaValue / 255.0;
+            dst.redValue = src.redValue / COLOR_CONVERT;
+            dst.greenValue = src.greenValue / COLOR_CONVERT;
+            dst.blueValue = src.blueValue / COLOR_CONVERT;
+            dst.alphaValue = src.alphaValue / COLOR_CONVERT;
         }
 
         /**
@@ -975,8 +976,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(ValueType red, ValueType green, ValueType blue, ValueType alpha = 1) :
-            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        Rgba32(ValueType red, ValueType green, ValueType blue, ValueType alpha = 1)
+            : redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
         {}
 
         /**
@@ -987,8 +988,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const SelfType& color, float alpha) :
-            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        Rgba32(const SelfType& color, float alpha)
+            : redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
         {}
 
         /**
@@ -999,11 +1000,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Rgba& color) :
-            redValue(ValueType(color.redValue)),
-            greenValue(ValueType(color.greenValue)),
-            blueValue(ValueType(color.blueValue)),
-            alphaValue(ValueType(color.alphaValue))
+        Rgba32(const Rgba& color)
+            : redValue(ValueType(color.redValue)),
+              greenValue(ValueType(color.greenValue)),
+              blueValue(ValueType(color.blueValue)),
+              alphaValue(ValueType(color.alphaValue))
         {}
 
         /**
@@ -1014,11 +1015,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Rgba8& color) :
-            redValue(ValueType(color.redValue / 255.0)),
-            greenValue(ValueType(color.greenValue / 255.0)),
-            blueValue(ValueType(color.blueValue / 255.0)),
-            alphaValue(ValueType(color.alphaValue / 255.0))
+        Rgba32(const Rgba8& color)
+            : redValue(ValueType(color.redValue / COLOR_CONVERT)),
+              greenValue(ValueType(color.greenValue / COLOR_CONVERT)),
+              blueValue(ValueType(color.blueValue / COLOR_CONVERT)),
+              alphaValue(ValueType(color.alphaValue / COLOR_CONVERT))
         {}
 
         /**
@@ -1029,11 +1030,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Srgba8& color) :
-            redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
-            greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
-            blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
-            alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
+        Rgba32(const Srgba8& color)
+            : redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
+              greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
+              blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
+              alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
         {}
 
         operator Rgba() const
@@ -1044,10 +1045,10 @@ namespace OHOS {
         operator Rgba8() const
         {
             return Rgba8(
-                Uround(redValue * 255.0),
-                Uround(greenValue * 255.0),
-                Uround(blueValue * 255.0),
-                Uround(alphaValue * 255.0));
+                Uround(redValue * COLOR_CONVERT),
+                Uround(greenValue * COLOR_CONVERT),
+                Uround(blueValue * COLOR_CONVERT),
+                Uround(alphaValue * COLOR_CONVERT));
         }
 
         operator Srgba8() const

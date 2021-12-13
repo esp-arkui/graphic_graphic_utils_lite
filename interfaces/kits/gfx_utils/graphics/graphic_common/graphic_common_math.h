@@ -123,7 +123,6 @@ namespace OHOS {
         }
         return (sum + x * ys - y * xs) * AHALF;
     }
-
 } // namespace OHOS
 
 #endif

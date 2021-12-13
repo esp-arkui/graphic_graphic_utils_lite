@@ -114,9 +114,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit DepictAdaptorVertexGenerator(VertexSource& source) :
-            m_source(&source),
-            m_status(INITIAL)
+        explicit DepictAdaptorVertexGenerator(VertexSource& source)
+            : m_source(&source), m_status(INITIAL)
         {}
 
         /**

@@ -21,7 +21,13 @@
 
 namespace OHOS {
     const double affineEpsilon = 1e-14;
-
+    const int16u parlIndex0 = 0;
+    const int16u parlIndex1 = 1;
+    const int16u parlIndex2 = 2;
+    const int16u parlIndex3 = 3;
+    const int16u parlIndex4 = 4;
+    const int16u parlIndex5 = 5;
+    const int16u parlIndexSize = 6;
     /**
      * @brief 图源映射变换
      * @since 1.0

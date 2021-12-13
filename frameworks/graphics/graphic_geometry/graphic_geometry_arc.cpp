@@ -15,8 +15,6 @@
 
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h>
 
-#include <cmath>
-
 namespace OHOS {
 Arc::Arc(double centerX, double centerY,
          double rx, double ry,
@@ -37,11 +35,11 @@ void Arc::ApproximationScale(double sale)
 
 unsigned Arc::Vertex(double* x, double* y)
 {
-    //当前命令是结束点没有顶点
+    // 当前命令是结束点没有顶点
     if (IsStop(pathCmd_)) {
         return PATH_CMD_STOP;
     }
-    if ((angle_ < end_ - delatAngle_ / 4) != isClockwise_) {
+    if ((angle_ < end_ - delatAngle_ / CURVERENUMSTEP) != isClockwise_) {
         *x = centerX_ + std::cos(end_) * rx_;
         *y = centerY_ + std::sin(end_) * ry_;
         pathCmd_ = PATH_CMD_STOP;
@@ -65,17 +63,16 @@ void Arc::Rewind(unsigned)
 }
 
 void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
-{   
-    const double aa = 0.125;
-    double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
-    delatAngle_ = std::acos(ra / (ra + 0.125 / scale_)) * 2;//计算出弧度变化率
+{
+    double ra = (std::fabs(rx_) + std::fabs(ry_)) / DOUBLENUM;
+    delatAngle_ = std::acos(ra / (ra + RADDALETAELPS / scale_)) * DOUBLENUM;// 计算出弧度变化率
     if (isClockwise) {
         while (endAngle < startAngle) {
-            endAngle += PI * 2.0;
+            endAngle += PI * DOUBLENUM;
         }
     } else {
         while (startAngle < endAngle) {
-            startAngle += PI * 2.0;
+            startAngle += PI * DOUBLENUM;
         }
         delatAngle_ = -delatAngle_;
     }
@@ -85,7 +82,8 @@ void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
     initialized_ = true;
 }
 
-void Arc::Init(double centerX, double centerY, double rx, double ry, double startAngle, double endAngle, bool isClockwise)
+void Arc::Init(double centerX, double centerY, double rx, double ry,
+               double startAngle, double endAngle, bool isClockwise)
 {
     centerX_ = centerX;
     centerY_ = centerY;
