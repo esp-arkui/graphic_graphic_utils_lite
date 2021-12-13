@@ -55,8 +55,8 @@ namespace OHOS {
         SpanGradient(interpolator_type& inter,
                      GradientF& gradient_function,
                      ColorF& color_function,
-                     double distance1, double distance2) :
-            interpolator_(&inter),
+                     double distance1, double distance2)
+                     : interpolator_(&inter),
             gradientFunction_(&gradient_function),
             colorFunction_(&color_function),
             distance1_(Iround(distance1 * gradient_subpixel_scale)),
@@ -78,7 +78,7 @@ namespace OHOS {
         void Generate(color_type* span, int x, int y, unsigned len)
         {
             int downscaleShift = interpolator_type::SUBPIXEL_SHIFT - gradient_subpixel_shift;
-            interpolator_->Begin(x + 0.5, y + 0.5, len);
+            interpolator_->Begin(x + HALFNUM, y + HALFNUM, len);
             for (; len; --len, ++(*interpolator_)) {
                 interpolator_->Coordinates(&x, &y);
                 int index = gradientFunction_->Calculate(x >> downscaleShift,
@@ -106,8 +106,8 @@ namespace OHOS {
      */
     class GradientRadialCalculate {
     public:
-        GradientRadialCalculate() :
-            endRadius_(100 * gradient_subpixel_scale),
+        GradientRadialCalculate()
+        : endRadius_(INDEX_HUNDRED * gradient_subpixel_scale),
             dx_(0),
             dy_(0)
         {
@@ -120,8 +120,8 @@ namespace OHOS {
          * @param dx x轴方向上，结束圆圆心到开始圆圆心得距离
          * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
          */
-        GradientRadialCalculate(double endRadius, double dx, double dy) :
-            endRadius_(Iround(endRadius * gradient_subpixel_scale)),
+        GradientRadialCalculate(double endRadius, double dx, double dy)
+        : endRadius_(Iround(endRadius * gradient_subpixel_scale)),
             dx_(Iround(dx * gradient_subpixel_scale)),
             dy_(Iround(dy * gradient_subpixel_scale))
         {
@@ -143,12 +143,12 @@ namespace OHOS {
             double dy = y - dy_;
             double m_distanceRadius = dx * dy_ - dy * dx_;
             double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
-            int deltaRadius = endRadius - startRadius; //半径的差
+            int deltaRadius = endRadius - startRadius; // 半径的差
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
-
+            int ret = Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius;
+            int index = (ret * size) / deltaRadius;
             if (index < 0) {
                 index = 0;
             }

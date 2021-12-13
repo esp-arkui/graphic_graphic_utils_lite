@@ -49,7 +49,7 @@ namespace OHOS {
         typedef int8u cover_type;
         typedef int16 coord_type;
 
-        //--------------------------------------------------------------------
+        // --------------------------------------------------------------------
         struct SpanBlock {
             coord_type x;
             // If negative, it's a solid span, covers is valid
@@ -60,9 +60,9 @@ namespace OHOS {
         typedef SpanBlock* iterator;
         typedef const SpanBlock* const_iterator;
 
-        //--------------------------------------------------------------------
-        ScanlineUnPackedContainer() :
-            m_min_x(0),
+        // --------------------------------------------------------------------
+        ScanlineUnPackedContainer()
+        : m_min_x(0),
             m_last_x(0x7FFFFFF0),
             m_cur_span(0)
         {}
@@ -153,14 +153,14 @@ namespace OHOS {
             m_y = y;
         }
 
-        //--------------------------------------------------------------------
+        // --------------------------------------------------------------------
         void ResetSpans()
         {
             m_last_x = 0x7FFFFFF0;
             m_cur_span = &m_spans[0];
         }
 
-        //--------------------------------------------------------------------
+        // --------------------------------------------------------------------
         int GetYLevel() const
         {
             return m_y;
@@ -190,7 +190,6 @@ namespace OHOS {
         PodArray<SpanBlock> m_spans;
         SpanBlock* m_cur_span;
     };
-
 } // namespace OHOS
 
 #endif

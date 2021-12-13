@@ -20,7 +20,7 @@
 * @version 1.0
 */
 
-//----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 #ifndef GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
 #define GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
 
@@ -34,7 +34,7 @@ namespace OHOS {
     * @version 1.0
     */
     enum PolyMaxCoordEnum {
-        POLY_MAX_COORD = (1 << 30) - 1 //----poly_max_coord
+        POLY_MAX_COORD = (1 << 30) - 1 // ----poly_max_coord
     };
 
     /**
@@ -103,15 +103,15 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RasterizerScanlineClip() :
-            m_clip_box(0, 0, 0, 0),
+        RasterizerScanlineClip()
+        : m_clip_box(0, 0, 0, 0),
             m_x1(0),
             m_y1(0),
             m_clipping_flags(0),
             m_clipping(false)
         {}
 
-        //--------------------------------------------------------------------
+        // --------------------------------------------------------------------
         void ResetClipping()
         {
             m_clipping = false;
@@ -144,20 +144,6 @@ namespace OHOS {
             }
         }
 
-    private:
-        /**
-        * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
-        * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
-        * 相关的属性设置等。
-        * @since 1.0
-        * @version 1.0
-        */
-        template <class Rasterizer>
-        GRAPHIC_GEOMETRY_INLINE void LineClipY(Rasterizer& ras,
-                                               coord_type x1, coord_type y1,
-                                               coord_type x2, coord_type y2,
-                                               unsigned clipFlagsOne, unsigned clipFlagsTwo) const;
-
     public:
         /**
         * @brief 在RASTERIZER 过程中，增加设置采样点，并且设置
@@ -181,6 +167,20 @@ namespace OHOS {
         void LineTo(Rasterizer& ras, coord_type x2, coord_type y2);
 
     private:
+        /**
+        * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
+        * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
+        * 相关的属性设置等。
+        * @since 1.0
+        * @version 1.0
+        */
+        template <class Rasterizer>
+        GRAPHIC_GEOMETRY_INLINE void LineClipY(Rasterizer& ras,
+                                               coord_type x1, coord_type y1,
+                                               coord_type x2, coord_type y2,
+                                               unsigned clipFlagsOne, unsigned clipFlagsTwo) const;
+
+    private:
         rect_type m_clip_box;
         coord_type m_x1;
         coord_type m_y1;
@@ -188,14 +188,14 @@ namespace OHOS {
         bool m_clipping;
     };
 
-    //---------------------------------------------------
+    // ---------------------------------------------------
     class RasterizerScanlineNoClip {
     public:
         typedef RasterDepictInt conv_type;
         typedef int coord_type;
 
-        RasterizerScanlineNoClip() :
-            m_x1(0), m_y1(0)
+        RasterizerScanlineNoClip()
+        : m_x1(0), m_y1(0)
         {}
 
         void ResetClipping()
@@ -231,18 +231,20 @@ namespace OHOS {
        */
     template <class Depict>
     template <class Rasterizer>
-    void RasterizerScanlineClip<Depict>::
-        LineClipY(Rasterizer& ras, coord_type x1, coord_type y1,
+    void RasterizerScanlineClip<Depict>:: LineClipY(Rasterizer& ras, coord_type x1, coord_type y1,
                   coord_type x2, coord_type y2,
                   unsigned clipFlagsOne, unsigned clipFlagsTwo) const
     {
-        clipFlagsOne &= 10;
-        clipFlagsTwo &= 10;
+        clipFlagsOne &= INDEX_TEN;
+        clipFlagsTwo &= INDEX_TEN;
         if ((clipFlagsOne | clipFlagsTwo) == 0) {
             /*
                 * 表明坐标x1,y1,x2,y2 全部在范围内,line 操作之
                 */
-            ras.LineOperate(RasterDepictInt::XInt(x1), RasterDepictInt::YInt(y1), RasterDepictInt::XInt(x2), RasterDepictInt::YInt(y2));
+            ras.LineOperate(RasterDepictInt::XInt(x1),
+                            RasterDepictInt::YInt(y1),
+                            RasterDepictInt::XInt(x2),
+                            RasterDepictInt::YInt(y2));
         } else {
             if (clipFlagsOne == clipFlagsTwo) {
                 /*
@@ -313,7 +315,6 @@ namespace OHOS {
     {
         if (m_clipping) {
             unsigned cFlagsLineToPoint = ClippingFlags(x2, y2, m_clip_box);
-
             if ((m_clipping_flags & 0x0A) == (cFlagsLineToPoint & 0x0A) && (m_clipping_flags & 0x0A) != 0) {
                 /*
                     * 表明moveto与lineto重合
