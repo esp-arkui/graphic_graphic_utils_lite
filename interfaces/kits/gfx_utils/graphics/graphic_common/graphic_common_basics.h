@@ -41,27 +41,32 @@
 namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
 
-/**
- * @brief 填充规则.
- * @since 1.0
- * @version 1.0
- */
+    /**
+     * @brief 填充规则.
+     * @since 1.0
+     * @version 1.0
+     */
     enum FillingRuleEnum {
         FILL_NON_ZERO,
         FILL_EVEN_ODD
     };
 
-/**
- * @brief 子像素的偏移以及掩码标志.
- * @since 1.0
- * @version 1.0
- */
+    /**
+     * @brief 子像素的偏移以及掩码标志.
+     * @since 1.0
+     * @version 1.0
+     */
     enum PolySubpixelScaleEnum {
         POLY_SUBPIXEL_SHIFT = 8,
         POLY_SUBPIXEL_SCALE = 1 << POLY_SUBPIXEL_SHIFT,
         POLY_SUBPIXEL_MASK = POLY_SUBPIXEL_SCALE - 1
     };
 
+    enum GradientSubpixelScaleEnum {
+        GRADIENT_SUBPIXEL_SHIFT = 4,                            //-----gradient_subpixel_shift
+        GRADIENT_SUBPIXEL_SCALE = 1 << GRADIENT_SUBPIXEL_SHIFT, //-----GRADIENT_SUBPIXEL_SCALE
+        GRADIENT_SUBPIXEL_MASK = GRADIENT_SUBPIXEL_SCALE - 1    //-----gradient_subpixel_mask
+    };
     /**
      * @brief 覆盖率的弹性处理.
      * @since 1.0
@@ -96,31 +101,6 @@ namespace OHOS {
         PATH_FLAGS_MASK = 0xF0
     };
 
-    enum cover_scale_e {
-        cover_shift = 8,
-        cover_size = 1 << cover_shift,
-        cover_mask = cover_size - 1,
-        cover_none = 0,
-        cover_full = cover_mask
-    };
-
-    enum poly_subpixel_scale_e {
-        poly_subpixel_shift = 8,
-        poly_subpixel_scale = 1 << poly_subpixel_shift,
-        poly_subpixel_mask = poly_subpixel_scale - 1
-    };
-
-    enum gradient_subpixel_scale_e {
-        gradient_subpixel_shift = 4,
-        gradient_subpixel_scale = 1 << gradient_subpixel_shift,
-        gradient_subpixel_mask = gradient_subpixel_scale - 1
-    };
-
-    enum filling_rule_e {
-        fill_non_zero,
-        fill_even_odd
-    };
-
     /* 共线的四种情况 */
     enum RecursiveBezierEnum {
         COLLINEAR = 0,
@@ -146,7 +126,6 @@ namespace OHOS {
      * @brief 半圆弧角度
      */
     const double RAD_BASE = 180.0;
-
     const double ROUND_BASE = 0.5;
 
     /**
@@ -158,17 +137,14 @@ namespace OHOS {
      * @brief 颜色的最大值
      */
     const unsigned MAX_COLOR_NUM = 255;
-
     /**
      * @brief 颜色的最大值的一半
      */
     const unsigned HALF_COLOR_NUM = 128;
-
     /**
      * @brief 颜色的最大值的八分之一
      */
     const unsigned EIGHTH_COLOR_NUM = 32;
-
     /**
      * @brief 默认最大斜接
      */
@@ -179,62 +155,49 @@ namespace OHOS {
      */
     const int STRIDE_FACTOR = 4;
     const int PXSIZE2STRIDE_FACTOR = 3;
-
     /**
      * @brief 1/√2 即1 除以 √2
      */
-    const double  SIN45= 0.7071068;
+    const double SIN45 = 0.7071068;
     /**
      * @brief 1/√2 即1 除以 √2
      */
-    const double  COS45= 0.7071068;
-
+    const double COS45 = 0.7071068;
     /**
      * @brief 两倍
      */
-    const int  TWO_TIMES= 2;
-
+    const int TWO_TIMES = 2;
     /**
      * @brief 三倍
      */
-    const int  THREE_TIMES= 3;
-
+    const int THREE_TIMES = 3;
     /**
      * @brief 四倍
      */
-    const int  FOUR_TIMES= 4;
-
+    const int FOUR_TIMES = 4;
     /**
      * @brief 六倍
      */
-
-    const int  SIX_TIMES= 6;
-
+    const int SIX_TIMES = 6;
     /**
      * @brief 一次走两步
      */
     const int TWO_STEP = 2;
-
     const double HALFNUM = 0.5;
-
     const double DOUBLENUM = 2.0;
-
     const double RADDALETAELPS = 0.125;
 
     /**
      *下标
      */
-    const int  INDEX_ZERO= 0;
-    const int  INDEX_ONE= 1;
-    const int  INDEX_TWO= 2;
-    const int  INDEX_THREE= 3;
-    const int  INDEX_FOUR= 4;
-    const int  INDEX_FIVE= 5;
-    const int  INDEX_SIX= 6;
-    const int  INDEX_SEVEN= 7;
-
-
-
+    const int INDEX_ZERO = 0;
+    const int INDEX_ONE = 1;
+    const int INDEX_TWO = 2;
+    const int INDEX_THREE = 3;
+    const int INDEX_FOUR = 4;
+    const int INDEX_FIVE = 5;
+    const int INDEX_SIX = 6;
+    const int INDEX_SEVEN = 7;
 
 #if defined(GRAPHIC_GEOMETRY_FISTP)
 #    pragma warning(push)
@@ -620,8 +583,8 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_)
-            : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_) :
+            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
@@ -770,7 +733,8 @@ namespace OHOS {
         T y;
         PointBase()
         {}
-        PointBase(T x_, T y_) : x(x_), y(y_)
+        PointBase(T x_, T y_) :
+            x(x_), y(y_)
         {}
     };
     using PointD = PointBase<double>;
@@ -783,7 +747,8 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) :
+            x(x_), y(y_), cmd(cmd_)
         {}
     };
 
@@ -797,7 +762,8 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
+            x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
@@ -808,7 +774,8 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) :
+            x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS
