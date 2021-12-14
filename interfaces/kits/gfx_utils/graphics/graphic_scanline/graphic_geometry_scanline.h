@@ -107,7 +107,7 @@ namespace OHOS {
         void AddCells(int x, unsigned cellLength, const CoverType* covers)
         {
             x -= minScaneLineXCoord;
-            std::memcpy(&arrayCovers[x], covers, cellLength * sizeof(CoverType));
+            memcpy_s(&arrayCovers[x], cellLength * sizeof(CoverType), covers, cellLength * sizeof(CoverType));
             if (x == lastScaneLineXCoord + 1) {
                 curSpanBlock->spanLength += (coord_type)cellLength;
             } else {
@@ -126,7 +126,7 @@ namespace OHOS {
         void AddSpan(int x, unsigned spanLength, unsigned cover)
         {
             x -= minScaneLineXCoord;
-            std::memset(&arrayCovers[x], cover, spanLength);
+            memset_s(&arrayCovers[x], spanLength, cover, spanLength);
             if (x == lastScaneLineXCoord + 1) {
                 curSpanBlock->spanLength += (coord_type)spanLength;
             } else {

@@ -679,7 +679,7 @@ namespace OHOS {
                                                                 CELL_BLOCK_POOL);
 
                 if (m_cells) {
-                    std::memcpy(new_cells, m_cells, m_max_blocks * sizeof(CellType*));
+                    memcpy_s(new_cells, m_max_blocks * sizeof(CellType*), m_cells, m_max_blocks * sizeof(CellType*));
                     GeometryArrayAllocator<CellType*>::Deallocate(m_cells, m_max_blocks);
                 }
                 m_cells = new_cells;
