@@ -55,7 +55,7 @@ namespace OHOS {
                 distence = distence - d;
                 --nSize;
             }
-            if (vtxSeq.Size() >= TWO_STEP) {
+            if (2 <= vtxSeq.Size()) {
                 nSize = vtxSeq.Size() - 1;
                 VertexType& prev = vtxSeq[nSize - 1];
                 VertexType& last = vtxSeq[nSize];
@@ -64,8 +64,8 @@ namespace OHOS {
                 double y = prev.y + (last.y - prev.y) * d;
                 last.x = x;
                 last.y = y;
-                if (!prev(last)) {       // 计算两个顶点距离是否很近
-                    vtxSeq.RemoveLast(); // 删除距离不近的点
+                if (!prev(last)) {       //计算两个顶点距离是否很近
+                    vtxSeq.RemoveLast(); //删除距离不近的点
                 }
                 vtxSeq.Close(closed != 0);
             } else {
@@ -73,6 +73,7 @@ namespace OHOS {
             }
         }
     }
+
 } // namespace OHOS
 
 #endif

@@ -69,8 +69,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2)))
-            : m_outline(cell_block_limit),
+        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2))) :
+            m_outline(cell_block_limit),
             m_clipper(),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -84,10 +84,10 @@ namespace OHOS {
             }
         }
 
-        // --------------------------------------------------------------------
+        //--------------------------------------------------------------------
         template <class GammaF>
-        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit)
-            : m_outline(cell_block_limit),
+        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit) :
+            m_outline(cell_block_limit),
             m_clipper(m_outline),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -155,7 +155,7 @@ namespace OHOS {
             }
         }
 
-        // --------------------------------------------------------------------
+        //--------------------------------------------------------------------
         unsigned ApplyGammaFunction(unsigned cover) const
         {
             return m_gamma[cover];
@@ -286,7 +286,7 @@ namespace OHOS {
         bool HitTest(int tx, int ty);
 
     private:
-        // --------------------------------------------------------------------
+        //--------------------------------------------------------------------
         // Disable copying
         RasterizerScanlineAntiAlias(const RasterizerScanlineAntiAlias<Clip>&);
         const RasterizerScanlineAntiAlias<Clip>&
@@ -333,7 +333,7 @@ namespace OHOS {
                 unsigned alpha;
 
                 cover += cur_cell->cover;
-                // accumulate all cells with the same X
+                //accumulate all cells with the same X
                 while (--num_cells) {
                     cur_cell = *++cells;
                     if (cur_cell->x != x) {
@@ -344,7 +344,7 @@ namespace OHOS {
                 }
 
                 if (area) {
-                    // 由 area 到  (cover << (POLY_SUBPIXEL_SHIFT + 1)) 的跨度间隔
+                    //由 area 到  (cover << (POLY_SUBPIXEL_SHIFT + 1)) 的跨度间隔
                     // cover 可以理解为是 area 为 1的delta mask
                     alpha = CalculateAlpha((cover << (POLY_SUBPIXEL_SHIFT + 1)) - area);
                     if (alpha) {
@@ -395,7 +395,7 @@ namespace OHOS {
         return m_gamma[cover];
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::Reset()
     {
@@ -403,14 +403,14 @@ namespace OHOS {
         m_status = STATUS_INITIAL;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::FillingRule(FillingRuleEnum filling_rule)
     {
         m_filling_rule = filling_rule;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::ClipBox(double x1, double y1,
                                                     double x2, double y2)
@@ -420,7 +420,7 @@ namespace OHOS {
                           depict_type::UpScale(x2), depict_type::UpScale(y2));
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::ResetClipping()
     {
@@ -428,7 +428,7 @@ namespace OHOS {
         m_clipper.reset_clipping();
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::ClosePolygon()
     {
@@ -438,7 +438,7 @@ namespace OHOS {
         }
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::MoveTo(int x, int y)
     {
@@ -451,7 +451,7 @@ namespace OHOS {
         m_status = STATUS_MOVE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::LineTo(int x, int y)
     {
@@ -461,7 +461,7 @@ namespace OHOS {
         m_status = STATUS_LINE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::MoveToByDouble(double x, double y)
     {
@@ -474,7 +474,7 @@ namespace OHOS {
         m_status = STATUS_MOVE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::LineToByDouble(double x, double y)
     {
@@ -484,7 +484,7 @@ namespace OHOS {
         m_status = STATUS_LINE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::AddVertex(double x, double y, unsigned cmd)
     {
@@ -497,7 +497,7 @@ namespace OHOS {
         }
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::EdgeMake(int x1, int y1, int x2, int y2)
     {
@@ -510,7 +510,7 @@ namespace OHOS {
         m_status = STATUS_MOVE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::EdgeMakeUsingDouble(double x1, double y1,
                                                                 double x2, double y2)
@@ -524,7 +524,7 @@ namespace OHOS {
         m_status = STATUS_MOVE_TO;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     void RasterizerScanlineAntiAlias<Clip>::Sort()
     {
@@ -533,7 +533,7 @@ namespace OHOS {
         m_outline.SortAllCells();
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     GRAPHIC_GEOMETRY_INLINE bool RasterizerScanlineAntiAlias<Clip>::RewindScanlines()
     {
@@ -547,7 +547,7 @@ namespace OHOS {
         return true;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     GRAPHIC_GEOMETRY_INLINE bool RasterizerScanlineAntiAlias<Clip>::NavigateScanline(int y)
     {
@@ -563,7 +563,7 @@ namespace OHOS {
         return true;
     }
 
-    // ------------------------------------------------------------------------
+    //------------------------------------------------------------------------
     template <class Clip>
     bool RasterizerScanlineAntiAlias<Clip>::HitTest(int tx, int ty)
     {
@@ -573,6 +573,7 @@ namespace OHOS {
         SweepScanline(sl);
         return sl.hit();
     }
+
 } // namespace OHOS
 
 #endif

@@ -35,7 +35,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    class GeometryEllipse {
+    class Ellipse {
     public:
         /**
          * @brief Ellipse构造函数
@@ -44,15 +44,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Ellipse()
-            : x_(CIRCLE_CENTER_X),
-              y_(CIRCLE_CENTER_Y),
-              rx_(CIRCLE_RADIUS_X),
-              ry_(CIRCLE_RADIUS_Y),
-              scale_(SCALE),
-              num_(NUM),
-              step_(STEP),
-              clockwise_(CLOCKWISE)
+        Ellipse() :
+            x_(0.0), y_(0.0), rx_(1.0), ry_(1.0), scale_(1.0),
+            num_(4), step_(0), clockwise_(false)
         {}
 
         /**
@@ -66,8 +60,10 @@ namespace OHOS {
          * @version 1.0
          */
         Ellipse(double x, double y, double rx, double ry,
-                unsigned numSteps = 0, bool clockwise = false)
-            : x_(x), y_(y), rx_(rx), ry_(ry), scale_(1.0), num_(numSteps), step_(0), clockwise_(clockwise)
+                unsigned numSteps = 0, bool clockwise = false) :
+            x_(x),
+            y_(y), rx_(rx), ry_(ry), scale_(1.0),
+            num_(numSteps), step_(0), clockwise_(clockwise)
         {
             if (num_ == 0) {
                 CalcNumSteps();
@@ -148,9 +144,9 @@ namespace OHOS {
 
     inline void Ellipse::CalcNumSteps()
     {
-        double ra = (std::fabs(rx_) + std::fabs(ry_)) / CONSTANT_3;
-        double da = std::acos(ra / (ra + CONSTANT_1 / scale_)) * CONSTANT_3;
-        num_ = Uround(CONSTANT_3 * PI / da);
+        double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
+        double da = std::acos(ra / (ra + 0.125 / scale_)) * 2;
+        num_ = Uround(2 * PI / da);
     }
 
     inline unsigned Ellipse::Vertex(double* x, double* y)
@@ -161,15 +157,17 @@ namespace OHOS {
         }
         if (step_ > num_) {
             return PATH_CMD_STOP;
-        double angle = double(step_) / double(num_) * CONSTANT_2 * PI;
+        }
+        double angle = double(step_) / double(num_) * 2.0 * PI;
         if (clockwise_) {
-            angle = CONSTANT_2 * PI - angle;
+            angle = 2.0 * PI - angle;
         }
         *x = x_ + std::cos(angle) * rx_;
         *y = y_ + std::sin(angle) * ry_;
         step_++;
         return ((step_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO);
     }
+
 } // namespace OHOS
 
 #endif

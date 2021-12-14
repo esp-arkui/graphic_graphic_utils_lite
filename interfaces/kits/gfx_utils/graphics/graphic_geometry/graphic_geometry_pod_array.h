@@ -33,6 +33,7 @@
 #include "gfx_utils/heap_base.h"
 #include "securec.h"
 namespace OHOS {
+
     /**
      * @file agg_pod_array.h
      *
@@ -42,7 +43,7 @@ namespace OHOS {
      * @version 1.0
      */
     template <class T>
-    class GeometryPodArray : public HeapBase {
+    class PodArray : public HeapBase {
     public:
         using ValueType = T;
         using SelfType = PodArray<T>;
@@ -52,8 +53,8 @@ namespace OHOS {
             ArrAllocator<T>::Deallocate(data_, size_);
         }
 
-        PodArray()
-            :data_(0), size_(0)
+        PodArray() :
+            data_(0), size_(0)
         {}
         /**
          *
@@ -62,12 +63,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        PodArray(unsigned size)
-            : data_(ArrAllocator<T>::Allocate(size)), size_(size)
+        PodArray(unsigned size) :
+            data_(ArrAllocator<T>::Allocate(size)), size_(size)
         {}
 
-        PodArray(const SelfType& podArray)
-            : data_(ArrAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
+        PodArray(const SelfType& podArray) :
+            data_(ArrAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
         {
             memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
         }
@@ -178,5 +179,6 @@ namespace OHOS {
         T* data_;
         unsigned size_;
     };
+
 } // namespace OHOS
 #endif

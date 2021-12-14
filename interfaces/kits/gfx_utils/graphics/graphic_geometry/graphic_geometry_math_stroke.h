@@ -30,7 +30,8 @@ namespace OHOS {
     /**
      * @brief 线条末端线帽的样式。
      */
-    enum LineCapEnum{
+    enum LineCapEnum
+    {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -42,7 +43,8 @@ namespace OHOS {
     /**
      * @brief 两条线相交时，所创建的拐角类型
      */
-    enum LineJoinEnum{
+    enum LineJoinEnum
+    {
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -54,18 +56,18 @@ namespace OHOS {
     };
 
     template <class VertexConsumer>
-    class GeometryMathStroke {
+    class MathStroke {
     public:
         typedef typename VertexConsumer::ValueType coord_type;
-        MathStroke()
-            : width_(WIDTH),
-              widthAbs_(WIDTH_ABS),
-              widthEps_(WIDTH_EPS),
-              widthSign_(WIDTH_SIGN),
-              miterLimit_(MITER_LIMIT),
-              approxScale_(APPROX_SCALE),
-              lineCapEnum(BUTT_CAP),
-              lineJoinEnum(MITER_JOIN)
+        MathStroke() :
+            width_(0.5),
+            widthAbs_(0.5),
+            widthEps_(0.5 / 1024.0),
+            widthSign_(1),
+            miterLimit_(4.0),
+            approxScale_(1.0),
+            lineCapEnum(BUTT_CAP),
+            lineJoinEnum(MITER_JOIN)
         {
         }
 
@@ -99,7 +101,7 @@ namespace OHOS {
          */
         void width(double width)
         {
-            width_ = width * CONSTANT_4;
+            width_ = width * 0.5;
             if (width_ < 0) {
                 widthAbs_ = -width_;
                 widthSign_ = -1;
@@ -107,7 +109,7 @@ namespace OHOS {
                 widthAbs_ = width_;
                 widthSign_ = 1;
             }
-            widthEps_ = width_ / CONSTANT_5;
+            widthEps_ = width_ / 1024.0;
         }
 
         /**
@@ -157,10 +159,6 @@ namespace OHOS {
         {
             vertexConsumer.RemoveAll();
 
-            if (len == 0)
-            {
-                len += INFINITE_SIMAL;
-            }
             double dx1 = (vd1.y - vd0.y) / len;
             double dy1 = (vd1.x - vd0.x) / len;
             double dx2 = 0;
@@ -188,9 +186,7 @@ namespace OHOS {
                     angleStart = std::atan2(dy1, -dx1);
                     angleStart += deltaAngle;
                     for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                        AddVertex(vertexConsumer,
-                                  vd0.x + std::cos(angleStart) * width_,
-                                  vd0.y + std::sin(angleStart) * width_);
+                        AddVertex(vertexConsumer, vd0.x + std::cos(angleStart) * width_, vd0.y + std::sin(angleStart) * width_);
                         angleStart += deltaAngle;
                     }
                 } else {
@@ -212,14 +208,6 @@ namespace OHOS {
         void CalcJoin(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1,
                       const VertexDist& v2, double len1, double len2)
         {
-            if (len1 == 0)
-            {
-                len1 += INFINITE_SIMAL;
-            }
-            if (len2 == 0)
-            {
-                len2 += INFINITE_SIMAL;
-            }
             double dx1 = width_ * (vd1.y - vd0.y) / len1;
             double dy1 = width_ * (vd1.x - vd0.x) / len1;
             double dx2 = width_ * (v2.y - vd1.y) / len2;
@@ -238,8 +226,15 @@ namespace OHOS {
 
                 if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
                     if (approxScale_ * (widthAbs_ - dbevel) < widthEps_) {
-                        CalcInterse (vertexConsumer, vd0, vd1,
-                                     v2, dx, dx1, dx2, dy, dy1, dy2);
+                        if (CalcIntersection(vd0.x + dx1, vd0.y - dy1,
+                                             vd1.x + dx1, vd1.y - dy1,
+                                             vd1.x + dx2, vd1.y - dy2,
+                                             v2.x + dx2, v2.y - dy2,
+                                             &dx, &dy)) {
+                            AddVertex(vertexConsumer, dx, dy);
+                        } else {
+                            AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
+                        }
                         return;
                     }
                 }
@@ -262,21 +257,6 @@ namespace OHOS {
             }
         }
 
-        void CalcInterse(VertexConsumer& vertexConsumer,const VertexDist& vd0, const VertexDist& vd1,
-                         const VertexDist& v2, double& dx, double& dx1,
-                         double& dx2, double& dy, double& dy1, double& dy2)
-        {
-            if (CalcIntersection(vd0.x + dx1, vd0.y - dy1,
-                                 vd1.x + dx1, vd1.y - dy1,
-                                 vd1.x + dx2, vd1.y - dy2,
-                                 v2.x + dx2, v2.y - dy2,
-                                 &dx, &dy)) {
-                AddVertex(vertexConsumer, dx, dy);
-            } else {
-                AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
-            }
-        }
-
     private:
         GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, double x, double y)
         {
@@ -294,25 +274,12 @@ namespace OHOS {
             double deltaAngle = angleStart - angleEnd;
             int nIndex, divNumber;
 
-            deltaAngle = std::acos(widthAbs_ / (widthAbs_ + limitScale / approxScale_)) * CONSTANT_3;
+            deltaAngle = std::acos(widthAbs_ / (widthAbs_ + limitScale / approxScale_)) * 2;
 
             AddVertex(vertexConsumer, x + dx1, y + dy1);
-            Calculate(widthSign_, vertexConsumer, x, angleStart, angleEnd, deltaAngle, nIndex, divNumber);
-            AddVertex(vertexConsumer, x + dx2, y + dy2);
-        }
-
-        void Calculate(int widthSign_,
-                       VertexConsumer& vertexConsumer,
-                       double& x,
-                       double& angleStart,
-                       double& angleEnd,
-                       double& deltaAngle,
-                       int& nIndex,
-                       int& divNumber)
-        {
             if (widthSign_ > 0) {
                 if (angleStart > angleEnd)
-                    angleEnd += CONSTANT_3 * PI;
+                    angleEnd += 2 * PI;
                 divNumber = int((angleEnd - angleStart) / deltaAngle);
                 deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
                 angleStart += deltaAngle;
@@ -322,7 +289,7 @@ namespace OHOS {
                 }
             } else {
                 if (angleStart < angleEnd)
-                    angleEnd -= CONSTANT_3 * PI;
+                    angleEnd -= 2 * PI;
                 divNumber = int((angleStart - angleEnd) / deltaAngle);
                 deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
                 angleStart -= deltaAngle;
@@ -331,6 +298,7 @@ namespace OHOS {
                     angleStart -= deltaAngle;
                 }
             }
+            AddVertex(vertexConsumer, x + dx2, y + dy2);
         }
 
         /**

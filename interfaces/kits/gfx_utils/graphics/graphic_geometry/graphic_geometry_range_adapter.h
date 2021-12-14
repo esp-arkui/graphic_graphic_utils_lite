@@ -34,6 +34,7 @@
 #include "securec.h"
 
 namespace OHOS {
+
     const int QUICK_SORT_THRESHOLD = 9;
 
     /**
@@ -145,7 +146,7 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Array>
-    class GeometryRangeAdaptor : public HeapBase {
+    class RangeAdaptor : public HeapBase {
     public:
         using ValueType = typename Array::ValueType;
         /**
@@ -155,8 +156,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RangeAdaptor(Array& array, unsigned start, unsigned size)
-            : data_(array), start_(start), size_(size)
+        RangeAdaptor(Array& array, unsigned start, unsigned size) :
+            data_(array), start_(start), size_(size)
         {}
         /**
         *
@@ -223,15 +224,15 @@ namespace OHOS {
         }
 
     private:
-        Array& data_;    // 原数组
-        unsigned start_; // 原数组的起始位置
-        unsigned size_;  // 指定的大小
+        Array& data_;    //原数组
+        unsigned start_; //原数组的起始位置
+        unsigned size_;  //指定的大小
     };
 
     template <class Array, class Less>
     void QuickSort(Array& arr, Less less)
     {
-        if (arr.Size() < CONSTANT_3) {
+        if (arr.Size() < 2) {
             return;
         }
         typename Array::ValueType* e1;
@@ -246,7 +247,7 @@ namespace OHOS {
             int j;
             int pivot;
             if (len > QUICK_SORT_THRESHOLD) {
-                pivot = base + len / CONSTANT_3;
+                pivot = base + len / 2;
                 SwapElements(arr[base], arr[pivot]);
                 i = base + 1;
                 j = limit - 1;
@@ -287,21 +288,20 @@ namespace OHOS {
                     top[1] = limit;
                     limit = j;
                 }
-                top += CONSTANT_3;
+                top += 2;
             } else {
                 j = base;
                 i = j + 1;
-                for (; i < limit; i++) {
+                for (; i < limit; j = i, i++) {
                     for (; less(*(e1 = &(arr[j + 1])), *(e2 = &(arr[j]))); j--) {
                         SwapElements(*e1, *e2);
                         if (j == base) {
                             break;
                         }
                     }
-                    j = i;
                 }
                 if (top > stack) {
-                    top -= CONSTANT_3;
+                    top -= 2;
                     base = top[0];
                     limit = top[1];
                 } else {
@@ -343,19 +343,19 @@ namespace OHOS {
     template <class Array, class Equal>
     unsigned RemoveDuplicates(Array& arr, Equal equal)
     {
-        if (arr.Size() < CONSTANT_3) {
+        if (arr.Size() < 2) {
             return arr.Size();
         }
 
         unsigned i, j;
-        typename Array::ValueType& e;
         for (i = 1, j = 1; i < arr.Size(); i++) {
-            e = arr[i];
+            typename Array::ValueType& e = arr[i];
             if (!equal(e, arr[i - 1])) {
                 arr[j++] = e;
             }
         }
         return j;
     }
+
 } // namespace OHOS
 #endif

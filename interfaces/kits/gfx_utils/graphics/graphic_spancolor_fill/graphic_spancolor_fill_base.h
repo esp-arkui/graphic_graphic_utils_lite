@@ -23,7 +23,6 @@
 #ifndef SPAN_ALLOCATOR_CONVERTER_INCLUDED
 #define SPAN_ALLOCATOR_CONVERTER_INCLUDED
 
-#include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 
 namespace OHOS {
@@ -40,7 +39,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE color_type* Resize(unsigned span_len)
         {
             if (span_len > spans.Size()) {
-                spans.Resize(((span_len + MAX_COLOR_NUM) >> 8) << 8);
+                spans.Resize(((span_len + 255) >> 8) << 8);
             }
             return &spans[0];
         }
@@ -48,6 +47,7 @@ namespace OHOS {
     private:
         PodArray<color_type> spans;
     };
+
 } // namespace OHOS
 
 #endif

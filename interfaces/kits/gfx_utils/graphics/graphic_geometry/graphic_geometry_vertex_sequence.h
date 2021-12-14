@@ -75,8 +75,8 @@ namespace OHOS {
     template <class T, unsigned S>
     void VertexSequence<T, S>::Close(bool closed)
     {
-        while (BaseType::Size() > 1) {
-            if ((*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
+        while (1 < BaseType::Size()) {
+            if ((*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
                 break;
             }
             T t = (*this)[BaseType::Size() - 1];
@@ -85,8 +85,8 @@ namespace OHOS {
         }
 
         if (closed) {
-            while (BaseType::Size() > 1) {
-                if ((*this)[BaseType::Size() - 1]((*this)[0])) { // 计算两顶点距离
+            while (1 < BaseType::Size()) {
+                if ((*this)[BaseType::Size() - 1]((*this)[0])) { //计算两顶点距离
                     break;
                 }
                 BaseType::RemoveLast();
@@ -97,7 +97,7 @@ namespace OHOS {
     template <class T, unsigned S>
     void VertexSequence<T, S>::Add(const T& val)
     {
-        if (BaseType::Size() > 1) {
+        if (1 < BaseType::Size()) {
             if (!(*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
                 BaseType::RemoveLast();
             }
@@ -126,8 +126,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        VertexDist(double x_, double y_)
-        : x(x_), y(y_), dist(0.0)
+        VertexDist(double x_, double y_) :
+            x(x_), y(y_), dist(0.0)
         {
         }
         /**
@@ -161,11 +161,12 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        VertexDistCmd(double x_, double y_, unsigned cmd_)
-        : VertexDist(x_, y_), cmd(cmd_)
+        VertexDistCmd(double x_, double y_, unsigned cmd_) :
+            VertexDist(x_, y_), cmd(cmd_)
         {
         }
     };
+
 } // namespace OHOS
 
 #endif

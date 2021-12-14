@@ -59,22 +59,13 @@ namespace OHOS {
         */
         explicit PodAutoArray(const T* data)
         {
-            int status = memcpy_s(data_, data, sizeof(T) * (size_t)SizeN);
-            if(!status)
-            {
-                printf("%s", "内存出错");
-                return;
-            }
+            memcpy_s(data_, data, sizeof(T) * (size_t)SizeN);
         }
 
         const SelfType& operator=(const T* data)
         {
-            int status = memcpy_s(data_, sizeof(data_), data, sizeof(T) * (size_t)SizeN);
-            if (!status)
-            {
-                printf("%s", "内存出错");
-                return;
-            }
+            memcpy_s(data_, sizeof(data_), data, sizeof(T) * (size_t)SizeN);
+
             return *this;
         }
         /**
@@ -140,7 +131,7 @@ namespace OHOS {
         }
 
     private:
-        T data_[SizeN]; // 保存元素个数
+        T data_[SizeN]; //保存元素个数
     };
 
     /**
@@ -163,8 +154,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        PodArrayAdaptor(T* array, unsigned size)
-            : data_(array), size_(size)
+        PodArrayAdaptor(T* array, unsigned size) :
+            data_(array), size_(size)
         {}
         /**
          * @brief 获取指定索引的元素.
@@ -231,5 +222,6 @@ namespace OHOS {
         T* data_;
         unsigned size_;
     };
+
 } // namespace OHOS
 #endif

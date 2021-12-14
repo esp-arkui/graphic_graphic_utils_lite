@@ -50,12 +50,13 @@ namespace OHOS {
  * @version 1.0
  */
 template <class T, unsigned SizeN>
-class GeometryPodAutoVector : public HeapBase {
+class PodAutoVector : public HeapBase {
 public:
     using ValueType = T;
     using SelfType = PodAutoVector<T, SizeN>;
     /**
      * @brief 构造一个PodAutoVector.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -63,6 +64,7 @@ public:
 
      /**
      * @brief 清空元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -72,6 +74,7 @@ public:
     }
     /**
      * @brief 清空元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -81,6 +84,7 @@ public:
     }
     /**
      * @brief 增加一个元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -90,6 +94,7 @@ public:
     }
     /**
      * @brief 偏移数组首地址.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -99,6 +104,7 @@ public:
     }
     /**
      * @brief 增加一个元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -108,6 +114,7 @@ public:
     }
     /**
      * @brief 获取指定索引的元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -117,6 +124,7 @@ public:
     }
     /**
      * @brief 获取指定索引的元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -126,6 +134,7 @@ public:
     }
     /**
      * @brief 获取指定索引的元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -135,6 +144,7 @@ public:
     }
     /**
      * @brief 获取指定索引的元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -144,6 +154,7 @@ public:
     }
     /**
      * @brief 获取指定索引的元素.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -153,6 +164,7 @@ public:
     }
     /**
      * @brief 获取元素个数.
+     * 
      * @since 1.0
      * @version 1.0
      */
@@ -162,8 +174,8 @@ public:
     }
 
 private:
-    T data_[SizeN];  // 保存元素的数组
-    unsigned size_; // 元素数量
+    T data_[SizeN];  //保存元素的数组
+    unsigned size_; //元素数量
 };
 }
 #endif
