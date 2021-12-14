@@ -44,9 +44,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Ellipse()
-            : x_(0.0), y_(0.0), rx_(1.0), ry_(1.0), scale_(1.0),
-              num_(ELLIPSE_VERTEX_NUM), step_(0), clockwise_(false)
+        Ellipse() :
+            circleCenterX(0.0), circleCenterY(0.0), circleRadiusX(1.0), circleRadiusY(1.0), scaleRadio(1.0),
+            vertexNumber(ELLIPSE_VERTEX_NUM), circleInnerStep(0), isClockwise(false)
         {}
 
         /**
@@ -61,11 +61,11 @@ namespace OHOS {
          */
         Ellipse(double x, double y, double rx, double ry,
                 unsigned numSteps = 0, bool clockwise = false) :
-            x_(x),
-            y_(y), rx_(rx), ry_(ry), scale_(1.0),
-            num_(numSteps), step_(0), clockwise_(clockwise)
+            circleCenterX(x),
+            circleCenterY(y), circleRadiusX(rx), circleRadiusY(ry), scaleRadio(1.0),
+            vertexNumber(numSteps), circleInnerStep(0), isClockwise(clockwise)
         {
-            if (num_ == 0) {
+            if (vertexNumber == 0) {
                 CalcNumSteps();
             }
         }
@@ -111,61 +111,61 @@ namespace OHOS {
          */
         void CalcNumSteps();
 
-        double x_;       // 圆心的X坐标
-        double y_;       // 圆心的Y坐标
-        double rx_;      // 圆形的X半径
-        double ry_;      // 圆形的Y半径
-        double scale_;   // 缩放比例
-        unsigned num_;   // 顶点数量
-        unsigned step_;  // 构建的是一个圆内接多边形
-        bool clockwise_; // 顺时针，还是逆时针渲染
+        double circleCenterX;     // 圆心的X坐标
+        double circleCenterY;     // 圆心的Y坐标
+        double circleRadiusX;     // 圆形的X半径
+        double circleRadiusY;     // 圆形的Y半径
+        double scaleRadio;        // 缩放比例
+        unsigned vertexNumber;    // 顶点数量
+        unsigned circleInnerStep; // 构建的是一个圆内接多边形
+        bool isClockwise;         // 顺时针，还是逆时针渲染
     };
 
     inline void Ellipse::Init(double x, double y, double rx, double ry,
                               unsigned numSteps, bool clockwise)
     {
-        x_ = x;
-        y_ = y;
-        rx_ = rx;
-        ry_ = ry;
-        num_ = numSteps;
-        step_ = 0;
-        clockwise_ = clockwise;
-        if (num_ == 0) {
+        circleCenterX = x;
+        circleCenterY = y;
+        circleRadiusX = rx;
+        circleRadiusY = ry;
+        vertexNumber = numSteps;
+        circleInnerStep = 0;
+        isClockwise = clockwise;
+        if (vertexNumber == 0) {
             CalcNumSteps();
         }
     }
 
     inline void Ellipse::ApproximationScale(double scale)
     {
-        scale_ = scale;
+        scaleRadio = scale;
         CalcNumSteps();
     }
 
     inline void Ellipse::CalcNumSteps()
     {
-        double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
-        double da = std::acos(ra / (ra + 0.125 / scale_)) * 2;
-        num_ = Uround(TWO_TIMES * PI / da);
+        double ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / 2;
+        double da = std::acos(ra / (ra + 0.125 / scaleRadio)) * 2;
+        vertexNumber = Uround(TWO_TIMES * PI / da);
     }
 
     inline unsigned Ellipse::Vertex(double* x, double* y)
     {
-        if (step_ == num_) {
-            ++step_;
-            return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
+        if (circleInnerStep == vertexNumber) {
+            ++circleInnerStep;
+            return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CLOCKWISE;
         }
-        if (step_ > num_) {
+        if (circleInnerStep > vertexNumber) {
             return PATH_CMD_STOP;
         }
-        double angle = double(step_) / double(num_) * DOUBLENUM * PI;
-        if (clockwise_) {
+        double angle = double(circleInnerStep) / double(vertexNumber) * DOUBLENUM * PI;
+        if (isClockwise) {
             angle = DOUBLENUM * PI - angle;
         }
-        *x = x_ + std::cos(angle) * rx_;
-        *y = y_ + std::sin(angle) * ry_;
-        step_++;
-        return ((step_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO);
+        *x = circleCenterX + std::cos(angle) * circleRadiusX;
+        *y = circleCenterY + std::sin(angle) * circleRadiusY;
+        circleInnerStep++;
+        return ((circleInnerStep == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO);
     }
 
 } // namespace OHOS

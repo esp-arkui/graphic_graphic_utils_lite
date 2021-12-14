@@ -23,12 +23,11 @@
  * @version 1.0
  */
 
-
 #ifndef GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
 #define GRAPHIC_GEOMETRY_ROUNDED_RECT_INCLUDED
 
-#include "graphic_geometry_arc.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "graphic_geometry_arc.h"
 
 namespace OHOS {
     /**
@@ -90,7 +89,7 @@ namespace OHOS {
          */
         void ApproximationScale(double scale)
         {
-            arc_.ApproximationScale(scale);
+            arcCurveObject.ApproximationScale(scale);
         }
 
         /**
@@ -135,7 +134,7 @@ namespace OHOS {
          */
         double ApproximationScale() const
         {
-            return arc_.ApproximationScale();
+            return arcCurveObject.ApproximationScale();
         }
 
         /**
@@ -160,20 +159,20 @@ namespace OHOS {
             VERTEX_STATUS8
         };
 
-        unsigned status_;
-        Arc arc_;
-        double x1_;
-        double y1_;
-        double x2_;
-        double y2_;
-        double rx1_;
-        double ry1_;
-        double rx2_;
-        double ry2_;
-        double rx3_;
-        double ry3_;
-        double rx4_;
-        double ry4_;
+        unsigned arcCurveStatus;
+        Arc arcCurveObject;
+        double arcCurveXStart;
+        double arcCurveYStart;
+        double arcCurveXEnd;
+        double arcCurveYEnd;
+        double radiusXStart;
+        double radiusYStart;
+        double radiusXControlOne;
+        double radiusYControlOne;
+        double radiusXControlTwo;
+        double radiusYControlTwo;
+        double radiusXEnd;
+        double radiusYEnd;
     };
 
 } // namespace OHOS

@@ -27,7 +27,7 @@
 
 namespace OHOS {
     template <class ColorT>
-    class SpanAllocator {
+    class SpanFillColorAllocator {
     public:
         typedef ColorT color_type;
 
@@ -45,7 +45,7 @@ namespace OHOS {
         }
 
     private:
-        PodArray<color_type> spans;
+        GeometryPlainDataArray<color_type> spans;
     };
 
 } // namespace OHOS

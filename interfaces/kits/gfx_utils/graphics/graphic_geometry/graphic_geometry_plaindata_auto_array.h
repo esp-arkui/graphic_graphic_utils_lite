@@ -17,13 +17,14 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines Arc.
+ * @brief Defines PodAutoArray.
  *
  * @since 1.0
  * @version 1.0
  */
-#ifndef GRAPHIC_GEOMETRY_POD_ARRAY_INCLUDED
-#define GRAPHIC_GEOMETRY_POD_ARRAY_INCLUDED
+
+#ifndef GRAPHIC_GEOMETRY_POD_AUTO_ARRAY_INCLUDED
+#define GRAPHIC_GEOMETRY_POD_AUTO_ARRAY_INCLUDED
 
 #include <cstddef>
 #include <cstring>
@@ -31,52 +32,131 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/heap_base.h"
 #include "securec.h"
+
 namespace OHOS {
     /**
-     * @file agg_pod_array.h
+     * @file GeometryPlainDataAutoArray.h
      *
-     * @brief Defines PodArray数组,容量可变.
+     * @brief Defines GeometryPlainDataAutoArray数组.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class T, unsigned SizeN>
+    class GeometryPlainDataAutoArray : public HeapBase {
+    public:
+        using ValueType = T;
+        using SelfType = GeometryPlainDataAutoArray<T, SizeN>;
+
+        GeometryPlainDataAutoArray()
+        {}
+        /**
+        *
+        * @brief Defines 构造PodAutoArray数组,固定容量.
+        * @param data 初始数据
+        * @since 1.0
+        * @version 1.0
+        */
+        explicit GeometryPlainDataAutoArray(const T* data)
+        {
+            memcpy_s(data_, data, sizeof(T) * (size_t)SizeN);
+        }
+
+        const SelfType& operator=(const T* data)
+        {
+            memcpy_s(data_, sizeof(data_), data, sizeof(T) * (size_t)SizeN);
+
+            return *this;
+        }
+        /**
+         * @brief 获取指定索引的元素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& operator[](unsigned index) const
+        {
+            return data_[index];
+        }
+
+        /**
+         * @brief 获取指定索引的元素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& operator[](unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief 获取指定索引的元素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        const T& IndexAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief 获取指定索引的元素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T& IndexAt(unsigned index)
+        {
+            return data_[index];
+        }
+        /**
+         * @brief 获取指定索引的元素.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        T ValueAt(unsigned index) const
+        {
+            return data_[index];
+        }
+        /**
+         * @brief 获取元素个数.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
+        static unsigned Size()
+        {
+            return SizeN;
+        }
+
+    private:
+        T data_[SizeN]; // 保存元素个数
+    };
+
+    /**
+     * @file GeometryPlainDataArrayAdaptor.h
+     *
+     * @brief Defines PodAutoArray数组适配器.
      *
      * @since 1.0
      * @version 1.0
      */
     template <class T>
-    class PodArray : public HeapBase {
+    class GeometryPlainDataArrayAdaptor : public HeapBase {
     public:
         using ValueType = T;
-        using SelfType = PodArray<T>;
 
-        ~PodArray()
-        {
-            ArrAllocator<T>::Deallocate(data_, size_);
-        }
-
-        PodArray()
-            : data_(0), size_(0)
-        {}
         /**
          *
-         * @brief 构造Defines PodArray数组.
-         * @param size 初始容量
+         * @brief Defines 构造PodAutoArray数组适配器.
+         * @param array 原数组,size 数组容量
          * @since 1.0
          * @version 1.0
          */
-        PodArray(unsigned size)
-            : data_(ArrAllocator<T>::Allocate(size)), size_(size)
+        GeometryPlainDataArrayAdaptor(T* array, unsigned size) :
+            data_(array), size_(size)
         {}
-
-        PodArray(const SelfType& podArray)
-            : data_(ArrAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
-        {
-            memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
-        }
-
-        const SelfType& operator=(const SelfType& podArray)
-        {
-            Resize(podArray.Size());
-            memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
-            return *this;
-        }
         /**
          * @brief 获取指定索引的元素.
          *
@@ -126,41 +206,6 @@ namespace OHOS {
         T& IndexAt(unsigned index)
         {
             return data_[index];
-        }
-        /**
-         * @brief 获取元素首地址.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        const T* Data() const
-        {
-            return data_;
-        }
-        /**
-         * @brief 获取元素首地址.
-         *
-         * @since 1.0
-         * @version 1.0
-         */
-        T* Data()
-        {
-            return data_;
-        }
-
-        /**
-         *
-         * @brief 修改Defines PodArray数组容量.
-         * @param size 容量
-         * @since 1.0
-         * @version 1.0
-         */
-        void Resize(unsigned size)
-        {
-            if (size != size_) {
-                ArrAllocator<T>::Deallocate(data_, size_);
-                data_ = ArrAllocator<T>::Allocate(size_ = size);
-            }
         }
         /**
          * @brief 获取元素个数.

@@ -30,7 +30,7 @@
 
 namespace OHOS {
     /**
-     * @template<VertexSource,Curve3,Curve4> class DepictCurve
+     * @template<VertexSource,QuadraticBezierCurve,CubicBezierCurve> class DepictCurve
      * @brief 该DepictCurve类通过PATH_CMD_CURVE3 and PATH_CMD_CURVE4
      * 命令计算生成curve曲线点并且将生成的点利用转换管道保存到
      * move_to/line_to vertex sequence 中
@@ -38,13 +38,13 @@ namespace OHOS {
      * @version 1.0
      */
     template <class VertexSource,
-              class Curve3 = Curve3,
-              class Curve4 = Curve4>
+              class QuadraticBezierCurve = QuadraticBezierCurve,
+              class CubicBezierCurve = CubicBezierCurve>
     class DepictCurve {
     public:
-        typedef Curve3 curve3_type;
-        typedef Curve4 curve4_type;
-        typedef DepictCurve<VertexSource, Curve3, Curve4> self_type;
+        typedef QuadraticBezierCurve curve3_type;
+        typedef CubicBezierCurve curve4_type;
+        typedef DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve> self_type;
 
         /**
          * @brief DepictCurve类的构造函数。.
@@ -52,8 +52,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit DepictCurve(VertexSource& source)
-            : m_source(&source), m_last_x(0.0), m_last_y(0.0)
+        explicit DepictCurve(VertexSource& source) :
+            m_source(&source), m_last_x(0.0), m_last_y(0.0)
         {
         }
 
@@ -168,68 +168,68 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        template<class VertexSource, class Curve3, class Curve4>
-        void DepictCurve<VertexSource, Curve3, Curve4>::Rewind(unsigned path_id)
-        {
-            m_source->Rewind(path_id);
-            m_last_x = 0.0;
-            m_last_y = 0.0;
-            m_curve3.Reset();
-            m_curve4.Reset();
-        }
+    template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
+    void DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Rewind(unsigned path_id)
+    {
+        m_source->Rewind(path_id);
+        m_last_x = 0.0;
+        m_last_y = 0.0;
+        m_curve3.Reset();
+        m_curve4.Reset();
+    }
 
-        /*
+    /*
         * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
         * @since 1.0
         * @version 1.0
         */
-        template<class VertexSource, class Curve3, class Curve4>
-        unsigned DepictCurve<VertexSource, Curve3, Curve4>::Vertex(double* x, double* y)
-        {
-            if (!IsStop(m_curve3.Vertex(x, y))) {
-                m_last_x = *x;
-                m_last_y = *y;
-                return PATH_CMD_LINE_TO;
-            }
-
-            if (!IsStop(m_curve4.Vertex(x, y))) {
-                m_last_x = *x;
-                m_last_y = *y;
-                return PATH_CMD_LINE_TO;
-            }
-
-            double ct2_x = 0;
-            double ct2_y = 0;
-            double end_x = 0;
-            double end_y = 0;
-
-            unsigned cmd = m_source->Vertex(x, y);
-            switch (cmd) {
-                case PATH_CMD_CURVE3:
-                    m_source->Vertex(&end_x, &end_y);
-
-                    m_curve3.Init(m_last_x, m_last_y, *x, *y, end_x, end_y);
-
-                    m_curve3.Vertex(x, y);    // First call returns path_cmd_move_to
-                    m_curve3.Vertex(x, y);    // This is the first vertex of the curve
-                    cmd = PATH_CMD_LINE_TO;
-                    break;
-
-                case PATH_CMD_CURVE4:
-                    m_source->Vertex(&ct2_x, &ct2_y);
-                    m_source->Vertex(&end_x, &end_y);
-
-                    m_curve4.Init(m_last_x, m_last_y, *x, *y, ct2_x, ct2_y, end_x, end_y);
-
-                    m_curve4.Vertex(x, y);    // First call returns path_cmd_move_to
-                    m_curve4.Vertex(x, y);    // This is the first vertex of the curve
-                    cmd = PATH_CMD_LINE_TO;
-                    break;
-            }
+    template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
+    unsigned DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Vertex(double* x, double* y)
+    {
+        if (!IsStop(m_curve3.Vertex(x, y))) {
             m_last_x = *x;
             m_last_y = *y;
-            return cmd;
+            return PATH_CMD_LINE_TO;
         }
+
+        if (!IsStop(m_curve4.Vertex(x, y))) {
+            m_last_x = *x;
+            m_last_y = *y;
+            return PATH_CMD_LINE_TO;
+        }
+
+        double ct2_x = 0;
+        double ct2_y = 0;
+        double end_x = 0;
+        double end_y = 0;
+
+        unsigned cmd = m_source->Vertex(x, y);
+        switch (cmd) {
+            case PATH_CMD_CURVE3:
+                m_source->Vertex(&end_x, &end_y);
+
+                m_curve3.Init(m_last_x, m_last_y, *x, *y, end_x, end_y);
+
+                m_curve3.Vertex(x, y); // First call returns path_cmd_move_to
+                m_curve3.Vertex(x, y); // This is the first vertex of the curve
+                cmd = PATH_CMD_LINE_TO;
+                break;
+
+            case PATH_CMD_CURVE4:
+                m_source->Vertex(&ct2_x, &ct2_y);
+                m_source->Vertex(&end_x, &end_y);
+
+                m_curve4.Init(m_last_x, m_last_y, *x, *y, ct2_x, ct2_y, end_x, end_y);
+
+                m_curve4.Vertex(x, y); // First call returns path_cmd_move_to
+                m_curve4.Vertex(x, y); // This is the first vertex of the curve
+                cmd = PATH_CMD_LINE_TO;
+                break;
+        }
+        m_last_x = *x;
+        m_last_y = *y;
+        return cmd;
+    }
 } // namespace OHOS
 
 #endif

@@ -34,58 +34,57 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    class Dda2LineInterpolator {
+    class DdaTwoLineInterpolator {
     public:
-        Dda2LineInterpolator()
+        DdaTwoLineInterpolator()
         {}
 
-        Dda2LineInterpolator(int coordinate1, int coordinate2, int count)
-            :count_(count <= 0 ? 1 : count),
-            left_((coordinate2 - coordinate1) / count_),
-            remainder_((coordinate2 - coordinate1) % count_),
-            modulo_(remainder_),
-            coordinate_(coordinate1)
+        DdaTwoLineInterpolator(int coordinate1, int coordinate2, int count) :
+            dividCount(count <= 0 ? 1 : count),
+            leftSideCoordinate((coordinate2 - coordinate1) / dividCount),
+            remainderValue((coordinate2 - coordinate1) % dividCount),
+            moduloOperate(remainderValue),
+            coordinateData(coordinate1)
         {
-            if (modulo_ <= 0) {
-                modulo_ += count;
-                remainder_ += count;
-                left_--;
+            if (moduloOperate <= 0) {
+                moduloOperate += count;
+                remainderValue += count;
+                leftSideCoordinate--;
             }
-            modulo_ -= count;
+            moduloOperate -= count;
         }
 
         void operator++()
         {
-            modulo_ += remainder_;
-            coordinate_ += left_;
-            if (modulo_ > 0) {
-                modulo_ -= count_;
-                coordinate_++;
+            moduloOperate += remainderValue;
+            coordinateData += leftSideCoordinate;
+            if (moduloOperate > 0) {
+                moduloOperate -= dividCount;
+                coordinateData++;
             }
         }
 
         void operator--()
         {
-            if (modulo_ <= remainder_) {
-                modulo_ += count_;
-                coordinate_--;
+            if (moduloOperate <= remainderValue) {
+                moduloOperate += dividCount;
+                coordinateData--;
             }
-            modulo_ -= remainder_;
-            coordinate_ -= left_;
+            moduloOperate -= remainderValue;
+            coordinateData -= leftSideCoordinate;
         }
 
         int GetCoordinate() const
         {
-            return coordinate_;
+            return coordinateData;
         }
 
     private:
-        int count_;
-        int left_;
-        int remainder_;
-        int modulo_;
-        int coordinate_;
+        int dividCount;
+        int leftSideCoordinate;
+        int remainderValue;
+        int moduloOperate;
+        int coordinateData;
     };
 } // namespace OHOS
-
 #endif

@@ -13,18 +13,19 @@
  * limitations under the License.
  */
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h"
+
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-    VertexGenerateStroke::VertexGenerateStroke()
-        :stroker_(),
-         srcVertices_(),
-         outVertices_(),
-         shorten_(0.0),
-         closed_(0),
-         status_(INITIAL),
-         srcVertex_(0),
-         outVertex_(0)
+    VertexGenerateStroke::VertexGenerateStroke() :
+        stroker_(),
+        srcVertices_(),
+        outVertices_(),
+        shorten_(0.0),
+        closed_(0),
+        status_(INITIAL),
+        srcVertex_(0),
+        outVertex_(0)
     {
     }
 
@@ -90,7 +91,7 @@ namespace OHOS {
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[0],
                                      srcVertices_[1],
-                                     srcVertices_[0].dist_);
+                                     srcVertices_[0].vertexDistance);
                     srcVertex_ = 1;
                     prevStatus_ = OUTLINE1;
                     status_ = OUT_VERTICES;
@@ -100,7 +101,7 @@ namespace OHOS {
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[srcVertices_.Size() - 1],
                                      srcVertices_[srcVertices_.Size() - verticesNum],
-                                     srcVertices_[srcVertices_.Size() - verticesNum].dist_);
+                                     srcVertices_[srcVertices_.Size() - verticesNum].vertexDistance);
                     prevStatus_ = OUTLINE2;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
@@ -119,8 +120,8 @@ namespace OHOS {
                                       srcVertices_.Prev(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Next(srcVertex_),
-                                      srcVertices_.Prev(srcVertex_).dist_,
-                                      srcVertices_.Curr(srcVertex_).dist_);
+                                      srcVertices_.Prev(srcVertex_).vertexDistance,
+                                      srcVertices_.Curr(srcVertex_).vertexDistance);
                     ++srcVertex_;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
@@ -140,8 +141,8 @@ namespace OHOS {
                                       srcVertices_.Next(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Prev(srcVertex_),
-                                      srcVertices_.Curr(srcVertex_).dist_,
-                                      srcVertices_.Prev(srcVertex_).dist_);
+                                      srcVertices_.Curr(srcVertex_).vertexDistance,
+                                      srcVertices_.Prev(srcVertex_).vertexDistance);
                     outVertex_ = 0;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
@@ -158,10 +159,10 @@ namespace OHOS {
                     break;
                 case END_POLY1:
                     status_ = prevStatus_;
-                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
+                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CLOCKWISE;
                 case END_POLY2:
                     status_ = prevStatus_;
-                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CW;
+                    return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_ANTI_CLOCKWISE;
                 case STOP:
                     cmd = PATH_CMD_STOP;
                     break;

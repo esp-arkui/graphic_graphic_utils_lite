@@ -25,18 +25,19 @@
 
 namespace OHOS {
     template <class Source>
-    class SpanPatternRgba {
+    class SpanPatternFillRgba {
     public:
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
         typedef typename PatternSource::order_type orderType;
         typedef typename colorType::ValueType valueType;
-        SpanPatternRgba()
+        SpanPatternFillRgba()
         {
         }
-        SpanPatternRgba(PatternSource& source,
-                        unsigned offset_x, unsigned offset_y)
-            : patternSource(&source), offsetX(offset_x), offsetY(offset_y)
+        SpanPatternFillRgba(PatternSource& source,
+                            unsigned offset_x, unsigned offset_y) :
+            patternSource(&source),
+            offsetX(offset_x), offsetY(offset_y)
         {
         }
         /**

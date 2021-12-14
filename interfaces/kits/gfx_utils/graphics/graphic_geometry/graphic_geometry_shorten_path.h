@@ -23,7 +23,6 @@
  * @version 1.0
  */
 
-
 #ifndef GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
 #define GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
 
@@ -44,26 +43,26 @@ namespace OHOS {
         using VertexType = typename VertexSequence::ValueType;
 
         if (vtxSeq.Size() > 1 && distence > 0.0) {
-            double d;
+            double vtxSeqDistance;
             int nSize = int(vtxSeq.Size() - TWO_STEP);
             while (nSize) {
-                d = vtxSeq[nSize].dist_;
-                if (distence < d) {
+                vtxSeqDistance = vtxSeq[nSize].vertexDistance;
+                if (distence < vtxSeqDistance) {
                     break;
                 }
                 vtxSeq.RemoveLast();
-                distence = distence - d;
+                distence = distence - vtxSeqDistance;
                 --nSize;
             }
             if (vtxSeq.Size() > 1) {
                 nSize = vtxSeq.Size() - 1;
                 VertexType& prev = vtxSeq[nSize - 1];
                 VertexType& last = vtxSeq[nSize];
-                d = (prev.dist_ - distence) / prev.dist_;
-                double x = prev.x_ + (last.x_ - prev.x_) * d;
-                double y = prev.y_ + (last.y_ - prev.y_) * d;
-                last.x_ = x;
-                last.y_ = y;
+                vtxSeqDistance = (prev.vertexDistance - distence) / prev.vertexDistance;
+                double x = prev.vertexXCoord + (last.vertexXCoord - prev.vertexXCoord) * vtxSeqDistance;
+                double y = prev.vertexYCoord + (last.vertexYCoord - prev.vertexYCoord) * vtxSeqDistance;
+                last.vertexXCoord = x;
+                last.vertexYCoord = y;
                 if (!prev(last)) {       // 计算两个顶点距离是否很近
                     vtxSeq.RemoveLast(); // 删除距离不近的点
                 }

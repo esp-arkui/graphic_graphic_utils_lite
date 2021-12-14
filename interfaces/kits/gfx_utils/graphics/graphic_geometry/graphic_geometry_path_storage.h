@@ -17,9 +17,10 @@
 #define GRAPHIC_PATH_STORAGE_INCLUDED
 
 #include <cstring>
-#include "graphic_geometry_bezier_arc.h"
+
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
+#include "graphic_geometry_bezier_arc.h"
 
 namespace OHOS {
     /**
@@ -28,8 +29,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    template<class ValueType, unsigned BlockShift = OHOS::THIRTY_TWO_COLOR_NUM,
-             unsigned BlockPool = OHOS::MAX_COLOR_SIZE>
+    template <class ValueType, unsigned BlockShift = OHOS::THIRTY_TWO_COLOR_NUM,
+              unsigned BlockPool = OHOS::MAX_COLOR_SIZE>
     class VertexBlockStorage {
     public:
         // Allocation parameters
@@ -127,14 +128,14 @@ namespace OHOS {
     {
         if (totalBlocks_) {
             ValueType** coordBLK = croodBlocks_ + totalBlocks_ - 1;
-            for( ; totalBlocks_ > 0 ; totalBlocks_--) {
-                ArrAllocator<ValueType>::Deallocate(
+            for (; totalBlocks_ > 0; totalBlocks_--) {
+                GeometryArrayAllocator<ValueType>::Deallocate(
                     *coordBLK,
                     BLOCK_SIZE * OHOS::TWO_TIMES +
-                    BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
+                        BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
                 --coordBLK;
             }
-            ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
+            GeometryArrayAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
             totalBlocks_ = 0;
             maxBlocks_ = 0;
             croodBlocks_ = 0;
@@ -150,8 +151,8 @@ namespace OHOS {
     }
 
     template <class ValueType, unsigned S, unsigned P>
-    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage()
-        : totalVertices_(0),
+    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage() :
+        totalVertices_(0),
         totalBlocks_(0),
         maxBlocks_(0),
         croodBlocks_(0),
@@ -160,8 +161,8 @@ namespace OHOS {
     }
 
     template <class ValueType, unsigned S, unsigned P>
-    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage(const VertexBlockStorage<ValueType, S, P>& v)
-        : totalVertices_(0),
+    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage(const VertexBlockStorage<ValueType, S, P>& v) :
+        totalVertices_(0),
         totalBlocks_(0),
         maxBlocks_(0),
         croodBlocks_(0),
@@ -171,8 +172,7 @@ namespace OHOS {
     }
 
     template <class ValueType, unsigned S, unsigned P>
-    const VertexBlockStorage<ValueType, S, P>& VertexBlockStorage<ValueType, S, P>
-        ::operator=(const VertexBlockStorage<ValueType, S, P>& v)
+    const VertexBlockStorage<ValueType, S, P>& VertexBlockStorage<ValueType, S, P>::operator=(const VertexBlockStorage<ValueType, S, P>& v)
     {
         RemoveAll();
         unsigned i;
@@ -246,8 +246,8 @@ namespace OHOS {
     void VertexBlockStorage<ValueType, S, P>::AllocateBlock(unsigned nb)
     {
         if (nb >= maxBlocks_) {
-            ValueType** new_coords = ArrAllocator<ValueType*>::Allocate(
-                        (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
+            ValueType** new_coords = GeometryArrayAllocator<ValueType*>::Allocate(
+                (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
 
             unsigned char** new_cmds =
                 (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
@@ -261,15 +261,15 @@ namespace OHOS {
                             cmdBlocks_,
                             maxBlocks_ * sizeof(unsigned char*));
 
-                ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
+                GeometryArrayAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
             }
             croodBlocks_ = new_coords;
             cmdBlocks_ = new_cmds;
             maxBlocks_ += BLOCK_POOL;
         }
         croodBlocks_[nb] =
-            ArrAllocator<ValueType>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
-                                              BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
+            GeometryArrayAllocator<ValueType>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
+                                                        BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
 
         cmdBlocks_[nb] =
             (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
@@ -291,16 +291,16 @@ namespace OHOS {
     template <class ValueType>
     class PolyPlainAdaptor {
     public:
-        PolyPlainAdaptor()
-            : data_(0),
+        PolyPlainAdaptor() :
+            data_(0),
             ptr_(0),
             end_(0),
             closed_(false),
             stop_(false)
         {}
 
-        PolyPlainAdaptor(const ValueType* data, unsigned numPoints, bool closed)
-            : data_(data),
+        PolyPlainAdaptor(const ValueType* data, unsigned numPoints, bool closed) :
+            data_(data),
             ptr_(data),
             end_(data + numPoints * OHOS::TWO_TIMES),
             closed_(closed),
@@ -354,7 +354,8 @@ namespace OHOS {
     class PathBase {
     public:
         using SelfType = PathBase<VertexContainer>;
-        PathBase() : vertices_(), iterator_(0)
+        PathBase() :
+            vertices_(), iterator_(0)
         {}
         /**
          * @brief 去除所有顶点
@@ -506,7 +507,7 @@ namespace OHOS {
                 if (IsVertex(cmd)) {
                     double x0, y0;
                     unsigned cmd0 = LastVertex(&x0, &y0);
-                    if (IsVertex(cmd0)&&(CalcDistance(x, y, x0, y0) > VERTEX_DIST_EPSILON)) {
+                    if (IsVertex(cmd0) && (CalcDistance(x, y, x0, y0) > VERTEX_DIST_EPSILON)) {
                         if (IsMoveTo(cmd)) {
                             cmd = PATH_CMD_LINE_TO;
                         }
@@ -520,10 +521,8 @@ namespace OHOS {
                         }
                         vertices_.AddVertex(x, y, cmd);
                     }
-
-
                 }
-                for( ; !IsStop(cmd = vs.Vertex(&x, &y)) ; ) {
+                for (; !IsStop(cmd = vs.Vertex(&x, &y));) {
                     unsigned int c;
                     if (IsMoveTo(cmd)) {
                         c = unsigned(PATH_CMD_LINE_TO);
@@ -618,9 +617,9 @@ namespace OHOS {
             if (CalcDistance(x0, y0, x, y) < epsilon) {
                 return;
             }
-            BezierArcSvg a(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
-            if (a.RadiiOK()) {
-                JoinPath(a);
+            BezierArcSvg bezierArcSvg(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+            if (bezierArcSvg.RadiiOK()) {
+                JoinPath(bezierArcSvg);
             } else {
                 LineTo(x, y);
             }
@@ -672,5 +671,4 @@ namespace OHOS {
 
     using PathStorage = PathBase<VertexBlockStorage<double> >;
 } // namespace OHOS
-
 #endif

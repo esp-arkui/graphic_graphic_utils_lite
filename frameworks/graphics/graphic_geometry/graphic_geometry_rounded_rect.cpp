@@ -17,54 +17,54 @@
 
 namespace OHOS {
     RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r)
-        :x1_(x1), y1_(y1), x2_(x2), y2_(y2),
-        rx1_(r), ry1_(r), rx2_(r), ry2_(r),
-        rx3_(r), ry3_(r), rx4_(r), ry4_(r)
+        :arcCurveXStart(x1), arcCurveYStart(y1), arcCurveXEnd(x2), arcCurveYEnd(y2),
+        radiusXStart(r), radiusYStart(r), radiusXControlOne(r), radiusYControlOne(r),
+        radiusXControlTwo(r), radiusYControlTwo(r), radiusXEnd(r), radiusYEnd(r)
     {
         if (x1 > x2) {
-            x1_ = x2;
-            x2_ = x1;
+            arcCurveXStart = x2;
+            arcCurveXEnd = x1;
         }
         if (y1 > y2) {
-            y1_ = y2;
-            y2_ = y1;
+            arcCurveYStart = y2;
+            arcCurveYEnd = y1;
         }
     }
 
     void RoundedRect::Rect(double x1, double y1, double x2, double y2)
     {
-        x2_ = x2;
-        y2_ = y2;
-        x1_ = x1;
-        y1_ = y1;
+        arcCurveXEnd = x2;
+        arcCurveYEnd = y2;
+        arcCurveXStart = x1;
+        arcCurveYStart = y1;
         if (x1 > x2) {
-            x1_ = x2;
-            x2_ = x1;
+            arcCurveXStart = x2;
+            arcCurveXEnd = x1;
         }
         if (y1 > y2) {
-            y1_ = y2;
-            y2_ = y1;
+            arcCurveYStart = y2;
+            arcCurveYEnd = y1;
         }
     }
 
     void RoundedRect::Radius(double r)
     {
-        rx1_ = ry1_ = rx2_ = ry2_ = rx3_ = ry3_ = rx4_ = ry4_ = r;
+        radiusXStart = radiusYStart = radiusXControlOne = radiusYControlOne = radiusXControlTwo = radiusYControlTwo = radiusXEnd = radiusYEnd = r;
     }
 
     void RoundedRect::Radius(double rx, double ry)
     {
-        ry1_ = ry2_ = ry3_ = ry4_ = ry;
-        rx1_ = rx2_ = rx3_ = rx4_ = rx;
+        radiusYStart = radiusYControlOne = radiusYControlTwo = radiusYEnd = ry;
+        radiusXStart = radiusXControlOne = radiusXControlTwo = radiusXEnd = rx;
     }
 
     void RoundedRect::Radius(double rxBottom, double ryBottom,
                              double rxTop, double ryTop)
     {
-        rx1_ = rx2_ = rxBottom;
-        rx3_ = rx4_ = rxTop;
-        ry1_ = ry2_ = ryBottom;
-        ry3_ = ry4_ = ryTop;
+        radiusXStart = radiusXControlOne = rxBottom;
+        radiusXControlTwo = radiusXEnd = rxTop;
+        radiusYStart = radiusYControlOne = ryBottom;
+        radiusYControlTwo = radiusYEnd = ryTop;
     }
 
     void RoundedRect::Radius(double rx1,
@@ -73,104 +73,104 @@ namespace OHOS {
                              double ry2,
                              double rx3, double ry3, double rx4, double ry4)
     {
-        rx1_ = rx1;
-        ry1_ = ry1;
-        rx2_ = rx2;
-        ry2_ = ry2;
-        rx3_ = rx3;
-        ry3_ = ry3;
-        rx4_ = rx4;
-        ry4_ = ry4;
+        radiusXStart = rx1;
+        radiusYStart = ry1;
+        radiusXControlOne = rx2;
+        radiusYControlOne = ry2;
+        radiusXControlTwo = rx3;
+        radiusYControlTwo = ry3;
+        radiusXEnd = rx4;
+        radiusYEnd = ry4;
     }
 
     void RoundedRect::NormalizeRadius()
     {
-        double dx = std::fabs(y2_ - y1_);
-        double dy = std::fabs(x2_ - x1_);
+        double dx = std::fabs(arcCurveYEnd - arcCurveYStart);
+        double dy = std::fabs(arcCurveXEnd - arcCurveXStart);
 
-        double t = dx / (rx1_ + rx2_);
+        double t = dx / (radiusXStart + radiusXControlOne);
         double k = 1.0;
         if (t < k)
             k = t;
-        t = dx / (rx3_ + rx4_);
+        t = dx / (radiusXControlTwo + radiusXEnd);
         if (t < k)
             k = t;
-        t = dy / (ry1_ + ry2_);
+        t = dy / (radiusYStart + radiusYControlOne);
         if (t < k)
             k = t;
-        t = dy / (ry3_ + ry4_);
+        t = dy / (radiusYControlTwo + radiusYEnd);
         if (t < k)
             k = t;
 
         if (k < 1.0) {
-            rx1_ *= k;
-            ry1_ *= k;
-            rx2_ *= k;
-            ry2_ *= k;
-            rx3_ *= k;
-            ry3_ *= k;
-            rx4_ *= k;
-            ry4_ *= k;
+            radiusXStart *= k;
+            radiusYStart *= k;
+            radiusXControlOne *= k;
+            radiusYControlOne *= k;
+            radiusXControlTwo *= k;
+            radiusYControlTwo *= k;
+            radiusXEnd *= k;
+            radiusYEnd *= k;
         }
     }
 
     void RoundedRect::Rewind(unsigned)
     {
-        status_ = 0;
+        arcCurveStatus = 0;
     }
 
     unsigned RoundedRect::Vertex(double* x, double* y)
     {
         unsigned cmd = PATH_CMD_STOP;
-        switch (status_) {
+        switch (arcCurveStatus) {
             case VERTEX_STATUS:
-                arc_.Init(x1_ + rx1_, y1_ + ry1_, rx1_, ry1_, PI, PI + PI * HALFNUM);
-                arc_.Rewind(0);
-                status_++;
+                arcCurveObject.Init(arcCurveXStart + radiusXStart, arcCurveYStart + radiusYStart, radiusXStart, radiusYStart, PI, PI + PI * HALFNUM);
+                arcCurveObject.Rewind(0);
+                arcCurveStatus++;
             case VERTEX_STATUS1:
-                cmd = arc_.Vertex(x, y);
+                cmd = arcCurveObject.Vertex(x, y);
                 if (IsStop(cmd)) {
-                    status_++;
+                    arcCurveStatus++;
                 } else {
                     return cmd;
                 }
             case VERTEX_STATUS2:
-                arc_.Init(x2_ - rx2_, y1_ + ry2_, rx2_, ry2_, PI + PI * HALFNUM, 0.0);
-                arc_.Rewind(0);
-                status_++;
+                arcCurveObject.Init(arcCurveXEnd - radiusXControlOne, arcCurveYStart + radiusYControlOne, radiusXControlOne, radiusYControlOne, PI + PI * HALFNUM, 0.0);
+                arcCurveObject.Rewind(0);
+                arcCurveStatus++;
             case VERTEX_STATUS3:
-                cmd = arc_.Vertex(x, y);
+                cmd = arcCurveObject.Vertex(x, y);
                 if (IsStop(cmd)) {
-                    status_++;
+                    arcCurveStatus++;
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
             case VERTEX_STATUS4:
-                arc_.Init(x2_ - rx3_, y2_ - ry3_, rx3_, ry3_,
+                arcCurveObject.Init(arcCurveXEnd - radiusXControlTwo, arcCurveYEnd - radiusYControlTwo, radiusXControlTwo, radiusYControlTwo,
                           0.0, PI * HALFNUM);
-                arc_.Rewind(0);
-                status_++;
+                arcCurveObject.Rewind(0);
+                arcCurveStatus++;
             case VERTEX_STATUS5:
-                cmd = arc_.Vertex(x, y);
+                cmd = arcCurveObject.Vertex(x, y);
                 if (IsStop(cmd)) {
-                    status_++;
+                    arcCurveStatus++;
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
             case VERTEX_STATUS6:
-                arc_.Init(x1_ + rx4_, y2_ - ry4_, rx4_, ry4_, PI * HALFNUM, PI);
-                arc_.Rewind(0);
-                status_++;
+                arcCurveObject.Init(arcCurveXStart + radiusXEnd, arcCurveYEnd - radiusYEnd, radiusXEnd, radiusYEnd, PI * HALFNUM, PI);
+                arcCurveObject.Rewind(0);
+                arcCurveStatus++;
             case VERTEX_STATUS7:
-                cmd = arc_.Vertex(x, y);
+                cmd = arcCurveObject.Vertex(x, y);
                 if (IsStop(cmd)) {
-                    status_++;
+                    arcCurveStatus++;
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
             case VERTEX_STATUS8:
-                cmd = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
-                status_++;
+                cmd = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CLOCKWISE;
+                arcCurveStatus++;
                 break;
         }
         return cmd;

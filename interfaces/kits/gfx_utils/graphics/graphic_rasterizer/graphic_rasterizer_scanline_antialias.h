@@ -27,8 +27,9 @@
 #include "graphic_rasterizer_scanline_clip.h"
 
 namespace OHOS {
+    using RasterizerScanlineClipInt = RasterizerScanlineClip<RasterDepictInt>;
     /**
-    * @template<Clip = RasterizerScanlineClipInt> class RasterizerScanlineAntiAlias
+    * @template<Clip = RasterizerScanlineClipInt> typename RasterizerScanlineAntiAlias
     * @brief 多边形光栅化用于高质量的填充多边形的渲染,
     * 这个类的int坐标包括了24.8的格式，24位用于坐标int部分,
     * 8位用于子像素的shift偏移部分 ，再用move_to(x, y) / line_to(x, y)
@@ -69,8 +70,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2)))
-            : m_outline(cell_block_limit),
+        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2))) :
+            m_outline(cell_block_limit),
             m_clipper(),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -84,9 +85,9 @@ namespace OHOS {
             }
         }
 
-        template <class GammaF>
-        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit)
-            : m_outline(cell_block_limit),
+        template <typename GammaF>
+        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit) :
+            m_outline(cell_block_limit),
             m_clipper(m_outline),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -145,7 +146,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        template <class GammaF>
+        template <typename GammaF>
         void GammaFunction(const GammaF& gamma_function)
         {
             int coverIndex;
@@ -211,7 +212,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        template <class VertexSource>
+        template <typename VertexSource>
         void AddPath(VertexSource& vs, unsigned path_id = 0)
         {
             double x;
@@ -236,7 +237,7 @@ namespace OHOS {
         {
             return m_outline.MinX();
         }
-        int Miny() const
+        int MinY() const
         {
             return m_outline.Miny();
         }
@@ -244,9 +245,9 @@ namespace OHOS {
         {
             return m_outline.MaxX();
         }
-        int Maxy() const
+        int MaxY() const
         {
-            return m_outline.Maxy();
+            return m_outline.MaxY();
         }
 
         /**
@@ -279,7 +280,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        template <class Scanline>
+        template <typename Scanline>
         bool SweepScanline(Scanline& sl);
         bool HitTest(int tx, int ty);
 
@@ -301,25 +302,25 @@ namespace OHOS {
     };
 
     /**
-        * @brief 从Rasterizer阶段获取到某y值的扫描线
-        * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
-        * 利用2者计算delta area 作为area cover 转换成gamma cover
-        * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
-        * 填充到新的scanline中，拥有后续的render。
-        * @since 1.0
-        * @version 1.0
-        */
+    * @brief 从Rasterizer阶段获取到某y值的扫描线
+    * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
+    * 利用2者计算delta area 作为area cover 转换成gamma cover
+    * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
+    * 填充到新的scanline中，拥有后续的render。
+    * @since 1.0
+    * @version 1.0
+    */
     template <class Clip>
     template <class Scanline>
     bool RasterizerScanlineAntiAlias<Clip>::SweepScanline(Scanline& sl)
     {
         while (1) {
-            if (m_scan_y > m_outline.Maxy()) {
+            if (m_scan_y > m_outline.MaxY()) {
                 return false;
             }
             sl.ResetSpans();
             unsigned num_cells = m_outline.ScanlineNumCells(m_scan_y);
-            const CellBuildAntiAlias * const * cells = m_outline.ScanlineCells(m_scan_y);
+            const CellBuildAntiAlias* const* cells = m_outline.ScanlineCells(m_scan_y);
             int cover = 0;
 
             while (num_cells) {
@@ -369,10 +370,10 @@ namespace OHOS {
     }
 
     /**
-        * @brief 将area cover转为gamma cover值计算alpha。
-        * @since 1.0
-        * @version 1.0
-        */
+    * @brief 将area cover转为gamma cover值计算alpha。
+    * @since 1.0
+    * @version 1.0
+    */
     template <class Clip>
     GRAPHIC_GEOMETRY_INLINE unsigned RasterizerScanlineAntiAlias<Clip>::CalculateAlpha(int area) const
     {
@@ -522,7 +523,7 @@ namespace OHOS {
         if (m_auto_close)
             ClosePolygon();
         m_outline.SortAllCells();
-        if (m_outline.TotalCells() == 0) {
+        if (m_outline.GetTotalCells() == 0) {
             return false;
         }
         m_scan_y = m_outline.Miny();
@@ -535,9 +536,9 @@ namespace OHOS {
         if (m_auto_close)
             ClosePolygon();
         m_outline.SortAllCells();
-        if (m_outline.TotalCells() == 0 ||
+        if (m_outline.GetTotalCells() == 0 ||
             y < m_outline.Miny() ||
-            y > m_outline.Maxy()) {
+            y > m_outline.MaxY()) {
             return false;
         }
         m_scan_y = y;
@@ -549,10 +550,9 @@ namespace OHOS {
     {
         if (!NavigateScanline(ty))
             return false;
-        scanline_hit_test sl(tx);
+        ScanlineHitRegionMeasure sl(tx);
         SweepScanline(sl);
-        return sl.hit();
+        return sl.GetHitMeasure();
     }
 } // namespace OHOS
-
 #endif

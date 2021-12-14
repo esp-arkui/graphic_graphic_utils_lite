@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 #ifndef GRAPHIC_GEOMETRY_ARC_INCLUDED
 #define GRAPHIC_GEOMETRY_ARC_INCLUDED
 
@@ -30,7 +29,8 @@ namespace OHOS {
      */
     class Arc : public HeapBase {
     public:
-        Arc() : scale_(1.0), initialized_(false)
+        Arc() :
+            mExpansionRatio(1.0), mInitialized(false)
         {
         }
 
@@ -71,7 +71,7 @@ namespace OHOS {
          */
         double ApproximationScale() const
         {
-            return scale_;
+            return mExpansionRatio;
         }
 
         /**
@@ -99,18 +99,18 @@ namespace OHOS {
          * @version 1.0
          */
         void Normalize(double angle1, double angle2, bool isClockwise);
-        bool initialized_;  // 是否被Init
-        unsigned pathCmd_;  // 连接命令
-        double centerX_;    // 中心X坐标
-        double centerY_;    // 中心Y坐标
-        double rx_;         // X短半轴
-        double ry_;         // Y长半轴
-        double angle_;      // 当前角度
-        double start_;      // 起始角度
-        double end_;        // 结束角度
-        double scale_;      // 伸缩比
-        double delatAngle_; // 弧度变化率
-        bool isClockwise_;  // 方向
+        bool mInitialized;      // 是否被Init
+        unsigned mPathCommand;  // 连接命令
+        double mCenterX;        // 中心X坐标
+        double mCenterY;        // 中心Y坐标
+        double mRadiusX;        // X短半轴
+        double mRadiusY;        // Y长半轴
+        double mCurrentAngle;   // 当前角度
+        double mBeginAngle;     // 起始角度
+        double mEndAngle;       // 结束角度
+        double mExpansionRatio; // 伸缩比
+        double mDeltaAngle;     // 弧度变化率
+        bool mIsClockwise;      // 方向
     };
 } // namespace OHOS
 

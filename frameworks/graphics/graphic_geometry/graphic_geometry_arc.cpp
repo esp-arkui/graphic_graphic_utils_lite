@@ -21,52 +21,52 @@ Arc::Arc(double centerX, double centerY,
          double rx, double ry,
          double start_, double end_,
          bool isClockwise)
-    : centerX_(centerX), centerY_(centerY), rx_(rx), ry_(ry), scale_(1.0)
+    : mCenterX(centerX), mCenterY(centerY), mRadiusX(rx), mRadiusY(ry), mExpansionRatio(1.0)
 {
     Normalize(start_, end_, isClockwise);
 }
 
 void Arc::ApproximationScale(double sale)
 {
-    scale_ = sale;
-    if (initialized_) {
-        Normalize(start_, end_, isClockwise_);
+    mExpansionRatio = sale;
+    if (mInitialized) {
+        Normalize(mBeginAngle, mEndAngle, mIsClockwise);
     }
 }
 
 unsigned Arc::Vertex(double* x, double* y)
 {
     // 当前命令是结束点没有顶点
-    if (IsStop(pathCmd_)) {
+    if (IsStop(mPathCommand)) {
         return PATH_CMD_STOP;
     }
-    if ((angle_ < end_ - delatAngle_ / CURVERENUMSTEP) != isClockwise_) {
-        *x = centerX_ + std::cos(end_) * rx_;
-        *y = centerY_ + std::sin(end_) * ry_;
-        pathCmd_ = PATH_CMD_STOP;
+    if ((mCurrentAngle < mEndAngle - mDeltaAngle / CURVERENUMSTEP) != mIsClockwise) {
+        *x = mCenterX + std::cos(mEndAngle) * mRadiusX;
+        *y = mCenterY + std::sin(mEndAngle) * mRadiusY;
+        mPathCommand = PATH_CMD_STOP;
         return PATH_CMD_LINE_TO;
     }
 
-    *x = centerX_ + std::cos(angle_) * rx_;
-    *y = centerY_ + std::sin(angle_) * ry_;
+    *x = mCenterX + std::cos(mCurrentAngle) * mRadiusX;
+    *y = mCenterY + std::sin(mCurrentAngle) * mRadiusY;
 
-    angle_ += delatAngle_;
+    mCurrentAngle += mDeltaAngle;
 
-    unsigned pf = pathCmd_;
-    pathCmd_ = PATH_CMD_LINE_TO;
+    unsigned pf = mPathCommand;
+    mPathCommand = PATH_CMD_LINE_TO;
     return pf;
 }
 
 void Arc::Rewind(unsigned)
 {
-    pathCmd_ = PATH_CMD_MOVE_TO;
-    angle_ = start_;
+    mPathCommand = PATH_CMD_MOVE_TO;
+    mCurrentAngle = mBeginAngle;
 }
 
 void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
 {
-    double ra = (std::fabs(rx_) + std::fabs(ry_)) / DOUBLENUM;
-    delatAngle_ = std::acos(ra / (ra + RADDALETAELPS / scale_)) * DOUBLENUM; // 计算出弧度变化率
+    double ra = (std::fabs(mRadiusX) + std::fabs(mRadiusY)) / DOUBLENUM;
+    mDeltaAngle = std::acos(ra / (ra + RADDALETAELPS / mExpansionRatio)) * DOUBLENUM; // 计算出弧度变化率
     if (isClockwise) {
         while (endAngle < startAngle) {
             endAngle += PI * DOUBLENUM;
@@ -75,21 +75,21 @@ void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
         while (startAngle < endAngle) {
             startAngle += PI * DOUBLENUM;
         }
-        delatAngle_ = -delatAngle_;
+        mDeltaAngle = -mDeltaAngle;
     }
-    isClockwise_ = isClockwise;
-    start_ = startAngle;
-    end_ = endAngle;
-    initialized_ = true;
+    mIsClockwise = isClockwise;
+    mBeginAngle = startAngle;
+    mEndAngle = endAngle;
+    mInitialized = true;
 }
 
 void Arc::Init(double centerX, double centerY, double rx, double ry,
                double startAngle, double endAngle, bool isClockwise)
 {
-    centerX_ = centerX;
-    centerY_ = centerY;
-    rx_ = rx;
-    ry_ = ry;
+    mCenterX = centerX;
+    mCenterY = centerY;
+    mRadiusX = rx;
+    mRadiusY = ry;
     Normalize(startAngle, endAngle, isClockwise);
 }
 } // namespace OHOS

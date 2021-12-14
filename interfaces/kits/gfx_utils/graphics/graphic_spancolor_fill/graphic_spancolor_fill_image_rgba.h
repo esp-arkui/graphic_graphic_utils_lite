@@ -51,19 +51,21 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Source, class Interpolator>
-    class SpanImage {
+    class SpanFillImage {
     public:
         using source_type = Source;
         using interpolator_type = Interpolator;
 
-        SpanImage()
+        SpanFillImage()
         {
         }
         /**
          * @brief 构造函数传参
          */
-        SpanImage(source_type& src,
-                  interpolator_type& interpolator) : src_(&src), interpolator_(&interpolator)
+        SpanFillImage(source_type& src,
+                      interpolator_type& interpolator) :
+            src_(&src),
+            interpolator_(&interpolator)
         {
         }
 
@@ -98,13 +100,13 @@ namespace OHOS {
     * @version 1.0
     */
     template <class Source, class Interpolator>
-    class SpanImageRgba : public SpanImage<Source, Interpolator> {
+    class SpanImageRgba : public SpanFillImage<Source, Interpolator> {
     public:
         using source_type = Source;
         using color_type = typename source_type::color_type;
         using order_type = typename source_type::order_type;
         using interpolator_type = Interpolator;
-        using spanImage = SpanImage<source_type, interpolator_type>;
+        using spanImage = SpanFillImage<source_type, interpolator_type>;
         using value_type = typename color_type::ValueType;
         using calc_type = typename color_type::CalcType;
         using long_type = typename color_type::LongType;
@@ -112,7 +114,8 @@ namespace OHOS {
         SpanImageRgba()
         {
         }
-        SpanImageRgba(source_type& src, interpolator_type& interpolator) : spanImage(src, interpolator)
+        SpanImageRgba(source_type& src, interpolator_type& interpolator) :
+            spanImage(src, interpolator)
         {
         }
         /**

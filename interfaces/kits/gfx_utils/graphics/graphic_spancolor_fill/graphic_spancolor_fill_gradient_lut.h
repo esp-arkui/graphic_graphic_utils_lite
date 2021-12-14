@@ -35,14 +35,15 @@ namespace OHOS {
     * @version 1.0
     */
     template <class ColorInterpolator, unsigned ColorLutSize = 256>
-    class GradientLut {
+    class GradientColorCalibration {
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
         enum {
             colorLutSize_ = ColorLutSize
         };
-        GradientLut() : colorType(colorLutSize_)
+        GradientColorCalibration() :
+            colorType(colorLutSize_)
         {
         }
 
@@ -147,7 +148,8 @@ namespace OHOS {
              * @param offset_ (0-1)
              * @param color_ 添加的颜色
              */
-            ColorPoint(double offset_, const color_type& color_) : offset(offset_), color(color_)
+            ColorPoint(double offset_, const color_type& color_) :
+                offset(offset_), color(color_)
             {
                 if (offset < 0.0)
                     offset = 0.0;
@@ -178,10 +180,10 @@ namespace OHOS {
             return colorPoint1.offset == colorPoint2.offset;
         }
 
-        using colorProfileType = OHOS::PodBvector<ColorPoint, COLOR_PROFILE_SIZE>;
+        using colorProfileType = OHOS::GeometryPlainDataBlockVector<ColorPoint, COLOR_PROFILE_SIZE>;
         colorProfileType colorProfile;
 
-        using colorLutType = OHOS::PodArray<color_type>;
+        using colorLutType = OHOS::GeometryPlainDataArray<color_type>;
         colorLutType colorType;
     };
 } // namespace OHOS

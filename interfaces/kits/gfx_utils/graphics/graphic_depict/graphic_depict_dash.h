@@ -38,11 +38,11 @@ namespace OHOS {
      * @version 1.0
      */
     template <class VertexSource, class Markers = EmptyMarkers>
-    struct DepictDash : public DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers> {
+    struct DepictDash : public DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers> {
         typedef Markers marker_type;
-        typedef DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers> base_type;
+        typedef DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers> base_type;
 
-        DepictDash(VertexSource& vs) : DepictAdaptorVertexGenerator<VertexSource, VCGenDash, Markers>(vs)
+        DepictDash(VertexSource& vs) : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers>(vs)
         {
         }
 

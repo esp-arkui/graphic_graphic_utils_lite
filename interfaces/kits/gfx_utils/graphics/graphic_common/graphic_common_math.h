@@ -30,9 +30,6 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-    const double VERTEX_DIST_EPSILON = 1e-14;
-    const double INTERSECTIONEPSILON = 1.0e-30;
-    const double AHALF = 0.5;
     /**
      * @brief 计算向量叉积
      * @param x1,x2,x为向量点的x坐标，y1,y2,y为向量点的y坐标
@@ -121,7 +118,7 @@ namespace OHOS {
             x = valueType.x;
             y = valueType.y;
         }
-        return (sum + x * ys - y * xs) * AHALF;
+        return (sum + x * ys - y * xs) * ALPHAHALF;
     }
 } // namespace OHOS
 

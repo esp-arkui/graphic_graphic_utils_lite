@@ -17,7 +17,7 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-    VCGenDash::VCGenDash()
+    VertexGenerateDash::VertexGenerateDash()
         :totalDashLen_(0.0),
          numDashes_(0),
          dashStart_(0.0),
@@ -30,7 +30,7 @@ namespace OHOS {
          srcVertex_(0)
          {}
 
-    void VCGenDash::RemoveAllDashes()
+    void VertexGenerateDash::RemoveAllDashes()
     {
         totalDashLen_ = 0.0;
         numDashes_ = 0;
@@ -38,7 +38,7 @@ namespace OHOS {
         currDash_ = 0;
     }
 
-    void VCGenDash::AddDash(double dashLen, double gapLen)
+    void VertexGenerateDash::AddDash(double dashLen, double gapLen)
     {
         if (numDashes_ < MAX_DASHES) {
             totalDashLen_ += dashLen + gapLen;
@@ -47,13 +47,13 @@ namespace OHOS {
         }
     }
 
-    void VCGenDash::DashStart(double ds)
+    void VertexGenerateDash::DashStart(double ds)
     {
         dashStart_ = ds;
         CalcDashStart(std::fabs(ds));
     }
 
-    void VCGenDash::CalcDashStart(double ds)
+    void VertexGenerateDash::CalcDashStart(double ds)
     {
         currDash_ = 0;
         currDashStart_ = 0.0;
@@ -72,14 +72,14 @@ namespace OHOS {
         }
     }
  
-    void VCGenDash::RemoveAll()
+    void VertexGenerateDash::RemoveAll()
     {
         status_ = INITIAL;
         srcVertices_.RemoveAll();
         closed_ = 0;
     }
 
-    void VCGenDash::AddVertex(double x, double y, unsigned cmd)
+    void VertexGenerateDash::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
         if (IsMoveTo(cmd)) {
@@ -94,7 +94,7 @@ namespace OHOS {
     }
 
     
-    void VCGenDash::Rewind(unsigned)
+    void VertexGenerateDash::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
             srcVertices_.Close(closed_ != 0);
@@ -105,7 +105,7 @@ namespace OHOS {
     }
 
 
-    unsigned VCGenDash::Vertex(double* x, double* y)
+    unsigned VertexGenerateDash::Vertex(double* x, double* y)
     {
         unsigned cmd = PATH_CMD_MOVE_TO;
         while (!IsStop(cmd)) {
@@ -121,9 +121,9 @@ namespace OHOS {
                     srcVertex_ = 1;
                     vertexDist1_ = &srcVertices_[0];
                     vertexDist2_ = &srcVertices_[1];
-                    currRest = vertexDist1_->dist_;
-                    *x = vertexDist1_->x_;
-                    *y = vertexDist1_->y_;
+                    currRest = vertexDist1_->vertexDistance;
+                    *x = vertexDist1_->vertexXCoord;
+                    *y = vertexDist1_->vertexYCoord;
                     if (dashStart_ >= 0.0) {
                         CalcDashStart(dashStart_);
                     }
@@ -143,15 +143,15 @@ namespace OHOS {
                                 currDash_ = 0;
                             }
                             currDashStart_ = 0.0;
-                            *x = vertexDist2_->x_ - (vertexDist2_->x_ - vertexDist1_->x_) * currRest / vertexDist1_->dist_;
-                            *y = vertexDist2_->y_ - (vertexDist2_->y_ - vertexDist1_->y_) * currRest / vertexDist1_->dist_;
+                            *x = vertexDist2_->vertexXCoord - (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
+                            *y = vertexDist2_->vertexYCoord - (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
                         } else {
                             currDashStart_ += currRest;
-                            *x = vertexDist2_->x_;
-                            *y = vertexDist2_->y_;
+                            *x = vertexDist2_->vertexXCoord;
+                            *y = vertexDist2_->vertexYCoord;
                             ++srcVertex_;
                             vertexDist1_ = vertexDist2_;
-                            currRest = vertexDist1_->dist_;
+                            currRest = vertexDist1_->vertexDistance;
                             if (closed_) {
                                 if (srcVertex_ > srcVertices_.Size()) {
                                     status_ = STOP;

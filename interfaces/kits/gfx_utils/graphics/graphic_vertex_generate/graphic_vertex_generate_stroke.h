@@ -37,7 +37,7 @@ namespace OHOS {
 
     public:
         using VertexStorage = VertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
-        using CoordStorage = PodBvector<PointD, BLOCK_SHIFT_SIZE>;
+        using CoordStorage = GeometryPlainDataBlockVector<PointD, BLOCK_SHIFT_SIZE>;
 
         VertexGenerateStroke();
 

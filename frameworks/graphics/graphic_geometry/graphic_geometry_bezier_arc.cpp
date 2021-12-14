@@ -73,20 +73,20 @@ namespace OHOS {
             sweepAngle = DOUBLENUM * PI;
         }
         if (std::fabs(sweepAngle) < 1e-10) {
-            numVertices_ = BEZIER_ARC_POINTS;
-            cmd_ = PATH_CMD_LINE_TO;
-            vertices_[INDEX_ZERO] = x + rx * std::cos(startAngle);
-            vertices_[INDEX_ONE] = y + ry * std::sin(startAngle);
-            vertices_[INDEX_TWO] = x + rx * std::cos(startAngle + sweepAngle);
-            vertices_[INDEX_THREE] = y + ry * std::sin(startAngle + sweepAngle);
+            numberVertices = BEZIER_ARC_POINTS;
+            currentCommand = PATH_CMD_LINE_TO;
+            arrayVertices[INDEX_ZERO] = x + rx * std::cos(startAngle);
+            arrayVertices[INDEX_ONE] = y + ry * std::sin(startAngle);
+            arrayVertices[INDEX_TWO] = x + rx * std::cos(startAngle + sweepAngle);
+            arrayVertices[INDEX_THREE] = y + ry * std::sin(startAngle + sweepAngle);
             return;
         }
 
         double prevSweep;
         double totalSweep = 0.0;
         double localSweep = 0.0;
-        numVertices_ = BEZIER_ARC_SETUP;
-        cmd_ = PATH_CMD_CURVE4;
+        numberVertices = BEZIER_ARC_SETUP;
+        currentCommand = PATH_CMD_CURVE4;
         bool done = false;
         do {
             if (0.0 > sweepAngle) {
@@ -107,11 +107,11 @@ namespace OHOS {
                 }
             }
 
-            ArcToBezier(x, y, rx, ry, startAngle, localSweep, vertices_ + numVertices_ - BEZIER_ARC_SETUP);
+            ArcToBezier(x, y, rx, ry, startAngle, localSweep, arrayVertices + numberVertices - BEZIER_ARC_SETUP);
 
             startAngle += localSweep;
-            numVertices_ += BEZIER_ARC_VERTICES_SIZE_STEP;
-        } while (numVertices_ < BEZIER_ARC_VERTEX_NUM && !done);
+            numberVertices += BEZIER_ARC_VERTICES_SIZE_STEP;
+        } while (numberVertices < BEZIER_ARC_VERTEX_NUM && !done);
     }
 
     void BezierArcSvg::Init(double x0, double y0,
@@ -127,7 +127,7 @@ namespace OHOS {
         if (rx < 0.0) {
             rx = -rx;
         }
-        radiiOK_ = true;
+        isRadiusJoinPath = true;
 
         double delatY2 = (y0 - y2) / DOUBLENUM;
         double delatX2 = (x0 - x2) / DOUBLENUM;
@@ -150,7 +150,7 @@ namespace OHOS {
             pry = ry * ry;
             prx = rx * rx;
             if (radiiCheck > BEZIER_ARC_RADIICHECK) {
-                radiiOK_ = false;
+                isRadiusJoinPath = false;
             }
         }
         double sign = (largeArcFlag == sweepFlag) ? -1.0 : 1.0;
@@ -195,17 +195,17 @@ namespace OHOS {
         } else if (sweepFlag && sweepAngle < 0) {
             sweepAngle += PI * DOUBLENUM;
         }
-        arc_.Init(0.0, 0.0, rx, ry, startAngle, sweepAngle);
+        bezierArcModel.Init(0.0, 0.0, rx, ry, startAngle, sweepAngle);
         TransAffine mtx = TransAffineRotation(angle);
         mtx *= TransAffineTranslation(cx, cy);
-        for (unsigned i = BEZIER_ARC_SETUP; i < arc_.Nuvertices() - BEZIER_ARC_SETUP; i += BEZIER_ARC_SETUP) {
-            mtx.Transform(arc_.Vertices() + i, arc_.Vertices() + i + 1);
+        for (unsigned i = BEZIER_ARC_SETUP; i < bezierArcModel.GetNumberVertices() - BEZIER_ARC_SETUP; i += BEZIER_ARC_SETUP) {
+            mtx.Transform(bezierArcModel.GetVertices() + i, bezierArcModel.GetVertices() + i + 1);
         }
-        arc_.Vertices()[0] = x0;
-        arc_.Vertices()[1] = y0;
-        if (arc_.Nuvertices() > BEZIER_ARC_SETUP) {
-            arc_.Vertices()[arc_.Nuvertices() - BEZIER_ARC_SETUP] = x2;
-            arc_.Vertices()[arc_.Nuvertices() - 1] = y2;
+        bezierArcModel.GetVertices()[0] = x0;
+        bezierArcModel.GetVertices()[1] = y0;
+        if (bezierArcModel.GetNumberVertices() > BEZIER_ARC_SETUP) {
+            bezierArcModel.GetVertices()[bezierArcModel.GetNumberVertices() - BEZIER_ARC_SETUP] = x2;
+            bezierArcModel.GetVertices()[bezierArcModel.GetNumberVertices() - 1] = y2;
         }
     }
 } // namespace OHOS

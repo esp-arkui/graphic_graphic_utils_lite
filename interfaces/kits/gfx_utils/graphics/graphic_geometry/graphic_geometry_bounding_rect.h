@@ -48,9 +48,9 @@ namespace OHOS {
         *y2 = CoordT(0);
 
         vertexSource.Rewind(pathId);
-        unsigned cmd;
-        while (!IsStop(cmd = vertexSource.Vertex(&x, &y))) {
-            if (IsVertex(cmd)) {
+        unsigned currentCommand;
+        while (!IsStop(currentCommand = vertexSource.Vertex(&x, &y))) {
+            if (IsVertex(currentCommand)) {
                 if (first) {
                     *x1 = CoordT(x);
                     *y1 = CoordT(y);

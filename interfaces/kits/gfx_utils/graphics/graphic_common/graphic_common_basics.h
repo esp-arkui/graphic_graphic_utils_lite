@@ -95,8 +95,8 @@ namespace OHOS {
 
     enum PathFlagsEnum {
         PATH_FLAGS_NONE = 0,
-        PATH_FLAGS_CCW = 0x10, // 顺时针
-        PATH_FLAGS_CW = 0x20,  // 逆时针
+        PATH_FLAGS_CLOCKWISE = 0x10,      // 顺时针
+        PATH_FLAGS_ANTI_CLOCKWISE = 0x20, // 逆时针
         PATH_FLAGS_CLOSE = 0x40,
         PATH_FLAGS_MASK = 0xF0
     };
@@ -108,6 +108,22 @@ namespace OHOS {
         COLLINEAR2,
         COLLINEAR3
     };
+    enum ClippingFlagsEnum {
+        CLIPPING_FLAGS_X1_CLIPPED = 4,
+        CLIPPING_FLAGS_X2_CLIPPED = 1,
+        CLIPPING_FLAGS_Y1_CLIPPED = 8,
+        CLIPPING_FLAGS_Y2_CLIPPED = 2,
+        CLIPPING_FLAGS_X_CLIPPED = CLIPPING_FLAGS_X1_CLIPPED | CLIPPING_FLAGS_X2_CLIPPED,
+        CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
+    };
+    template <class Type>
+    class RectBase;
+
+    template <class Type>
+    class PointBase;
+
+    template <class Type>
+    class VertexBase;
 
     using int8 = signed char;
     using int8u = unsigned char;
@@ -117,7 +133,18 @@ namespace OHOS {
     using int32u = unsigned;
     using int64 = signed long long;
     using int64u = unsigned long long;
+    using RectI = RectBase<int>;
+    using RectD = RectBase<double>;
+    using PointD = PointBase<double>;
+    using PointI = PointBase<int>;
+    using VertexF = VertexBase<float>;
+    using VertexD = VertexBase<double>;
+    using VertexI = VertexBase<int>;
 
+    const double COEFFICIENT = 0.7;
+    const double ALPHAHALF = 0.5;
+    const double VERTEX_DIST_EPSILON = 1e-14;
+    const double INTERSECTIONEPSILON = 1.0e-30;
     /**
      * @brief 圆周率
      */
@@ -238,62 +265,6 @@ namespace OHOS {
     const int INDEX_SIX = 6;
     const int INDEX_SEVEN = 7;
 
-#if defined(GRAPHIC_GEOMETRY_FISTP)
-#    pragma warning(push)
-#    pragma warning(disable : 4035)
-    GRAPHIC_GEOMETRY_INLINE int Iround(double v)
-    {
-        int t;
-        __asm fld qword ptr[v] __asm fistp dword ptr[t] __asm mov eax, dword ptr[t]
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uround(double v)
-    {
-        unsigned t;
-        __asm fld qword ptr[v] __asm fistp dword ptr[t] __asm mov eax, dword ptr[t]
-    }
-#    pragma warning(pop)
-    GRAPHIC_GEOMETRY_INLINE int Ifloor(double val)
-    {
-        return int(Floor(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val)
-    {
-        return unsigned(Floor(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
-    {
-        return int(Ceil(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
-    {
-        return unsigned(Ceil(val));
-    }
-#elif defined(GRAPHIC_GEOMETRY_QIFIST)
-    GRAPHIC_GEOMETRY_INLINE int Iround(double val)
-    {
-        return int(val);
-    }
-    GRAPHIC_GEOMETRY_INLINE int Uround(double val)
-    {
-        return unsigned(val);
-    }
-    GRAPHIC_GEOMETRY_INLINE int Ifloor(double val)
-    {
-        return int(std::floor(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val)
-    {
-        return unsigned(std::floor(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
-    {
-        return int(std::ceil(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
-    {
-        return unsigned(std::ceil(val));
-    }
-#else
     GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
     {
         return int(std::ceil(val));
@@ -319,7 +290,7 @@ namespace OHOS {
     {
         return unsigned(val);
     }
-#endif
+
     /**
      * @brief 两个数是否相近.
      *
@@ -355,7 +326,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline double Rad2Deg(double val)
+    inline double RadianToDegree(double val)
     {
         return val * RAD_BASE / PI;
     }
@@ -364,7 +335,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline double Deg2Rad(double val)
+    inline double DegreeToRadian(double val)
     {
         return val * PI / RAD_BASE;
     }
@@ -434,7 +405,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve3(unsigned val)
+    inline bool IsQuadraticBezierCurve(unsigned val)
     {
         return PATH_CMD_CURVE3 == val;
     }
@@ -444,7 +415,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCurve4(unsigned val)
+    inline bool IsCubicBezierCurve(unsigned val)
     {
         return PATH_CMD_CURVE4 == val;
     }
@@ -466,7 +437,7 @@ namespace OHOS {
      */
     inline bool IsClose(unsigned val)
     {
-        return (val & ~(PATH_FLAGS_CW | PATH_FLAGS_CCW)) == (PATH_CMD_END_POLY | PATH_FLAGS_CLOSE);
+        return (val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) == (PATH_CMD_END_POLY | PATH_FLAGS_CLOSE);
     }
 
     /**
@@ -484,9 +455,9 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCw(unsigned val)
+    inline bool IsAntiClockWise(unsigned val)
     {
-        return (val & PATH_FLAGS_CW) != 0;
+        return (val & PATH_FLAGS_ANTI_CLOCKWISE) != 0;
     }
 
     /**
@@ -494,9 +465,9 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline bool IsCcw(unsigned val)
+    inline bool IsClockWise(unsigned val)
     {
-        return (val & PATH_FLAGS_CCW) != 0;
+        return (val & PATH_FLAGS_CLOCKWISE) != 0;
     }
 
     /**
@@ -506,7 +477,7 @@ namespace OHOS {
      */
     inline bool IsOriented(unsigned val)
     {
-        return (val & (PATH_FLAGS_CW | PATH_FLAGS_CCW)) != 0;
+        return (val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) != 0;
     }
 
     /**
@@ -526,7 +497,7 @@ namespace OHOS {
      */
     inline unsigned ClearOrientation(unsigned val)
     {
-        return val & ~(PATH_FLAGS_CW | PATH_FLAGS_CCW);
+        return val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
     }
 
     /**
@@ -556,14 +527,14 @@ namespace OHOS {
      */
     inline unsigned GetOrientation(unsigned val)
     {
-        return val & (PATH_FLAGS_CW | PATH_FLAGS_CCW);
+        return val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
     }
 
 #ifdef GRAPHIC_GEOMETRY_CUSTOM_ALLOCATOR
 #    include "graphic_geometry_allocator.h"
 #else
     template <class T>
-    struct ObjAllocator {
+    struct GeometryObjectAllocator {
         /**
          * @brief 对象内存分配
          * @since 1.0
@@ -585,7 +556,7 @@ namespace OHOS {
     };
 
     template <class T>
-    struct ArrAllocator {
+    struct GeometryArrayAllocator {
         /**
          * @brief 数组内存分配
          * @since 1.0
@@ -593,8 +564,8 @@ namespace OHOS {
          */
         static T* Allocate(unsigned num)
         {
-            if(num < 1){
-               num = 1;
+            if (num < 1) {
+                num = 1;
             }
             return new T[num];
         }
@@ -625,7 +596,8 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_) :
+            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
@@ -764,8 +736,6 @@ namespace OHOS {
         }
         return rect;
     }
-    using RectI = RectBase<int>;
-    using RectD = RectBase<double>;
 
     template <class T>
     struct PointBase {
@@ -778,8 +748,7 @@ namespace OHOS {
             x(x_), y(y_)
         {}
     };
-    using PointD = PointBase<double>;
-    using PointI = PointBase<int>;
+
     template <class T>
     struct VertexBase {
         using ValueType = T;
@@ -788,13 +757,11 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) :
+            x(x_), y(y_), cmd(cmd_)
         {}
     };
 
-    using VertexF = VertexBase<float>;
-    using VertexD = VertexBase<double>;
-    using VertexI = VertexBase<int>;
     template <class T>
     struct ConstRowInfo {
         int x1;
@@ -802,7 +769,8 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
+            x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
@@ -813,7 +781,8 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) :
+            x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS

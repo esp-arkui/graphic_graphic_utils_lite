@@ -14,7 +14,7 @@
  */
 
 /**
-* @file agg_RasterizerCellsAntiAlias.h
+* @file graphic_rasterizer_cells_antialias.h
 * @brief Defines 光栅细胞（防走样）
 * @since 1.0
 * @version 1.0
@@ -78,9 +78,10 @@ namespace OHOS {
         enum DxLimitEnum {
             DX_LIMIT = CONSTITUTION << POLY_SUBPIXEL_SHIFT
         };
+
     public:
-        using cell_type = Cell;
-        using self_type = RasterizerCellsAntiAlias<Cell>;
+        using CellType = Cell;
+        using SelfType = RasterizerCellsAntiAlias<Cell>;
 
         ~RasterizerCellsAntiAlias();
 
@@ -98,7 +99,7 @@ namespace OHOS {
          * @version 1.0
          */
         void Reset();
-        void Style(const cell_type& style_cell);
+        void Style(const CellType& style_cell);
 
         /**
          * @brief 根据传入的2个坐标点（均带有子像素），
@@ -125,7 +126,7 @@ namespace OHOS {
         {
             return m_max_x;
         }
-        int Maxy() const
+        int MaxY() const
         {
             return m_max_y;
         }
@@ -138,7 +139,7 @@ namespace OHOS {
          */
         void SortAllCells();
 
-        unsigned TotalCells() const
+        unsigned GetTotalCells() const
         {
             return m_num_cells;
         }
@@ -160,7 +161,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const cell_type * const * ScanlineCells(unsigned yLevel) const
+        const CellType* const* ScanlineCells(unsigned yLevel) const
         {
             return m_sorted_cells.Data() + m_sorted_y[yLevel - m_min_y].start;
         }
@@ -171,8 +172,8 @@ namespace OHOS {
         }
 
     private:
-        RasterizerCellsAntiAlias(const self_type&);
-        const self_type& operator=(const self_type&);
+        RasterizerCellsAntiAlias(const SelfType&);
+        const SelfType& operator=(const SelfType&);
 
         /**
          * @brief 光栅化过程中设置当前的cell单元。
@@ -181,7 +182,7 @@ namespace OHOS {
          */
         void SetCurrentCell(int x, int y);
 
-        void OutLineLegal(int x1, int y1,int x2, int y2);
+        void OutLineLegal(int x1, int y1, int x2, int y2);
 
         /**
          * @brief 光栅化过程中添加当前的cell单元。
@@ -211,12 +212,12 @@ namespace OHOS {
         unsigned m_curr_block;
         unsigned m_num_cells;
         unsigned m_cell_block_limit;
-        cell_type** m_cells;
-        cell_type* m_curr_cell_ptr;
-        PodVector<cell_type*> m_sorted_cells;
-        PodVector<SortedYLevel> m_sorted_y;
-        cell_type m_curr_cell;
-        cell_type m_style_cell;
+        CellType** m_cells;
+        CellType* m_curr_cell_ptr;
+        GeometryPlainDataVector<CellType*> m_sorted_cells;
+        GeometryPlainDataVector<SortedYLevel> m_sorted_y;
+        CellType m_curr_cell;
+        CellType m_style_cell;
         int m_min_x;
         int m_min_y;
         int m_max_x;
@@ -224,62 +225,58 @@ namespace OHOS {
         bool m_sorted;
     };
 
-    class scanline_hit_test {
+    class ScanlineHitRegionMeasure {
     public:
-        scanline_hit_test(int x)
-            : m_x(x), m_hit(false)
+        ScanlineHitRegionMeasure(int x) :
+            mXCoordinate(x), mHitMeasureFlags(false)
         {}
 
-        void reset_spans()
-        {}
-        void finalize(int)
-        {}
-        void add_cell(int x, int)
+        void AddCellInContainer(int x, int)
         {
-            if (m_x == x)
-                m_hit = true;
+            if (mXCoordinate == x)
+                mHitMeasureFlags = true;
         }
-        void add_span(int x, int len, int)
+        void AddSpanInContainer(int x, int len, int)
         {
-            if (m_x >= x && m_x < x + len)
-                m_hit = true;
+            if (mXCoordinate >= x && mXCoordinate < x + len)
+                mHitMeasureFlags = true;
         }
-        unsigned num_spans() const
+        unsigned GetNumberSpans() const
         {
             return 1;
         }
-        bool hit() const
+        bool GetHitMeasure() const
         {
-            return m_hit;
+            return mHitMeasureFlags;
         }
 
     private:
-        int m_x;
-        bool m_hit;
+        int mXCoordinate;
+        bool mHitMeasureFlags;
     };
 
     template <class Cell>
     RasterizerCellsAntiAlias<Cell>::~RasterizerCellsAntiAlias()
     {
         if (m_num_blocks) {
-            cell_type** ptr = m_cells + m_num_blocks - 1;
+            CellType** ptr = m_cells + m_num_blocks - 1;
             while (m_num_blocks--) {
-                ArrAllocator<cell_type>::Deallocate(*ptr, CELL_BLOCK_SIZE);
+                GeometryArrayAllocator<CellType>::Deallocate(*ptr, CELL_BLOCK_SIZE);
                 ptr--;
             }
-            ArrAllocator<cell_type*>::Deallocate(m_cells, m_max_blocks);
+            GeometryArrayAllocator<CellType*>::Deallocate(m_cells, m_max_blocks);
         }
     }
 
-   /**
+    /**
     *  @brief RasterizerCellsAntiAlias 类的构造函数。.
     * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
     * @since 1.0
     * @version 1.0
     */
     template <class Cell>
-    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit)
-        : m_num_blocks(0),
+    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
+        m_num_blocks(0),
         m_max_blocks(0),
         m_curr_block(0),
         m_num_cells(0),
@@ -496,7 +493,7 @@ namespace OHOS {
     }
 
     template <class Cell>
-    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::Style(const cell_type& style_cell)
+    GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::Style(const CellType& style_cell)
     {
         m_style_cell.style(style_cell);
     }
@@ -537,7 +534,6 @@ namespace OHOS {
         int x_from, x_to;
         int rem_dy_mask, mod_dy_mask, lift_dy_mask, delta, first, increase;
         long long deltax_mask;
-
 
         OutLineLegal(ex1, ey1, ex2, ey2);
         SetCurrentCell(ex1, ey1);
@@ -678,20 +674,20 @@ namespace OHOS {
     {
         if (m_curr_block >= m_num_blocks) {
             if (m_num_blocks >= m_max_blocks) {
-                cell_type** new_cells =
-                    ArrAllocator<cell_type*>::Allocate(m_max_blocks +
-                                                       CELL_BLOCK_POOL);
+                CellType** new_cells =
+                    GeometryArrayAllocator<CellType*>::Allocate(m_max_blocks +
+                                                                CELL_BLOCK_POOL);
 
                 if (m_cells) {
-                    std::memcpy(new_cells, m_cells, m_max_blocks * sizeof(cell_type*));
-                    ArrAllocator<cell_type*>::Deallocate(m_cells, m_max_blocks);
+                    std::memcpy(new_cells, m_cells, m_max_blocks * sizeof(CellType*));
+                    GeometryArrayAllocator<CellType*>::Deallocate(m_cells, m_max_blocks);
                 }
                 m_cells = new_cells;
                 m_max_blocks += CELL_BLOCK_POOL;
             }
 
             m_cells[m_num_blocks++] =
-                ArrAllocator<cell_type>::Allocate(CELL_BLOCK_SIZE);
+                GeometryArrayAllocator<CellType>::Allocate(CELL_BLOCK_SIZE);
         }
         m_curr_cell_ptr = m_cells[m_curr_block++];
     }
@@ -731,8 +727,8 @@ namespace OHOS {
         while (1) {
             int len = int(limit - base);
 
-            Cell** i;
-            Cell** j;
+            Cell** iIndex;
+            Cell** jIndex;
             Cell** pivot;
 
             if (len > QSORT_THRESHOLD) {
@@ -742,68 +738,68 @@ namespace OHOS {
                 pivot = base + len / TWO_TIMES;
                 SwapCells(base, pivot);
 
-                i = base + 1;
-                j = limit - 1;
+                iIndex = base + 1;
+                jIndex = limit - 1;
 
                 /**
                  * 排序保证   *i的值 <= *base 的值 <= *j 的值
                  */
-                if ((*j)->x < (*i)->x) {
-                    SwapCells(i, j);
+                if ((*jIndex)->x < (*iIndex)->x) {
+                    SwapCells(iIndex, jIndex);
                 }
 
-                if ((*base)->x < (*i)->x) {
-                    SwapCells(base, i);
+                if ((*base)->x < (*iIndex)->x) {
+                    SwapCells(base, iIndex);
                 }
 
-                if ((*j)->x < (*base)->x) {
-                    SwapCells(base, j);
+                if ((*jIndex)->x < (*base)->x) {
+                    SwapCells(base, jIndex);
                 }
 
                 while (1) {
                     int x = (*base)->x;
                     do {
-                        i++;
-                    } while ((*i)->x < x);
+                        iIndex++;
+                    } while ((*iIndex)->x < x);
                     do {
-                        j--;
-                    } while (x < (*j)->x);
+                        jIndex--;
+                    } while (x < (*jIndex)->x);
 
-                    if (i > j) {
+                    if (iIndex > jIndex) {
                         break;
                     }
-                    SwapCells(i, j);
+                    SwapCells(iIndex, jIndex);
                 }
 
-                SwapCells(base, j);
+                SwapCells(base, jIndex);
                 /**
                  * push 压入了最大的子数组sub-array
                  */
-                if (j - base > limit - i) {
+                if (jIndex - base > limit - iIndex) {
                     top[0] = base;
-                    top[1] = j;
-                    base = i;
+                    top[1] = jIndex;
+                    base = iIndex;
                 } else {
-                    top[0] = i;
+                    top[0] = iIndex;
                     top[1] = limit;
-                    limit = j;
+                    limit = jIndex;
                 }
                 top += TWO_STEP;
             } else {
                 /**
                  * 当 sub-array 子数组变小时使用执行插入排序
                  */
-                j = base;
-                i = j + 1;
+                jIndex = base;
+                iIndex = jIndex + 1;
 
-                for (; i < limit; i++) {
-                    for (; j[1]->x < (*j)->x; j--) {
-                        SwapCells(j + 1, j);
-                        if (j == base) {
+                for (; iIndex < limit; iIndex++) {
+                    for (; jIndex[1]->x < (*jIndex)->x; jIndex--) {
+                        SwapCells(jIndex + 1, jIndex);
+                        if (jIndex == base) {
                             break;
                         }
                     }
-                    j = i;
+                    jIndex = iIndex;
                 }
 
                 if (top > stack) {
@@ -835,7 +831,7 @@ namespace OHOS {
         m_curr_cell.cover = 0;
         m_curr_cell.area = 0;
 
-        if (m_num_cells == 0){
+        if (m_num_cells == 0) {
             return;
         }
 
@@ -847,8 +843,8 @@ namespace OHOS {
         m_sorted_y.CleanData();
 
         // Create the Y-histogram (count the numbers of cells for each Y)
-        cell_type** block_ptr = m_cells;
-        cell_type* cell_ptr;
+        CellType** block_ptr = m_cells;
+        CellType* cell_ptr;
         unsigned nb = m_num_cells;
         unsigned i;
         while (nb) {
@@ -893,7 +889,5 @@ namespace OHOS {
         }
         m_sorted = true;
     }
-
 } // namespace OHOS
-
 #endif

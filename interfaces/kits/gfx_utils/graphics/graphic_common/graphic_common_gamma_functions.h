@@ -28,13 +28,12 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-#define LINEARVALUE 0.0031308
-#define SRGB_VALUE 0.04045
-#define CARDINAL_NUMBER 12.92
-#define BENCHMARK 0.055
-#define BASE_VALUE 1.055
-#define POW_VALUE 2.4
-
+    const double LINEARVALUE = 0.0031308;
+    const double SRGB_VALUE = 0.04045;
+    const double CARDINAL_NUMBER = 12.92;
+    const double BENCHMARK = 0.055;
+    const double BASE_VALUE = 1.055;
+    const double POW_VALUE = 2.4;
     struct GammaNone {
         double operator()(double x) const
         {
@@ -51,8 +50,12 @@ namespace OHOS {
      */
     class GammaPower {
     public:
-        GammaPower() : gamma_(1.0) {}
-        GammaPower(double gamma) : gamma_(gamma) {}
+        GammaPower() :
+            gamma_(1.0)
+        {}
+        GammaPower(double gamma) :
+            gamma_(gamma)
+        {}
 
         void Gamma(double gamma)
         {
@@ -81,8 +84,12 @@ namespace OHOS {
      */
     class GammaMultiply {
     public:
-        GammaMultiply() : multiply_(1.0) {}
-        GammaMultiply(double value) : multiply_(value) {}
+        GammaMultiply() :
+            multiply_(1.0)
+        {}
+        GammaMultiply(double value) :
+            multiply_(value)
+        {}
 
         void Value(double value)
         {
@@ -116,7 +123,8 @@ namespace OHOS {
     inline double LinearToSrgb(double linearValue)
     {
         return (linearValue <= LINEARVALUE) ?
-            (linearValue * CARDINAL_NUMBER) : (BASE_VALUE * pow(linearValue, 1 / POW_VALUE) - BENCHMARK);
+                   (linearValue * CARDINAL_NUMBER) :
+                   (BASE_VALUE * pow(linearValue, 1 / POW_VALUE) - BENCHMARK);
     }
 
     /**
@@ -129,7 +137,8 @@ namespace OHOS {
     inline double SrgbToLinear(double srgbValue)
     {
         return (srgbValue <= SRGB_VALUE) ?
-            (srgbValue / CARDINAL_NUMBER) : pow((srgbValue + BENCHMARK) / (BASE_VALUE), POW_VALUE);
+                   (srgbValue / CARDINAL_NUMBER) :
+                   pow((srgbValue + BENCHMARK) / (BASE_VALUE), POW_VALUE);
     }
 } // namespace OHOS
 

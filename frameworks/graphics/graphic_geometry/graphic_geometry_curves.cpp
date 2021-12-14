@@ -14,6 +14,7 @@
  */
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h"
+
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 
 namespace OHOS {
@@ -21,24 +22,24 @@ namespace OHOS {
     const double CURVEANGLETOLERANCEEPSILON = 0.01;
     const int CURVERECURSIONLIMIT = 32;
     const double CURVES_NUM_STEP_LEN = 0.25;
-    double Curve3Inc::ApproximationScale() const
+    double QuadraticBezierCurveIncrement::ApproximationScale() const
     {
-        return scale_;
+        return approximationScale;
     }
 
-    void Curve3Inc::ApproximationScale(double scale)
+    void QuadraticBezierCurveIncrement::ApproximationScale(double scale)
     {
-        scale_ = scale;
+        approximationScale = scale;
     }
 
-    void Curve3Inc::Init(double x1, double y1,
-                         double x2, double y2,
-                         double x3, double y3)
+    void QuadraticBezierCurveIncrement::Init(double x1, double y1,
+                                             double x2, double y2,
+                                             double x3, double y3)
     {
-        startX_ = x1;
-        startY_ = y1;
-        endX_ = x3;
-        endY_ = y3;
+        startXCoordinate = x1;
+        startYCoordinate = y1;
+        endXCoordinate = x3;
+        endYCoordinate = y3;
 
         double deltaX1 = x2 - x1;
         double deltaY1 = y2 - y1;
@@ -48,76 +49,76 @@ namespace OHOS {
         double len = std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                      std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
 
-        numSteps_ = Uround(len * CURVES_NUM_STEP_LEN * scale_);
+        numberSteps = Uround(len * CURVES_NUM_STEP_LEN * approximationScale);
         const int NUM_STEPS_MAX = 4;
-        if (numSteps_ < NUM_STEPS_MAX) {
-            numSteps_ = NUM_STEPS_MAX;
+        if (numberSteps < NUM_STEPS_MAX) {
+            numberSteps = NUM_STEPS_MAX;
         }
-        double subdivideStep = 1.0 / numSteps_;
+        double subdivideStep = 1.0 / numberSteps;
         double subdivideStep2 = subdivideStep * subdivideStep;
 
         double tmpX = (x1 - x2 * DOUBLENUM + x3) * subdivideStep2;
         double tmpY = (y1 - y2 * DOUBLENUM + y3) * subdivideStep2;
 
-        savedFx_ = x1;
-        fx_ = x1;
-        savedFy_ = y1;
-        fy_ = y1;
+        savedFinalXCoordinate = x1;
+        finalXCoordinate = x1;
+        savedFinalYCoordinate = y1;
+        finalYCoordinate = y1;
 
-        savedDfx_ = tmpX + (x2 - x1) * (DOUBLENUM * subdivideStep);
-        dfx_ = tmpY + (x2 - x1) * (DOUBLENUM * subdivideStep);
-        savedDfy_ = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
-        dfy_ = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
+        savedDeltaFinalXCoordinate = tmpX + (x2 - x1) * (DOUBLENUM * subdivideStep);
+        deltaFinalXCoordinate = tmpY + (x2 - x1) * (DOUBLENUM * subdivideStep);
+        savedDeltaFinalYCoordinate = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
+        deltaFinalYCoordinate = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
 
-        ddfx_ = tmpX * DOUBLENUM;
-        ddfy_ = tmpY * DOUBLENUM;
+        doubleDeltaFinalXCoordinate = tmpX * DOUBLENUM;
+        doubleDeltaFinalYCoordinate = tmpY * DOUBLENUM;
 
-        step_ = numSteps_;
+        currentStep = numberSteps;
     }
 
-    void Curve3Inc::Rewind(unsigned)
+    void QuadraticBezierCurveIncrement::Rewind(unsigned)
     {
-        if (numSteps_ == 0) {
-            step_ = -1;
+        if (numberSteps == 0) {
+            currentStep = -1;
             return;
         }
 
-        step_ = numSteps_;
-        fx_ = savedFx_;
-        fy_ = savedFy_;
-        dfx_ = savedDfx_;
-        dfy_ = savedDfy_;
+        currentStep = numberSteps;
+        finalXCoordinate = savedFinalXCoordinate;
+        finalYCoordinate = savedFinalYCoordinate;
+        deltaFinalXCoordinate = savedDeltaFinalXCoordinate;
+        deltaFinalYCoordinate = savedDeltaFinalYCoordinate;
     }
 
-    unsigned Curve3Inc::Vertex(double* x, double* y)
+    unsigned QuadraticBezierCurveIncrement::Vertex(double* x, double* y)
     {
-        if (step_ < 0) {
+        if (currentStep < 0) {
             return PATH_CMD_STOP;
         }
-        if (step_ == numSteps_) {
-            *x = startX_;
-            *y = startY_;
-            --step_;
+        if (currentStep == numberSteps) {
+            *x = startXCoordinate;
+            *y = startYCoordinate;
+            --currentStep;
             return PATH_CMD_MOVE_TO;
         }
-        if (step_ == 0) {
-            *x = endX_;
-            *y = endY_;
-            --step_;
+        if (currentStep == 0) {
+            *x = endXCoordinate;
+            *y = endYCoordinate;
+            --currentStep;
             return PATH_CMD_LINE_TO;
         }
 
-        fx_ += dfx_;
-        fy_ += dfy_;
-        dfx_ += ddfx_;
-        dfy_ += ddfy_;
-        *x = fx_;
-        *y = fy_;
-        --step_;
+        finalXCoordinate += deltaFinalXCoordinate;
+        finalYCoordinate += deltaFinalYCoordinate;
+        deltaFinalXCoordinate += doubleDeltaFinalXCoordinate;
+        deltaFinalYCoordinate += doubleDeltaFinalYCoordinate;
+        *x = finalXCoordinate;
+        *y = finalYCoordinate;
+        --currentStep;
         return PATH_CMD_LINE_TO;
     }
 
-    void Curve3Div::Init(double x1, double y1,
+    void QuadraticBezierCurveDividOperate::Init(double x1, double y1,
                          double x2, double y2,
                          double x3, double y3)
     {
@@ -128,7 +129,7 @@ namespace OHOS {
         count_ = 0;
     }
 
-    void Curve3Div::RecursiveBezier(double x1, double y1,
+    void QuadraticBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
                                     double x2, double y2,
                                     double x3, double y3,
                                     unsigned level)
@@ -197,7 +198,7 @@ namespace OHOS {
         RecursiveBezier(x123, y123, x23, y23, x3, y3, level + 1);
     }
 
-    void Curve3Div::Bezier(double x1, double y1,
+    void QuadraticBezierCurveDividOperate::Bezier(double x1, double y1,
                            double x2, double y2,
                            double x3, double y3)
     {
@@ -206,25 +207,25 @@ namespace OHOS {
         points_.Add(PointD(x3, y3));
     }
 
-    void Curve4Inc::ApproximationScale(double scale)
+    void CubicBezierCurveIncrement::ApproximationScale(double scale)
     {
-        scale_ = scale;
+        approximationScale = scale;
     }
 
-    double Curve4Inc::ApproximationScale() const
+    double CubicBezierCurveIncrement::ApproximationScale() const
     {
-        return scale_;
+        return approximationScale;
     }
 
-    void Curve4Inc::Init(double x1, double y1,
+    void CubicBezierCurveIncrement::Init(double x1, double y1,
                          double x2, double y2,
                          double x3, double y3,
                          double x4, double y4)
     {
-        startX_ = x1;
-        startY_ = y1;
-        endX_ = x4;
-        endY_ = y4;
+        startXCoordinate = x1;
+        startYCoordinate = y1;
+        endXCoordinate = x4;
+        endYCoordinate = y4;
 
         double deltaX1 = x2 - x1;
         double deltaY1 = y2 - y1;
@@ -236,15 +237,15 @@ namespace OHOS {
         double len = (std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                       std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2) +
                       std::sqrt(deltaX3 * deltaX3 + deltaY3 * deltaY3)) *
-                     CURVES_NUM_STEP_LEN * scale_;
+                     CURVES_NUM_STEP_LEN * approximationScale;
 
-        numSteps_ = Uround(len);
+        numberSteps = Uround(len);
         const int cuvereNumStep = 4;
-        if (numSteps_ < cuvereNumStep) {
-            numSteps_ = cuvereNumStep;
+        if (numberSteps < cuvereNumStep) {
+            numberSteps = cuvereNumStep;
         }
 
-        double subdivideStep = 1.0 / numSteps_;
+        double subdivideStep = 1.0 / numberSteps;
         double subdivideStep2 = subdivideStep * subdivideStep;
         double subdivideStep3 = subdivideStep * subdivideStep * subdivideStep;
         const double PrelMin = 3.0;
@@ -261,76 +262,76 @@ namespace OHOS {
         double tmp2X = (x2 - x3) * PrelMin - x1 + x4;
         double tmp2Y = (y2 - y3) * PrelMin - y1 + y4;
 
-        savedFx_ = x1;
-        fx_ = x1;
-        savedFy_ = y1;
-        fy_ = y1;
+        savedFinalXCoordinate = x1;
+        finalXCoordinate = x1;
+        savedFinalYCoordinate = y1;
+        finalYCoordinate = y1;
 
-        savedDfx_ = (x2 - x1) * pre1 + tmp1X * pre2 + tmp2X * subdivideStep3;
-        dfx_ = (x2 - x1) * pre1 + tmp1X * pre2 + tmp2X * subdivideStep3;
-        savedDfy_ = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
-        dfy_ = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
+        savedDeltaFinalXCoordinate = (x2 - x1) * pre1 + tmp1X * pre2 + tmp2X * subdivideStep3;
+        deltaFinalXCoordinate = (x2 - x1) * pre1 + tmp1X * pre2 + tmp2X * subdivideStep3;
+        savedDeltaFinalYCoordinate = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
+        deltaFinalYCoordinate = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
 
-        savedDdfx_ = tmp1X * pre4 + tmp2X * pre5;
-        ddfx_ = tmp1X * pre4 + tmp2X * pre5;
-        savedDdfy_ = tmp1Y * pre4 + tmp2Y * pre5;
-        ddfy_ = tmp1Y * pre4 + tmp2Y * pre5;
+        savedDoubleDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
+        doubleDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
+        savedDoubleDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
+        doubleDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
 
-        dddfx_ = tmp2X * pre5;
-        dddfy_ = tmp2Y * pre5;
+        doubleDoubleDeltaFinalXCoordinate = tmp2X * pre5;
+        doubleDoubleDeltaFinalYCoordinate = tmp2Y * pre5;
 
-        step_ = numSteps_;
+        currentStep = numberSteps;
     }
 
-    void Curve4Inc::Rewind(unsigned)
+    void CubicBezierCurveIncrement::Rewind(unsigned)
     {
-        if (numSteps_ == 0) {
-            step_ = -1;
+        if (numberSteps == 0) {
+            currentStep = -1;
             return;
         }
 
-        step_ = numSteps_;
-        fx_ = savedFx_;
-        fy_ = savedFy_;
-        dfx_ = savedDfx_;
-        dfy_ = savedDfy_;
-        ddfx_ = savedDdfx_;
-        ddfy_ = savedDdfy_;
+        currentStep = numberSteps;
+        finalXCoordinate = savedFinalXCoordinate;
+        finalYCoordinate = savedFinalYCoordinate;
+        deltaFinalXCoordinate = savedDeltaFinalXCoordinate;
+        deltaFinalYCoordinate = savedDeltaFinalYCoordinate;
+        doubleDeltaFinalXCoordinate = savedDoubleDeltaFinalXCoordinate;
+        doubleDeltaFinalYCoordinate = savedDoubleDeltaFinalYCoordinate;
     }
 
-    unsigned Curve4Inc::Vertex(double* x, double* y)
+    unsigned CubicBezierCurveIncrement::Vertex(double* x, double* y)
     {
-        if (step_ < 0) {
+        if (currentStep < 0) {
             return PATH_CMD_STOP;
         }
-        if (step_ == numSteps_) {
-            *x = startX_;
-            *y = startY_;
-            --step_;
+        if (currentStep == numberSteps) {
+            *x = startXCoordinate;
+            *y = startYCoordinate;
+            --currentStep;
             return PATH_CMD_MOVE_TO;
         }
 
-        if (step_ == 0) {
-            *x = endX_;
-            *y = endY_;
-            --step_;
+        if (currentStep == 0) {
+            *x = endXCoordinate;
+            *y = endYCoordinate;
+            --currentStep;
             return PATH_CMD_LINE_TO;
         }
 
-        fx_ += dfx_;
-        fy_ += dfy_;
-        dfx_ += ddfx_;
-        dfy_ += ddfy_;
-        ddfx_ += dddfx_;
-        ddfy_ += dddfy_;
+        finalXCoordinate += deltaFinalXCoordinate;
+        finalYCoordinate += deltaFinalYCoordinate;
+        deltaFinalXCoordinate += doubleDeltaFinalXCoordinate;
+        deltaFinalYCoordinate += doubleDeltaFinalYCoordinate;
+        doubleDeltaFinalXCoordinate += doubleDoubleDeltaFinalXCoordinate;
+        doubleDeltaFinalYCoordinate += doubleDoubleDeltaFinalYCoordinate;
 
-        *x = fx_;
-        *y = fy_;
-        --step_;
+        *x = finalXCoordinate;
+        *y = finalYCoordinate;
+        --currentStep;
         return PATH_CMD_LINE_TO;
     }
 
-    void Curve4Div::Init(double x1, double y1,
+    void CubicBezierCurveDividOperate::Init(double x1, double y1,
                          double x2, double y2,
                          double x3, double y3,
                          double x4, double y4)
@@ -342,7 +343,7 @@ namespace OHOS {
         count_ = 0;
     }
 
-    void Curve4Div::RecursiveBezier(double x1, double y1,
+    void CubicBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
                                     double x2, double y2,
                                     double x3, double y3,
                                     double x4, double y4,
@@ -481,8 +482,7 @@ namespace OHOS {
                 break;
 
             case COLLINEAR3:
-                if ((delta2 + delta3) * (delta2 + delta3)
-                        <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
+                if ((delta2 + delta3) * (delta2 + delta3) <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                     // 如果曲率未超过距离公差值
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
                         points_.Add(PointD(x23, y23));
@@ -513,7 +513,6 @@ namespace OHOS {
                         points_.Add(PointD(x3, y3));
                         return;
                     }
-
                 }
                 break;
         }
@@ -522,7 +521,7 @@ namespace OHOS {
         RecursiveBezier(x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1);
     }
 
-    void Curve4Div::Bezier(double x1, double y1,
+    void CubicBezierCurveDividOperate::Bezier(double x1, double y1,
                            double x2, double y2,
                            double x3, double y3,
                            double x4, double y4)

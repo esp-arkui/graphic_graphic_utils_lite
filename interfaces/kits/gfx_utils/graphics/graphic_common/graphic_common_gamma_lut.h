@@ -27,26 +27,25 @@
 
 #include <cmath>
 
-#include "graphic_common_gamma_functions.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "graphic_common_gamma_functions.h"
 
 namespace OHOS {
-#define TABLESIZE 256
-#define TABLEBOUNDARY 255
-#define TABLESIZE_HALF 128
-#define TABLESIZE_QURATER 64
-#define TABLESIZE_EIGHTH 32
-#define TABLESIZE_ONE_SIXTEENTH 16
-#define TABLESIZE_ONE_THIRTYTWO 8
-#define TABLESIZE_ONE_SIXTHFOUR 4
-#define TABLESIZE_ONE_ONETWENTYEIGHT 2
-#define TABLESIZE_ONE_TWOFIFTYSIX 1
-#define MOVEBIT 8
-#define HALF 0.5
-#define SRGBVALUE 255.0
-#define RGB16MAX 65535.0
-#define ALPHAMAX 255
-
+    const int TABLESIZE = 256;
+    const int TABLEBOUNDARY = 255;
+    const int TABLESIZE_HALF = 128;
+    const int TABLESIZE_QURATER = 64;
+    const int TABLESIZE_EIGHTH = 32;
+    const int TABLESIZE_ONE_SIXTEENTH = 16;
+    const int TABLESIZE_ONE_THIRTYTWO = 8;
+    const int TABLESIZE_ONE_SIXTHFOUR = 4;
+    const int TABLESIZE_ONE_ONETWENTYEIGHT = 2;
+    const int TABLESIZE_ONE_TWOFIFTYSIX = 1;
+    const int MOVEBIT = 8;
+    const double HALF = 0.5;
+    const double SRGBVALUE = 255.0;
+    const double RGB16MAX = 65535.0;
+    const int ALPHAMAX = 255;
     /**
      * @brief Srgb查找类
      *

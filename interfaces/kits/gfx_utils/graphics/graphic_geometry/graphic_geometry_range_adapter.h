@@ -39,9 +39,9 @@ namespace OHOS {
     * @since 1.0
     * @version 1.0
     */
-    inline bool IntLess(int a, int b)
+    inline bool IntLess(int firstValue, int secondValue)
     {
-        return a < b;
+        return firstValue < secondValue;
     }
     /**
     *
@@ -49,9 +49,9 @@ namespace OHOS {
     * @since 1.0
     * @version 1.0
     */
-    inline bool IntGreater(int a, int b)
+    inline bool IntGreater(int firstValue, int secondValue)
     {
-        return a > b;
+        return firstValue > secondValue;
     }
     /**
     *
@@ -59,9 +59,9 @@ namespace OHOS {
     * @since 1.0
     * @version 1.0
     */
-    inline bool UnsignedLess(unsigned a, unsigned b)
+    inline bool UnsignedLess(unsigned firstValue, unsigned secondValue)
     {
-        return a < b;
+        return firstValue < secondValue;
     }
 
     /**
@@ -70,9 +70,9 @@ namespace OHOS {
     * @since 1.0
     * @version 1.0
     */
-    inline bool UnsignedGreater(unsigned a, unsigned b)
+    inline bool UnsignedGreater(unsigned firstValue, unsigned secondValue)
     {
-        return a > b;
+        return firstValue > secondValue;
     }
     /**
     *
@@ -81,46 +81,46 @@ namespace OHOS {
     * @version 1.0
     */
     template <class T>
-    inline void SwapElements(T& val1, T& val2)
+    inline void SwapElements(T& firstValue, T& secondValue)
     {
-        T temp = val1;
-        val1 = val2;
-        val2 = temp;
+        T temp = firstValue;
+        firstValue = secondValue;
+        secondValue = temp;
     }
 
     template <class Array, class Less>
-    void ToCompareLess(Array& arr, Less less,int i,int j,int base)
+    void ToCompareLess(Array& arr, Less less, int iIndex, int jIndex, int base)
     {
-        for (;;) {
-            do
-                i++;
-            while (less(arr[i], arr[base]));
-            do
-                j--;
-            while (less(arr[base], arr[j]));
+        while (1) {
+            do {
+                iIndex++;
+            } while (less(arr[iIndex], arr[base]));
+            do {
+                jIndex--;
+            } while (less(arr[base], arr[jIndex]));
 
-            if (i > j) {
+            if (iIndex > jIndex) {
                 break;
             }
-            SwapElements(arr[i], arr[j]);
+            SwapElements(arr[iIndex], arr[jIndex]);
         }
     }
 
     template <class Array, class Less>
-    bool CompareLessThreshold(Array& arr, Less less,int i,int j,int base,int limit,int* top,int * stack)
+    bool CompareLessThreshold(Array& arr, Less less, int iIndex, int jIndex, int base, int limit, int* top, int* stack)
     {
         typename Array::ValueType* e1;
         typename Array::ValueType* e2;
-        j = base;
-        i = j + 1;
-        for (; i < limit; i++) {
-            for (; less(*(e1 = &(arr[j + 1])), *(e2 = &(arr[j]))); j--) {
+        jIndex = base;
+        iIndex = jIndex + 1;
+        for (; iIndex < limit; iIndex++) {
+            for (; less(*(e1 = &(arr[jIndex + 1])), *(e2 = &(arr[jIndex]))); jIndex--) {
                 SwapElements(*e1, *e2);
-                if (j == base) {
+                if (jIndex == base) {
                     break;
                 }
             }
-             j = i;
+            jIndex = iIndex;
         }
         if (top > stack) {
             top -= TWO_STEP;
@@ -162,10 +162,10 @@ namespace OHOS {
     template <class Array>
     void InvertContainer(Array& arr)
     {
-        int i = 0;
-        int j = arr.size() - 1;
-        while (i < j) {
-            SwapElements(arr[i++], arr[j--]);
+        int iIndex = 0;
+        int jIndex = arr.size() - 1;
+        while (iIndex < jIndex) {
+            SwapElements(arr[iIndex++], arr[jIndex--]);
         }
     }
 
@@ -196,8 +196,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RangeAdaptor(Array& array, unsigned start, unsigned size)
-            : data_(array), start_(start), size_(size)
+        RangeAdaptor(Array& array, unsigned start, unsigned size) :
+            data_(array), startPoint(start), arraySize(size)
         {}
         /**
         *
@@ -207,7 +207,7 @@ namespace OHOS {
         */
         unsigned Size() const
         {
-            return size_;
+            return arraySize;
         }
 
         /**
@@ -218,7 +218,7 @@ namespace OHOS {
         */
         const ValueType& operator[](unsigned index) const
         {
-            return data_[start_ + index];
+            return data_[startPoint + index];
         }
 
         /**
@@ -229,7 +229,7 @@ namespace OHOS {
         */
         ValueType& operator[](unsigned index)
         {
-            return data_[start_ + index];
+            return data_[startPoint + index];
         }
 
         /**
@@ -240,7 +240,7 @@ namespace OHOS {
         */
         const ValueType& IndexAt(unsigned index) const
         {
-            return data_[start_ + index];
+            return data_[startPoint + index];
         }
         /**
         *
@@ -250,7 +250,7 @@ namespace OHOS {
         */
         ValueType& IndexAt(unsigned index)
         {
-            return data_[start_ + index];
+            return data_[startPoint + index];
         }
         /**
         *
@@ -260,65 +260,65 @@ namespace OHOS {
         */
         ValueType ValueAt(unsigned index) const
         {
-            return data_[start_ + index];
+            return data_[startPoint + index];
         }
 
     private:
-        Array& data_;    // 原数组
-        unsigned start_; // 原数组的起始位置
-        unsigned size_;  // 指定的大小
+        Array& data_;        // 原数组
+        unsigned startPoint; // 原数组的起始位置
+        unsigned arraySize;  // 指定的大小
     };
 
     template <class Array, class Less>
     void QuickSort(Array& arr, Less less)
     {
-        if (arr.Size() <  INDEX_TWO) {
+        if (arr.Size() < INDEX_TWO) {
             return;
         }
-        typename Array::ValueType* e1;
-        typename Array::ValueType* e2;
+        typename Array::ValueType* firstElement;
+        typename Array::ValueType* secondElement;
         int stack[80];
         int* top = stack;
         int limit = arr.Size();
-        int base = 0;
-        for (;;) {
-            int len = limit - base;
-            int i;
-            int j;
+        int baseLimit = 0;
+        while (1) {
+            int len = limit - baseLimit;
+            int iIndex;
+            int jIndex;
             int pivot;
             if (len > QUICK_SORT_THRESHOLD) {
-                pivot = base + len * HALFNUM;
-                SwapElements(arr[base], arr[pivot]);
-                i = base + 1;
-                j = limit - 1;
-                e1 = &(arr[j]);
-                e2 = &(arr[i]);
-                if (less(*e1, *e2)) {
-                    SwapElements(*e1, *e2);
+                pivot = baseLimit + len * HALFNUM;
+                SwapElements(arr[baseLimit], arr[pivot]);
+                iIndex = baseLimit + 1;
+                jIndex = limit - 1;
+                firstElement = &(arr[jIndex]);
+                secondElement = &(arr[iIndex]);
+                if (less(*firstElement, *secondElement)) {
+                    SwapElements(*firstElement, *secondElement);
                 }
-                e1 = &(arr[base]);
-                e2 = &(arr[i]);
-                if (less(*e1, *e2)) {
-                    SwapElements(*e1, *e2);
+                firstElement = &(arr[baseLimit]);
+                secondElement = &(arr[iIndex]);
+                if (less(*firstElement, *secondElement)) {
+                    SwapElements(*firstElement, *secondElement);
                 }
-                e1 = &(arr[j]);
-                e2 = &(arr[base]);
-                if (less(*e1, *e2))
-                    SwapElements(*e1, *e2);
-                ToCompareLess(arr,less,i,j,base);
-                SwapElements(arr[base], arr[j]);
-                if (j - base > limit - i) {
-                    top[0] = base;
-                    top[1] = j;
-                    base = i;
+                firstElement = &(arr[jIndex]);
+                secondElement = &(arr[baseLimit]);
+                if (less(*firstElement, *secondElement))
+                    SwapElements(*firstElement, *secondElement);
+                ToCompareLess(arr, less, iIndex, jIndex, baseLimit);
+                SwapElements(arr[baseLimit], arr[jIndex]);
+                if (jIndex - baseLimit > limit - iIndex) {
+                    top[0] = baseLimit;
+                    top[1] = jIndex;
+                    baseLimit = iIndex;
                 } else {
-                    top[0] = i;
+                    top[0] = iIndex;
                     top[1] = limit;
-                    limit = j;
+                    limit = jIndex;
                 }
                 top += TWO_STEP;
             } else {
-                if(CompareLessThreshold(arr,less,i,j,base,limit,top,stack)){
+                if (CompareLessThreshold(arr, less, iIndex, jIndex, baseLimit, limit, top, stack)) {
                     break;
                 }
             }
@@ -332,26 +332,26 @@ namespace OHOS {
             return 0;
         }
 
-        unsigned begin = 0;
-        unsigned end = arrData.size() - 1;
+        unsigned arrayBegin = 0;
+        unsigned arrayEnd = arrData.size() - 1;
 
         if (less(val, arrData[0])) {
             return 0;
         }
-        if (less(arrData[end], val)) {
-            return end + 1;
+        if (less(arrData[arrayEnd], val)) {
+            return arrayEnd + 1;
         }
 
-        while (end - begin > 1) {
-            unsigned mid = (end + begin) >> 1;
+        while (arrayEnd - arrayBegin > 1) {
+            unsigned mid = (arrayEnd + arrayBegin) >> 1;
             if (less(val, arrData[mid])) {
-                end = mid;
+                arrayEnd = mid;
             } else {
-                begin = mid;
+                arrayBegin = mid;
             }
         }
 
-        return end;
+        return arrayEnd;
     }
 
     template <class Array, class Equal>
@@ -361,14 +361,14 @@ namespace OHOS {
             return arr.Size();
         }
 
-        unsigned i, j;
-        for (i = 1, j = 1; i < arr.Size(); i++) {
-            typename Array::ValueType& e = arr[i];
-            if (!equal(e, arr[i - 1])) {
-                arr[j++] = e;
+        unsigned iIndex, jIndex;
+        for (iIndex = 1, jIndex = 1; iIndex < arr.Size(); iIndex++) {
+            typename Array::ValueType& element = arr[iIndex];
+            if (!equal(element, arr[iIndex - 1])) {
+                arr[jIndex++] = element;
             }
         }
-        return j;
+        return jIndex;
     }
 } // namespace OHOS
 #endif

@@ -121,8 +121,8 @@ namespace OHOS {
             int x2 = Iround(tx * SUBPIXEL_SCALE);
             int y2 = Iround(ty * SUBPIXEL_SCALE);
 
-            dda2LineInterpolatorX = Dda2LineInterpolator(x1, x2, len);
-            dda2LineInterpolatorY = Dda2LineInterpolator(y1, y2, len);
+            dda2LineInterpolatorX = DdaTwoLineInterpolator(x1, x2, len);
+            dda2LineInterpolatorY = DdaTwoLineInterpolator(y1, y2, len);
         }
 
         /*
@@ -131,9 +131,9 @@ namespace OHOS {
         void Resynchronize(double xe, double ye, unsigned len)
         {
             transType->transform(&xe, &ye);
-            dda2LineInterpolatorX = Dda2LineInterpolator(
+            dda2LineInterpolatorX = DdaTwoLineInterpolator(
                 dda2LineInterpolatorX.GetCoordinate(), Iround(xe * SUBPIXEL_SCALE), len);
-            dda2LineInterpolatorY = Dda2LineInterpolator(
+            dda2LineInterpolatorY = DdaTwoLineInterpolator(
                 dda2LineInterpolatorY.GetCoordinate(), Iround(ye * SUBPIXEL_SCALE), len);
         }
 
@@ -154,8 +154,8 @@ namespace OHOS {
 
     private:
         trans_type* transType;
-        Dda2LineInterpolator dda2LineInterpolatorX;
-        Dda2LineInterpolator dda2LineInterpolatorY;
+        DdaTwoLineInterpolator dda2LineInterpolatorX;
+        DdaTwoLineInterpolator dda2LineInterpolatorY;
     };
 } // namespace OHOS
 

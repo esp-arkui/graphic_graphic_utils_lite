@@ -25,8 +25,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    class VCGenDash {
-        enum Status{
+    class VertexGenerateDash {
+        enum Status {
             INITIAL,
             READY,
             POLYLINE,
@@ -36,7 +36,7 @@ namespace OHOS {
     public:
         typedef VertexSequence<VertexDist, BLOCK_SHIFT_SIZE> VertexStorage;
 
-        VCGenDash();
+        VertexGenerateDash();
         /**
          * @brief 去除所有破折号
          * @since 1.0
@@ -99,8 +99,8 @@ namespace OHOS {
         unsigned Vertex(double* x, double* y);
 
     private:
-        VCGenDash(const VCGenDash&);
-        const VCGenDash& operator=(const VCGenDash&);
+        VertexGenerateDash(const VertexGenerateDash&);
+        const VertexGenerateDash& operator=(const VertexGenerateDash&);
 
         void CalcDashStart(double ds);
 

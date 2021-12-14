@@ -38,7 +38,7 @@ namespace OHOS {
      * @version 1.0
      */
     template <class T, unsigned S = BLOCK_SHIFT_SIZE>
-    class PodBvector : public HeapBase {
+    class GeometryPlainDataBlockVector : public HeapBase {
     public:
         enum BlockScaleEnum {
             BLOCK_SHIFT = S,
@@ -46,17 +46,17 @@ namespace OHOS {
             BLOCK_MASK = BLOCK_SIZE - 1
         };
         using ValueType = T;
-        PodBvector();
+        GeometryPlainDataBlockVector();
         /**
         * @brief 构造一个 PodBvector.
         * @param blockPtrInc 每个块大小
         * @since 1.0
         * @version 1.0
         */
-        PodBvector(unsigned blockPtrInc);
-        ~PodBvector();
-        PodBvector(const PodBvector<T, S>& v);
-        const PodBvector<T, S>& operator=(const PodBvector<T, S>& v);
+        GeometryPlainDataBlockVector(unsigned blockPtrInc);
+        ~GeometryPlainDataBlockVector();
+        GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v);
+        const GeometryPlainDataBlockVector<T, S>& operator=(const GeometryPlainDataBlockVector<T, S>& v);
         /**
         * @brief 清空.
         * @since 1.0
@@ -406,28 +406,28 @@ namespace OHOS {
     };
 
     template <class T, unsigned S>
-    PodBvector<T, S>::~PodBvector()
+    GeometryPlainDataBlockVector<T, S>::~GeometryPlainDataBlockVector()
     {
         if (numBlocks_) {
             T** blk = blocks_ + numBlocks_ - 1;
             while (numBlocks_--) {
-                ArrAllocator<T>::Deallocate(*blk, BLOCK_SIZE);
+                GeometryArrayAllocator<T>::Deallocate(*blk, BLOCK_SIZE);
                 --blk;
             }
         }
-        ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
+        GeometryArrayAllocator<T*>::Deallocate(blocks_, maxBlocks_);
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::FreeTail(unsigned size)
+    void GeometryPlainDataBlockVector<T, S>::FreeTail(unsigned size)
     {
         if (size < size_) {
             unsigned nb = (size + BLOCK_MASK) >> BLOCK_SHIFT;
             while (numBlocks_ > nb) {
-                ArrAllocator<T>::Deallocate(blocks_[--numBlocks_], BLOCK_SIZE);
+                GeometryArrayAllocator<T>::Deallocate(blocks_[--numBlocks_], BLOCK_SIZE);
             }
             if (numBlocks_ == 0) {
-                ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
+                GeometryArrayAllocator<T*>::Deallocate(blocks_, maxBlocks_);
                 blocks_ = 0;
                 maxBlocks_ = 0;
             }
@@ -436,28 +436,28 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector()
-        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector() :
+        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
     {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector(unsigned blockPtrInc)
-        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(unsigned blockPtrInc) :
+        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
     {
     }
 
     template <class T, unsigned S>
-    PodBvector<T, S>::PodBvector(const PodBvector<T, S>& v)
-        : size_(v.size_),
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v) :
+        size_(v.size_),
         numBlocks_(v.numBlocks_),
         maxBlocks_(v.maxBlocks_),
-        blocks_(v.maxBlocks_ ? ArrAllocator<T*>::Allocate(v.maxBlocks_) : 0),
+        blocks_(v.maxBlocks_ ? GeometryArrayAllocator<T*>::Allocate(v.maxBlocks_) : 0),
         blockPtrInc_(v.blockPtrInc_)
     {
         unsigned i;
         for (i = 0; i < v.numBlocks_; ++i) {
-            blocks_[i] = ArrAllocator<T>::Allocate(BLOCK_SIZE);
+            blocks_[i] = GeometryArrayAllocator<T>::Allocate(BLOCK_SIZE);
             if (memcpy_s(blocks_[i], BLOCK_SIZE * sizeof(T), v.blocks_[i], BLOCK_SIZE * sizeof(T)) != EOK) {
                 free(blocks_[i]);
                 continue;
@@ -466,7 +466,7 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    const PodBvector<T, S>& PodBvector<T, S>::operator=(const PodBvector<T, S>& v)
+    const GeometryPlainDataBlockVector<T, S>& GeometryPlainDataBlockVector<T, S>::operator=(const GeometryPlainDataBlockVector<T, S>& v)
     {
         unsigned i;
         for (i = numBlocks_; i < v.numBlocks_; ++i) {
@@ -483,27 +483,27 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::AllocateBlock(unsigned blockNum)
+    void GeometryPlainDataBlockVector<T, S>::AllocateBlock(unsigned blockNum)
     {
         if (blockNum >= maxBlocks_) {
-            T** newBlocks = ArrAllocator<T*>::Allocate(maxBlocks_ + blockPtrInc_);
+            T** newBlocks = GeometryArrayAllocator<T*>::Allocate(maxBlocks_ + blockPtrInc_);
 
             if (blocks_) {
                 if (memcpy_s(newBlocks, (maxBlocks_ + blockPtrInc_), blocks_, numBlocks_ * sizeof(T*)) != EOK) {
                     free(newBlocks);
                     return;
                 }
-                ArrAllocator<T*>::Deallocate(blocks_, maxBlocks_);
+                GeometryArrayAllocator<T*>::Deallocate(blocks_, maxBlocks_);
             }
             blocks_ = newBlocks;
             maxBlocks_ += blockPtrInc_;
         }
-        blocks_[blockNum] = ArrAllocator<T>::Allocate(BLOCK_SIZE);
+        blocks_[blockNum] = GeometryArrayAllocator<T>::Allocate(BLOCK_SIZE);
         numBlocks_++;
     }
 
     template <class T, unsigned S>
-    inline T* PodBvector<T, S>::DataPtr()
+    inline T* GeometryPlainDataBlockVector<T, S>::DataPtr()
     {
         unsigned blockNum = size_ >> BLOCK_SHIFT; //解释含义
         if (blockNum >= numBlocks_) {
@@ -513,14 +513,14 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    inline void PodBvector<T, S>::Add(const T& val)
+    inline void GeometryPlainDataBlockVector<T, S>::Add(const T& val)
     {
         *DataPtr() = val;
         ++size_;
     }
 
     template <class T, unsigned S>
-    inline void PodBvector<T, S>::RemoveLast()
+    inline void GeometryPlainDataBlockVector<T, S>::RemoveLast()
     {
         if (size_) {
             --size_;
@@ -528,14 +528,14 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::ModifyLast(const T& val)
+    void GeometryPlainDataBlockVector<T, S>::ModifyLast(const T& val)
     {
         RemoveLast();
         Add(val);
     }
 
     template <class T, unsigned S>
-    int PodBvector<T, S>::AllocateContinuousBlock(unsigned numElements)
+    int GeometryPlainDataBlockVector<T, S>::AllocateContinuousBlock(unsigned numElements)
     {
         if (numElements < BLOCK_SIZE) {
             DataPtr();
@@ -557,13 +557,13 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    unsigned PodBvector<T, S>::ByteSize() const
+    unsigned GeometryPlainDataBlockVector<T, S>::ByteSize() const
     {
         return size_ * sizeof(T);
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::Serialize(int8u* ptr) const
+    void GeometryPlainDataBlockVector<T, S>::Serialize(int8u* ptr) const
     {
         unsigned i;
         for (i = 0; i < size_; i++) {
@@ -576,7 +576,7 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::Deserialize(const int8u* data, unsigned byteSize)
+    void GeometryPlainDataBlockVector<T, S>::Deserialize(const int8u* data, unsigned byteSize)
     {
         RemoveAll();
         byteSize /= sizeof(T);
@@ -592,7 +592,7 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    void PodBvector<T, S>::Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize)
+    void GeometryPlainDataBlockVector<T, S>::Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize)
     {
         while (size_ < start) {
             Add(emptyVal);

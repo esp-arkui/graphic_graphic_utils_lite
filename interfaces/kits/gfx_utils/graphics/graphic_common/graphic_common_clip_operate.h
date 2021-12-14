@@ -38,18 +38,9 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // 完全可见
-const int CLIP_LINE_SEGMENT_FULL_CLIP = 4; // 完全裁剪
-enum ClippingFlagsEnum {
-    CLIPPING_FLAGS_X1_CLIPPED = 4,
-    CLIPPING_FLAGS_X2_CLIPPED = 1,
-    CLIPPING_FLAGS_Y1_CLIPPED = 8,
-    CLIPPING_FLAGS_Y2_CLIPPED = 2,
-    CLIPPING_FLAGS_X_CLIPPED = CLIPPING_FLAGS_X1_CLIPPED | CLIPPING_FLAGS_X2_CLIPPED,
-    CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
-};
-
-/**
+    const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // 完全可见
+    const int CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // 完全裁剪
+    /**
  *   0110  |  0010  | 0011
  *         |        |
  *  -------+--------+-------- clipBox.y2
@@ -67,37 +58,37 @@ enum ClippingFlagsEnum {
  * @since 1.0
  * @version 1.0
  */
-template <class T>
-inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
-{
-    return ((y < clipBox.y1) << 0x03) | ((y > clipBox.y2) << 0x01);
-}
+    template <class T>
+    inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
+    {
+        return ((y < clipBox.y1) << 0x03) | ((y > clipBox.y2) << 0x01);
+    }
 
-/**
+    /**
  * @brief 确定x的位置，横向裁剪.
  * @param x 横向位置,clipBox裁剪窗口
  * @return 返回对应的区域编码
  * @since 1.0
  * @version 1.0
  */
-template <class T>
-inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
-{
-    return ((x < clipBox.x1) << 0x02) | (x > clipBox.x2);
-}
+    template <class T>
+    inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
+    {
+        return ((x < clipBox.x1) << 0x02) | (x > clipBox.x2);
+    }
 
-/**
+    /**
  * @brief 根据顶点的位置确定顶点的剪裁.
  * @param x,y 顶点位置,clipBox裁剪窗口
  * @return 返回对应的区域编码
  * @since 1.0
  * @version 1.0
  */
-template <class T>
-inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
-{
-    return ((x < clipBox.x1) << 0x02) | ((y < clipBox.y1) << 0x03) | (x > clipBox.x2) | ((y > clipBox.y2) << 0x01);
-}
+    template <class T>
+    inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
+    {
+        return ((x < clipBox.x1) << 0x02) | ((y < clipBox.y1) << 0x03) | (x > clipBox.x2) | ((y > clipBox.y2) << 0x01);
+    }
 } // namespace OHOS
 
 #endif

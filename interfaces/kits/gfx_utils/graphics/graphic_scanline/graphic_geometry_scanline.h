@@ -55,10 +55,10 @@ namespace OHOS {
         };
         using Iterator = SpanBlock*;
         using ConstIterator = const SpanBlock*;
-        ScanlineUnPackedContainer()
-            : minX_(0),
-              lastX_(0x7FFFFFF0),
-              curSpan_(0)
+        ScanlineUnPackedContainer() :
+            minScaneLineXCoord(0),
+            lastScaneLineXCoord(0x7FFFFFF0),
+            curSpanBlock(0)
         {}
         /**
             * @class ScanlineUnPackedContainer
@@ -74,13 +74,13 @@ namespace OHOS {
         {
             const int liftNumber = 2;
             unsigned max_len = max_x - min_x + liftNumber;
-            if (max_len > spans_.Size()) {
-                spans_.Resize(max_len);
-                covers_.Resize(max_len);
+            if (max_len > arraySpans.Size()) {
+                arraySpans.Resize(max_len);
+                arrayCovers.Resize(max_len);
             }
-            lastX_ = 0x7FFFFFF0;
-            minX_ = min_x;
-            curSpan_ = &spans_[0];
+            lastScaneLineXCoord = 0x7FFFFFF0;
+            minScaneLineXCoord = min_x;
+            curSpanBlock = &arraySpans[0];
         }
 
         /* 根据x的位置 以及cover 颜色覆盖率是扩展call的区域
@@ -88,17 +88,17 @@ namespace OHOS {
          */
         void AddCell(int x, unsigned cover)
         {
-            x -= minX_;
-            covers_[x] = (CoverType)cover;
-            if (x == lastX_ + 1) {
-                curSpan_->spanLength++;
+            x -= minScaneLineXCoord;
+            arrayCovers[x] = (CoverType)cover;
+            if (x == lastScaneLineXCoord + 1) {
+                curSpanBlock->spanLength++;
             } else {
-                curSpan_++;
-                curSpan_->x = (coord_type)(x + minX_);
-                curSpan_->spanLength = 1;
-                curSpan_->covers = &covers_[x];
+                curSpanBlock++;
+                curSpanBlock->x = (coord_type)(x + minScaneLineXCoord);
+                curSpanBlock->spanLength = 1;
+                curSpanBlock->covers = &arrayCovers[x];
             }
-            lastX_ = x;
+            lastScaneLineXCoord = x;
         }
 
         /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
@@ -106,17 +106,17 @@ namespace OHOS {
         */
         void AddCells(int x, unsigned cellLength, const CoverType* covers)
         {
-            x -= minX_;
-            std::memcpy(&covers_[x], covers, cellLength * sizeof(CoverType));
-            if (x == lastX_ + 1) {
-                curSpan_->spanLength += (coord_type)cellLength;
+            x -= minScaneLineXCoord;
+            std::memcpy(&arrayCovers[x], covers, cellLength * sizeof(CoverType));
+            if (x == lastScaneLineXCoord + 1) {
+                curSpanBlock->spanLength += (coord_type)cellLength;
             } else {
-                curSpan_++;
-                curSpan_->x = (coord_type)(x + minX_);
-                curSpan_->spanLength = (coord_type)cellLength;
-                curSpan_->covers = &covers_[x];
+                curSpanBlock++;
+                curSpanBlock->x = (coord_type)(x + minScaneLineXCoord);
+                curSpanBlock->spanLength = (coord_type)cellLength;
+                curSpanBlock->covers = &arrayCovers[x];
             }
-            lastX_ = x + cellLength - 1;
+            lastScaneLineXCoord = x + cellLength - 1;
         }
 
         /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
@@ -125,17 +125,17 @@ namespace OHOS {
         */
         void AddSpan(int x, unsigned spanLength, unsigned cover)
         {
-            x -= minX_;
-            std::memset(&covers_[x], cover, spanLength);
-            if (x == lastX_ + 1) {
-                curSpan_->spanLength += (coord_type)spanLength;
+            x -= minScaneLineXCoord;
+            std::memset(&arrayCovers[x], cover, spanLength);
+            if (x == lastScaneLineXCoord + 1) {
+                curSpanBlock->spanLength += (coord_type)spanLength;
             } else {
-                curSpan_++;
-                curSpan_->x = (coord_type)(x + minX_);
-                curSpan_->spanLength = (coord_type)spanLength;
-                curSpan_->covers = &covers_[x];
+                curSpanBlock++;
+                curSpanBlock->x = (coord_type)(x + minScaneLineXCoord);
+                curSpanBlock->spanLength = (coord_type)spanLength;
+                curSpanBlock->covers = &arrayCovers[x];
             }
-            lastX_ = x + spanLength - 1;
+            lastScaneLineXCoord = x + spanLength - 1;
         }
 
         /*
@@ -143,29 +143,29 @@ namespace OHOS {
         */
         void Finalize(int y)
         {
-            y_ = y;
+            scaneLineYCoord = y;
         }
         void ResetSpans()
         {
-            lastX_ = 0x7FFFFFF0;
-            curSpan_ = &spans_[0];
+            lastScaneLineXCoord = 0x7FFFFFF0;
+            curSpanBlock = &arraySpans[0];
         }
 
         int GetYLevel() const
         {
-            return y_;
+            return scaneLineYCoord;
         }
         unsigned NumSpans() const
         {
-            return unsigned(curSpan_ - &spans_[0]);
+            return unsigned(curSpanBlock - &arraySpans[0]);
         }
         ConstIterator Begin() const
         {
-            return &spans_[1];
+            return &arraySpans[1];
         }
         Iterator Begin()
         {
-            return &spans_[1];
+            return &arraySpans[1];
         }
 
     private:
@@ -173,12 +173,12 @@ namespace OHOS {
         const self_type& operator=(const self_type&);
 
     private:
-        int minX_;
-        int lastX_;
-        int y_;
-        PodArray<CoverType> covers_;
-        PodArray<SpanBlock> spans_;
-        SpanBlock* curSpan_;
+        int minScaneLineXCoord;
+        int lastScaneLineXCoord;
+        int scaneLineYCoord;
+        GeometryPlainDataArray<CoverType> arrayCovers;
+        GeometryPlainDataArray<SpanBlock> arraySpans;
+        SpanBlock* curSpanBlock;
     };
 } // namespace OHOS
 

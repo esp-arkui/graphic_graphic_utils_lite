@@ -23,14 +23,13 @@
  * @version 1.0
  */
 
-
 #ifndef GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
 #define GRAPHIC_GEOMETRY_VERTEX_SEQUENCE_INCLUDED
 
-#include "graphic_geometry_pod_bvector.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
+#include "graphic_geometry_plaindata_blockvector.h"
 namespace OHOS {
     /**
      * @file graphic_geometry_vertex_sequence.h
@@ -41,9 +40,9 @@ namespace OHOS {
      * @version 1.0
      */
     template <class T, unsigned S = BLOCK_SHIFT_SIZE>
-    class VertexSequence : public PodBvector<T, S> {
+    class VertexSequence : public GeometryPlainDataBlockVector<T, S> {
     public:
-        using BaseType = PodBvector<T, S>;
+        using BaseType = GeometryPlainDataBlockVector<T, S>;
         /**
          * @brief 封闭顶点源.
          *
@@ -113,9 +112,9 @@ namespace OHOS {
     }
 
     struct VertexDist {
-        double x_;
-        double y_;
-        double dist_;
+        double vertexXCoord;
+        double vertexYCoord;
+        double vertexDistance;
 
         VertexDist()
         {}
@@ -126,8 +125,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        VertexDist(double x, double y)
-            : x_(x), y_(y), dist_(0.0)
+        VertexDist(double x, double y) :
+            vertexXCoord(x), vertexYCoord(y), vertexDistance(0.0)
         {
         }
         /**
@@ -140,10 +139,10 @@ namespace OHOS {
          */
         bool operator()(const VertexDist& val)
         {
-            dist_ = CalcDistance(x_, y_, val.x_, val.y_);
-            bool ret = dist_ > VERTEX_DIST_EPSILON;
+            vertexDistance = CalcDistance(vertexXCoord, vertexYCoord, val.vertexXCoord, val.vertexYCoord);
+            bool ret = vertexDistance > VERTEX_DIST_EPSILON;
             if (!ret) {
-                dist_ = 1.0 / VERTEX_DIST_EPSILON;
+                vertexDistance = 1.0 / VERTEX_DIST_EPSILON;
             }
             return ret;
         }
@@ -161,8 +160,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        VertexDistCmd(double x_, double y_, unsigned cmd_)
-            : VertexDist(x_, y_), cmd(cmd_)
+        VertexDistCmd(double x_, double y_, unsigned cmd_) :
+            VertexDist(x_, y_), cmd(cmd_)
         {
         }
     };

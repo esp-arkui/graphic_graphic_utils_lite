@@ -35,7 +35,7 @@
 
 namespace OHOS {
     /**
-     * @file agg_pod_vector.h
+     * @file GeometryPlainDataVector.h
      *
      * @brief Defines PodVector，提供了序列化与反序列化的方法.
      *
@@ -43,12 +43,12 @@ namespace OHOS {
      * @version 1.0
      */
     template <class T>
-    class PodVector : public HeapBase {
+    class GeometryPlainDataVector : public HeapBase {
     public:
         using ValueType = T;
 
-        PodVector()
-            : size_(0), capacity_(0), data_(0)
+        GeometryPlainDataVector() :
+            size_(0), capacity_(0), data_(0)
         {}
 
         /**
@@ -58,16 +58,16 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        PodVector(unsigned cap, unsigned extraTail = 0);
+        GeometryPlainDataVector(unsigned cap, unsigned extraTail = 0);
 
-        PodVector(const PodVector<T>&);
+        GeometryPlainDataVector(const GeometryPlainDataVector<T>&);
 
-        ~PodVector()
+        ~GeometryPlainDataVector()
         {
-            ArrAllocator<T>::Deallocate(data_, capacity_);
+            GeometryArrayAllocator<T>::Deallocate(data_, capacity_);
         }
 
-        const PodVector<T>& operator=(const PodVector<T>&);
+        const GeometryPlainDataVector<T>& operator=(const GeometryPlainDataVector<T>&);
 
         /**
          *
@@ -320,31 +320,31 @@ namespace OHOS {
     };
 
     template <class T>
-    void PodVector<T>::Capacity(unsigned cap, unsigned extraTail)
+    void GeometryPlainDataVector<T>::Capacity(unsigned cap, unsigned extraTail)
     {
         size_ = 0;
         if (cap > capacity_) {
-            ArrAllocator<T>::Deallocate(data_, capacity_);
+            GeometryArrayAllocator<T>::Deallocate(data_, capacity_);
             capacity_ = cap + extraTail;
-            data_ = capacity_ ? ArrAllocator<T>::Allocate(capacity_) : 0;
+            data_ = capacity_ ? GeometryArrayAllocator<T>::Allocate(capacity_) : 0;
         }
     }
 
     template <class T>
-    void PodVector<T>::Allocate(unsigned size, unsigned extraTail)
+    void GeometryPlainDataVector<T>::Allocate(unsigned size, unsigned extraTail)
     {
         Capacity(size, extraTail);
         size_ = size;
     }
 
     template <class T>
-    void PodVector<T>::Resize(unsigned newSize)
+    void GeometryPlainDataVector<T>::Resize(unsigned newSize)
     {
         if (newSize > size_) {
             if (newSize > capacity_) {
-                T* data = ArrAllocator<T>::Allocate(newSize);
+                T* data = GeometryArrayAllocator<T>::Allocate(newSize);
                 memcpy_s(data, newSize, data_, size_ * sizeof(T));
-                ArrAllocator<T>::Deallocate(data_, capacity_);
+                GeometryArrayAllocator<T>::Deallocate(data_, capacity_);
                 data_ = data;
             }
         } else {
@@ -353,20 +353,20 @@ namespace OHOS {
     }
 
     template <class T>
-    PodVector<T>::PodVector(unsigned cap, unsigned extraTail)
-        : size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
+    GeometryPlainDataVector<T>::GeometryPlainDataVector(unsigned cap, unsigned extraTail) :
+        size_(0), capacity_(cap + extraTail), data_(GeometryArrayAllocator<T>::Allocate(capacity_))
     {
     }
 
     template <class T>
-    PodVector<T>::PodVector(const PodVector<T>& v)
-        : size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
+    GeometryPlainDataVector<T>::GeometryPlainDataVector(const GeometryPlainDataVector<T>& v) :
+        size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? GeometryArrayAllocator<T>::Allocate(v.capacity_) : 0)
     {
         memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
     }
 
     template <class T>
-    const PodVector<T>& PodVector<T>::operator=(const PodVector<T>& val)
+    const GeometryPlainDataVector<T>& GeometryPlainDataVector<T>::operator=(const GeometryPlainDataVector<T>& val)
     {
         Allocate(val.size_);
         if (val.size_) {
@@ -376,7 +376,7 @@ namespace OHOS {
     }
 
     template <class T>
-    void PodVector<T>::Deserialize(const int8u* data, unsigned byteSize)
+    void GeometryPlainDataVector<T>::Deserialize(const int8u* data, unsigned byteSize)
     {
         byteSize = byteSize / sizeof(T);
         Allocate(byteSize);
@@ -386,7 +386,7 @@ namespace OHOS {
     }
 
     template <class T>
-    void PodVector<T>::Serialize(int8u* ptr) const
+    void GeometryPlainDataVector<T>::Serialize(int8u* ptr) const
     {
         if (size_) {
             memcpy_s(ptr, size_ * sizeof(T), data_, size_ * sizeof(T));
@@ -394,7 +394,7 @@ namespace OHOS {
     }
 
     template <class T>
-    void PodVector<T>::InsertAt(unsigned pos, const T& val)
+    void GeometryPlainDataVector<T>::InsertAt(unsigned pos, const T& val)
     {
         if (pos >= size_) {
             data_[size_] = val;

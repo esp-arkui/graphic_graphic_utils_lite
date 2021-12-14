@@ -50,8 +50,8 @@ namespace OHOS {
      */
     class BezierArc : public HeapBase {
     public:
-        BezierArc()
-            :vertex_(BEZIER_ARC_VERTEX_NUM), numVertices_(0), cmd_(PATH_CMD_LINE_TO)
+        BezierArc() :
+            vertexIndex(BEZIER_ARC_VERTEX_NUM), numberVertices(0), currentCommand(PATH_CMD_LINE_TO)
         {}
 
         /**
@@ -86,7 +86,7 @@ namespace OHOS {
          */
         void Rewind(unsigned)
         {
-            vertex_ = 0;
+            vertexIndex = 0;
         }
 
         /**
@@ -98,16 +98,16 @@ namespace OHOS {
          */
         unsigned Vertex(double* x, double* y)
         {
-            if (vertex_ >= numVertices_) {
+            if (vertexIndex >= numberVertices) {
                 return PATH_CMD_STOP;
             }
-            *x = vertices_[vertex_];
-            *y = vertices_[vertex_ + 1];
-            vertex_ = vertex_ + OHOS::TWO_STEP;
-            if (vertex_ == OHOS::TWO_STEP) {
+            *x = arrayVertices[vertexIndex];
+            *y = arrayVertices[vertexIndex + 1];
+            vertexIndex = vertexIndex + OHOS::TWO_STEP;
+            if (vertexIndex == OHOS::TWO_STEP) {
                 return unsigned(PATH_CMD_MOVE_TO);
             } else {
-                return cmd_;
+                return currentCommand;
             }
         }
 
@@ -117,9 +117,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Nuvertices() const
+        unsigned GetNumberVertices() const
         {
-            return numVertices_;
+            return numberVertices;
         }
 
         /**
@@ -128,9 +128,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const double* Vertices() const
+        const double* GetVertices() const
         {
-            return vertices_;
+            return arrayVertices;
         }
 
         /**
@@ -139,16 +139,16 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double* Vertices()
+        double* GetVertices()
         {
-            return vertices_;
+            return arrayVertices;
         }
 
     private:
-        unsigned vertex_;
-        unsigned numVertices_;
-        double vertices_[BEZIER_ARC_VERTEX_NUM];
-        unsigned cmd_;
+        unsigned vertexIndex;
+        unsigned numberVertices;
+        double arrayVertices[BEZIER_ARC_VERTEX_NUM];
+        unsigned currentCommand;
     };
 
     /**
@@ -159,8 +159,8 @@ namespace OHOS {
      */
     class BezierArcSvg : public HeapBase {
     public:
-        BezierArcSvg()
-            : arc_(), radiiOK_(false)
+        BezierArcSvg() :
+            bezierArcModel(), isRadiusJoinPath(false)
         {}
 
         /**
@@ -177,16 +177,16 @@ namespace OHOS {
                      double angle,
                      bool largeArcFlag, // 大弧线标志
                      bool sweepFlag,    // 扫掠角标志
-                     double x2, double y2)
-            : arc_(),
-              radiiOK_(false)
+                     double x2, double y2) :
+            bezierArcModel(),
+            isRadiusJoinPath(false)
         {
             Init(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2);
         }
 
         bool RadiiOK() const
         {
-            return radiiOK_;
+            return isRadiusJoinPath;
         }
 
         void Init(double x1,
@@ -207,7 +207,7 @@ namespace OHOS {
         */
         void Rewind(unsigned)
         {
-            arc_.Rewind(0);
+            bezierArcModel.Rewind(0);
         }
 
         /**
@@ -219,7 +219,7 @@ namespace OHOS {
          */
         unsigned Vertex(double* x, double* y)
         {
-            return arc_.Vertex(x, y);
+            return bezierArcModel.Vertex(x, y);
         }
 
         /**
@@ -228,9 +228,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const double* Vertices() const
+        const double* GetVertices() const
         {
-            return arc_.Vertices();
+            return bezierArcModel.GetVertices();
         }
 
         /**
@@ -239,9 +239,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double* Vertices()
+        double* GetVertices()
         {
-            return arc_.Vertices();
+            return bezierArcModel.GetVertices();
         }
 
         /**
@@ -249,14 +249,14 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned NumVertices_() const
+        unsigned GetNumberVertices() const
         {
-            return arc_.Nuvertices();
+            return bezierArcModel.GetNumberVertices();
         }
 
     private:
-        BezierArc arc_;
-        bool radiiOK_;
+        BezierArc bezierArcModel;
+        bool isRadiusJoinPath;
     };
 } // namespace OHOS
 

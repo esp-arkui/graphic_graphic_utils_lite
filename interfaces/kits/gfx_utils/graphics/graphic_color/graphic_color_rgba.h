@@ -31,19 +31,17 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h"
 
 namespace OHOS {
-#define PURPLE_MIN 380.0
-#define PURPLE_MIDDLE 420.0
-#define PURPLE_MAX 440.0
-#define BLUE_MAX 490.0
-#define CYAN_MAX 510.0
-#define GREEN_MAX 580.0
-#define ORANGE_MAX 645.0
-#define RED_MIN 700.0
-#define RED_MAX 780.0
-#define COEFFICIENT 0.7
-#define FIXED_VALUE 0.3
-#define COLOR_CONVERT 255.0
-
+    const double PURPLE_MIN = 380.0;
+    const double PURPLE_MIDDLE = 420.0;
+    const double PURPLE_MAX = 440.0;
+    const double BLUE_MAX = 490.0;
+    const double CYAN_MAX = 510.0;
+    const double GREEN_MAX = 580.0;
+    const double ORANGE_MAX = 645.0;
+    const double RED_MIN = 700.0;
+    const double RED_MAX = 780.0;
+    const double FIXED_VALUE = 0.3;
+    const double COLOR_CONVERT = 255.0;
     struct OrderRgb {
         enum RgbEnum {
             RED = 0,
@@ -133,8 +131,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(double red, double green, double blue, double alpha = 1.0)
-            : redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        Rgba(double red, double green, double blue, double alpha = 1.0) :
+            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
         {}
 
         /**
@@ -145,8 +143,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(const Rgba& color, double alpha)
-            : redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        Rgba(const Rgba& color, double alpha) :
+            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
         {}
 
         /**
@@ -558,11 +556,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK)
-            : redValue(ValueType(red)),
-              greenValue(ValueType(green)),
-              blueValue(ValueType(blue)),
-              alphaValue(ValueType(alpha))
+        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
+            redValue(ValueType(red)),
+            greenValue(ValueType(green)),
+            blueValue(ValueType(blue)),
+            alphaValue(ValueType(alpha))
         {}
 
         /**
@@ -586,11 +584,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(const SelfType& color, unsigned alpha)
-            : redValue(color.redValue),
-              greenValue(color.greenValue),
-              blueValue(color.blueValue),
-              alphaValue(ValueType(alpha))
+        Rgba8T(const SelfType& color, unsigned alpha) :
+            redValue(color.redValue),
+            greenValue(color.greenValue),
+            blueValue(color.blueValue),
+            alphaValue(ValueType(alpha))
         {}
 
         /**
@@ -1069,8 +1067,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(ValueType red, ValueType green, ValueType blue, ValueType alpha = 1)
-            : redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
+        Rgba32(ValueType red, ValueType green, ValueType blue, ValueType alpha = 1) :
+            redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
         {}
 
         /**
@@ -1081,8 +1079,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const SelfType& color, float alpha)
-            : redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        Rgba32(const SelfType& color, float alpha) :
+            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
         {}
 
         /**
@@ -1093,11 +1091,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Rgba& color)
-            : redValue(ValueType(color.redValue)),
-              greenValue(ValueType(color.greenValue)),
-              blueValue(ValueType(color.blueValue)),
-              alphaValue(ValueType(color.alphaValue))
+        Rgba32(const Rgba& color) :
+            redValue(ValueType(color.redValue)),
+            greenValue(ValueType(color.greenValue)),
+            blueValue(ValueType(color.blueValue)),
+            alphaValue(ValueType(color.alphaValue))
         {}
 
         /**
@@ -1108,11 +1106,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Rgba8& color)
-            : redValue(ValueType(color.redValue / COLOR_CONVERT)),
-              greenValue(ValueType(color.greenValue / COLOR_CONVERT)),
-              blueValue(ValueType(color.blueValue / COLOR_CONVERT)),
-              alphaValue(ValueType(color.alphaValue / COLOR_CONVERT))
+        Rgba32(const Rgba8& color) :
+            redValue(ValueType(color.redValue / COLOR_CONVERT)),
+            greenValue(ValueType(color.greenValue / COLOR_CONVERT)),
+            blueValue(ValueType(color.blueValue / COLOR_CONVERT)),
+            alphaValue(ValueType(color.alphaValue / COLOR_CONVERT))
         {}
 
         /**
@@ -1123,11 +1121,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba32(const Srgba8& color)
-            : redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
-              greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
-              blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
-              alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
+        Rgba32(const Srgba8& color) :
+            redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
+            greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
+            blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
+            alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
         {}
 
         operator Rgba() const
