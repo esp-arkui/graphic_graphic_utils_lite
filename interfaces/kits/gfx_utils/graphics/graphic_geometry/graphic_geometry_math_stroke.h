@@ -204,20 +204,20 @@ namespace OHOS {
         /**
          * @brief 计算相交和拐角
          */
-        void CalcJoin(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1,
-                      const VertexDist& v2, double len1, double len2)
+        void CalcJoin(VertexConsumer& vertexConsumer, const VertexDist& vertexDistBegin, const VertexDist& vertexDistMiddle,
+                      const VertexDist& vertexDistLast, double deltaLengthPrev, double deltaLengthLast)
         {
-            double dx1 = strokeWidth * (vd1.vertexYCoord - vd0.vertexYCoord) / len1;
-            double dy1 = strokeWidth * (vd1.vertexXCoord - vd0.vertexXCoord) / len1;
-            double dx2 = strokeWidth * (v2.vertexYCoord - vd1.vertexYCoord) / len2;
-            double dy2 = strokeWidth * (v2.vertexXCoord - vd1.vertexXCoord) / len2;
+            double dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;
+            double dy1 = strokeWidth * (vertexDistMiddle.vertexXCoord - vertexDistBegin.vertexXCoord) / deltaLengthPrev;
+            double dx2 = strokeWidth * (vertexDistLast.vertexYCoord - vertexDistMiddle.vertexYCoord) / deltaLengthLast;
+            double dy2 = strokeWidth * (vertexDistLast.vertexXCoord - vertexDistMiddle.vertexXCoord) / deltaLengthLast;
 
             vertexConsumer.RemoveAll();
 
-            double crossProduct = CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord, vd1.vertexXCoord, vd1.vertexYCoord, v2.vertexXCoord, v2.vertexYCoord);
+            double crossProduct = CrossProduct(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, vertexDistMiddle.vertexXCoord, vertexDistMiddle.vertexYCoord, vertexDistLast.vertexXCoord, vertexDistLast.vertexYCoord);
             if (crossProduct != 0 && (crossProduct > 0) == (strokeWidth > 0)) {
-                double limit = ((len1 < len2) ? len1 : len2) / strokeWidthUsingAbs;
-                CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
+                double limit = ((deltaLengthPrev < deltaLengthLast) ? deltaLengthPrev : deltaLengthLast) / strokeWidthUsingAbs;
+                CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
             } else {
                 double dx = (dx1 + dx2) * HALFNUM;
                 double dy = (dy1 + dy2) * HALFNUM;
@@ -225,14 +225,14 @@ namespace OHOS {
 
                 if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
                     if (approxScaleRadio * (strokeWidthUsingAbs - dbevel) < strokeWidthPercentDivision) {
-                        if (CalcIntersection(vd0.vertexXCoord + dx1, vd0.vertexYCoord - dy1,
-                                             vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1,
-                                             vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2,
-                                             v2.vertexXCoord + dx2, v2.vertexYCoord - dy2,
+                        if (CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
+                                             vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
+                                             vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
+                                             vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
                                              &dx, &dy)) {
                             AddVertex(vertexConsumer, dx, dy);
                         } else {
-                            AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
+                            AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
                         }
                         return;
                     }
@@ -242,15 +242,15 @@ namespace OHOS {
                     case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
-                        CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimitMeasure, dbevel);
+                        CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimitMeasure, dbevel);
                         break;
                     case ROUND_JOIN:
-                        CalcArc(vertexConsumer, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vertexConsumer, vertexDistMiddle.vertexXCoord, vertexDistMiddle.vertexYCoord, dx1, -dy1, dx2, -dy2);
                         break;
 
                     default:
-                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
-                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
+                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
+                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2);
                         break;
                 }
             }
