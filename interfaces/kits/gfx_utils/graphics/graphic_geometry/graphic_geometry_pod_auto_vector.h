@@ -15,10 +15,7 @@
 
 /**
  * @addtogroup GraphicGeometry
- * @{
- *
  * @brief Defines PodAutoVector.
- *
  * @since 1.0
  * @version 1.0
  */
@@ -33,15 +30,6 @@
 #include "gfx_utils/heap_base.h"
 
 namespace OHOS {
-/**
- * @file agg_pod_auto_vector.h
- *
- * @brief Defines PodAutoVector数组.
- *
- * @since 1.0
- * @version 1.0
- */
-
 /**
  *
  * @brief Defines PodAutoVector,增加了可以增删改的方法，最大容量固定.
@@ -62,9 +50,8 @@ public:
      */
     PodAutoVector() : size_(0) {}
 
-     /**
+    /**
      * @brief 清空元素.
-     * 
      * @since 1.0
      * @version 1.0
      */
@@ -74,7 +61,6 @@ public:
     }
     /**
      * @brief 清空元素.
-     * 
      * @since 1.0
      * @version 1.0
      */
@@ -84,7 +70,6 @@ public:
     }
     /**
      * @brief 增加一个元素.
-     * 
      * @since 1.0
      * @version 1.0
      */
@@ -174,8 +159,8 @@ public:
     }
 
 private:
-    T data_[SizeN];  //保存元素的数组
-    unsigned size_; //元素数量
+    T data_[SizeN];  // 保存元素的数组
+    unsigned size_; // 元素数量
 };
 }
 #endif

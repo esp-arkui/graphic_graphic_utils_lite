@@ -30,8 +30,7 @@ namespace OHOS {
     /**
      * @brief 线条末端线帽的样式。
      */
-    enum LineCapEnum
-    {
+    enum LineCapEnum {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -43,8 +42,7 @@ namespace OHOS {
     /**
      * @brief 两条线相交时，所创建的拐角类型
      */
-    enum LineJoinEnum
-    {
+    enum LineJoinEnum {
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -60,11 +58,11 @@ namespace OHOS {
     public:
         typedef typename VertexConsumer::ValueType coord_type;
         MathStroke() :
-            width_(0.5),
-            widthAbs_(0.5),
-            widthEps_(0.5 / 1024.0),
+            width_(OHOS::AHALF),
+            widthAbs_(OHOS::AHALF),
+            widthEps_(OHOS::AHALF / BUF_SIZE),
             widthSign_(1),
-            miterLimit_(4.0),
+            miterLimit_(OHOS::DEFAULTMITERLIMIT),
             approxScale_(1.0),
             lineCapEnum(BUTT_CAP),
             lineJoinEnum(MITER_JOIN)
@@ -101,7 +99,7 @@ namespace OHOS {
          */
         void width(double width)
         {
-            width_ = width * 0.5;
+            width_ = width * OHOS::AHALF;
             if (width_ < 0) {
                 widthAbs_ = -width_;
                 widthSign_ = -1;
@@ -109,7 +107,7 @@ namespace OHOS {
                 widthAbs_ = width_;
                 widthSign_ = 1;
             }
-            widthEps_ = width_ / 1024.0;
+            widthEps_ = width_ / BUF_SIZE;
         }
 
         /**
@@ -133,7 +131,7 @@ namespace OHOS {
          */
         double width() const
         {
-            return width_ * 2.0;
+            return width_ * TWO_TIMES;
         }
 
         /**
@@ -175,7 +173,7 @@ namespace OHOS {
                 AddVertex(vertexConsumer, vd0.x_ - dx1 - dx2, vd0.y_ + dy1 - dy2);
                 AddVertex(vertexConsumer, vd0.x_ + dx1 - dx2, vd0.y_ - dy1 - dy2);
             } else {
-                double deltaAngle = std::acos(widthAbs_ / (widthAbs_ + 0.125 / approxScale_)) * 2;
+                double deltaAngle = std::acos(widthAbs_ / (widthAbs_ + RADDALETAELPS / approxScale_)) * TWO_TIMES;
                 double angleStart;
                 int nIndex;
                 int divNumber = int(PI / deltaAngle);
@@ -186,7 +184,8 @@ namespace OHOS {
                     angleStart = std::atan2(dy1, -dx1);
                     angleStart += deltaAngle;
                     for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                        AddVertex(vertexConsumer, vd0.x_ + std::cos(angleStart) * width_, vd0.y_ + std::sin(angleStart) * width_);
+                        AddVertex(vertexConsumer, vd0.x_ + std::cos(angleStart) * width_,
+								  vd0.y_ + std::sin(angleStart) * width_);
                         angleStart += deltaAngle;
                     }
                 } else {
@@ -220,8 +219,8 @@ namespace OHOS {
                 double limit = ((len1 < len2) ? len1 : len2) / widthAbs_;
                 CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
             } else {
-                double dx = (dx1 + dx2) / 2;
-                double dy = (dy1 + dy2) / 2;
+                double dx = (dx1 + dx2) * HALFNUM;
+                double dy = (dy1 + dy2) * HALFNUM;
                 double dbevel = std::sqrt(dx * dx + dy * dy);
 
                 if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
@@ -274,12 +273,12 @@ namespace OHOS {
             double deltaAngle = angleStart - angleEnd;
             int nIndex, divNumber;
 
-            deltaAngle = std::acos(widthAbs_ / (widthAbs_ + limitScale / approxScale_)) * 2;
+            deltaAngle = std::acos(widthAbs_ / (widthAbs_ + limitScale / approxScale_)) * TWO_TIMES;
 
             AddVertex(vertexConsumer, x + dx1, y + dy1);
             if (widthSign_ > 0) {
                 if (angleStart > angleEnd)
-                    angleEnd += 2 * PI;
+                    angleEnd += TWO_TIMES * PI;
                 divNumber = int((angleEnd - angleStart) / deltaAngle);
                 deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
                 angleStart += deltaAngle;
@@ -289,7 +288,7 @@ namespace OHOS {
                 }
             } else {
                 if (angleStart < angleEnd)
-                    angleEnd -= 2 * PI;
+                    angleEnd -= TWO_TIMES * PI;
                 divNumber = int((angleStart - angleEnd) / deltaAngle);
                 deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
                 angleStart -= deltaAngle;

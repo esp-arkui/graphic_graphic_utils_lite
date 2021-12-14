@@ -100,7 +100,7 @@ namespace OHOS {
             }
             buffer_.Allocate(w, OHOS::HALF_COLOR_NUM);
             stack_.Allocate(div, OHOS::EIGHTH_COLOR_NUM);
-            for(y = 0; y < h; y++) {
+            for (y = 0; y < h; y++) {
                 sum.Clear();
                 sumIn.Clear();
                 sumOut.Clear();
@@ -110,7 +110,7 @@ namespace OHOS {
                     sum.Add(pix, i + 1);
                     sumOut.Add(pix);
                 }
-                for(i = 1; i <= radius; i++) {
+                for (i = 1; i <= radius; i++) {
                     if (i>wm) {
                         pix = img.Pixel(wm, y);
                     } else {
@@ -121,7 +121,7 @@ namespace OHOS {
                     sumIn.Add(pix);
                 }
                 stackPtr = radius;
-                for(x = 0; x < w; x++) {
+                for (x = 0; x < w; x++) {
                     if (mulSum) {
                         sum.CalculatePixel(buffer_[x], mulSum, shrSum);
                     } else {        

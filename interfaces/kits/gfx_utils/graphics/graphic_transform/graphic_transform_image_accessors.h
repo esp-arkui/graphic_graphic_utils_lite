@@ -30,15 +30,13 @@ namespace OHOS {
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
         typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth
-        {
+        enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
 
         ImageAccessorClone()
         {}
-        explicit ImageAccessorClone(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat)
+        explicit ImageAccessorClone(PixelFormatType& pixFormat) : pixFormat_(&pixFormat)
         {}
         /**
          * @brief 关联像素集
@@ -51,33 +49,6 @@ namespace OHOS {
             pixFormat_ = &pixFormat;
         }
 
-    private:
-        /**
-         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
-         * @return 坐标为(xPixel_,yPixel_)的像素地址
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
-        {
-            int x = xPixel_;
-            int y = yPixel_;
-            if (x < 0) {
-                x = 0;
-            }
-            if (x >= (int)pixFormat_->Width()) {
-                x = pixFormat_->Width() - 1;
-            }
-            if (y < 0) {
-                y = 0;
-            }
-            if (y >= (int)pixFormat_->Height()) {
-                y = pixFormat_->Height() - 1;
-            }
-            return pixFormat_->PixPtr(x, y);
-        }
-
-    public:
         /**
          * @brief 获取像素地址
          * @param x x轴坐标
@@ -92,7 +63,7 @@ namespace OHOS {
             xPixel_ = xSpanPixel_ = x;
             yPixel_ = y;
             if (x >= 0 && x+len <= (int)pixFormat_->Width() &&
-               y >= 0 && y < (int)pixFormat_->Height() ) {
+                    y >= 0 && y < (int)pixFormat_->Height()) {
                 return pixPtr_ = pixFormat_->PixPtr(x, y);
             }
             pixPtr_ = 0;
@@ -122,8 +93,8 @@ namespace OHOS {
         {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
-            if (pixPtr_ != 0 && 
-               yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+            if ( pixPtr_ != 0 &&
+                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
                 return pixPtr_ = pixFormat_->PixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
@@ -131,43 +102,7 @@ namespace OHOS {
         }
 
     private:
-        const PixelFormatType* pixFormat_;
-        int xPixel_, xSpanPixel_, yPixel_;
-        const int8u* pixPtr_;
-    };
 
-    /**
-     * @brief 图像存取器
-     * @since 1.0
-     * @version 1.0
-     */
-    template<class PixelFormatType> class ImageAccessorNoRepeat {
-    public:
-        typedef typename PixelFormatType::ColorType color_type;
-        typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth
-        {
-            PIX_WIDTH = PixelFormatType::PIX_WIDTH
-        };
-
-        ImageAccessorNoRepeat() 
-        {}
-        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat)
-        : pixFormat_(&pixFormat)
-        {}
-        /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
-         * @since 1.0
-         * @version 1.0
-         */
-        void Attach(PixelFormatType& pixFormat)
-        {
-            pixFormat_ = &pixFormat;
-        }
-
-    private:
         /**
          * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
          * @return 坐标为(xPixel_,yPixel_)的像素地址
@@ -183,20 +118,48 @@ namespace OHOS {
             }
             if (x >= (int)pixFormat_->Width()) {
                 x = pixFormat_->Width() - 1;
-                return NULL;
             }
             if (y < 0) {
                 y = 0;
             }
             if (y >= (int)pixFormat_->Height()) {
                 y = pixFormat_->Height() - 1;
-                return NULL;
             }
-
             return pixFormat_->PixPtr(x, y);
         }
+        const PixelFormatType* pixFormat_;
+        int xPixel_, xSpanPixel_, yPixel_;
+        const int8u* pixPtr_;
+    };
 
+    /**
+     * @brief 图像存取器
+     * @since 1.0
+     * @version 1.0
+     */
+    template<class PixelFormatType> class ImageAccessorNoRepeat {
     public:
+        typedef typename PixelFormatType::ColorType color_type;
+        typedef typename PixelFormatType::OrderType order_type;
+        typedef typename PixelFormatType::ValueType value_type;
+        enum PixWidth {
+            PIX_WIDTH = PixelFormatType::PIX_WIDTH
+        };
+
+        ImageAccessorNoRepeat()
+        {}
+        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat) : pixFormat_(&pixFormat)
+        {}
+        /**
+         * @brief 关联像素集
+         * @param pixFormat 需要关联的像素集
+         * @since 1.0
+         * @version 1.0
+         */
+        void Attach(PixelFormatType& pixFormat)
+        {
+            pixFormat_ = &pixFormat;
+        }
         /**
          * @brief 获取像素地址
          * @param x x轴坐标
@@ -241,8 +204,8 @@ namespace OHOS {
         {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
-            if (pixPtr_ != 0 &&
-            yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+            if ( pixPtr_ != 0 &&
+                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
                 return pixPtr_ = pixFormat_->pixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
@@ -250,6 +213,34 @@ namespace OHOS {
         }
 
     private:
+        /**
+         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
+         * @return 坐标为(xPixel_,yPixel_)的像素地址
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
+        {
+            int x = xPixel_;
+            int y = yPixel_;
+            if (x < 0) {
+                x = 0;
+            }
+            if (x >= (int)pixFormat_->Width()) {
+                x = pixFormat_->Width() - 1;
+                return NULL;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+            if (y >= (int)pixFormat_->Height()) {
+                y = pixFormat_->Height() - 1;
+                return NULL;
+            }
+
+            return pixFormat_->PixPtr(x, y);
+        }
+
         const PixelFormatType* pixFormat_;
         int xPixel_, xSpanPixel_, yPixel_;
         const int8u* pixPtr_;
@@ -266,14 +257,13 @@ namespace OHOS {
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
         typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth { 
+        enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH 
         };
 
         ImageAccessorWrap()
         {}
-        explicit ImageAccessorWrap(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorWrap(PixelFormatType& pixFormat) : pixFormat_(&pixFormat),
             wrapX_(pixFormat.Width()),
             wrapY_(pixFormat.Height())
         {}
@@ -346,14 +336,13 @@ namespace OHOS {
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
         typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth { 
+        enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH 
         };
 
         ImageAccessorRepeatX()
         {}
-        explicit ImageAccessorRepeatX(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorRepeatX(PixelFormatType& pixFormat) : pixFormat_(&pixFormat),
             wrapX_(pixFormat.Width())
         {}
         /**
@@ -437,8 +426,7 @@ namespace OHOS {
 
         ImageAccessorRepeatY()
         {}
-        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) : pixFormat_(&pixFormat),
             wrapY_(pixFormat.Height())
         {}
         /**
@@ -507,8 +495,8 @@ namespace OHOS {
     public:
         WrapModeRepeat()
         {}
-        WrapModeRepeat(unsigned size) :
-            size_(size),
+        WrapModeRepeat(unsigned size)
+            : size_(size),
             add_(size * (0x3FFFFFFF / size)),
             value_(0)
         {}
@@ -532,7 +520,6 @@ namespace OHOS {
         unsigned add_;
         unsigned value_;
     };
-
 } // namespace OHOS
 
 #endif

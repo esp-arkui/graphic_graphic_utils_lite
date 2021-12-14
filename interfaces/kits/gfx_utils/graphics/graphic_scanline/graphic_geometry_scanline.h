@@ -46,12 +46,12 @@ namespace OHOS {
         /*
          * 像素覆盖率类型
          */
-        using CoverType = int8u;
-        using CoordType = int16;
+        using cover_type = int8u;
+        using coord_type = int16;
         struct SpanBlock {
-            CoordType x;
-            CoordType spanLength;
-            CoverType* covers;
+            coord_type x;
+            coord_type spanLength;
+            cover_type* covers;
         };
 
         using Iterator = SpanBlock*;
@@ -97,7 +97,7 @@ namespace OHOS {
                 curSpan_->spanLength++;
             } else {
                 curSpan_++;
-                curSpan_->x = (CoordType)(x + minX_);
+                curSpan_->x = (coord_type)(x + minX_);
                 curSpan_->spanLength = 1;
                 curSpan_->covers = &covers_[x];
             }
@@ -112,11 +112,11 @@ namespace OHOS {
             x -= minX_;
             std::memcpy(&covers_[x], covers, cellLength * sizeof(CoverType));
             if (x == lastX_ + 1) {
-                curSpan_->spanLength += (CoordType)cellLength;
+                curSpan_->spanLength += (coord_type)cellLength;
             } else {
                 curSpan_++;
-                curSpan_->x = (CoordType)(x + minX_);
-                curSpan_->spanLength = (CoordType)cellLength;
+                curSpan_->x = (coord_type)(x + minX_);
+                curSpan_->spanLength = (coord_type)cellLength;
                 curSpan_->covers = &covers_[x];
             }
             lastX_ = x + cellLength - 1;
@@ -131,11 +131,11 @@ namespace OHOS {
             x -= minX_;
             std::memset(&covers_[x], cover, spanLength);
             if (x == lastX_ + 1) {
-                curSpan_->spanLength += (CoordType)spanLength;
+                curSpan_->spanLength += (coord_type)spanLength;
             } else {
                 curSpan_++;
-                curSpan_->x = (CoordType)(x + minX_);
-                curSpan_->spanLength = (CoordType)spanLength;
+                curSpan_->x = (coord_type)(x + minX_);
+                curSpan_->spanLength = (coord_type)spanLength;
                 curSpan_->covers = &covers_[x];
             }
             lastX_ = x + spanLength - 1;
