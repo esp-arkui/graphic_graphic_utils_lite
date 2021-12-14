@@ -450,7 +450,7 @@ namespace OHOS {
             delta--;
         }
         /**
-         *submask_flags_x1+ (0->first)过程
+         * submask_flags_x1+ (0->first)过程
          */
         m_curr_cell.area += (submask_flags_x1 + first) * delta;
         m_curr_cell.cover += delta;
@@ -461,7 +461,7 @@ namespace OHOS {
 
         if (pixel_x1 != pixel_x2) {
             /**
-             *delta_subpixel x（ 0 到 POLY_SUBPIXEL_SCALE）  到 ( delta_subpixel_scale_y + delta)
+             * delta_subpixel x（ 0 到 POLY_SUBPIXEL_SCALE）  到 ( delta_subpixel_scale_y + delta)
              */
             deltay_mask = POLY_SUBPIXEL_SCALE * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1 + delta);
             rem_dx_mask = (int)(deltay_mask % dx);
@@ -739,7 +739,7 @@ namespace OHOS {
                 /**
                  * 先交换 base + len / 2 as the pivot
                  */
-                pivot = base + len / 2;
+                pivot = base + len / TWO_TIMES;
                 SwapCells(base, pivot);
 
                 i = base + 1;
@@ -788,7 +788,7 @@ namespace OHOS {
                     top[1] = limit;
                     limit = j;
                 }
-                top += 2;
+                top += TWO_STEP;
             } else {
                 /**
                  * 当 sub-array 子数组变小时使用执行插入排序
@@ -807,7 +807,7 @@ namespace OHOS {
                 }
 
                 if (top > stack) {
-                    top -= 2;
+                    top -= TWO_STEP;
                     base = top[0];
                     limit = top[1];
                 } else {
@@ -840,10 +840,10 @@ namespace OHOS {
         }
 
         // Allocate the array of cell pointers
-        m_sorted_cells.Allocate(m_num_cells, 16);
+        m_sorted_cells.Allocate(m_num_cells, ARRAY_SIZE);
 
         // Allocate and zero the Y array
-        m_sorted_y.Allocate(m_max_y - m_min_y + 1, 16);
+        m_sorted_y.Allocate(m_max_y - m_min_y + 1, ARRAY_SIZE);
         m_sorted_y.CleanData();
 
         // Create the Y-histogram (count the numbers of cells for each Y)
