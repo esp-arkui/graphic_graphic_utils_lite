@@ -44,9 +44,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Ellipse() :
-            x_(0.0), y_(0.0), rx_(1.0), ry_(1.0), scale_(1.0),
-            num_(4), step_(0), clockwise_(false)
+        Ellipse()
+            : x_(0.0), y_(0.0), rx_(1.0), ry_(1.0), scale_(1.0),
+              num_(ELLIPSE_VERTEX_NUM), step_(0), clockwise_(false)
         {}
 
         /**
@@ -146,7 +146,7 @@ namespace OHOS {
     {
         double ra = (std::fabs(rx_) + std::fabs(ry_)) / 2;
         double da = std::acos(ra / (ra + 0.125 / scale_)) * 2;
-        num_ = Uround(2 * PI / da);
+        num_ = Uround(TWO_TIMES * PI / da);
     }
 
     inline unsigned Ellipse::Vertex(double* x, double* y)
@@ -158,9 +158,9 @@ namespace OHOS {
         if (step_ > num_) {
             return PATH_CMD_STOP;
         }
-        double angle = double(step_) / double(num_) * 2.0 * PI;
+        double angle = double(step_) / double(num_) * DOUBLENUM * PI;
         if (clockwise_) {
-            angle = 2.0 * PI - angle;
+            angle = DOUBLENUM * PI - angle;
         }
         *x = x_ + std::cos(angle) * rx_;
         *y = y_ + std::sin(angle) * ry_;

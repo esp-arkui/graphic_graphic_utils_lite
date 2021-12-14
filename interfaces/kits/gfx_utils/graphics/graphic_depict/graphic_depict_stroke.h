@@ -28,9 +28,9 @@ namespace OHOS {
     */
     template <class VertexSource, class Markers = EmptyMarkers>
     struct DepictStroke
-        : public DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers> {
+        : public DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers> {
         typedef Markers marker_type;
-        typedef DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>
+        typedef DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>
             base_type;
 
         /**
@@ -40,7 +40,7 @@ namespace OHOS {
         * @version 1.0
         */
         DepictStroke(VertexSource& vs)
-            : DepictAdaptorVertexGenerator<VertexSource, VCGenStroke, Markers>(vs)
+            : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
         {
         }
         /*
@@ -162,7 +162,5 @@ namespace OHOS {
         const DepictStroke<VertexSource, Markers>& operator=(
             const DepictStroke<VertexSource, Markers>&);
     };
-
 } // namespace OHOS
-
 #endif

@@ -157,8 +157,8 @@ namespace OHOS {
         {
             vertexConsumer.RemoveAll();
 
-            double dx1 = (vd1.y - vd0.y) / len;
-            double dy1 = (vd1.x - vd0.x) / len;
+            double dx1 = (vd1.y_ - vd0.y_) / len;
+            double dy1 = (vd1.x_ - vd0.x_) / len;
             double dx2 = 0;
             double dy2 = 0;
 
@@ -170,8 +170,8 @@ namespace OHOS {
                     dx2 = dy1 * widthSign_;
                     dy2 = dx1 * widthSign_;
                 }
-                AddVertex(vertexConsumer, vd0.x - dx1 - dx2, vd0.y + dy1 - dy2);
-                AddVertex(vertexConsumer, vd0.x + dx1 - dx2, vd0.y - dy1 - dy2);
+                AddVertex(vertexConsumer, vd0.x_ - dx1 - dx2, vd0.y_ + dy1 - dy2);
+                AddVertex(vertexConsumer, vd0.x_ + dx1 - dx2, vd0.y_ - dy1 - dy2);
             } else {
                 double deltaAngle = std::acos(widthAbs_ / (widthAbs_ + RADDALETAELPS / approxScale_)) * TWO_TIMES;
                 double angleStart;
@@ -179,25 +179,25 @@ namespace OHOS {
                 int divNumber = int(PI / deltaAngle);
 
                 deltaAngle = PI / (divNumber + 1);
-                AddVertex(vertexConsumer, vd0.x - dx1, vd0.y + dy1);
+                AddVertex(vertexConsumer, vd0.x_ - dx1, vd0.y_ + dy1);
                 if (widthSign_ > 0) {
                     angleStart = std::atan2(dy1, -dx1);
                     angleStart += deltaAngle;
                     for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                        AddVertex(vertexConsumer, vd0.x + std::cos(angleStart) * width_,
-                                  vd0.y + std::sin(angleStart) * width_);
+                        AddVertex(vertexConsumer, vd0.x_ + std::cos(angleStart) * width_,
+								  vd0.y_ + std::sin(angleStart) * width_);
                         angleStart += deltaAngle;
                     }
                 } else {
                     angleStart = std::atan2(-dy1, dx1);
                     angleStart -= deltaAngle;
                     for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                        AddVertex(vertexConsumer, vd0.x + std::cos(angleStart) * width_,
-                                  vd0.y + std::sin(angleStart) * width_);
+                        AddVertex(vertexConsumer, vd0.x_ + std::cos(angleStart) * width_,
+                                  vd0.y_ + std::sin(angleStart) * width_);
                         angleStart -= deltaAngle;
                     }
                 }
-                AddVertex(vertexConsumer, vd0.x + dx1, vd0.y - dy1);
+                AddVertex(vertexConsumer, vd0.x_ + dx1, vd0.y_ - dy1);
             }
         }
 
@@ -207,14 +207,14 @@ namespace OHOS {
         void CalcJoin(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1,
                       const VertexDist& v2, double len1, double len2)
         {
-            double dx1 = width_ * (vd1.y - vd0.y) / len1;
-            double dy1 = width_ * (vd1.x - vd0.x) / len1;
-            double dx2 = width_ * (v2.y - vd1.y) / len2;
-            double dy2 = width_ * (v2.x - vd1.x) / len2;
+            double dx1 = width_ * (vd1.y_ - vd0.y_) / len1;
+            double dy1 = width_ * (vd1.x_ - vd0.x_) / len1;
+            double dx2 = width_ * (v2.y_ - vd1.y_) / len2;
+            double dy2 = width_ * (v2.x_ - vd1.x_) / len2;
 
             vertexConsumer.RemoveAll();
 
-            double crossProduct = CrossProduct(vd0.x, vd0.y, vd1.x, vd1.y, v2.x, v2.y);
+            double crossProduct = CrossProduct(vd0.x_, vd0.y_, vd1.x_, vd1.y_, v2.x_, v2.y_);
             if (crossProduct != 0 && (crossProduct > 0) == (width_ > 0)) {
                 double limit = ((len1 < len2) ? len1 : len2) / widthAbs_;
                 CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, MITER_JOIN_REVERT, limit, 0);
@@ -225,14 +225,14 @@ namespace OHOS {
 
                 if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
                     if (approxScale_ * (widthAbs_ - dbevel) < widthEps_) {
-                        if (CalcIntersection(vd0.x + dx1, vd0.y - dy1,
-                                             vd1.x + dx1, vd1.y - dy1,
-                                             vd1.x + dx2, vd1.y - dy2,
-                                             v2.x + dx2, v2.y - dy2,
+                        if (CalcIntersection(vd0.x_ + dx1, vd0.y_ - dy1,
+                                             vd1.x_ + dx1, vd1.y_ - dy1,
+                                             vd1.x_ + dx2, vd1.y_ - dy2,
+                                             v2.x_ + dx2, v2.y_ - dy2,
                                              &dx, &dy)) {
                             AddVertex(vertexConsumer, dx, dy);
                         } else {
-                            AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
+                            AddVertex(vertexConsumer, vd1.x_ + dx1, vd1.y_ - dy1);
                         }
                         return;
                     }
@@ -245,12 +245,12 @@ namespace OHOS {
                         CalcMiter(vertexConsumer, vd0, vd1, v2, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimit_, dbevel);
                         break;
                     case ROUND_JOIN:
-                        CalcArc(vertexConsumer, vd1.x, vd1.y, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vertexConsumer, vd1.x_, vd1.y_, dx1, -dy1, dx2, -dy2);
                         break;
 
                     default:
-                        AddVertex(vertexConsumer, vd1.x + dx1, vd1.y - dy1);
-                        AddVertex(vertexConsumer, vd1.x + dx2, vd1.y - dy2);
+                        AddVertex(vertexConsumer, vd1.x_ + dx1, vd1.y_ - dy1);
+                        AddVertex(vertexConsumer, vd1.x_ + dx2, vd1.y_ - dy2);
                         break;
                 }
             }
@@ -313,29 +313,29 @@ namespace OHOS {
                        double mlimit,
                        double dbevel)
         {
-            double xi = vd1.x;
-            double yi = vd1.y;
+            double xi = vd1.x_;
+            double yi = vd1.y_;
             double di = 1;
             double lim = widthAbs_ * mlimit;
             bool miterLimitExceeded = true;
             bool intersectionFailed = true;
-            if (CalcIntersection(vd0.x + dx1, vd0.y - dy1,
-                                 vd1.x + dx1, vd1.y - dy1,
-                                 vd1.x + dx2, vd1.y - dy2,
-                                 vd2.x + dx2, vd2.y - dy2,
+            if (CalcIntersection(vd0.x_ + dx1, vd0.y_ - dy1,
+                                 vd1.x_ + dx1, vd1.y_ - dy1,
+                                 vd1.x_ + dx2, vd1.y_ - dy2,
+                                 vd2.x_ + dx2, vd2.y_ - dy2,
                                  &xi, &yi)) {
-                di = CalcDistance(vd1.x, vd1.y, xi, yi);
+                di = CalcDistance(vd1.x_, vd1.y_, xi, yi);
                 if (di <= lim) {
                     AddVertex(vc, xi, yi);
                     miterLimitExceeded = false;
                 }
                 intersectionFailed = false;
             } else {
-                double x2 = vd1.x + dx1;
-                double y2 = vd1.y - dy1;
-                if ((CrossProduct(vd0.x, vd0.y, vd1.x, vd1.y, x2, y2) < 0.0) ==
-                    (CrossProduct(vd1.x, vd1.y, vd2.x, vd2.y, x2, y2) < 0.0)) {
-                    AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
+                double x2 = vd1.x_ + dx1;
+                double y2 = vd1.y_ - dy1;
+                if ((CrossProduct(vd0.x_, vd0.y_, vd1.x_, vd1.y_, x2, y2) < 0.0) ==
+                    (CrossProduct(vd1.x_, vd1.y_, vd2.x_, vd2.y_, x2, y2) < 0.0)) {
+                    AddVertex(vc, vd1.x_ + dx1, vd1.y_ - dy1);
                     miterLimitExceeded = false;
                 }
             }
@@ -343,24 +343,24 @@ namespace OHOS {
             if (miterLimitExceeded) {
                 switch (linejoin) {
                     case MITER_JOIN_REVERT:
-                        AddVertex(vc, vd1.x + dx1, vd1.y - dy1);
-                        AddVertex(vc, vd1.x + dx2, vd1.y - dy2);
+                        AddVertex(vc, vd1.x_ + dx1, vd1.y_ - dy1);
+                        AddVertex(vc, vd1.x_ + dx2, vd1.y_ - dy2);
                         break;
 
                     case MITER_JOIN_ROUND:
-                        CalcArc(vc, vd1.x, vd1.y, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vc, vd1.x_, vd1.y_, dx1, -dy1, dx2, -dy2);
                         break;
 
                     default:
                         if (intersectionFailed) {
                             mlimit *= widthSign_;
-                            AddVertex(vc, vd1.x + dx1 + dy1 * mlimit, vd1.y - dy1 + dx1 * mlimit);
-                            AddVertex(vc, vd1.x + dx2 - dy2 * mlimit, vd1.y - dy2 - dx2 * mlimit);
+                            AddVertex(vc, vd1.x_ + dx1 + dy1 * mlimit, vd1.y_ - dy1 + dx1 * mlimit);
+                            AddVertex(vc, vd1.x_ + dx2 - dy2 * mlimit, vd1.y_ - dy2 - dx2 * mlimit);
                         } else {
-                            double x1 = vd1.x + dx1;
-                            double y1 = vd1.y - dy1;
-                            double x2 = vd1.x + dx2;
-                            double y2 = vd1.y - dy2;
+                            double x1 = vd1.x_ + dx1;
+                            double y1 = vd1.y_ - dy1;
+                            double x2 = vd1.x_ + dx2;
+                            double y2 = vd1.y_ - dy2;
                             di = (lim - dbevel) / (di - dbevel);
                             AddVertex(vc, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
                             AddVertex(vc, x2 + (xi - x2) * di, y2 + (yi - y2) * di);

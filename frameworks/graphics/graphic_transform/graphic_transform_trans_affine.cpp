@@ -85,7 +85,6 @@ namespace OHOS {
         return *this;
     }
 
-    
     bool TransAffine::IsIdentity(double epsilon) const
     {
         return IsEqualEps(scaleX, 1.0, epsilon) &&
@@ -100,5 +99,4 @@ namespace OHOS {
     {
         return std::fabs(scaleX) > epsilon && std::fabs(scaleY) > epsilon;
     }
-
 } // namespace OHOS

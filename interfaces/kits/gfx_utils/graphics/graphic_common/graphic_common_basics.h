@@ -163,7 +163,22 @@ namespace OHOS {
      * @brief 默认最大斜接
      */
     const unsigned DEFAULTMITERLIMIT = 10;
-
+    /**
+     * @brief 一个字节的长度
+     */
+    const int BYTE_LENGTH = 8;
+    /**
+     * @brief dash数组最大长度
+     */
+    const int MAX_DASHES = 32;
+    /**
+     * @brief 默认的块偏移量
+     */
+    const int BLOCK_SHIFT_SIZE = 6;
+    /**
+     * @brief 绘制椭圆所需的顶点数
+     */
+    const int ELLIPSE_VERTEX_NUM = 4;
     /**
      * 一般步幅是宽度的四倍
      */
@@ -193,6 +208,10 @@ namespace OHOS {
      * @brief 六倍
      */
     const int SIX_TIMES = 6;
+    /**
+     * @brief 一百倍
+     */
+    const int HUNDRED_TIMES = 100;
     /**
      * @brief 一次走两步
      */

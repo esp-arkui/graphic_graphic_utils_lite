@@ -39,7 +39,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE color_type* Resize(unsigned span_len)
         {
             if (span_len > spans.Size()) {
-                spans.Resize(((span_len + 255) >> 8) << 8);
+                spans.Resize(((span_len + MAX_COLOR_NUM) >> BYTE_LENGTH) << BYTE_LENGTH);
             }
             return &spans[0];
         }
