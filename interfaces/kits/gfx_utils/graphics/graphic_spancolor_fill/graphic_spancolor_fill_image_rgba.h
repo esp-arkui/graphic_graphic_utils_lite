@@ -115,7 +115,6 @@ namespace OHOS {
         SpanImageRgba(source_type& src, interpolator_type& interpolator) : spanImage(src, interpolator)
         {
         }
-
         /**
          * @brief Generate 生成相应image
          * @param span 需要填色的扫描线首地址
@@ -126,25 +125,18 @@ namespace OHOS {
         void Generate(color_type* span, int x, int y, unsigned len)
         {
             spanImage::GetInterpolator().Begin(x + COORD_OFFSET, y + COORD_OFFSET, len);
-
             long_type luminance[LUMINANCE_SIZE];
             const value_type* colorsPtr;
-
             do {
-                int x_hr;
-                int y_hr;
-
+                int x_hr, y_hr;
                 /**
                  * 获取插值器新增加的新的坐标点
                  */
                 spanImage::GetInterpolator().Coordinates(&x_hr, &y_hr);
-
                 x_hr -= IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 y_hr -= IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
-
                 int spanX = x_hr >> IMAGE_SUBPIXEL_SHIFT;
                 int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
-
                 unsigned weight;
                 /**
                  * 设置图像色彩值 r g b a 像素值的
@@ -153,24 +145,20 @@ namespace OHOS {
                 luminance[INDEX_ONE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 luminance[INDEX_TWO] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 luminance[INDEX_THREE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
-
                 /**
                  * 获取图像像素点坐标
                  */
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
-
                 /**
                  * 获取需要插值的颜色指针
                  */
                 colorsPtr = (const value_type*)spanImage::GetSource().Span(spanX, spanY, PIXEL_TIMES);
-                weight = (IMAGE_SUBPIXEL_SCALE - x_hr) *
-                         (IMAGE_SUBPIXEL_SCALE - y_hr);
+                weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * (IMAGE_SUBPIXEL_SCALE - y_hr);
                 luminance[INDEX_ZERO] += weight * *colorsPtr++;
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-
                 // 获取下一个x对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().NextX();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
@@ -178,7 +166,6 @@ namespace OHOS {
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-
                 // 获取下一个y对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().Nexty();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
@@ -186,16 +173,13 @@ namespace OHOS {
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-
                 // 获取下一个x对应颜色
                 colorsPtr = (const value_type*)spanImage::GetSource().NextX();
-
                 weight = x_hr * y_hr;
                 luminance[INDEX_ZERO] += weight * *colorsPtr++;
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-
                 span->redValue = value_type(
                     color_type::Downshift(luminance[order_type::RED], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
                 span->greenValue = value_type(
@@ -204,7 +188,6 @@ namespace OHOS {
                     color_type::Downshift(luminance[order_type::BLUE], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
                 span->alphaValue = value_type(
                     color_type::Downshift(luminance[order_type::ALPHA], IMAGE_SUBPIXEL_SHIFT * PIXEL_TIMES));
-
                 ++span;
                 ++spanImage::GetInterpolator();
             } while (--len);

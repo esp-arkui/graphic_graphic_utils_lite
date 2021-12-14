@@ -38,8 +38,8 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
-const int CLIP_LINE_SEGMENT_FULL_VISIB = 0;// 完全可见
-const int CLIP_LINE_SEGMENT_FULL_CLIP = 4;// 完全裁剪
+const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // 完全可见
+const int CLIP_LINE_SEGMENT_FULL_CLIP = 4; // 完全裁剪
 enum ClippingFlagsEnum {
     CLIPPING_FLAGS_X1_CLIPPED = 4,
     CLIPPING_FLAGS_X2_CLIPPED = 1,
@@ -59,7 +59,7 @@ enum ClippingFlagsEnum {
  *  -------+--------+-------- clipBox.y1
  *         |        |
  *   1100  |  1000  | 1001
- *         |        | 
+ *         |        |
  * clipBox.x1 clipBox.x2
  * @brief 确定y的位置，纵向裁剪.
  * @param y 纵向位置,clipBox裁剪窗口

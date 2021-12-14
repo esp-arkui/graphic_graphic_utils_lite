@@ -47,8 +47,8 @@ namespace OHOS {
     public:
         using ValueType = T;
 
-        PodVector() :
-            size_(0), capacity_(0), data_(0)
+        PodVector()
+            : size_(0), capacity_(0), data_(0)
         {}
 
         /**
@@ -353,14 +353,14 @@ namespace OHOS {
     }
 
     template <class T>
-    PodVector<T>::PodVector(unsigned cap, unsigned extraTail) :
-        size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
+    PodVector<T>::PodVector(unsigned cap, unsigned extraTail)
+        : size_(0), capacity_(cap + extraTail), data_(ArrAllocator<T>::Allocate(capacity_))
     {
     }
 
     template <class T>
-    PodVector<T>::PodVector(const PodVector<T>& v) :
-        size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
+    PodVector<T>::PodVector(const PodVector<T>& v)
+        : size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? ArrAllocator<T>::Allocate(v.capacity_) : 0)
     {
         memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
     }

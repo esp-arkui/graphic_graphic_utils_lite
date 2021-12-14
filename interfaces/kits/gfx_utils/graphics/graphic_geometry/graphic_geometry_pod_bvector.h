@@ -41,11 +41,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    template <class T, unsigned S = 6>
+    template <class T, unsigned S = BLOCK_SHIFT_SIZE>
     class PodBvector : public HeapBase {
     public:
-        enum BlockScaleEnum
-        {
+        enum BlockScaleEnum {
             BLOCK_SHIFT = S,
             BLOCK_SIZE = 1 << BLOCK_SHIFT,
             BLOCK_MASK = BLOCK_SIZE - 1
@@ -507,7 +506,7 @@ namespace OHOS {
     template <class T, unsigned S>
     inline T* PodBvector<T, S>::DataPtr()
     {
-        unsigned blockNum = size_ >> BLOCK_SHIFT; //解释含义
+        unsigned blockNum = size_ >> BLOCK_SHIFT;
         if (blockNum >= numBlocks_) {
             AllocateBlock(blockNum);
         }
