@@ -14,9 +14,6 @@
  */
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h"
-
-#include <cmath>
-
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 
 namespace OHOS {
@@ -56,7 +53,6 @@ namespace OHOS {
         if (numSteps_ < NUM_STEPS_MAX) {
             numSteps_ = NUM_STEPS_MAX;
         }
-
         double subdivideStep = 1.0 / numSteps_;
         double subdivideStep2 = subdivideStep * subdivideStep;
 
@@ -140,7 +136,6 @@ namespace OHOS {
         if (level > CURVERECURSIONLIMIT) {
             return;
         }
-
         // 计算线段的所有中点
         double x12 = (x1 + x2) / 2;
         double y12 = (y1 + y2) / 2;
@@ -164,7 +159,7 @@ namespace OHOS {
 
                 da = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
                 if (da >= PI) {
-                    da = 2 * PI - da;
+                    da = TWO_TIMES * PI - da;
                 }
 
                 if (da < angleTolerance_) {

@@ -1,6 +1,19 @@
+/*
+* Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
-
 
 namespace OHOS {
     RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r)
@@ -114,7 +127,6 @@ namespace OHOS {
                 arc_.Init(x1_ + rx1_, y1_ + ry1_, rx1_, ry1_, PI, PI + PI * HALFNUM);
                 arc_.Rewind(0);
                 status_++;
-
             case VERTEX_STATUS1:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
@@ -122,12 +134,10 @@ namespace OHOS {
                 } else {
                     return cmd;
                 }
-
             case VERTEX_STATUS2:
                 arc_.Init(x2_ - rx2_, y1_ + ry2_, rx2_, ry2_, PI + PI * HALFNUM, 0.0);
                 arc_.Rewind(0);
                 status_++;
-
             case VERTEX_STATUS3:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
@@ -135,13 +145,11 @@ namespace OHOS {
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
-
             case VERTEX_STATUS4:
                 arc_.Init(x2_ - rx3_, y2_ - ry3_, rx3_, ry3_,
                           0.0, PI * HALFNUM);
                 arc_.Rewind(0);
                 status_++;
-
             case VERTEX_STATUS5:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
@@ -149,12 +157,10 @@ namespace OHOS {
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
-
             case VERTEX_STATUS6:
                 arc_.Init(x1_ + rx4_, y2_ - ry4_, rx4_, ry4_, PI * HALFNUM, PI);
                 arc_.Rewind(0);
                 status_++;
-
             case VERTEX_STATUS7:
                 cmd = arc_.Vertex(x, y);
                 if (IsStop(cmd)) {
@@ -162,7 +168,6 @@ namespace OHOS {
                 } else {
                     return PATH_CMD_LINE_TO;
                 }
-
             case VERTEX_STATUS8:
                 cmd = PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CCW;
                 status_++;

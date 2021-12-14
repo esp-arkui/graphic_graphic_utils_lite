@@ -20,9 +20,8 @@
 
 namespace OHOS {
 
-    class VCGenStroke {
-        enum Status
-        {
+    class VertexGenerateStroke {
+        enum Status {
             INITIAL,
             READY,
             CAP1,
@@ -37,10 +36,10 @@ namespace OHOS {
         };
 
     public:
-        using VertexStorage = VertexSequence<VertexDist, 6>;
-        using CoordStorage = PodBvector<PointD, 6>;
+        using VertexStorage = VertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
+        using CoordStorage = PodBvector<PointD, BLOCK_SHIFT_SIZE>;
 
-        VCGenStroke();
+        VertexGenerateStroke();
 
         void LineCap(LineCapEnum lc)
         {
@@ -110,9 +109,8 @@ namespace OHOS {
         unsigned Vertex(double* x, double* y);
 
     private:
-        VCGenStroke(const VCGenStroke&);
-        const VCGenStroke& operator=(const VCGenStroke&);
-
+        VertexGenerateStroke(const VertexGenerateStroke&);
+        const VertexGenerateStroke& operator=(const VertexGenerateStroke&);
         MathStroke<CoordStorage> stroker_;
         VertexStorage srcVertices_;
         CoordStorage outVertices_;

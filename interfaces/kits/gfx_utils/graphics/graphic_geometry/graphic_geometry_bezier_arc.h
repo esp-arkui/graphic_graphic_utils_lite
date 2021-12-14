@@ -159,8 +159,8 @@ namespace OHOS {
      */
     class BezierArcSvg : public HeapBase {
     public:
-        BezierArcSvg() :
-            arc_(), radiiOK_(false)
+        BezierArcSvg()
+            : arc_(), radiiOK_(false)
         {}
 
         /**
@@ -177,9 +177,9 @@ namespace OHOS {
                      double angle,
                      bool largeArcFlag, // 大弧线标志
                      bool sweepFlag,    // 扫掠角标志
-                     double x2, double y2) :
-            arc_(),
-            radiiOK_(false)
+                     double x2, double y2)
+            : arc_(),
+              radiiOK_(false)
         {
             Init(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2);
         }

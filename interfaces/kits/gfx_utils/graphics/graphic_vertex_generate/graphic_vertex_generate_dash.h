@@ -25,15 +25,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    class VCGenDash
-    {
-        enum MaxDashes
-        {
-            MAX_DASHES = 32
-        };
-
-        enum Status
-        {
+    class VCGenDash {
+        enum Status{
             INITIAL,
             READY,
             POLYLINE,
@@ -41,7 +34,7 @@ namespace OHOS {
         };
 
     public:
-        typedef VertexSequence<VertexDist, 6> VertexStorage;
+        typedef VertexSequence<VertexDist, BLOCK_SHIFT_SIZE> VertexStorage;
 
         VCGenDash();
         /**

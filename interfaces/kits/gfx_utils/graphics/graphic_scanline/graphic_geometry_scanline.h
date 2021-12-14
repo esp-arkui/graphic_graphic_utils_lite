@@ -46,25 +46,21 @@ namespace OHOS {
         /*
          * 像素覆盖率类型
          */
-        typedef int8u cover_type;
-        typedef int16 coord_type;
-
-        //--------------------------------------------------------------------
+        using CoverType = int8u;
+        using CoordType = int16;
         struct SpanBlock {
-            coord_type x;
-            // If negative, it's a solid span, covers is valid
-            coord_type spanLength;
-            cover_type* covers;
+            CoordType x;
+            CoordType spanLength;
+            CoverType* covers;
         };
 
-        typedef SpanBlock* iterator;
-        typedef const SpanBlock* const_iterator;
+        using Iterator = SpanBlock*;
+        using ConstIterator = const SpanBlock*;
 
-        //--------------------------------------------------------------------
-        ScanlineUnPackedContainer() :
-            m_min_x(0),
-            m_last_x(0x7FFFFFF0),
-            m_cur_span(0)
+        ScanlineUnPackedContainer()
+            : minX_(0),
+              lastX_(0x7FFFFFF0),
+              curSpan_(0)
         {}
 
         /**
@@ -81,13 +77,13 @@ namespace OHOS {
         {
             const int liftNumber = 2;
             unsigned max_len = max_x - min_x + liftNumber;
-            if (max_len > m_spans.Size()) {
-                m_spans.Resize(max_len);
-                m_covers.Resize(max_len);
+            if (max_len > spans_.Size()) {
+                spans_.Resize(max_len);
+                covers_.Resize(max_len);
             }
-            m_last_x = 0x7FFFFFF0;
-            m_min_x = min_x;
-            m_cur_span = &m_spans[0];
+            lastX_ = 0x7FFFFFF0;
+            minX_ = min_x;
+            curSpan_ = &spans_[0];
         }
 
         /* 根据x的位置 以及cover 颜色覆盖率是扩展call的区域
@@ -95,35 +91,35 @@ namespace OHOS {
          */
         void AddCell(int x, unsigned cover)
         {
-            x -= m_min_x;
-            m_covers[x] = (cover_type)cover;
-            if (x == m_last_x + 1) {
-                m_cur_span->spanLength++;
+            x -= minX_;
+            covers_[x] = (CoverType)cover;
+            if (x == lastX_ + 1) {
+                curSpan_->spanLength++;
             } else {
-                m_cur_span++;
-                m_cur_span->x = (coord_type)(x + m_min_x);
-                m_cur_span->spanLength = 1;
-                m_cur_span->covers = &m_covers[x];
+                curSpan_++;
+                curSpan_->x = (CoordType)(x + minX_);
+                curSpan_->spanLength = 1;
+                curSpan_->covers = &covers_[x];
             }
-            m_last_x = x;
+            lastX_ = x;
         }
 
         /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
         * 还是添加cells单元数组 。
         */
-        void AddCells(int x, unsigned cellLength, const cover_type* covers)
+        void AddCells(int x, unsigned cellLength, const CoverType* covers)
         {
-            x -= m_min_x;
-            std::memcpy(&m_covers[x], covers, cellLength * sizeof(cover_type));
-            if (x == m_last_x + 1) {
-                m_cur_span->spanLength += (coord_type)cellLength;
+            x -= minX_;
+            std::memcpy(&covers_[x], covers, cellLength * sizeof(CoverType));
+            if (x == lastX_ + 1) {
+                curSpan_->spanLength += (CoordType)cellLength;
             } else {
-                m_cur_span++;
-                m_cur_span->x = (coord_type)(x + m_min_x);
-                m_cur_span->spanLength = (coord_type)cellLength;
-                m_cur_span->covers = &m_covers[x];
+                curSpan_++;
+                curSpan_->x = (CoordType)(x + minX_);
+                curSpan_->spanLength = (CoordType)cellLength;
+                curSpan_->covers = &covers_[x];
             }
-            m_last_x = x + cellLength - 1;
+            lastX_ = x + cellLength - 1;
         }
 
         /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
@@ -132,17 +128,17 @@ namespace OHOS {
         */
         void AddSpan(int x, unsigned spanLength, unsigned cover)
         {
-            x -= m_min_x;
-            std::memset(&m_covers[x], cover, spanLength);
-            if (x == m_last_x + 1) {
-                m_cur_span->spanLength += (coord_type)spanLength;
+            x -= minX_;
+            std::memset(&covers_[x], cover, spanLength);
+            if (x == lastX_ + 1) {
+                curSpan_->spanLength += (CoordType)spanLength;
             } else {
-                m_cur_span++;
-                m_cur_span->x = (coord_type)(x + m_min_x);
-                m_cur_span->spanLength = (coord_type)spanLength;
-                m_cur_span->covers = &m_covers[x];
+                curSpan_++;
+                curSpan_->x = (CoordType)(x + minX_);
+                curSpan_->spanLength = (CoordType)spanLength;
+                curSpan_->covers = &covers_[x];
             }
-            m_last_x = x + spanLength - 1;
+            lastX_ = x + spanLength - 1;
         }
 
         /*
@@ -150,32 +146,29 @@ namespace OHOS {
         */
         void Finalize(int y)
         {
-            m_y = y;
+            y_ = y;
         }
-
-        //--------------------------------------------------------------------
         void ResetSpans()
         {
-            m_last_x = 0x7FFFFFF0;
-            m_cur_span = &m_spans[0];
+            lastX_ = 0x7FFFFFF0;
+            curSpan_ = &spans_[0];
         }
 
-        //--------------------------------------------------------------------
         int GetYLevel() const
         {
-            return m_y;
+            return y_;
         }
         unsigned NumSpans() const
         {
-            return unsigned(m_cur_span - &m_spans[0]);
+            return unsigned(curSpan_ - &spans_[0]);
         }
-        const_iterator Begin() const
+        ConstIterator Begin() const
         {
-            return &m_spans[1];
+            return &spans_[1];
         }
-        iterator Begin()
+        Iterator Begin()
         {
-            return &m_spans[1];
+            return &spans_[1];
         }
 
     private:
@@ -183,14 +176,13 @@ namespace OHOS {
         const self_type& operator=(const self_type&);
 
     private:
-        int m_min_x;
-        int m_last_x;
-        int m_y;
-        PodArray<cover_type> m_covers;
-        PodArray<SpanBlock> m_spans;
-        SpanBlock* m_cur_span;
+        int minX_;
+        int lastX_;
+        int y_;
+        PodArray<CoverType> covers_;
+        PodArray<SpanBlock> spans_;
+        SpanBlock* curSpan_;
     };
-
 } // namespace OHOS
 
 #endif

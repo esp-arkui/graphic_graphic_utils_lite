@@ -71,9 +71,9 @@ namespace OHOS {
         }
 
     private:
-        DepictDash(const DepictDash<VertexSource, Markers>&);
-        const DepictDash<VertexSource, Markers>&
-            operator=(const DepictDash<VertexSource, Markers>&);
+        DepictDash(const DepictDash<VertexSource, Markers> &);
+        const DepictDash<VertexSource, Markers> &
+            operator=(const DepictDash<VertexSource, Markers> &);
     };
 } // namespace OHOS
 

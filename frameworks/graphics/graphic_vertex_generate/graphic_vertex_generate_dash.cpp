@@ -57,7 +57,7 @@ namespace OHOS {
     {
         currDash_ = 0;
         currDashStart_ = 0.0;
-        for (; ds > 0.0; ) {
+        for (; ds > 0.0;) {
             if (ds > dashes_[currDash_]) {
                 ds -= dashes_[currDash_];
                 ++currDash_;
@@ -109,7 +109,7 @@ namespace OHOS {
     {
         unsigned cmd = PATH_CMD_MOVE_TO;
         while (!IsStop(cmd)) {
-            switch ( status_ ) {
+            switch (status_) {
                 case INITIAL:
                     Rewind(0);
                 case READY:
@@ -121,9 +121,9 @@ namespace OHOS {
                     srcVertex_ = 1;
                     vertexDist1_ = &srcVertices_[0];
                     vertexDist2_ = &srcVertices_[1];
-                    currRest = vertexDist1_->dist;
-                    *x = vertexDist1_->x;
-                    *y = vertexDist1_->y;
+                    currRest = vertexDist1_->dist_;
+                    *x = vertexDist1_->x_;
+                    *y = vertexDist1_->y_;
                     if (dashStart_ >= 0.0) {
                         CalcDashStart(dashStart_);
                     }
@@ -143,15 +143,15 @@ namespace OHOS {
                                 currDash_ = 0;
                             }
                             currDashStart_ = 0.0;
-                            *x = vertexDist2_->x - (vertexDist2_->x - vertexDist1_->x) * currRest / vertexDist1_->dist;
-                            *y = vertexDist2_->y - (vertexDist2_->y - vertexDist1_->y) * currRest / vertexDist1_->dist;
+                            *x = vertexDist2_->x_ - (vertexDist2_->x_ - vertexDist1_->x_) * currRest / vertexDist1_->dist_;
+                            *y = vertexDist2_->y_ - (vertexDist2_->y_ - vertexDist1_->y_) * currRest / vertexDist1_->dist_;
                         } else {
                             currDashStart_ += currRest;
-                            *x = vertexDist2_->x;
-                            *y = vertexDist2_->y;
+                            *x = vertexDist2_->x_;
+                            *y = vertexDist2_->y_;
                             ++srcVertex_;
                             vertexDist1_ = vertexDist2_;
-                            currRest = vertexDist1_->dist;
+                            currRest = vertexDist1_->dist_;
                             if (closed_) {
                                 if (srcVertex_ > srcVertices_.Size()) {
                                     status_ = STOP;

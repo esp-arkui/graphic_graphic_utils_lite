@@ -40,7 +40,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    template <class T, unsigned S = 6>
+    template <class T, unsigned S = BLOCK_SHIFT_SIZE>
     class VertexSequence : public PodBvector<T, S> {
     public:
         using BaseType = PodBvector<T, S>;
@@ -76,7 +76,7 @@ namespace OHOS {
     void VertexSequence<T, S>::Close(bool closed)
     {
         while (1 < BaseType::Size()) {
-            if ((*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
+            if ((*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
                 break;
             }
             T t = (*this)[BaseType::Size() - 1];
@@ -98,7 +98,7 @@ namespace OHOS {
     void VertexSequence<T, S>::Add(const T& val)
     {
         if (1 < BaseType::Size()) {
-            if (!(*this)[BaseType::Size() - 2]((*this)[BaseType::Size() - 1])) {
+            if (!(*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
                 BaseType::RemoveLast();
             }
         }
@@ -113,9 +113,9 @@ namespace OHOS {
     }
 
     struct VertexDist {
-        double x;
-        double y;
-        double dist;
+        double x_;
+        double y_;
+        double dist_;
 
         VertexDist()
         {}
@@ -126,8 +126,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        VertexDist(double x_, double y_) :
-            x(x_), y(y_), dist(0.0)
+        VertexDist(double x, double y)
+            : x_(x), y_(y), dist_(0.0)
         {
         }
         /**
@@ -140,10 +140,10 @@ namespace OHOS {
          */
         bool operator()(const VertexDist& val)
         {
-            dist = CalcDistance(x, y, val.x, val.y);
-            bool ret = dist > VERTEX_DIST_EPSILON;
+            dist_ = CalcDistance(x_, y_, val.x_, val.y_);
+            bool ret = dist_ > VERTEX_DIST_EPSILON;
             if (!ret) {
-                dist = 1.0 / VERTEX_DIST_EPSILON;
+                dist_ = 1.0 / VERTEX_DIST_EPSILON;
             }
             return ret;
         }
@@ -161,8 +161,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        VertexDistCmd(double x_, double y_, unsigned cmd_) :
-            VertexDist(x_, y_), cmd(cmd_)
+        VertexDistCmd(double x_, double y_, unsigned cmd_)
+            : VertexDist(x_, y_), cmd(cmd_)
         {
         }
     };

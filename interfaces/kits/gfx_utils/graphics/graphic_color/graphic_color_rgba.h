@@ -333,7 +333,15 @@ namespace OHOS {
         {
             return Rgba(0, 0, 0, 0);
         }
-
+        /**
+         * @brief 根据波长初始化颜色
+         *
+         * @param waveLength波长
+         * @return 返回Rgba对象
+         * @since 1.0
+         * @version 1.0
+         */
+        static Rgba InitColorByWaveLength(double waveLength);
         /**
          * @brief 根据波长以及gamma值计算颜色值
          *
@@ -375,42 +383,127 @@ namespace OHOS {
     {
         return Rgba(rgbaA) *= multiplyValue;
     }
-
+    /**
+     * @brief 波长是否是紫色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsPurpleWave(double waveLength)
+    {
+        if (waveLength >= PURPLE_MIN && waveLength <= PURPLE_MAX) {
+            return Rgba(-1.0 * (waveLength - PURPLE_MAX) / (PURPLE_MAX - PURPLE_MIN), 0.0, 1.0);
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    /**
+     * @brief 波长是否是蓝色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsBlueWave(double waveLength)
+    {
+        if (waveLength >= PURPLE_MAX && waveLength <= BLUE_MAX) {
+            return Rgba(0.0, (waveLength - PURPLE_MAX) / (BLUE_MAX - PURPLE_MAX), 1.0);
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    /**
+     * @brief 波长是否是青色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsCyanWave(double waveLength)
+    {
+        if (waveLength >= BLUE_MAX && waveLength <= CYAN_MAX) {
+            return Rgba(0.0, 1.0, -1.0 * (waveLength - CYAN_MAX) / (CYAN_MAX - BLUE_MAX));
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    /**
+     * @brief 波长是否是绿色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsGreenWave(double waveLength)
+    {
+        if (waveLength >= CYAN_MAX && waveLength <= GREEN_MAX) {
+            return Rgba((waveLength - CYAN_MAX) / (GREEN_MAX - CYAN_MAX), 1.0, 0.0);
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    /**
+     * @brief 波长是否是橙色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsOrangeWave(double waveLength)
+    {
+        if (waveLength >= GREEN_MAX && waveLength <= ORANGE_MAX) {
+            return Rgba(1.0, -1.0 * (waveLength - ORANGE_MAX) / (ORANGE_MAX - GREEN_MAX), 0.0);
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    /**
+     * @brief 波长是否是红色波段
+     *
+     * @param waveLength 波长
+     * @return 返回Rgba对象
+     * @since 1.0
+     * @version 1.0
+     */
+    inline Rgba IsRedWave(double waveLength)
+    {
+        if (waveLength >= ORANGE_MAX && waveLength <= RED_MAX) {
+            return Rgba(1.0, 0.0, 0.0);
+        } else {
+            return Rgba(0.0, 0.0, 0.0);
+        }
+    }
+    inline Rgba Rgba::InitColorByWaveLength(double waveLength)
+    {
+        Rgba rgba(0.0, 0.0, 0.0);
+        rgba += IsPurpleWave(waveLength);
+        rgba += IsBlueWave(waveLength);
+        rgba += IsCyanWave(waveLength);
+        rgba += IsGreenWave(waveLength);
+        rgba += IsOrangeWave(waveLength);
+        rgba += IsRedWave(waveLength);
+        return rgba;
+    }
     inline Rgba Rgba::FromWavelength(double waveLength, double gamma)
     {
         Rgba rgba(0.0, 0.0, 0.0);
-
-        if (waveLength >= PURPLE_MIN && waveLength <= PURPLE_MAX) {
-            rgba.redValue = -1.0 * (waveLength - PURPLE_MAX) / (PURPLE_MAX - PURPLE_MIN);
-            rgba.blueValue = 1.0;
-        } else if (waveLength >= PURPLE_MAX && waveLength <= BLUE_MAX) {
-            rgba.greenValue = (waveLength - PURPLE_MAX) / (BLUE_MAX - PURPLE_MAX);
-            rgba.blueValue = 1.0;
-        } else if (waveLength >= BLUE_MAX && waveLength <= CYAN_MAX) {
-            rgba.greenValue = 1.0;
-            rgba.blueValue = -1.0 * (waveLength - CYAN_MAX) / (CYAN_MAX - BLUE_MAX);
-        } else if (waveLength >= CYAN_MAX && waveLength <= GREEN_MAX) {
-            rgba.redValue = (waveLength - CYAN_MAX) / (GREEN_MAX - CYAN_MAX);
-            rgba.greenValue = 1.0;
-        } else if (waveLength >= GREEN_MAX && waveLength <= ORANGE_MAX) {
-            rgba.redValue = 1.0;
-            rgba.greenValue = -1.0 * (waveLength - ORANGE_MAX) / (ORANGE_MAX - GREEN_MAX);
-        } else if (waveLength >= ORANGE_MAX && waveLength <= RED_MAX) {
-            rgba.redValue = 1.0;
-        }
-
-        // 计算比率系数
+        rgba += rgba.InitColorByWaveLength(waveLength);
+        // 计算比系数
         double ratio = 1.0;
         if (waveLength > RED_MIN) {
             ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
         } else if (waveLength < PURPLE_MIDDLE) {
             ratio = FIXED_VALUE + COEFFICIENT * (waveLength - PURPLE_MIN) / (PURPLE_MIDDLE - PURPLE_MIN);
         }
-
-        rgba.redValue = std::pow(rgba.redValue * ratio, gamma);
-        rgba.greenValue = std::pow(rgba.greenValue * ratio, gamma);
-        rgba.blueValue = std::pow(rgba.blueValue * ratio, gamma);
-        return rgba;
+        return Rgba(std::pow(rgba.redValue * ratio, gamma),
+                    std::pow(rgba.greenValue * ratio, gamma),
+                    std::pow(rgba.blueValue * ratio, gamma));
     }
 
     /**

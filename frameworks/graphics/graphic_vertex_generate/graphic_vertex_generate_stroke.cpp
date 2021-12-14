@@ -16,7 +16,7 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-    VCGenStroke::VCGenStroke()
+    VertexGenerateStroke::VertexGenerateStroke()
         :stroker_(),
          srcVertices_(),
          outVertices_(),
@@ -28,14 +28,14 @@ namespace OHOS {
     {
     }
 
-    void VCGenStroke::RemoveAll()
+    void VertexGenerateStroke::RemoveAll()
     {
         srcVertices_.RemoveAll();
         closed_ = 0;
         status_ = INITIAL;
     }
 
-    void VCGenStroke::AddVertex(double x, double y, unsigned cmd)
+    void VertexGenerateStroke::AddVertex(double x, double y, unsigned cmd)
     {
         status_ = INITIAL;
         if (IsMoveTo(cmd)) {
@@ -49,7 +49,7 @@ namespace OHOS {
         }
     }
 
-    void VCGenStroke::Rewind(unsigned)
+    void VertexGenerateStroke::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
             srcVertices_.Close(closed_ != 0);
@@ -64,7 +64,7 @@ namespace OHOS {
         outVertex_ = 0;
     }
 
-    unsigned VCGenStroke::Vertex(double* x, double* y)
+    unsigned VertexGenerateStroke::Vertex(double* x, double* y)
     {
         const unsigned verticesNum = 2;
         unsigned cmd = PATH_CMD_LINE_TO;
@@ -90,7 +90,7 @@ namespace OHOS {
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[0],
                                      srcVertices_[1],
-                                     srcVertices_[0].dist);
+                                     srcVertices_[0].dist_);
                     srcVertex_ = 1;
                     prevStatus_ = OUTLINE1;
                     status_ = OUT_VERTICES;
@@ -100,7 +100,7 @@ namespace OHOS {
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[srcVertices_.Size() - 1],
                                      srcVertices_[srcVertices_.Size() - verticesNum],
-                                     srcVertices_[srcVertices_.Size() - verticesNum].dist);
+                                     srcVertices_[srcVertices_.Size() - verticesNum].dist_);
                     prevStatus_ = OUTLINE2;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
@@ -111,7 +111,7 @@ namespace OHOS {
                         status_ = END_POLY1;
                         break;
                     }
-                    if(!closed_ && srcVertex_ >= srcVertices_.Size() - 1){
+                    if (!closed_ && srcVertex_ >= srcVertices_.Size() - 1) {
                         status_ = CAP2;
                         break;
                     }
@@ -119,8 +119,8 @@ namespace OHOS {
                                       srcVertices_.Prev(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Next(srcVertex_),
-                                      srcVertices_.Prev(srcVertex_).dist,
-                                      srcVertices_.Curr(srcVertex_).dist);
+                                      srcVertices_.Prev(srcVertex_).dist_,
+                                      srcVertices_.Curr(srcVertex_).dist_);
                     ++srcVertex_;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
@@ -140,8 +140,8 @@ namespace OHOS {
                                       srcVertices_.Next(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Prev(srcVertex_),
-                                      srcVertices_.Curr(srcVertex_).dist,
-                                      srcVertices_.Prev(srcVertex_).dist);
+                                      srcVertices_.Curr(srcVertex_).dist_,
+                                      srcVertices_.Prev(srcVertex_).dist_);
                     outVertex_ = 0;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
