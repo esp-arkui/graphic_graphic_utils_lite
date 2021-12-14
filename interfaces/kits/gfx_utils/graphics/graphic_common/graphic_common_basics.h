@@ -221,11 +221,6 @@ namespace OHOS {
 
     const double RADDALETAELPS = 0.125;
 
-    //const int16u BEZIER_ARC_POINTS = 4;
-    //const int16u BEZIER_ARC_SETUP = 2;
-    //const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
-    //const double CURVES_NUM_STEP_LEN = 0.25;
-
     /**
      *下标
      */
