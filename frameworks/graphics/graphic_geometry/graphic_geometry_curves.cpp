@@ -14,9 +14,6 @@
  */
 
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_curves.h"
-
-#include <cmath>
-
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 
 namespace OHOS {
