@@ -35,27 +35,27 @@ namespace OHOS {
      */
     class TransViewPort {
     public:
-        TransViewPort() 
-        : worldX1_(0.0),
-          worldY1_(0.0),
-          worldX2_(1.0),
-          worldY2_(1.0),
-          deviceX1_(0.0),
-          deviceY1_(0.0),
-          deviceX2_(1.0),
-          deviceY2_(1.0),
-          aspect_(ASPECT_RATIO_STRETCH),
-          isValid_(true),
-          alignX_(0.0),
-          alignY_(0.0),
-          realWorldX1_(0.0),
-          realWorldY1_(0.0),
-          realWorldX2_(1.0),
-          realWorldY2_(1.0),
-          realDeviceX1_(0.0),
-          realDeviceY1_(0.0),
-          scaleX_(1.0),
-          scaleY_(1.0)
+        TransViewPort()
+            : worldX1_(0.0),
+              worldY1_(0.0),
+              worldX2_(1.0),
+              worldY2_(1.0),
+              deviceX1_(0.0),
+              deviceY1_(0.0),
+              deviceX2_(1.0),
+              deviceY2_(1.0),
+              aspect_(ASPECT_RATIO_STRETCH),
+              isValid_(true),
+              alignX_(0.0),
+              alignY_(0.0),
+              realWorldX1_(0.0),
+              realWorldY1_(0.0),
+              realWorldX2_(1.0),
+              realWorldY2_(1.0),
+              realDeviceX1_(0.0),
+              realDeviceY1_(0.0),
+              scaleX_(1.0),
+              scaleY_(1.0)
         {}
          /**
          * @brief 设定xy轴方向对其的偏移量

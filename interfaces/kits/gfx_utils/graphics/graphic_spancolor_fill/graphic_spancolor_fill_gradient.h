@@ -55,12 +55,12 @@ namespace OHOS {
         SpanGradient(interpolator_type& inter,
                      GradientF& gradient_function,
                      ColorF& color_function,
-                     double distance1, double distance2) :
-            interpolator_(&inter),
-            gradientFunction_(&gradient_function),
-            colorFunction_(&color_function),
-            distance1_(Iround(distance1 * GRADIENT_SUBPIXEL_SCALE)),
-            distance2_(Iround(distance2 * GRADIENT_SUBPIXEL_SCALE))
+                     double distance1, double distance2)
+            : interpolator_(&inter),
+              gradientFunction_(&gradient_function),
+              colorFunction_(&color_function),
+              distance1_(Iround(distance1 * GRADIENT_SUBPIXEL_SCALE)),
+              distance2_(Iround(distance2 * GRADIENT_SUBPIXEL_SCALE))
         {
         }
 
@@ -78,7 +78,7 @@ namespace OHOS {
         void Generate(color_type* span, int x, int y, unsigned len)
         {
             int downscaleShift = interpolator_type::SUBPIXEL_SHIFT - GRADIENT_SUBPIXEL_SHIFT;
-            interpolator_->Begin(x + 0.5, y + 0.5, len);
+            interpolator_->Begin(x + HALFNUM, y + HALFNUM, len);
             for (; len; --len, ++(*interpolator_)) {
                 interpolator_->Coordinates(&x, &y);
                 int index = gradientFunction_->Calculate(x >> downscaleShift,
@@ -106,10 +106,10 @@ namespace OHOS {
      */
     class GradientRadialCalculate {
     public:
-        GradientRadialCalculate() :
-            endRadius_(100 * GRADIENT_SUBPIXEL_SCALE),
-            dx_(0),
-            dy_(0)
+        GradientRadialCalculate()
+            : endRadius_(HUNDRED_TIMES * GRADIENT_SUBPIXEL_SCALE),
+              dx_(0),
+              dy_(0)
         {
             UpdateValues();
         }
@@ -120,10 +120,10 @@ namespace OHOS {
          * @param dx x轴方向上，结束圆圆心到开始圆圆心得距离
          * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
          */
-        GradientRadialCalculate(double endRadius, double dx, double dy) :
-            endRadius_(Iround(endRadius * GRADIENT_SUBPIXEL_SCALE)),
-            dx_(Iround(dx * GRADIENT_SUBPIXEL_SCALE)),
-            dy_(Iround(dy * GRADIENT_SUBPIXEL_SCALE))
+        GradientRadialCalculate(double endRadius, double dx, double dy)
+            : endRadius_(Iround(endRadius * GRADIENT_SUBPIXEL_SCALE)),
+              dx_(Iround(dx * GRADIENT_SUBPIXEL_SCALE)),
+              dy_(Iround(dy * GRADIENT_SUBPIXEL_SCALE))
         {
             UpdateValues();
         }
@@ -147,7 +147,8 @@ namespace OHOS {
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
+            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul)
+                         - startRadius) * size) / deltaRadius;
 
             if (index < 0) {
                 index = 0;

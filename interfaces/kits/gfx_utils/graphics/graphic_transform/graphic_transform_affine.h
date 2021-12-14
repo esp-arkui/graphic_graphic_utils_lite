@@ -34,7 +34,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        TransAffine() : scaleX(1.0),shearY(0.0),shearX(0.0),scaleY(1.0),translateX(0.0),translateY(0.0) {}
+        TransAffine() : scaleX(1.0), shearY(0.0), shearX(0.0), scaleY(1.0), translateX(0.0), translateY(0.0) {}
         /**
          * @brief 自定义矩阵
          * @since 1.0
@@ -290,4 +290,3 @@ namespace OHOS {
 } // namespace OHOS
 
 #endif
-

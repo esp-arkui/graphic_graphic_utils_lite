@@ -154,8 +154,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        PodArrayAdaptor(T* array, unsigned size) :
-            data_(array), size_(size)
+        PodArrayAdaptor(T* array, unsigned size)
+            : data_(array), size_(size)
         {}
         /**
          * @brief 获取指定索引的元素.

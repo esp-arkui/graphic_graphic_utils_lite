@@ -53,7 +53,6 @@ namespace OHOS {
         if (numSteps_ < NUM_STEPS_MAX) {
             numSteps_ = NUM_STEPS_MAX;
         }
-
         double subdivideStep = 1.0 / numSteps_;
         double subdivideStep2 = subdivideStep * subdivideStep;
 
@@ -161,7 +160,7 @@ namespace OHOS {
 
                 da = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
                 if (da >= PI) {
-                    da = DOUBLENUM * PI - da;
+                    da = TWO_TIMES * PI - da;
                 }
 
                 if (da < angleTolerance_) {

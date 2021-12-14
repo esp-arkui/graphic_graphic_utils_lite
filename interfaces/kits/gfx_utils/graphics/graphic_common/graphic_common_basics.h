@@ -63,9 +63,9 @@ namespace OHOS {
     };
 
     enum GradientSubpixelScaleEnum {
-        GRADIENT_SUBPIXEL_SHIFT = 4,                            //-----gradient_subpixel_shift
-        GRADIENT_SUBPIXEL_SCALE = 1 << GRADIENT_SUBPIXEL_SHIFT, //-----GRADIENT_SUBPIXEL_SCALE
-        GRADIENT_SUBPIXEL_MASK = GRADIENT_SUBPIXEL_SCALE - 1    //-----gradient_subpixel_mask
+        GRADIENT_SUBPIXEL_SHIFT = 4,
+        GRADIENT_SUBPIXEL_SCALE = 1 << GRADIENT_SUBPIXEL_SHIFT,
+        GRADIENT_SUBPIXEL_MASK = GRADIENT_SUBPIXEL_SCALE - 1
     };
     /**
      * @brief 覆盖率的弹性处理.
@@ -138,9 +138,18 @@ namespace OHOS {
     const double BOXER = 180.0;
 
     /**
+     * @brief BUF_SIZE
+     */
+    const double BUF_SIZE = 1024.0;
+    /**
      * @brief 颜色的最大值
      */
     const unsigned MAX_COLOR_NUM = 255;
+    /**
+     * @brief 颜色的最大值数组长度
+     */
+    const unsigned MAX_COLOR_SIZE = 256;
+
     /**
      * @brief 颜色的最大值的一半
      */
@@ -150,10 +159,30 @@ namespace OHOS {
      */
     const unsigned EIGHTH_COLOR_NUM = 32;
     /**
+     * @brief 颜色的最大值的三十二分之一
+     */
+    const unsigned THIRTY_TWO_COLOR_NUM = 8;
+
+    /**
      * @brief 默认最大斜接
      */
     const unsigned DEFAULTMITERLIMIT = 10;
-
+    /**
+     * @brief 一个字节的长度
+     */
+    const int BYTE_LENGTH = 8;
+    /**
+     * @brief dash数组最大长度
+     */
+    const int MAX_DASHES = 32;
+    /**
+     * @brief 默认的块偏移量
+     */
+    const int BLOCK_SHIFT_SIZE = 6;
+    /**
+     * @brief 绘制椭圆所需的顶点数
+     */
+    const int ELLIPSE_VERTEX_NUM = 4;
     /**
      * 一般步幅是宽度的四倍
      */
@@ -184,6 +213,10 @@ namespace OHOS {
      */
     const int SIX_TIMES = 6;
     /**
+     * @brief 一百倍
+     */
+    const int HUNDRED_TIMES = 100;
+    /**
      * @brief 一次走两步
      */
     const int TWO_STEP = 2;
@@ -191,8 +224,13 @@ namespace OHOS {
     const double DOUBLENUM = 2.0;
     const double RADDALETAELPS = 0.125;
 
+    const int CONSTITUTION = 16384;
     /**
-     *下标
+     * @brief 正下方
+     */
+    const int DIRECTLY_BELOW = 10;
+    /**
+     * 下标
      */
     const int INDEX_ZERO = 0;
     const int INDEX_ONE = 1;
@@ -451,7 +489,7 @@ namespace OHOS {
      */
     inline bool IsCw(unsigned val)
     {
-        return 0 != (val & PATH_FLAGS_CW);
+        return (val & PATH_FLAGS_CW) != 0;
     }
 
     /**
@@ -558,6 +596,9 @@ namespace OHOS {
          */
         static T* Allocate(unsigned num)
         {
+            if(num < 1){
+               num = 1;
+            }
             return new T[num];
         }
         /**
@@ -587,8 +628,7 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_) :
-            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
@@ -751,8 +791,7 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) :
-            x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
         {}
     };
 
@@ -766,8 +805,7 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 
@@ -778,8 +816,7 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS

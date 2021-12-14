@@ -66,7 +66,7 @@ void Arc::Rewind(unsigned)
 void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
 {
     double ra = (std::fabs(rx_) + std::fabs(ry_)) / DOUBLENUM;
-    delatAngle_ = std::acos(ra / (ra + RADDALETAELPS / scale_)) * DOUBLENUM;// 计算出弧度变化率
+    delatAngle_ = std::acos(ra / (ra + RADDALETAELPS / scale_)) * DOUBLENUM; // 计算出弧度变化率
     if (isClockwise) {
         while (endAngle < startAngle) {
             endAngle += PI * DOUBLENUM;
