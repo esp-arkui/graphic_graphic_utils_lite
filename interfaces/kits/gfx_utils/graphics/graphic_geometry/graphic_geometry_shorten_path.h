@@ -64,8 +64,8 @@ namespace OHOS {
                 double y = prev.y_ + (last.y_ - prev.y_) * d;
                 last.x_ = x;
                 last.y_ = y;
-                if (!prev(last)) {       //计算两个顶点距离是否很近
-                    vtxSeq.RemoveLast(); //删除距离不近的点
+                if (!prev(last)) {       // 计算两个顶点距离是否很近
+                    vtxSeq.RemoveLast(); // 删除距离不近的点
                 }
                 vtxSeq.Close(closed != 0);
             } else {
@@ -73,7 +73,6 @@ namespace OHOS {
             }
         }
     }
-
 } // namespace OHOS
 
 #endif

@@ -143,7 +143,7 @@ namespace OHOS {
             double dy = y - dy_;
             double m_distanceRadius = dx * dy_ - dy * dx_;
             double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
-            int deltaRadius = endRadius - startRadius; //半径的差
+            int deltaRadius = endRadius - startRadius; // 半径的差
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }

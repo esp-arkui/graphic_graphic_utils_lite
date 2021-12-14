@@ -53,16 +53,13 @@ namespace OHOS {
             coord_type spanLength;
             cover_type* covers;
         };
-
         using Iterator = SpanBlock*;
         using ConstIterator = const SpanBlock*;
-
         ScanlineUnPackedContainer()
             : minX_(0),
               lastX_(0x7FFFFFF0),
               curSpan_(0)
         {}
-
         /**
             * @class ScanlineUnPackedContainer
             * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
