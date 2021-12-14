@@ -101,7 +101,11 @@ namespace OHOS {
         PATH_FLAGS_MASK = 0xF0
     };
 
-    /* 共线的四种情况 */
+    /**
+     * @brief 共线的四种情况.
+     * @since 1.0
+     * @version 1.0
+     */
     enum RecursiveBezierEnum {
         COLLINEAR = 0,
         COLLINEAR1,

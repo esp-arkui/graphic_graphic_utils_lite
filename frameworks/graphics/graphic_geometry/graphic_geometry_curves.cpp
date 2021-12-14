@@ -137,13 +137,14 @@ namespace OHOS {
         if (level > CURVERECURSIONLIMIT) {
             return;
         }
+
         // 计算线段的所有中点
-        double x12 = (x1 + x2) / 2;
-        double y12 = (y1 + y2) / 2;
-        double x23 = (x2 + x3) / 2;
-        double y23 = (y2 + y3) / 2;
-        double x123 = (x12 + x23) / 2;
-        double y123 = (y12 + y23) / 2;
+        double x12 = (x1 + x2) / DOUBLENUM;
+        double y12 = (y1 + y2) / DOUBLENUM;
+        double x23 = (x2 + x3) / DOUBLENUM;
+        double y23 = (y2 + y3) / DOUBLENUM;
+        double x123 = (x12 + x23) / DOUBLENUM;
+        double y123 = (y12 + y23) / DOUBLENUM;
 
         double deltaX = x3 - x1;
         double deltaY = y3 - y1;
@@ -354,18 +355,18 @@ namespace OHOS {
         }
 
         // 计算线段的所有中点
-        double x12 = (x1 + x2) / 2;
-        double y12 = (y1 + y2) / 2;
-        double x23 = (x2 + x3) / 2;
-        double y23 = (y2 + y3) / 2;
-        double x34 = (x3 + x4) / 2;
-        double y34 = (y3 + y4) / 2;
-        double x123 = (x12 + x23) / 2;
-        double y123 = (y12 + y23) / 2;
-        double x234 = (x23 + x34) / 2;
-        double y234 = (y23 + y34) / 2;
-        double x1234 = (x123 + x234) / 2;
-        double y1234 = (y123 + y234) / 2;
+        double x12 = (x1 + x2) / DOUBLENUM;
+        double y12 = (y1 + y2) / DOUBLENUM;
+        double x23 = (x2 + x3) / DOUBLENUM;
+        double y23 = (y2 + y3) / DOUBLENUM;
+        double x34 = (x3 + x4) / DOUBLENUM;
+        double y34 = (y3 + y4) / DOUBLENUM;
+        double x123 = (x12 + x23) / DOUBLENUM;
+        double y123 = (y12 + y23) / DOUBLENUM;
+        double x234 = (x23 + x34) / DOUBLENUM;
+        double y234 = (y23 + y34) / DOUBLENUM;
+        double x1234 = (x123 + x234) / DOUBLENUM;
+        double y1234 = (y123 + y234) / DOUBLENUM;
 
         // 试着用一条直线近似整个三次曲线
         double deltaX = x4 - x1;
