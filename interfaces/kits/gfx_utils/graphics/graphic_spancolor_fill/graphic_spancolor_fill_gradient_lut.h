@@ -34,7 +34,7 @@ namespace OHOS {
     * @since 1.0
     * @version 1.0
     */
-    template <class ColorInterpolator, unsigned ColorLutSize = 256>
+    template <class ColorInterpolator, unsigned ColorLutSize = MAX_COLOR_SIZE>
     class GradientColorCalibration {
     public:
         typedef ColorInterpolator interpolator_type;
