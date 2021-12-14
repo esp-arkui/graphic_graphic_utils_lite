@@ -15,10 +15,7 @@
 
 /**
  * @addtogroup GraphicGeometry
- * @{
- *
- * @brief Defines Arc.
- *
+ * @brief Defines Arc
  * @since 1.0
  * @version 1.0
  */
@@ -34,7 +31,6 @@
 #include "securec.h"
 
 namespace OHOS {
-
     const int QUICK_SORT_THRESHOLD = 9;
 
     /**
@@ -91,6 +87,50 @@ namespace OHOS {
         val1 = val2;
         val2 = temp;
     }
+
+    template <class Array, class Less>
+    void ToCompareLess(Array& arr, Less less,int i,int j,int base)
+    {
+        for (;;) {
+            do
+                i++;
+            while (less(arr[i], arr[base]));
+            do
+                j--;
+            while (less(arr[base], arr[j]));
+
+            if (i > j) {
+                break;
+            }
+            SwapElements(arr[i], arr[j]);
+        }
+    }
+
+    template <class Array, class Less>
+    bool CompareLessThreshold(Array& arr, Less less,int i,int j,int base,int limit,int* top,int * stack)
+    {
+        typename Array::ValueType* e1;
+        typename Array::ValueType* e2;
+        j = base;
+        i = j + 1;
+        for (; i < limit; i++) {
+            for (; less(*(e1 = &(arr[j + 1])), *(e2 = &(arr[j]))); j--) {
+                SwapElements(*e1, *e2);
+                if (j == base) {
+                    break;
+                }
+            }
+             j = i;
+        }
+        if (top > stack) {
+            top -= TWO_STEP;
+            base = top[0];
+            limit = top[1];
+        } else {
+            return true;
+        }
+    }
+
     /**
     *
     * @brief 快速排序算法.
@@ -156,8 +196,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RangeAdaptor(Array& array, unsigned start, unsigned size) :
-            data_(array), start_(start), size_(size)
+        RangeAdaptor(Array& array, unsigned start, unsigned size)
+            : data_(array), start_(start), size_(size)
         {}
         /**
         *
@@ -224,15 +264,15 @@ namespace OHOS {
         }
 
     private:
-        Array& data_;    //原数组
-        unsigned start_; //原数组的起始位置
-        unsigned size_;  //指定的大小
+        Array& data_;    // 原数组
+        unsigned start_; // 原数组的起始位置
+        unsigned size_;  // 指定的大小
     };
 
     template <class Array, class Less>
     void QuickSort(Array& arr, Less less)
     {
-        if (arr.Size() < 2) {
+        if (arr.Size() <  INDEX_TWO) {
             return;
         }
         typename Array::ValueType* e1;
@@ -247,7 +287,7 @@ namespace OHOS {
             int j;
             int pivot;
             if (len > QUICK_SORT_THRESHOLD) {
-                pivot = base + len / 2;
+                pivot = base + len * HALFNUM;
                 SwapElements(arr[base], arr[pivot]);
                 i = base + 1;
                 j = limit - 1;
@@ -265,19 +305,7 @@ namespace OHOS {
                 e2 = &(arr[base]);
                 if (less(*e1, *e2))
                     SwapElements(*e1, *e2);
-                for (;;) {
-                    do
-                        i++;
-                    while (less(arr[i], arr[base]));
-                    do
-                        j--;
-                    while (less(arr[base], arr[j]));
-
-                    if (i > j) {
-                        break;
-                    }
-                    SwapElements(arr[i], arr[j]);
-                }
+                ToCompareLess(arr,less,i,j,base);
                 SwapElements(arr[base], arr[j]);
                 if (j - base > limit - i) {
                     top[0] = base;
@@ -288,23 +316,9 @@ namespace OHOS {
                     top[1] = limit;
                     limit = j;
                 }
-                top += 2;
+                top += TWO_STEP;
             } else {
-                j = base;
-                i = j + 1;
-                for (; i < limit; j = i, i++) {
-                    for (; less(*(e1 = &(arr[j + 1])), *(e2 = &(arr[j]))); j--) {
-                        SwapElements(*e1, *e2);
-                        if (j == base) {
-                            break;
-                        }
-                    }
-                }
-                if (top > stack) {
-                    top -= 2;
-                    base = top[0];
-                    limit = top[1];
-                } else {
+                if(CompareLessThreshold(arr,less,i,j,base,limit,top,stack)){
                     break;
                 }
             }
@@ -343,7 +357,7 @@ namespace OHOS {
     template <class Array, class Equal>
     unsigned RemoveDuplicates(Array& arr, Equal equal)
     {
-        if (arr.Size() < 2) {
+        if (arr.Size() < INDEX_TWO) {
             return arr.Size();
         }
 
@@ -356,6 +370,5 @@ namespace OHOS {
         }
         return j;
     }
-
 } // namespace OHOS
 #endif

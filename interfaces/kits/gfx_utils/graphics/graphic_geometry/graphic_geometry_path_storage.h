@@ -17,22 +17,20 @@
 #define GRAPHIC_PATH_STORAGE_INCLUDED
 
 #include <cstring>
-
 #include "graphic_geometry_bezier_arc.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 
 namespace OHOS {
-
     /**
      * @brief 顶点源数据块
      *
      * @since 1.0
      * @version 1.0
      */
-    template<class ValueType, unsigned BlockShift=8, unsigned BlockPool=256>
-    class VertexBlockStorage
-    {
+    template<class ValueType, unsigned BlockShift = OHOS::THIRTY_TWO_COLOR_NUM,
+             unsigned BlockPool = OHOS::MAX_COLOR_SIZE>
+    class VertexBlockStorage {
     public:
         // Allocation parameters
         enum BlockScale {
@@ -124,20 +122,19 @@ namespace OHOS {
         int8u** cmdBlocks_;
     };
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     void VertexBlockStorage<ValueType, S, P>::FreeAll()
     {
         if (totalBlocks_) {
             ValueType** coordBLK = croodBlocks_ + totalBlocks_ - 1;
-            for(;totalBlocks_ > 0;totalBlocks_--) {
+            for( ; totalBlocks_ > 0 ; totalBlocks_--) {
                 ArrAllocator<ValueType>::Deallocate(
                     *coordBLK,
-                    BLOCK_SIZE * 2 + 
+                    BLOCK_SIZE * OHOS::TWO_TIMES +
                     BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
                 --coordBLK;
             }
-            ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * 2);
+            ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
             totalBlocks_ = 0;
             maxBlocks_ = 0;
             croodBlocks_ = 0;
@@ -146,17 +143,15 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     VertexBlockStorage<ValueType, S, P>::~VertexBlockStorage()
     {
         FreeAll();
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
-    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage() :
-        totalVertices_(0),
+    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage()
+        : totalVertices_(0),
         totalBlocks_(0),
         maxBlocks_(0),
         croodBlocks_(0),
@@ -164,10 +159,9 @@ namespace OHOS {
     {
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
-    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage(const VertexBlockStorage<ValueType, S, P>& v) :
-        totalVertices_(0),
+    VertexBlockStorage<ValueType, S, P>::VertexBlockStorage(const VertexBlockStorage<ValueType, S, P>& v)
+        : totalVertices_(0),
         totalBlocks_(0),
         maxBlocks_(0),
         croodBlocks_(0),
@@ -176,10 +170,9 @@ namespace OHOS {
         *this = v;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
-    const VertexBlockStorage<ValueType, S, P>&
-        VertexBlockStorage<ValueType, S, P>::operator=(const VertexBlockStorage<ValueType, S, P>& v)
+    const VertexBlockStorage<ValueType, S, P>& VertexBlockStorage<ValueType, S, P>
+        ::operator=(const VertexBlockStorage<ValueType, S, P>& v)
     {
         RemoveAll();
         unsigned i;
@@ -191,14 +184,12 @@ namespace OHOS {
         return *this;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline void VertexBlockStorage<ValueType, S, P>::RemoveAll()
     {
         totalVertices_ = 0;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline void VertexBlockStorage<ValueType, S, P>::AddVertex(double x, double y,
                                                                unsigned cmd)
@@ -210,7 +201,6 @@ namespace OHOS {
         totalVertices_++;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline unsigned VertexBlockStorage<ValueType, S, P>::LastCommand() const
     {
@@ -220,7 +210,6 @@ namespace OHOS {
         return PATH_CMD_STOP;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline unsigned VertexBlockStorage<ValueType, S, P>::LastVertex(double* x, double* y) const
     {
@@ -230,14 +219,12 @@ namespace OHOS {
         return PATH_CMD_STOP;
     }
 
-    // //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline unsigned VertexBlockStorage<ValueType, S, P>::TotalVertices() const
     {
         return totalVertices_;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline unsigned VertexBlockStorage<ValueType, S, P>::Vertex(unsigned idx,
                                                                 double* x, double* y) const
@@ -249,20 +236,18 @@ namespace OHOS {
         return cmdBlocks_[nb][idx & BLOCK_MASK];
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     inline unsigned VertexBlockStorage<ValueType, S, P>::Command(unsigned idx) const
     {
         return cmdBlocks_[idx >> BLOCK_SHIFT][idx & BLOCK_MASK];
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     void VertexBlockStorage<ValueType, S, P>::AllocateBlock(unsigned nb)
     {
         if (nb >= maxBlocks_) {
-            ValueType** new_coords = 
-                ArrAllocator<ValueType*>::Allocate((maxBlocks_ + BLOCK_POOL) * 2);
+            ValueType** new_coords = ArrAllocator<ValueType*>::Allocate(
+                        (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
 
             unsigned char** new_cmds =
                 (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
@@ -276,23 +261,22 @@ namespace OHOS {
                             cmdBlocks_,
                             maxBlocks_ * sizeof(unsigned char*));
 
-                ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * 2);
+                ArrAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
             }
             croodBlocks_ = new_coords;
             cmdBlocks_ = new_cmds;
             maxBlocks_ += BLOCK_POOL;
         }
         croodBlocks_[nb] =
-            ArrAllocator<ValueType>::Allocate(BLOCK_SIZE * 2 +
+            ArrAllocator<ValueType>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
                                               BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
 
         cmdBlocks_[nb] =
-            (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * 2);
+            (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
 
         totalBlocks_++;
     }
 
-    //------------------------------------------------------------------------
     template <class ValueType, unsigned S, unsigned P>
     int8u* VertexBlockStorage<ValueType, S, P>::StoragePtrs(ValueType** xy_ptr)
     {
@@ -304,22 +288,21 @@ namespace OHOS {
         return cmdBlocks_[nb] + (totalVertices_ & BLOCK_MASK);
     }
 
-    //-----------------------------------------------------PolyPlainAdaptor
     template <class ValueType>
     class PolyPlainAdaptor {
     public:
-        PolyPlainAdaptor() :
-            data_(0),
+        PolyPlainAdaptor()
+            : data_(0),
             ptr_(0),
             end_(0),
             closed_(false),
             stop_(false)
         {}
 
-        PolyPlainAdaptor(const ValueType* data, unsigned numPoints, bool closed) :
-            data_(data),
+        PolyPlainAdaptor(const ValueType* data, unsigned numPoints, bool closed)
+            : data_(data),
             ptr_(data),
-            end_(data + numPoints * 2),
+            end_(data + numPoints * OHOS::TWO_TIMES),
             closed_(closed),
             stop_(false)
         {}
@@ -328,7 +311,7 @@ namespace OHOS {
         {
             data_ = data;
             ptr_ = data;
-            end_ = data + numPoints * 2;
+            end_ = data + numPoints * OHOS::TWO_TIMES;
             closed_ = closed;
             stop_ = false;
         }
@@ -367,26 +350,11 @@ namespace OHOS {
         bool stop_;
     };
 
-    //---------------------------------------------------------------PathBase
-    // A container to store vertices with their flags.
-    // A path consists of a number of contours separated with "MoveTo"
-    // commands. The path storage can keep and maintain more than one
-    // path.
-    // To navigate to the beginning of a particular path, use Rewind(pathId);
-    // Where pathId is what StartNewPath() returns. So, when you call
-    // StartNewPath() you need to store its return value somewhere else
-    // to navigate to the path afterwards.
-    //
-    // See also: vertex_source concept
-    //------------------------------------------------------------------------
     template <class VertexContainer>
     class PathBase {
     public:
         using SelfType = PathBase<VertexContainer>;
-
-        //--------------------------------------------------------------------
-        PathBase() :
-            vertices_(), iterator_(0)
+        PathBase() : vertices_(), iterator_(0)
         {}
         /**
          * @brief 去除所有顶点
@@ -538,25 +506,24 @@ namespace OHOS {
                 if (IsVertex(cmd)) {
                     double x0, y0;
                     unsigned cmd0 = LastVertex(&x0, &y0);
-                    if (IsVertex(cmd0)) {
-                        if (CalcDistance(x, y, x0, y0) > VERTEX_DIST_EPSILON) {
-                            if (IsMoveTo(cmd)) {
-                                cmd = PATH_CMD_LINE_TO;
-                            }
-                            vertices_.AddVertex(x, y, cmd);
+                    if (IsVertex(cmd0)&&(CalcDistance(x, y, x0, y0) > VERTEX_DIST_EPSILON)) {
+                        if (IsMoveTo(cmd)) {
+                            cmd = PATH_CMD_LINE_TO;
                         }
+                        vertices_.AddVertex(x, y, cmd);
+                    } else if (IsStop(cmd0)) {
+                        cmd = PATH_CMD_MOVE_TO;
+                        vertices_.AddVertex(x, y, cmd);
                     } else {
-                        if (IsStop(cmd0)) {
-                            cmd = PATH_CMD_MOVE_TO;
-                        } else {
-                            if (IsMoveTo(cmd)) {
-                                cmd = PATH_CMD_LINE_TO;
-                            }
+                        if (IsMoveTo(cmd)) {
+                            cmd = PATH_CMD_LINE_TO;
                         }
                         vertices_.AddVertex(x, y, cmd);
                     }
+
+
                 }
-                for(;!IsStop(cmd = vs.Vertex(&x, &y));) {
+                for( ; !IsStop(cmd = vs.Vertex(&x, &y)) ; ) {
                     unsigned int c;
                     if (IsMoveTo(cmd)) {
                         c = unsigned(PATH_CMD_LINE_TO);
@@ -608,7 +575,6 @@ namespace OHOS {
         unsigned iterator_;
     };
 
-    //------------------------------------------------------------------------
     template <class VC>
     unsigned PathBase<VC>::StartNewPath()
     {
@@ -618,21 +584,18 @@ namespace OHOS {
         return vertices_.TotalVertices();
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline void PathBase<VC>::MoveTo(double x, double y)
     {
         vertices_.AddVertex(x, y, PATH_CMD_MOVE_TO);
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline void PathBase<VC>::LineTo(double x, double y)
     {
         vertices_.AddVertex(x, y, PATH_CMD_LINE_TO);
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     void PathBase<VC>::ArcTo(double rx, double ry,
                              double angle,
@@ -648,17 +611,11 @@ namespace OHOS {
 
             rx = std::fabs(rx);
             ry = std::fabs(ry);
-
-            // Ensure radii are valid
-            //-------------------------
             if (rx < epsilon || ry < epsilon) {
                 LineTo(x, y);
                 return;
             }
-
             if (CalcDistance(x0, y0, x, y) < epsilon) {
-                // If the endpoints (x, y) and (x0, y0) are identical, then this
-                // is equivalent to omitting the elliptical arc segment entirely.
                 return;
             }
             BezierArcSvg a(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
@@ -672,7 +629,6 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline void PathBase<VC>::EndPoly(unsigned flags)
     {
@@ -681,14 +637,12 @@ namespace OHOS {
         }
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline void PathBase<VC>::ClosePolygon(unsigned flags)
     {
         EndPoly(PATH_FLAGS_CLOSE | flags);
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline unsigned PathBase<VC>::TotalVertices() const
     {
@@ -701,14 +655,12 @@ namespace OHOS {
         return vertices_.LastVertex(x, y);
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline void PathBase<VC>::Rewind(unsigned pathId)
     {
         iterator_ = pathId;
     }
 
-    //------------------------------------------------------------------------
     template <class VC>
     inline unsigned PathBase<VC>::Vertex(double* x, double* y)
     {
@@ -718,9 +670,7 @@ namespace OHOS {
         return vertices_.Vertex(iterator_++, x, y);
     }
 
-    //-----------------------------------------------------------PathStorage
     using PathStorage = PathBase<VertexBlockStorage<double> >;
-
 } // namespace OHOS
 
 #endif

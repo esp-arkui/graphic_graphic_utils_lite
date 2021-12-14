@@ -41,9 +41,8 @@ namespace OHOS {
 
         Curve3Inc(double x1, double y1,
                   double x2, double y2,
-                  double x3, double y3) :
-            numSteps_(0),
-            step_(0), scale_(1.0)
+                  double x3, double y3)
+            : numSteps_(0), step_(0), scale_(1.0)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
@@ -107,15 +106,13 @@ namespace OHOS {
 
     class Curve3Div {
     public:
-        Curve3Div() :
-            approximationScale_(1.0), angleTolerance_(0.0), count_(0)
+        Curve3Div() : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {}
 
         Curve3Div(double x1, double y1,
                   double x2, double y2,
-                  double x3, double y3) :
-            approximationScale_(1.0),
-            angleTolerance_(0.0), count_(0)
+                  double x3, double y3)
+            : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
@@ -239,20 +236,18 @@ namespace OHOS {
 
     class Curve4Inc {
     public:
-        Curve4Inc() :
-            numSteps_(0), step_(0), scale_(1.0)
+        Curve4Inc() : numSteps_(0), step_(0), scale_(1.0)
         {}
 
         Curve4Inc(double x1, double y1, double x2, double y2,
-                  double x3, double y3, double x4, double y4) :
-            numSteps_(0),
-            step_(0), scale_(1.0)
+                  double x3, double y3, double x4, double y4)
+            : numSteps_(0), step_(0), scale_(1.0)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        Curve4Inc(const Curve4Points& curve4Points) :
-            numSteps_(0), step_(0), scale_(1.0)
+        Curve4Inc(const Curve4Points& curve4Points)
+            : numSteps_(0), step_(0), scale_(1.0)
         {
             Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
@@ -385,32 +380,30 @@ namespace OHOS {
     inline Curve4Points HermiteToBezier(const Curve4Points& curve4Points)
     {
         return HermiteToBezier(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
-                                   curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
-                                   curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
-                                   curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
+                curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
     }
 
     class Curve4Div {
     public:
-        Curve4Div() :
-            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
+        Curve4Div()
+            : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {}
 
-        Curve4Div(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) :
-            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
+        Curve4Div(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4)
+            : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        Curve4Div(const Curve4Points& curve4Points) :
-            approximationScale_(1.0),
-            angleTolerance_(0.0),
-            count_(0)
+        Curve4Div(const Curve4Points& curve4Points)
+            : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {
             Init(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
-                    curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
-                    curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
-                    curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
+                 curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                 curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                 curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
         }
 
         void Init(double x1, double y1,
@@ -421,9 +414,9 @@ namespace OHOS {
         void Init(const Curve4Points& curve4Points)
         {
             Init(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
-                    curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
-                    curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
-                    curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
+                 curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
+                 curve4Points[OHOS::INDEX_FOUR], curve4Points[OHOS::INDEX_FIVE],
+                 curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
         }
 
         void Reset()
@@ -515,12 +508,11 @@ namespace OHOS {
      */
     class Curve3 {
     public:
-        Curve3() :
-            approximationMethod_(CURVEDIV)
+        Curve3() : approximationMethod_(CURVEDIV)
         {}
 
-        Curve3(double x1, double y1, double x2, double y2, double x3, double y3) :
-            approximationMethod_(CURVEDIV)
+        Curve3(double x1, double y1, double x2, double y2, double x3, double y3)
+            : approximationMethod_(CURVEDIV)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
@@ -615,21 +607,18 @@ namespace OHOS {
      */
     class Curve4 {
     public:
-        Curve4() :
-            approximationMethod_(CURVEDIV)
+        Curve4() : approximationMethod_(CURVEDIV)
         {}
 
         Curve4(double x1, double y1,
                double x2, double y2,
                double x3, double y3,
-               double x4, double y4) :
-            approximationMethod_(CURVEDIV)
+               double x4, double y4) : approximationMethod_(CURVEDIV)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        Curve4(const Curve4Points& curve4Points) :
-            approximationMethod_(CURVEDIV)
+        Curve4(const Curve4Points& curve4Points) : approximationMethod_(CURVEDIV)
         {
             Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
