@@ -54,7 +54,6 @@ shared_library("graphic_utils") {
     "frameworks/style.cpp",
     "frameworks/transform.cpp",
     "frameworks/version.cpp",
-    "frameworks/graphics/graphic_common/graphic_common_clip_operate.cpp",
     "frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp",
     "frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp",
     "frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp",
