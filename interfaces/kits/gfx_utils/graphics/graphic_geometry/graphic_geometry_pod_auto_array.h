@@ -131,7 +131,7 @@ namespace OHOS {
         }
 
     private:
-        T data_[SizeN]; //保存元素个数
+        T data_[SizeN]; // 保存元素个数
     };
 
     /**

@@ -167,6 +167,7 @@ namespace OHOS {
      * @brief 一个字节的长度
      */
     const int BYTE_LENGTH = 8;
+    const int ARRAY_SIZE = 16;
     /**
      * @brief dash数组最大长度
      */
