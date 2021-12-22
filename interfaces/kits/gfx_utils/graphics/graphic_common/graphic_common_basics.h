@@ -121,13 +121,13 @@ namespace OHOS {
         CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
     };
     template <class Type>
-    class RectBase;
+    struct RectBase;
 
     template <class Type>
-    class PointBase;
+    struct PointBase;
 
     template <class Type>
-    class VertexBase;
+    struct VertexBase;
 
     using int8 = signed char;
     using int8u = unsigned char;
