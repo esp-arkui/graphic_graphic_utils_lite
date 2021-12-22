@@ -376,24 +376,6 @@ namespace OHOS {
     }
 
     template <class T>
-    void GeometryPlainDataVector<T>::Deserialize(const int8u* data, unsigned byteSize)
-    {
-        byteSize = byteSize / sizeof(T);
-        Allocate(byteSize);
-        if (byteSize) {
-            memcpy_s(data_, byteSize * sizeof(T), data, byteSize * sizeof(T));
-        }
-    }
-
-    template <class T>
-    void GeometryPlainDataVector<T>::Serialize(int8u* ptr) const
-    {
-        if (size_) {
-            memcpy_s(ptr, size_ * sizeof(T), data_, size_ * sizeof(T));
-        }
-    }
-
-    template <class T>
     void GeometryPlainDataVector<T>::InsertAt(unsigned pos, const T& val)
     {
         if (pos >= size_) {
