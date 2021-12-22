@@ -96,13 +96,7 @@ namespace OHOS {
         * @version 1.0
         */
         void RemoveLast();
-        /**
-        * @brief 申请numElements大小的连续内存块.
-        * @param numElements 要申请的元素个数
-        * @since 1.0
-        * @version 1.0
-        */
-        int AllocateContinuousBlock(unsigned numElements);
+
         void AllocateBlock(unsigned blockNum);
 
         /**
@@ -532,88 +526,6 @@ namespace OHOS {
     {
         RemoveLast();
         Add(val);
-    }
-
-    template <class T, unsigned S>
-    int GeometryPlainDataBlockVector<T, S>::AllocateContinuousBlock(unsigned numElements)
-    {
-        if (numElements < BLOCK_SIZE) {
-            DataPtr();
-            unsigned rest = BLOCK_SIZE - (size_ & BLOCK_MASK);
-            unsigned index;
-            if (numElements <= rest) {
-                index = size_;
-                size_ += numElements;
-                return index;
-            }
-
-            size_ += rest;
-            DataPtr();
-            index = size_;
-            size_ += numElements;
-            return index;
-        }
-        return -1;
-    }
-
-    template <class T, unsigned S>
-    unsigned GeometryPlainDataBlockVector<T, S>::ByteSize() const
-    {
-        return size_ * sizeof(T);
-    }
-
-    template <class T, unsigned S>
-    void GeometryPlainDataBlockVector<T, S>::Serialize(int8u* ptr) const
-    {
-        unsigned i;
-        for (i = 0; i < size_; i++) {
-            if (memcpy_s(ptr, sizeof(T), &(*this)[i], sizeof(T)) != EOK) {
-                free(ptr);
-                continue;
-            }
-            ptr += sizeof(T);
-        }
-    }
-
-    template <class T, unsigned S>
-    void GeometryPlainDataBlockVector<T, S>::Deserialize(const int8u* data, unsigned byteSize)
-    {
-        RemoveAll();
-        byteSize /= sizeof(T);
-        for (unsigned i = 0; i < byteSize; ++i) {
-            T* ptr = DataPtr();
-            if (memcpy_s(ptr, sizeof(T), data, sizeof(T)) != EOK) {
-                free(ptr);
-                continue;
-            }
-            ++size_;
-            data += sizeof(T);
-        }
-    }
-
-    template <class T, unsigned S>
-    void GeometryPlainDataBlockVector<T, S>::Deserialize(unsigned start, const T& emptyVal, const int8u* data, unsigned byteSize)
-    {
-        while (size_ < start) {
-            Add(emptyVal);
-        }
-        byteSize /= sizeof(T);
-        for (unsigned i = 0; i < byteSize; ++i) {
-            if (start + i < size_) {
-                if (memcpy_s(&((*this)[start + i]), sizeof(T), data, sizeof(T)) != EOK) {
-                    free(&((*this)[start + i]));
-                    continue;
-                }
-            } else {
-                T* ptr = DataPtr();
-                if (memcpy_s(ptr, sizeof(T), data, sizeof(T)) != EOK) {
-                    free(ptr);
-                    continue;
-                }
-                ++size_;
-            }
-            data += sizeof(T);
-        }
     }
 } // namespace OHOS
 #endif

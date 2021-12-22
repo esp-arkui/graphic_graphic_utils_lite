@@ -538,41 +538,6 @@ namespace OHOS {
             }
         }
 
-        /**
-         * @brief 连接路径
-         * @param data 要连接的顶点源
-         * @param numPoints 顶点数
-         * @param closed 是否闭合
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class ValueType>
-        void ConcatPoly(const ValueType* data,
-                        unsigned numPoints,
-                        bool closed)
-        {
-            PolygonPathAdaptor<ValueType> poly(data, numPoints, closed);
-            ConcatPath(poly);
-        }
-
-        /**
-         * @brief 将顶点源加入到已有的源
-         * @param data 要加入的顶点源
-         * @param pathId 加入的位置
-         * @param numPoints 顶点数
-         * @param closed 是否闭合
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class ValueType>
-        void JoinPoly(const ValueType* data,
-                      unsigned numPoints,
-                      bool closed)
-        {
-            PolygonPathAdaptor<ValueType> poly(data, numPoints, closed);
-            JoinPath(poly);
-        }
-
     private:
         VertexContainer vertices_;
         unsigned iterator_;
