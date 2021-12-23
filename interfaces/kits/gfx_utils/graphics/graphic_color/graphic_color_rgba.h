@@ -135,7 +135,7 @@ namespace OHOS {
          * @param color是Rgba对象、alpha透明度
          * @return 无
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         Rgba(const Rgba& color, float alpha) :
             redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
