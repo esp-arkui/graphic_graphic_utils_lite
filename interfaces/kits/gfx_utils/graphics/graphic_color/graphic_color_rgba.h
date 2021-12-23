@@ -46,8 +46,7 @@ namespace OHOS {
         enum RgbEnum {
             RED = 0,
             GREEN = 1,
-            BLUE = 2,
-            N = 3
+            BLUE = 2
         };
     };
 
@@ -55,8 +54,7 @@ namespace OHOS {
         enum BgrEnum {
             BLUE = 0,
             GREEN = 1,
-            RED = 2,
-            N = 3
+            RED = 2
         };
     };
 
@@ -65,8 +63,7 @@ namespace OHOS {
             RED = 0,
             GREEN = 1,
             BLUE = 2,
-            ALPHA = 3,
-            N = 4
+            ALPHA = 3
         };
     };
 
@@ -75,8 +72,7 @@ namespace OHOS {
             ALPHA = 0,
             RED = 1,
             GREEN = 2,
-            BLUE = 3,
-            N = 4
+            BLUE = 3
         };
     };
     struct OrderAbgr {
@@ -84,8 +80,7 @@ namespace OHOS {
             ALPHA = 0,
             BLUE = 1,
             GREEN = 2,
-            RED = 3,
-            N = 4
+            RED = 3
         };
     };
     struct OrderBgra {
@@ -93,14 +88,13 @@ namespace OHOS {
             BLUE = 0,
             GREEN = 1,
             RED = 2,
-            ALPHA = 3,
-            N = 4
+            ALPHA = 3
         };
     };
 
     struct Linear {
     };
-    struct Srgb {
+    struct StandardRgb {
     };
 
     /**
@@ -621,38 +615,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba8T<Linear>中
-         *
-         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba8T<Srgb>对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba8T<Linear>& dst, const Rgba8T<Srgb>& src)
-        {
-            dst.redValue = SrgbConv<ValueType>::RgbFromSrgb(src.redValue);
-            dst.greenValue = SrgbConv<ValueType>::RgbFromSrgb(src.greenValue);
-            dst.blueValue = SrgbConv<ValueType>::RgbFromSrgb(src.blueValue);
-            dst.alphaValue = src.alphaValue;
-        }
-
-        /**
-         * @brief 将Rgba8T<Linear>中的颜色值赋值到Rgba8T<Srgb>中
-         *
-         * @param dst为Rgba8T<Srgb>对象的引用，src为Rgba8T<Linear>对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba8T<Srgb>& dst, const Rgba8T<Linear>& src)
-        {
-            dst.redValue = SrgbConv<ValueType>::RgbToSrgb(src.redValue);
-            dst.greenValue = SrgbConv<ValueType>::RgbToSrgb(src.greenValue);
-            dst.blueValue = SrgbConv<ValueType>::RgbToSrgb(src.blueValue);
-            dst.alphaValue = src.alphaValue;
-        }
-
-        /**
          * @brief 将Rgba中的颜色值赋值到Rgba8T<Linear>中
          *
          * @param dst为Rgba8T<Linear>对象的引用，src为Rgba对象的常引用
@@ -669,38 +631,6 @@ namespace OHOS {
         }
 
         /**
-         * @brief 将Rgba中的颜色值赋值到Rgba8T<Srgb>中
-         *
-         * @param dst为Rgba8T<Srgb>对象的引用，src为Rgba对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba8T<Srgb>& dst, const Rgba& src)
-        {
-            dst.redValue = SrgbConv<float>::RgbToSrgb(float(src.redValue));
-            dst.greenValue = SrgbConv<float>::RgbToSrgb(float(src.greenValue));
-            dst.blueValue = SrgbConv<float>::RgbToSrgb(float(src.blueValue));
-            dst.alphaValue = SrgbConv<float>::AlphaToSrgb(float(src.alphaValue));
-        }
-
-        /**
-         * @brief 将Rgba8T<Linear>中的颜色值赋值到Rgba中
-         *
-         * @param dst为Rgba对象的引用，src为Rgba8T<Linear>对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba& dst, const Rgba8T<Linear>& src)
-        {
-            dst.redValue = src.redValue / COLOR_CONVERT;
-            dst.greenValue = src.greenValue / COLOR_CONVERT;
-            dst.blueValue = src.blueValue / COLOR_CONVERT;
-            dst.alphaValue = src.alphaValue / COLOR_CONVERT;
-        }
-
-        /**
          * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba中
          *
          * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
@@ -708,12 +638,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static void Convert(Rgba& dst, const Rgba8T<Srgb>& src)
+        static void Convert(Rgba& dst, const Rgba8T<StandardRgb>& src)
         {
-            dst.redValue = SrgbConv<float>::RgbFromSrgb(src.redValue);
-            dst.greenValue = SrgbConv<float>::RgbFromSrgb(src.greenValue);
-            dst.blueValue = SrgbConv<float>::RgbFromSrgb(src.blueValue);
-            dst.alphaValue = SrgbConv<float>::AlphaFromSrgb(src.alphaValue);
+            dst.redValue = StandardRgbConv<float>::RgbFromSrgb(src.redValue);
+            dst.greenValue = StandardRgbConv<float>::RgbFromSrgb(src.greenValue);
+            dst.blueValue = StandardRgbConv<float>::RgbFromSrgb(src.blueValue);
+            dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
         }
 
         static GRAPHIC_GEOMETRY_INLINE double ToDouble(ValueType valueType)
@@ -729,11 +659,6 @@ namespace OHOS {
         static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
         {
             return 0;
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType FullValue()
-        {
-            return BASEMASK;
         }
 
         GRAPHIC_GEOMETRY_INLINE bool IsTransparent() const
@@ -1005,7 +930,7 @@ namespace OHOS {
     };
 
     using Rgba8 = Rgba8T<Linear>;
-    using Srgba8 = Rgba8T<Srgb>;
+    using Srgba8 = Rgba8T<StandardRgb>;
 
     inline Rgba8 Rgb8Packed(unsigned value)
     {
@@ -1122,10 +1047,10 @@ namespace OHOS {
          * @version 1.0
          */
         Rgba32(const Srgba8& color) :
-            redValue(SrgbConv<ValueType>::RgbFromSrgb(color.redValue)),
-            greenValue(SrgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
-            blueValue(SrgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
-            alphaValue(SrgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
+            redValue(StandardRgbConv<ValueType>::RgbFromSrgb(color.redValue)),
+            greenValue(StandardRgbConv<ValueType>::RgbFromSrgb(color.greenValue)),
+            blueValue(StandardRgbConv<ValueType>::RgbFromSrgb(color.blueValue)),
+            alphaValue(StandardRgbConv<ValueType>::AlphaFromSrgb(color.alphaValue))
         {}
 
         operator Rgba() const
@@ -1145,10 +1070,10 @@ namespace OHOS {
         operator Srgba8() const
         {
             return Srgba8(
-                SrgbConv<ValueType>::RgbToSrgb(redValue),
-                SrgbConv<ValueType>::RgbToSrgb(greenValue),
-                SrgbConv<ValueType>::RgbToSrgb(blueValue),
-                SrgbConv<ValueType>::AlphaToSrgb(alphaValue));
+                StandardRgbConv<ValueType>::RgbToStandardRgb(redValue),
+                StandardRgbConv<ValueType>::RgbToStandardRgb(greenValue),
+                StandardRgbConv<ValueType>::RgbToStandardRgb(blueValue),
+                StandardRgbConv<ValueType>::AlphaToStandardRgb(alphaValue));
         }
 
         static GRAPHIC_GEOMETRY_INLINE ValueType FromDouble(double value)
