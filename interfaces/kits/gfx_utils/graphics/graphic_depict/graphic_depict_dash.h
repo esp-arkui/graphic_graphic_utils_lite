@@ -46,6 +46,7 @@ namespace OHOS {
         {
         }
 
+        DepictDash(){}
         void RemoveAllDashes()
         {
             base_type::GetGenerator().RemoveAllDashes();

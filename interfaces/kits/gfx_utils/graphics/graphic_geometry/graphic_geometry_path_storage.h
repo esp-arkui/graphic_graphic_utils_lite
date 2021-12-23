@@ -234,9 +234,9 @@ namespace OHOS {
         int8u** cmdBlocks_;//标记点状态
     };
 
-    class UICanvasPath2 : public HeapBase{
+    class UICanvasVertices : public HeapBase{
     public:
-        UICanvasPath2() :
+        UICanvasVertices() :
             vertices_(), iterator_(0)
         {}
 
@@ -413,13 +413,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        template <class VertexSource>
-        void ConcatPath(VertexSource& vs, unsigned pathId = 0)
+        void ConcatPath(BezierArc& path, unsigned pathId = 0)
         {
             double x, y;
             unsigned cmd;
-            vs.Rewind(pathId);
-            while (!IsStop(cmd = vs.Vertex(&x, &y))) {
+            path.Rewind(pathId);
+            while (!IsStop(cmd = path.Vertex(&x, &y))) {
                 vertices_.AddVertex(x, y, cmd);
             }
         }
@@ -431,13 +430,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        template <class VertexSource>
-        void JoinPath(VertexSource& vs, unsigned pathId = 0)
+        void JoinPath(BezierArcSvg& path, unsigned pathId = 0)
         {
             double x, y;
             unsigned pathCommand;
-            vs.Rewind(pathId);
-            pathCommand = vs.Vertex(&x, &y);
+            path.Rewind(pathId);
+            pathCommand = path.Vertex(&x, &y);
             if (!IsStop(pathCommand)) {
                 if (IsVertex(pathCommand)) {
                     double x0, y0;
@@ -457,7 +455,7 @@ namespace OHOS {
                         vertices_.AddVertex(x, y, pathCommand);
                     }
                 }
-                for (; !IsStop(pathCommand = vs.Vertex(&x, &y));) {
+                for (; !IsStop(pathCommand = path.Vertex(&x, &y));) {
                     unsigned int pathCmd;
                     if (IsMoveTo(pathCommand)) {
                         pathCmd = unsigned(PATH_CMD_LINE_TO);
@@ -473,6 +471,5 @@ namespace OHOS {
         VertexBlockStorage vertices_;
         unsigned iterator_;
     };
-
 } // namespace OHOS
 #endif

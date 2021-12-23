@@ -43,6 +43,7 @@ namespace OHOS {
             : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
         {
         }
+        DepictStroke(){};
         /*
         * ineCap 属性设置线条末端线帽的样式。
         * butt	默认。向线条的每个末端添加平直的边缘。
