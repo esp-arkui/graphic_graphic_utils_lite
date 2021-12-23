@@ -277,8 +277,9 @@ namespace OHOS {
 
             AddVertex(vertexConsumer, x + dx1, y + dy1);
             if (strokeWidthSignal > 0) {
-                if (angleStart > angleEnd)
+                if (angleStart > angleEnd) {
                     angleEnd += TWO_TIMES * PI;
+                }
                 divNumber = int((angleEnd - angleStart) / deltaAngle);
                 deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
                 angleStart += deltaAngle;
@@ -287,8 +288,9 @@ namespace OHOS {
                     angleStart += deltaAngle;
                 }
             } else {
-                if (angleStart < angleEnd)
+                if (angleStart < angleEnd) {
                     angleEnd -= TWO_TIMES * PI;
+                }
                 divNumber = int((angleStart - angleEnd) / deltaAngle);
                 deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
                 angleStart -= deltaAngle;
@@ -303,7 +305,7 @@ namespace OHOS {
         /**
          * @brief 计算斜接长度
          */
-        void CalcMiter(VertexConsumer& vc,
+        void CalcMiter(VertexConsumer& vertexConsumer,
                        const VertexDist& vd0,
                        const VertexDist& vd1,
                        const VertexDist& vd2,
@@ -326,7 +328,7 @@ namespace OHOS {
                                  &xi, &yi)) {
                 di = CalcDistance(vd1.vertexXCoord, vd1.vertexYCoord, xi, yi);
                 if (di <= lim) {
-                    AddVertex(vc, xi, yi);
+                    AddVertex(vertexConsumer, xi, yi);
                     miterLimitExceeded = false;
                 }
                 intersectionFailed = false;
@@ -335,7 +337,7 @@ namespace OHOS {
                 double y2 = vd1.vertexYCoord - dy1;
                 if ((CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord, vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0) ==
                     (CrossProduct(vd1.vertexXCoord, vd1.vertexYCoord, vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0)) {
-                    AddVertex(vc, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
+                    AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                     miterLimitExceeded = false;
                 }
             }
@@ -343,27 +345,27 @@ namespace OHOS {
             if (miterLimitExceeded) {
                 switch (linejoin) {
                     case MITER_JOIN_REVERT:
-                        AddVertex(vc, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
-                        AddVertex(vc, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
+                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
+                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
                         break;
 
                     case MITER_JOIN_ROUND:
-                        CalcArc(vc, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vertexConsumer, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
                         break;
 
                     default:
                         if (intersectionFailed) {
                             mlimit *= strokeWidthSignal;
-                            AddVertex(vc, vd1.vertexXCoord + dx1 + dy1 * mlimit, vd1.vertexYCoord - dy1 + dx1 * mlimit);
-                            AddVertex(vc, vd1.vertexXCoord + dx2 - dy2 * mlimit, vd1.vertexYCoord - dy2 - dx2 * mlimit);
+                            AddVertex(vertexConsumer, vd1.vertexXCoord + dx1 + dy1 * mlimit, vd1.vertexYCoord - dy1 + dx1 * mlimit);
+                            AddVertex(vertexConsumer, vd1.vertexXCoord + dx2 - dy2 * mlimit, vd1.vertexYCoord - dy2 - dx2 * mlimit);
                         } else {
                             double x1 = vd1.vertexXCoord + dx1;
                             double y1 = vd1.vertexYCoord - dy1;
                             double x2 = vd1.vertexXCoord + dx2;
                             double y2 = vd1.vertexYCoord - dy2;
                             di = (lim - dbevel) / (di - dbevel);
-                            AddVertex(vc, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
-                            AddVertex(vc, x2 + (xi - x2) * di, y2 + (yi - y2) * di);
+                            AddVertex(vertexConsumer, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
+                            AddVertex(vertexConsumer, x2 + (xi - x2) * di, y2 + (yi - y2) * di);
                         }
                         break;
                 }
