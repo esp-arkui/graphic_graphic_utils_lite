@@ -30,7 +30,7 @@ namespace OHOS {
     class Arc : public HeapBase {
     public:
         Arc() :
-            mExpansionRatio(1.0), mInitialized(false)
+            mInitialized(false), mExpansionRatio(1.0)
         {
         }
 
