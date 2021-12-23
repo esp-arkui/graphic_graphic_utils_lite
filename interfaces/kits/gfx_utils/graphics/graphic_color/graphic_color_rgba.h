@@ -31,17 +31,17 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h"
 
 namespace OHOS {
-    const double PURPLE_MIN = 380.0;
-    const double PURPLE_MIDDLE = 420.0;
-    const double PURPLE_MAX = 440.0;
-    const double BLUE_MAX = 490.0;
-    const double CYAN_MAX = 510.0;
-    const double GREEN_MAX = 580.0;
-    const double ORANGE_MAX = 645.0;
-    const double RED_MIN = 700.0;
-    const double RED_MAX = 780.0;
-    const double FIXED_VALUE = 0.3;
-    const double COLOR_CONVERT = 255.0;
+    const float PURPLE_MIN = 380.0f;
+    const float PURPLE_MIDDLE = 420.0f;
+    const float PURPLE_MAX = 440.0f;
+    const float BLUE_MAX = 490.0f;
+    const float CYAN_MAX = 510.0f;
+    const float GREEN_MAX = 580.0f;
+    const float ORANGE_MAX = 645.0f;
+    const float RED_MIN = 700.0f;
+    const float RED_MAX = 780.0f;
+    const float FIXED_VALUE = 0.3f;
+    const float COLOR_CONVERT = 255.0f;
     struct OrderRgb {
         enum RgbEnum {
             RED = 0,
@@ -107,12 +107,12 @@ namespace OHOS {
      * @version 1.0
      */
     struct Rgba {
-        using ValueType = double;
+        using ValueType = float;
 
-        double redValue;
-        double greenValue;
-        double blueValue;
-        double alphaValue;
+        float redValue;
+        float greenValue;
+        float blueValue;
+        float alphaValue;
 
         Rgba()
         {}
@@ -125,7 +125,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(double red, double green, double blue, double alpha = 1.0) :
+        Rgba(float red, float green, float blue, float alpha = 1.0) :
             redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha)
         {}
 
@@ -137,7 +137,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba(const Rgba& color, double alpha) :
+        Rgba(const Rgba& color, float alpha) :
             redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
         {}
 
@@ -180,7 +180,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba& Opacity(double alpha)
+        Rgba& Opacity(float alpha)
         {
             if (alpha < 0) {
                 alphaValue = 0;
@@ -200,7 +200,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double Opacity() const
+        float Opacity() const
         {
             return alphaValue;
         }
@@ -229,7 +229,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba& Premultiply(double alpha)
+        Rgba& Premultiply(float alpha)
         {
             if (alphaValue <= 0 || alpha <= 0) {
                 redValue = 0;
@@ -261,7 +261,7 @@ namespace OHOS {
                 greenValue = 0;
                 blueValue = 0;
             } else {
-                double alpha = 1.0 / alphaValue;
+                float alpha = 1.0 / alphaValue;
                 redValue *= alpha;
                 greenValue *= alpha;
                 blueValue *= alpha;
@@ -277,7 +277,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba Gradient(Rgba rgba, double k) const
+        Rgba Gradient(Rgba rgba, float k) const
         {
             Rgba ret;
             ret.redValue = redValue + (rgba.redValue - redValue) * k;
@@ -312,7 +312,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba& operator*=(double multiplyValue)
+        Rgba& operator*=(float multiplyValue)
         {
             redValue *= multiplyValue;
             greenValue *= multiplyValue;
@@ -333,7 +333,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba InitColorByWaveLength(double waveLength);
+        static Rgba InitColorByWaveLength(float waveLength);
         /**
          * @brief 根据波长以及gamma值计算颜色值
          *
@@ -342,9 +342,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static Rgba FromWavelength(double waveLength, double gamma = 1.0);
+        static Rgba FromWavelength(float waveLength, float gamma = 1.0);
 
-        explicit Rgba(double wavelen, double gamma = 1.0)
+        explicit Rgba(float wavelen, float gamma = 1.0)
         {
             *this = FromWavelength(wavelen, gamma);
         }
@@ -371,7 +371,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba operator*(const Rgba& rgbaA, double multiplyValue)
+    inline Rgba operator*(const Rgba& rgbaA, float multiplyValue)
     {
         return Rgba(rgbaA) *= multiplyValue;
     }
@@ -383,7 +383,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsPurpleWave(double waveLength)
+    inline Rgba IsPurpleWave(float waveLength)
     {
         if (waveLength >= PURPLE_MIN && waveLength <= PURPLE_MAX) {
             return Rgba(-1.0 * (waveLength - PURPLE_MAX) / (PURPLE_MAX - PURPLE_MIN), 0.0, 1.0);
@@ -399,7 +399,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsBlueWave(double waveLength)
+    inline Rgba IsBlueWave(float waveLength)
     {
         if (waveLength >= PURPLE_MAX && waveLength <= BLUE_MAX) {
             return Rgba(0.0, (waveLength - PURPLE_MAX) / (BLUE_MAX - PURPLE_MAX), 1.0);
@@ -415,7 +415,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsCyanWave(double waveLength)
+    inline Rgba IsCyanWave(float waveLength)
     {
         if (waveLength >= BLUE_MAX && waveLength <= CYAN_MAX) {
             return Rgba(0.0, 1.0, -1.0 * (waveLength - CYAN_MAX) / (CYAN_MAX - BLUE_MAX));
@@ -431,7 +431,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsGreenWave(double waveLength)
+    inline Rgba IsGreenWave(float waveLength)
     {
         if (waveLength >= CYAN_MAX && waveLength <= GREEN_MAX) {
             return Rgba((waveLength - CYAN_MAX) / (GREEN_MAX - CYAN_MAX), 1.0, 0.0);
@@ -447,7 +447,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsOrangeWave(double waveLength)
+    inline Rgba IsOrangeWave(float waveLength)
     {
         if (waveLength >= GREEN_MAX && waveLength <= ORANGE_MAX) {
             return Rgba(1.0, -1.0 * (waveLength - ORANGE_MAX) / (ORANGE_MAX - GREEN_MAX), 0.0);
@@ -463,7 +463,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba IsRedWave(double waveLength)
+    inline Rgba IsRedWave(float waveLength)
     {
         if (waveLength >= ORANGE_MAX && waveLength <= RED_MAX) {
             return Rgba(1.0, 0.0, 0.0);
@@ -471,7 +471,7 @@ namespace OHOS {
             return Rgba(0.0, 0.0, 0.0);
         }
     }
-    inline Rgba Rgba::InitColorByWaveLength(double waveLength)
+    inline Rgba Rgba::InitColorByWaveLength(float waveLength)
     {
         Rgba rgba(0.0, 0.0, 0.0);
         rgba += IsPurpleWave(waveLength);
@@ -482,12 +482,12 @@ namespace OHOS {
         rgba += IsRedWave(waveLength);
         return rgba;
     }
-    inline Rgba Rgba::FromWavelength(double waveLength, double gamma)
+    inline Rgba Rgba::FromWavelength(float waveLength, float gamma)
     {
         Rgba rgba(0.0, 0.0, 0.0);
         rgba += rgba.InitColorByWaveLength(waveLength);
         // 计算比系数
-        double ratio = 1.0;
+        float ratio = 1.0;
         if (waveLength > RED_MIN) {
             ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
         } else if (waveLength < PURPLE_MIDDLE) {
@@ -506,7 +506,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline Rgba RgbaPre(double redValue, double greenValue, double blueValue, double alphaValue)
+    inline Rgba RgbaPre(float redValue, float greenValue, float blueValue, float alphaValue)
     {
         return Rgba(redValue, greenValue, blueValue, alphaValue).Premultiply();
     }
@@ -646,12 +646,12 @@ namespace OHOS {
             dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE double ToDouble(ValueType valueType)
+        static GRAPHIC_GEOMETRY_INLINE float ToFloat(ValueType valueType)
         {
-            return double(valueType) / BASEMASK;
+            return float(valueType) / BASEMASK;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType FromDouble(double value)
+        static GRAPHIC_GEOMETRY_INLINE ValueType FromFloat(float value)
         {
             return ValueType(Uround(value * BASEMASK));
         }
@@ -749,21 +749,21 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        SelfType& Opacity(double alpha)
+        SelfType& Opacity(float alpha)
         {
             if (alpha < 0) {
                 alphaValue = 0;
             } else if (alpha > 1) {
                 alphaValue = 1;
             } else {
-                alphaValue = (ValueType)Uround(alpha * double(BASEMASK));
+                alphaValue = (ValueType)Uround(alpha * float(BASEMASK));
             }
             return *this;
         }
 
-        double Opacity() const
+        float Opacity() const
         {
-            return double(alphaValue) / double(BASEMASK);
+            return float(alphaValue) / float(BASEMASK);
         }
 
         /**
@@ -855,7 +855,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, double k) const
+        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
         {
             SelfType ret;
             CalcType increaseK = Uround(k * BASEMASK);
@@ -918,7 +918,7 @@ namespace OHOS {
             blueValue = gamma.GetInverseTableValue(blueValue);
         }
 
-        static SelfType FromWavelength(double waveLength, double gamma = 1.0)
+        static SelfType FromWavelength(float waveLength, float gamma = 1.0)
         {
             return SelfType(Rgba::FromWavelength(waveLength, gamma));
         }
@@ -972,8 +972,8 @@ namespace OHOS {
      */
     struct Rgba32 {
         using ValueType = float;
-        using CalcType = double;
-        using LongType = double;
+        using CalcType = float;
+        using LongType = float;
         using SelfType = Rgba32;
 
         ValueType redValue;
@@ -1076,12 +1076,12 @@ namespace OHOS {
                 StandardRgbConv<ValueType>::AlphaToStandardRgb(alphaValue));
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType FromDouble(double value)
+        static GRAPHIC_GEOMETRY_INLINE ValueType Fromfloat(float value)
         {
             return ValueType(value);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE double ToDouble(ValueType valueType)
+        static GRAPHIC_GEOMETRY_INLINE float Tofloat(ValueType valueType)
         {
             return valueType;
         }
@@ -1170,7 +1170,7 @@ namespace OHOS {
             return *this;
         }
 
-        GRAPHIC_GEOMETRY_INLINE SelfType& Opacity(double alpha)
+        GRAPHIC_GEOMETRY_INLINE SelfType& Opacity(float alpha)
         {
             if (alpha < 0) {
                 alphaValue = 0;
@@ -1182,7 +1182,7 @@ namespace OHOS {
             return *this;
         }
 
-        double Opacity() const
+        float Opacity() const
         {
             return alphaValue;
         }
@@ -1227,7 +1227,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, double k) const
+        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
         {
             SelfType ret;
             ret.redValue = ValueType(redValue + (color.redValue - redValue) * k);
@@ -1293,7 +1293,7 @@ namespace OHOS {
             blueValue = gamma.GetInverseTableValue(blueValue);
         }
 
-        static SelfType FromWavelength(double waveLength, double gamma = 1)
+        static SelfType FromWavelength(float waveLength, float gamma = 1)
         {
             return SelfType(Rgba::FromWavelength(waveLength, gamma));
         }
