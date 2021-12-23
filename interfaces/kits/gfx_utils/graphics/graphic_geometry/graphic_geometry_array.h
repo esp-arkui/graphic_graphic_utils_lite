@@ -23,8 +23,6 @@
 #ifndef GRAPHIC_GEOMETRY_ARRAY_INCLUDED
 #define GRAPHIC_GEOMETRY_ARRAY_INCLUDED
 #include "graphic_geometry_plaindata_array.h"
-#include "graphic_geometry_plaindata_auto_array.h"
-#include "graphic_geometry_plaindata_auto_vector.h"
 #include "graphic_geometry_plaindata_blockvector.h"
 #include "graphic_geometry_plaindata_vector.h"
 #include "graphic_geometry_range_adapter.h"
