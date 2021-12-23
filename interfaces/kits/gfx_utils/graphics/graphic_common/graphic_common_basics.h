@@ -37,7 +37,6 @@
 
 #include <cmath>
 
-#include "securec.h"
 namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
 

@@ -23,7 +23,7 @@
 #ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 
-#include "gfx_utils/graphics/graphic_color/graphic_color_rgba.h"
+#include "gfx_utils/color.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h"
 #include "gfx_utils/graphics/graphic_transform/graphic_transform_affine.h"
