@@ -25,7 +25,7 @@
 #ifndef GRAPHIC_GEOMETRY_CURVES_INCLUDED
 #define GRAPHIC_GEOMETRY_CURVES_INCLUDED
 
-#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
+#include "graphic_geometry_plaindata_blockvector.h"
 
 namespace OHOS {
     enum CurveApproximationMethodEnum {

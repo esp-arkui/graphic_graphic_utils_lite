@@ -28,7 +28,6 @@
 
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
-#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 #include "graphic_geometry_plaindata_blockvector.h"
 namespace OHOS {
     /**
