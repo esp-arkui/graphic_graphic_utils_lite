@@ -185,4 +185,119 @@ ColorType Color::Orange()
 {
     return GetColorFromRGB(0xFF, 0xA5, 0x00);
 }
+
+OHOS::Rgba32::operator Rgba8() const
+{
+    return Rgba8(
+        Uround(redValue * COLOR_CONVERT),
+        Uround(greenValue * COLOR_CONVERT),
+        Uround(blueValue * COLOR_CONVERT),
+                Uround(alphaValue * COLOR_CONVERT));
+}
+
+OHOS::Rgba32::operator Srgba8() const
+{
+    return Srgba8(
+        StandardRgbConv<ValueType>::RgbToStandardRgb(redValue),
+        StandardRgbConv<ValueType>::RgbToStandardRgb(greenValue),
+        StandardRgbConv<ValueType>::RgbToStandardRgb(blueValue),
+                StandardRgbConv<ValueType>::AlphaToStandardRgb(alphaValue));
+}
+
+Rgba32::SelfType &Rgba32::Clear()
+{
+    redValue = 0;
+    greenValue = 0;
+    blueValue = 0;
+    alphaValue = 0;
+    return *this;
+}
+
+Rgba32::SelfType &Rgba32::Opacity(float alpha)
+{
+    if (alpha < 0) {
+        alphaValue = 0;
+    } else if (alpha > 1) {
+        alphaValue = 1;
+    } else {
+        alphaValue = ValueType(alpha);
+    }
+    return *this;
+}
+
+Rgba32::SelfType &Rgba32::Premultiply()
+{
+    if (alphaValue < 1) {
+        if (alphaValue <= 0) {
+            redValue = 0;
+            greenValue = 0;
+            blueValue = 0;
+        } else {
+            redValue *= alphaValue;
+            greenValue *= alphaValue;
+            blueValue *= alphaValue;
+        }
+    }
+    return *this;
+}
+
+Rgba32::SelfType &Rgba32::Demultiply()
+{
+    if (alphaValue < 1) {
+        if (alphaValue <= 0) {
+            redValue = 0;
+            greenValue = 0;
+            blueValue = 0;
+        } else {
+            redValue /= alphaValue;
+            greenValue /= alphaValue;
+            blueValue /= alphaValue;
+        }
+    }
+    return *this;
+}
+
+Rgba32::SelfType Rgba32::Gradient(const Rgba32::SelfType &color, float k) const
+{
+    SelfType ret;
+    ret.redValue = ValueType(redValue + (color.redValue - redValue) * k);
+    ret.greenValue = ValueType(greenValue + (color.greenValue - greenValue) * k);
+    ret.blueValue = ValueType(blueValue + (color.blueValue - blueValue) * k);
+    ret.alphaValue = ValueType(alphaValue + (color.alphaValue - alphaValue) * k);
+    return ret;
+}
+
+void Rgba32::Add(const Rgba32::SelfType &color, unsigned cover)
+{
+    if (cover == COVER_MASK) {
+        if (color.IsOpaque()) {
+            *this = color;
+            return;
+        } else {
+            redValue += color.redValue;
+            greenValue += color.greenValue;
+            blueValue += color.blueValue;
+            alphaValue += color.alphaValue;
+        }
+    } else {
+        redValue += MultCover(color.redValue, cover);
+        greenValue += MultCover(color.greenValue, cover);
+        blueValue += MultCover(color.blueValue, cover);
+        alphaValue += MultCover(color.alphaValue, cover);
+    }
+    if (alphaValue > 1) {
+        alphaValue = 1;
+    }
+    if (redValue > alphaValue) {
+        redValue = alphaValue;
+    }
+    if (greenValue > alphaValue) {
+        greenValue = alphaValue;
+    }
+    if (blueValue > alphaValue) {
+        blueValue = alphaValue;
+    }
+}
+
+
 } // namespace OHOS
