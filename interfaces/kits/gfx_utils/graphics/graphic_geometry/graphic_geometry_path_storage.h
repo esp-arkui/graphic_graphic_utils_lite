@@ -17,7 +17,6 @@
 #define GRAPHIC_PATH_STORAGE_INCLUDED
 
 #include <cstring>
-
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 #include "graphic_geometry_bezier_arc.h"
@@ -25,40 +24,81 @@
 namespace OHOS {
     /**
      * @brief 顶点源数据块
-     *
      * @since 1.0
      * @version 1.0
      */
-    template <class ValueType, unsigned BlockShift = OHOS::THIRTY_TWO_COLOR_NUM,
-              unsigned BlockPool = OHOS::MAX_COLOR_SIZE>
     class VertexBlockStorage {
     public:
-        // Allocation parameters
         enum BlockScale {
-            BLOCK_SHIFT = BlockShift,
+            BLOCK_SHIFT = OHOS::THIRTY_TWO_COLOR_NUM,
             BLOCK_SIZE = 1 << BLOCK_SHIFT,
             BLOCK_MASK = BLOCK_SIZE - 1,
-            BLOCK_POOL = BlockPool
+            BLOCK_POOL = OHOS::MAX_COLOR_SIZE
         };
-        using SelfType = VertexBlockStorage<ValueType, BlockShift, BlockPool>;
 
-        ~VertexBlockStorage();
-        VertexBlockStorage();
-        VertexBlockStorage(const SelfType&);
-        const SelfType& operator=(const SelfType&);
+        ~VertexBlockStorage(){
+            FreeAll();
+        };
+
+        VertexBlockStorage()
+            :totalVertices_(0),
+            totalBlocks_(0),
+            maxBlocks_(0),
+            croodBlocks_(0),
+            cmdBlocks_(0)
+        {};
+
+        const VertexBlockStorage& operator=(const VertexBlockStorage& vertexBlockStorage)
+        {
+            RemoveAll();
+            unsigned iIndex;
+            for (iIndex = 0; iIndex < vertexBlockStorage.TotalVertices(); iIndex++) {
+                double x, y;
+                unsigned cmd = vertexBlockStorage.Vertex(iIndex, &x, &y);
+                AddVertex(x, y, cmd);
+            }
+            return *this;
+        }
+
+        VertexBlockStorage(const VertexBlockStorage& vertexBlockStorage)
+        {
+            *this = vertexBlockStorage;
+        }
+
         /**
          * @brief 去除所有顶点
          *
          * @since 1.0
          * @version 1.0
          */
-        void RemoveAll();
+        void RemoveAll()
+        {
+            totalVertices_ = 0;
+        }
         /**
          * @brief 释放空间
          * @since 1.0
          * @version 1.0
          */
-        void FreeAll();
+        void FreeAll()
+        {
+            if (totalBlocks_) {
+                double** coordBLK = croodBlocks_ + totalBlocks_ - 1;
+                for (; totalBlocks_ > 0; totalBlocks_--) {
+                    GeometryArrayAllocator<double>::Deallocate(
+                        *coordBLK,
+                        BLOCK_SIZE * OHOS::TWO_TIMES +
+                            BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
+                    --coordBLK;
+                }
+                GeometryArrayAllocator<double*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
+                totalBlocks_ = 0;
+                maxBlocks_ = 0;
+                croodBlocks_ = 0;
+                cmdBlocks_ = 0;
+                totalVertices_ = 0;
+            }
+        }
         /**
          * @brief 添加顶点
          *
@@ -68,14 +108,27 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AddVertex(double x, double y, unsigned cmd);
+        void AddVertex(double x, double y, unsigned cmd)
+        {
+            double* coord_ptr = 0;
+            *StoragePtrs(&coord_ptr) = (int8u)cmd;
+            coord_ptr[0] = double(x);
+            coord_ptr[1] = double(y);
+            totalVertices_++;
+        }
         /**
          * @brief 返回最后一条指令
          * @return 返回最后一条指令类型
          * @since 1.0
          * @version 1.0
          */
-        unsigned LastCommand() const;
+        unsigned LastCommand() const
+        {
+            if (totalVertices_) {
+                return Command(totalVertices_ - 1);
+            }
+            return PATH_CMD_STOP;
+        }
         /**
          * @brief 返回最后一个顶点的坐标
          * @param x 用于获取最后一个顶点x轴坐标
@@ -84,14 +137,23 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned LastVertex(double* x, double* y) const;
+        unsigned LastVertex(double* x, double* y) const
+        {
+            if (totalVertices_) {
+                return Vertex(totalVertices_ - 1, x, y);
+            }
+            return PATH_CMD_STOP;
+        }
         /**
          * @brief 返回顶点数量
          * @return 返回顶点数量
          * @since 1.0
          * @version 1.0
          */
-        unsigned TotalVertices() const;
+        unsigned TotalVertices() const
+        {
+            return totalVertices_;
+        }
         /**
          * @brief 获取特定的顶点的坐标
          * @param idx 顶点下标
@@ -101,266 +163,83 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(unsigned idx, double* x, double* y) const;
+        unsigned Vertex(unsigned index, double* x, double* y) const
+        {
+            unsigned nb = index >> BLOCK_SHIFT;
+            const double* pv = croodBlocks_[nb] + ((index & BLOCK_MASK) << 1);
+            *x = pv[0];
+            *y = pv[1];
+            return cmdBlocks_[nb][index & BLOCK_MASK];
+        }
         /**
          * @brief 获取特定的顶点对应的指令类型
-         * @param idx 顶点下标
+         * @param index 顶点下标
          * @return 返回该顶点对应的指令类型
          * @since 1.0
          * @version 1.0
          */
-        unsigned Command(unsigned idx) const;
-
+        unsigned Command(unsigned index) const
+        {
+            return cmdBlocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
+        }
     private:
-        void AllocateBlock(unsigned nb);
-        int8u* StoragePtrs(ValueType** xy_ptr);
+        void AllocateBlock(unsigned nb)
+        {
+            if (nb >= maxBlocks_) {
+                double** new_coords = GeometryArrayAllocator<double*>::Allocate(
+                    (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
 
+                unsigned char** new_cmds =
+                    (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
+
+                if (croodBlocks_) {
+                    memcpy_s(new_coords, maxBlocks_ * sizeof(double*),
+                             croodBlocks_,
+                             maxBlocks_ * sizeof(double*));
+
+                    memcpy_s(new_cmds, maxBlocks_ * sizeof(double*),
+                             cmdBlocks_,
+                             maxBlocks_ * sizeof(unsigned char*));
+
+                    GeometryArrayAllocator<double*>::Deallocate(croodBlocks_,
+                                                                   maxBlocks_ * OHOS::TWO_TIMES);
+                }
+                croodBlocks_ = new_coords;
+                cmdBlocks_ = new_cmds;
+                maxBlocks_ += BLOCK_POOL;
+            }
+            croodBlocks_[nb] =
+                GeometryArrayAllocator<double>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
+                                                            BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
+
+            cmdBlocks_[nb] =
+                (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
+
+            totalBlocks_++;
+        }
+        int8u* StoragePtrs(double** xy_ptr)
+        {
+            unsigned nb = totalVertices_ >> BLOCK_SHIFT;
+            if (nb >= totalBlocks_) {
+                AllocateBlock(nb);
+            }
+            *xy_ptr = croodBlocks_[nb] + ((totalVertices_ & BLOCK_MASK) << 1);
+            return cmdBlocks_[nb] + (totalVertices_ & BLOCK_MASK);
+        }
     private:
         unsigned totalVertices_;
         unsigned totalBlocks_;
         unsigned maxBlocks_;
-        ValueType** croodBlocks_;
-        int8u** cmdBlocks_;
+        double** croodBlocks_;//输入的点
+        int8u** cmdBlocks_;//标记点状态
     };
 
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    void VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::FreeAll()
-    {
-        if (totalBlocks_) {
-            ValueType** coordBLK = croodBlocks_ + totalBlocks_ - 1;
-            for (; totalBlocks_ > 0; totalBlocks_--) {
-                GeometryArrayAllocator<ValueType>::Deallocate(
-                    *coordBLK,
-                    BLOCK_SIZE * OHOS::TWO_TIMES +
-                        BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
-                --coordBLK;
-            }
-            GeometryArrayAllocator<ValueType*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
-            totalBlocks_ = 0;
-            maxBlocks_ = 0;
-            croodBlocks_ = 0;
-            cmdBlocks_ = 0;
-            totalVertices_ = 0;
-        }
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::~VertexBlockStorage()
-    {
-        FreeAll();
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::VertexBlockStorage() :
-        totalVertices_(0),
-        totalBlocks_(0),
-        maxBlocks_(0),
-        croodBlocks_(0),
-        cmdBlocks_(0)
-    {
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::VertexBlockStorage(
-        const VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>& vertexBlockStorage) :
-        totalVertices_(0),
-        totalBlocks_(0),
-        maxBlocks_(0),
-        croodBlocks_(0),
-        cmdBlocks_(0)
-    {
-        *this = vertexBlockStorage;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    const VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>& VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::operator=(
-        const VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>& vertexBlockStorage)
-    {
-        RemoveAll();
-        unsigned iIndex;
-        for (iIndex = 0; iIndex < vertexBlockStorage.TotalVertices(); iIndex++) {
-            double x, y;
-            unsigned cmd = vertexBlockStorage.Vertex(iIndex, &x, &y);
-            AddVertex(x, y, cmd);
-        }
-        return *this;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline void VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::RemoveAll()
-    {
-        totalVertices_ = 0;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline void VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::AddVertex(double x, double y,
-                                                                                    unsigned cmd)
-    {
-        ValueType* coord_ptr = 0;
-        *StoragePtrs(&coord_ptr) = (int8u)cmd;
-        coord_ptr[0] = ValueType(x);
-        coord_ptr[1] = ValueType(y);
-        totalVertices_++;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline unsigned VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::LastCommand() const
-    {
-        if (totalVertices_) {
-            return Command(totalVertices_ - 1);
-        }
-        return PATH_CMD_STOP;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline unsigned VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::LastVertex(
-        double* x, double* y) const
-    {
-        if (totalVertices_) {
-            return Vertex(totalVertices_ - 1, x, y);
-        }
-        return PATH_CMD_STOP;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline unsigned VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::TotalVertices() const
-    {
-        return totalVertices_;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline unsigned VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::Vertex(unsigned idx,
-                                                                                     double* x, double* y) const
-    {
-        unsigned nb = idx >> BLOCK_SHIFT;
-        const ValueType* pv = croodBlocks_[nb] + ((idx & BLOCK_MASK) << 1);
-        *x = pv[0];
-        *y = pv[1];
-        return cmdBlocks_[nb][idx & BLOCK_MASK];
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    inline unsigned VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::Command(unsigned idx) const
-    {
-        return cmdBlocks_[idx >> BLOCK_SHIFT][idx & BLOCK_MASK];
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    void VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::AllocateBlock(unsigned nb)
-    {
-        if (nb >= maxBlocks_) {
-            ValueType** new_coords = GeometryArrayAllocator<ValueType*>::Allocate(
-                (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
-
-            unsigned char** new_cmds =
-                (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
-
-            if (croodBlocks_) {
-                memcpy_s(new_coords, maxBlocks_ * sizeof(ValueType*),
-                         croodBlocks_,
-                         maxBlocks_ * sizeof(ValueType*));
-
-                memcpy_s(new_cmds, maxBlocks_ * sizeof(ValueType*),
-                         cmdBlocks_,
-                         maxBlocks_ * sizeof(unsigned char*));
-
-                GeometryArrayAllocator<ValueType*>::Deallocate(croodBlocks_,
-                                                               maxBlocks_ * OHOS::TWO_TIMES);
-            }
-            croodBlocks_ = new_coords;
-            cmdBlocks_ = new_cmds;
-            maxBlocks_ += BLOCK_POOL;
-        }
-        croodBlocks_[nb] =
-            GeometryArrayAllocator<ValueType>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
-                                                        BLOCK_SIZE / (sizeof(ValueType) / sizeof(unsigned char)));
-
-        cmdBlocks_[nb] =
-            (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
-
-        totalBlocks_++;
-    }
-
-    template <class ValueType, unsigned StoreBlockSize, unsigned BlockPool>
-    int8u* VertexBlockStorage<ValueType, StoreBlockSize, BlockPool>::StoragePtrs(ValueType** xy_ptr)
-    {
-        unsigned nb = totalVertices_ >> BLOCK_SHIFT;
-        if (nb >= totalBlocks_) {
-            AllocateBlock(nb);
-        }
-        *xy_ptr = croodBlocks_[nb] + ((totalVertices_ & BLOCK_MASK) << 1);
-        return cmdBlocks_[nb] + (totalVertices_ & BLOCK_MASK);
-    }
-
-    template <class ValueType>
-    class PolygonPathAdaptor {
+    class UICanvasPath2 : public HeapBase{
     public:
-        PolygonPathAdaptor() :
-            polygonPathData(0),
-            PathDataPtr(0),
-            PathDataEndPtr(0),
-            IsPolyPathClosed(false),
-            IsPolyPathStop(false)
-        {}
-
-        PolygonPathAdaptor(const ValueType* data, unsigned numPoints, bool closed) :
-            polygonPathData(data),
-            PathDataPtr(data),
-            PathDataEndPtr(data + numPoints * OHOS::TWO_TIMES),
-            IsPolyPathClosed(closed),
-            IsPolyPathStop(false)
-        {}
-
-        void Init(const ValueType* data, unsigned numPoints, bool closed)
-        {
-            polygonPathData = data;
-            PathDataPtr = data;
-            PathDataEndPtr = data + numPoints * OHOS::TWO_TIMES;
-            IsPolyPathClosed = closed;
-            IsPolyPathStop = false;
-        }
-
-        void Rewind(unsigned)
-        {
-            PathDataPtr = polygonPathData;
-            IsPolyPathStop = false;
-        }
-
-        unsigned Vertex(double* x, double* y)
-        {
-            if (PathDataPtr < PathDataEndPtr) {
-                bool first = PathDataPtr == polygonPathData;
-                *x = *PathDataPtr++;
-                *y = *PathDataPtr++;
-                if (first) {
-                    return PATH_CMD_MOVE_TO;
-                } else {
-                    return PATH_CMD_LINE_TO;
-                }
-            }
-            *x = *y = 0.0;
-            if (IsPolyPathClosed && !IsPolyPathStop) {
-                IsPolyPathStop = true;
-                return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE;
-            }
-            return PATH_CMD_STOP;
-        }
-
-    private:
-        const ValueType* polygonPathData;
-        const ValueType* PathDataPtr;
-        const ValueType* PathDataEndPtr;
-        bool IsPolyPathClosed;
-        bool IsPolyPathStop;
-    };
-
-    template <class VertexContainer>
-    class PathBase {
-    public:
-        using SelfType = PathBase<VertexContainer>;
-        PathBase() :
+        UICanvasPath2() :
             vertices_(), iterator_(0)
         {}
+
         /**
          * @brief 去除所有顶点
          *
@@ -384,21 +263,16 @@ namespace OHOS {
         }
 
         /**
-         * @brief 开始新的路径
-         * @return 返回顶点数量
-         * @since 1.0
-         * @version 1.0
-         */
-        unsigned StartNewPath();
-        /**
          * @brief 移动一个点到设定的坐标
          * @param x 顶点x轴坐标
          * @param y 顶点y轴坐标
          * @since 1.0
          * @version 1.0
          */
-        void MoveTo(double x, double y);
-
+        void MoveTo(double x, double y)
+        {
+            vertices_.AddVertex(x, y, PATH_CMD_MOVE_TO);
+        }
         /**
          * @brief 连线连到输入的坐标
          * @param x 顶点x轴坐标
@@ -406,7 +280,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void LineTo(double x, double y);
+        void LineTo(double x, double y)
+        {
+            vertices_.AddVertex(x, y, PATH_CMD_LINE_TO);
+        }
 
         /**
          * @brief 画弧线
@@ -424,10 +301,48 @@ namespace OHOS {
                    double angle,
                    bool largeArcFlag,
                    bool sweepFlag,
-                   double x, double y);
+                   double x, double y)
+        {
+            if (vertices_.TotalVertices() && IsVertex(vertices_.LastCommand())) {
+                const double epsilon = 1e-30;
+                double x0 = 0.0;
+                double y0 = 0.0;
+                vertices_.LastVertex(&x0, &y0);
 
-        void EndPoly(unsigned flags = PATH_FLAGS_CLOSE);
-        void ClosePolygon(unsigned flags = PATH_FLAGS_NONE);
+                rx = std::fabs(rx);
+                ry = std::fabs(ry);
+                if (rx < epsilon || ry < epsilon) {
+                    LineTo(x, y);
+                    return;
+                }
+                if (CalcDistance(x0, y0, x, y) < epsilon) {
+                    return;
+                }
+                BezierArcSvg bezierArcSvg(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
+                if (bezierArcSvg.RadiiOK()) {
+                    JoinPath(bezierArcSvg);
+                } else {
+                    LineTo(x, y);
+                }
+            } else {
+                MoveTo(x, y);
+            }
+        }
+
+        void EndPoly(unsigned flags = PATH_FLAGS_CLOSE)
+        {
+            if (IsVertex(vertices_.LastCommand())) {
+                vertices_.AddVertex(0.0, 0.0, PATH_CMD_END_POLY | flags);
+            }
+        }
+        /**
+         * @brief ClosePolygon 闭合多边形路径
+         * @param flags
+         */
+        void ClosePolygon(unsigned flags = PATH_FLAGS_NONE)
+        {
+            EndPoly(PATH_FLAGS_CLOSE | flags);
+        }
 
         /**
          * @brief 返回顶点数量
@@ -435,7 +350,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned TotalVertices() const;
+        unsigned TotalVertices() const
+        {
+            return vertices_.TotalVertices();
+        }
 
         /**
          * @brief 返回最后一个顶点的坐标
@@ -445,7 +363,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned LastVertex(double* x, double* y) const;
+        unsigned LastVertex(double* x, double* y) const
+        {
+            return vertices_.LastVertex(x, y);
+        }
         /**
          * @brief 获取特定的顶点的坐标
          * @param idx 顶点下标
@@ -457,13 +378,17 @@ namespace OHOS {
          */
         unsigned Vertex(unsigned idx, double* x, double* y) const;
 
+
         /**
          * @brief 迭代器回退到某一个顶点
          * @param pathId 回退的顶点序号
          * @since 1.0
          * @version 1.0
          */
-        void Rewind(unsigned pathId);
+        void Rewind(unsigned pathId)
+        {
+            iterator_ = pathId;
+        }
 
         /**
          * @brief 获取下一个顶点的坐标
@@ -473,7 +398,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(double* x, double* y)
+        {
+            if (iterator_ >= vertices_.TotalVertices()) {
+                return PATH_CMD_STOP;
+            }
+            return vertices_.Vertex(iterator_++, x, y);
+        }
 
         /**
          * @brief 连接路径
@@ -539,105 +470,9 @@ namespace OHOS {
         }
 
     private:
-        VertexContainer vertices_;
+        VertexBlockStorage vertices_;
         unsigned iterator_;
     };
 
-    template <class VertexContainer>
-    unsigned PathBase<VertexContainer>::StartNewPath()
-    {
-        if (!is_stop(vertices_.LastCommand())) {
-            vertices_.AddVertex(0.0, 0.0, PATH_CMD_STOP);
-        }
-        return vertices_.TotalVertices();
-    }
-
-    template <class VertexContainer>
-    inline void PathBase<VertexContainer>::MoveTo(double x, double y)
-    {
-        vertices_.AddVertex(x, y, PATH_CMD_MOVE_TO);
-    }
-
-    template <class VertexContainer>
-    inline void PathBase<VertexContainer>::LineTo(double x, double y)
-    {
-        vertices_.AddVertex(x, y, PATH_CMD_LINE_TO);
-    }
-
-    template <class VertexContainer>
-    void PathBase<VertexContainer>::ArcTo(double rx, double ry,
-                                          double angle,
-                                          bool largeArcFlag,
-                                          bool sweepFlag,
-                                          double x, double y)
-    {
-        if (vertices_.TotalVertices() && IsVertex(vertices_.LastCommand())) {
-            const double epsilon = 1e-30;
-            double x0 = 0.0;
-            double y0 = 0.0;
-            vertices_.LastVertex(&x0, &y0);
-
-            rx = std::fabs(rx);
-            ry = std::fabs(ry);
-            if (rx < epsilon || ry < epsilon) {
-                LineTo(x, y);
-                return;
-            }
-            if (CalcDistance(x0, y0, x, y) < epsilon) {
-                return;
-            }
-            BezierArcSvg bezierArcSvg(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
-            if (bezierArcSvg.RadiiOK()) {
-                JoinPath(bezierArcSvg);
-            } else {
-                LineTo(x, y);
-            }
-        } else {
-            MoveTo(x, y);
-        }
-    }
-
-    template <class VertexContainer>
-    inline void PathBase<VertexContainer>::EndPoly(unsigned flags)
-    {
-        if (IsVertex(vertices_.LastCommand())) {
-            vertices_.AddVertex(0.0, 0.0, PATH_CMD_END_POLY | flags);
-        }
-    }
-
-    template <class VertexContainer>
-    inline void PathBase<VertexContainer>::ClosePolygon(unsigned flags)
-    {
-        EndPoly(PATH_FLAGS_CLOSE | flags);
-    }
-
-    template <class VertexContainer>
-    inline unsigned PathBase<VertexContainer>::TotalVertices() const
-    {
-        return vertices_.TotalVertices();
-    }
-
-    template <class VertexContainer>
-    inline unsigned PathBase<VertexContainer>::LastVertex(double* x, double* y) const
-    {
-        return vertices_.LastVertex(x, y);
-    }
-
-    template <class VertexContainer>
-    inline void PathBase<VertexContainer>::Rewind(unsigned pathId)
-    {
-        iterator_ = pathId;
-    }
-
-    template <class VertexContainer>
-    inline unsigned PathBase<VertexContainer>::Vertex(double* x, double* y)
-    {
-        if (iterator_ >= vertices_.TotalVertices()) {
-            return PATH_CMD_STOP;
-        }
-        return vertices_.Vertex(iterator_++, x, y);
-    }
-
-    using PathStorage = PathBase<VertexBlockStorage<double> >;
 } // namespace OHOS
 #endif
