@@ -42,8 +42,8 @@ namespace OHOS {
               class CubicBezierCurve = CubicBezierCurve>
     class DepictCurve {
     public:
-        typedef QuadraticBezierCurve curve3_type;
-        typedef CubicBezierCurve curve4_type;
+        typedef QuadraticBezierCurve QuadraticBezierCurveType;
+        typedef CubicBezierCurve CubicBezierCurveType;
         typedef DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve> self_type;
 
         /**
@@ -72,13 +72,13 @@ namespace OHOS {
          */
         void ApproximationMethod(CurveApproximationMethodEnum curvApproxiMethod)
         {
-            m_curve3.ApproximationMethod(curvApproxiMethod);
-            m_curve4.ApproximationMethod(curvApproxiMethod);
+            m_quadratic_bezier.ApproximationMethod(curvApproxiMethod);
+            m_cubic_bezier.ApproximationMethod(curvApproxiMethod);
         }
 
         CurveApproximationMethodEnum ApproximationMethod() const
         {
-            return m_curve4.ApproximationMethod();
+            return m_cubic_bezier.ApproximationMethod();
         }
 
         /**
@@ -92,13 +92,13 @@ namespace OHOS {
          */
         void ApproximationScale(double aScale)
         {
-            m_curve3.SetApproximationScale(aScale);
-            m_curve4.SetApproximationScale(aScale);
+            m_quadratic_bezier.SetApproximationScale(aScale);
+            m_cubic_bezier.SetApproximationScale(aScale);
         }
 
         double ApproximationScale() const
         {
-            return m_curve4.ApproximationScale();
+            return m_cubic_bezier.ApproximationScale();
         }
 
         /**
@@ -109,13 +109,13 @@ namespace OHOS {
          */
         void AngleTolerance(double angleRate)
         {
-            m_curve3.AngleTolerance(angleRate);
-            m_curve4.AngleTolerance(angleRate);
+            m_quadratic_bezier.AngleTolerance(angleRate);
+            m_cubic_bezier.AngleTolerance(angleRate);
         }
 
         double AngleTolerance() const
         {
-            return m_curve4.AngleTolerance();
+            return m_cubic_bezier.AngleTolerance();
         }
 
         /**
@@ -128,13 +128,13 @@ namespace OHOS {
          */
         void CuspLimit(double v)
         {
-            m_curve3.CuspLimit(v);
-            m_curve4.CuspLimit(v);
+            m_quadratic_bezier.CuspLimit(v);
+            m_cubic_bezier.CuspLimit(v);
         }
 
         double CuspLimit() const
         {
-            return m_curve4.CuspLimit();
+            return m_cubic_bezier.CuspLimit();
         }
         /*
         * 重置某段路径的状态属性
@@ -158,8 +158,8 @@ namespace OHOS {
         VertexSource* m_source;
         double m_last_x;
         double m_last_y;
-        curve3_type m_curve3;
-        curve4_type m_curve4;
+        QuadraticBezierCurveType m_quadratic_bezier;
+        CubicBezierCurveType m_cubic_bezier;
     };
 
     /*
@@ -174,8 +174,8 @@ namespace OHOS {
         m_source->Rewind(path_id);
         m_last_x = 0.0;
         m_last_y = 0.0;
-        m_curve3.Reset();
-        m_curve4.Reset();
+        m_quadratic_bezier.Reset();
+        m_cubic_bezier.Reset();
     }
 
     /*
@@ -186,13 +186,13 @@ namespace OHOS {
     template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
     unsigned DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Vertex(double* x, double* y)
     {
-        if (!IsStop(m_curve3.Vertex(x, y))) {
+        if (!IsStop(m_quadratic_bezier.Vertex(x, y))) {
             m_last_x = *x;
             m_last_y = *y;
             return PATH_CMD_LINE_TO;
         }
 
-        if (!IsStop(m_curve4.Vertex(x, y))) {
+        if (!IsStop(m_cubic_bezier.Vertex(x, y))) {
             m_last_x = *x;
             m_last_y = *y;
             return PATH_CMD_LINE_TO;
@@ -208,10 +208,10 @@ namespace OHOS {
             case PATH_CMD_CURVE3:
                 m_source->Vertex(&end_x, &end_y);
 
-                m_curve3.Init(m_last_x, m_last_y, *x, *y, end_x, end_y);
+                m_quadratic_bezier.Init(m_last_x, m_last_y, *x, *y, end_x, end_y);
 
-                m_curve3.Vertex(x, y); // First call returns path_cmd_move_to
-                m_curve3.Vertex(x, y); // This is the first vertex of the curve
+                m_quadratic_bezier.Vertex(x, y); // First call returns path_cmd_move_to
+                m_quadratic_bezier.Vertex(x, y); // This is the first vertex of the curve
                 cmd = PATH_CMD_LINE_TO;
                 break;
 
@@ -219,10 +219,10 @@ namespace OHOS {
                 m_source->Vertex(&ct2_x, &ct2_y);
                 m_source->Vertex(&end_x, &end_y);
 
-                m_curve4.Init(m_last_x, m_last_y, *x, *y, ct2_x, ct2_y, end_x, end_y);
+                m_cubic_bezier.Init(m_last_x, m_last_y, *x, *y, ct2_x, ct2_y, end_x, end_y);
 
-                m_curve4.Vertex(x, y); // First call returns path_cmd_move_to
-                m_curve4.Vertex(x, y); // This is the first vertex of the curve
+                m_cubic_bezier.Vertex(x, y); // First call returns path_cmd_move_to
+                m_cubic_bezier.Vertex(x, y); // This is the first vertex of the curve
                 cmd = PATH_CMD_LINE_TO;
                 break;
         }
