@@ -46,7 +46,7 @@ namespace OHOS {
         typedef CubicBezierCurve curve4_type;
         typedef DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve> self_type;
 
-        DepictCurve(){}
+
         /**
          * @brief DepictCurve类的构造函数。.
          * 构造参数为VertexSource 属性决定曲线的顶点源。
