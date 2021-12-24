@@ -16,288 +16,223 @@
 #include "gfx_utils/color.h"
 
 namespace OHOS {
-ColorType Color::GetMixColor(ColorType c1, ColorType c2, uint8_t mix)
-{
-    ColorType ret;
-    /* COLOR_DEPTH is 16 or 32 */
-    // 8: right move 8 bit. 255: 2^8-1
-    ret.red = (static_cast<uint16_t>(c1.red) * mix + (static_cast<uint16_t>(c2.red) * (255 ^ mix))) >> 8;
-    // 8: right move 8 bit. 255: 2^8-1
-    ret.green = (static_cast<uint16_t>(c1.green) * mix + (static_cast<uint16_t>(c2.green) * (255 ^ mix))) >> 8;
-    // 8: right move 8 bit. 255: 2^8-1
-    ret.blue = (static_cast<uint16_t>(c1.blue) * mix + (static_cast<uint16_t>(c2.blue) * (255 ^ mix))) >> 8;
+    ColorType Color::GetMixColor(ColorType c1, ColorType c2, uint8_t mix)
+    {
+        ColorType ret;
+        /* COLOR_DEPTH is 16 or 32 */
+        // 8: right move 8 bit. 255: 2^8-1
+        ret.red = (static_cast<uint16_t>(c1.red) * mix + (static_cast<uint16_t>(c2.red) * (255 ^ mix))) >> 8;
+        // 8: right move 8 bit. 255: 2^8-1
+        ret.green = (static_cast<uint16_t>(c1.green) * mix + (static_cast<uint16_t>(c2.green) * (255 ^ mix))) >> 8;
+        // 8: right move 8 bit. 255: 2^8-1
+        ret.blue = (static_cast<uint16_t>(c1.blue) * mix + (static_cast<uint16_t>(c2.blue) * (255 ^ mix))) >> 8;
 #if COLOR_DEPTH == 32
-    ret.alpha = 0xFF;
+        ret.alpha = 0xFF;
 #endif
-    return ret;
-}
+        return ret;
+    }
 
-ColorType Color::GetColorFromRGB(uint8_t r8, uint8_t g8, uint8_t b8)
-{
-    return GetColorFromRGBA(r8, g8, b8, 0xFF);
-}
+    ColorType Color::GetColorFromRGB(uint8_t r8, uint8_t g8, uint8_t b8)
+    {
+        return GetColorFromRGBA(r8, g8, b8, 0xFF);
+    }
 
-ColorType Color::GetColorFromRGBA(uint8_t r8, uint8_t g8, uint8_t b8, uint8_t alpha)
-{
-    ColorType rColor;
+    ColorType Color::GetColorFromRGBA(uint8_t r8, uint8_t g8, uint8_t b8, uint8_t alpha)
+    {
+        ColorType rColor;
 #if COLOR_DEPTH == 16
-    rColor.red = r8 >> 3;   // 3: shift right 3 places
-    rColor.blue = b8 >> 3;  // 3: shift right 3 places
-    rColor.green = g8 >> 2; // 2: shift right 2 places
+        rColor.red = r8 >> 3;   // 3: shift right 3 places
+        rColor.blue = b8 >> 3;  // 3: shift right 3 places
+        rColor.green = g8 >> 2; // 2: shift right 2 places
 #elif COLOR_DEPTH == 32
-    // 24, 16, 8: shift right places
-    rColor.full = (alpha << 24) | (r8 << 16) | (g8 << 8) | (b8);
+        // 24, 16, 8: shift right places
+        rColor.full = (alpha << 24) | (r8 << 16) | (g8 << 8) | (b8);
 #endif
-    return rColor;
-}
+        return rColor;
+    }
 
-uint32_t Color::ColorTo32(ColorType color)
-{
+    uint32_t Color::ColorTo32(ColorType color)
+    {
 #if COLOR_DEPTH == 16
-    Color32 ret;
-    ret.red = color.red << 3;     /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
-    ret.green = color.green << 2; /* (2^8 - 1)/(2^6 - 1) = 255/63 = 4 */
-    ret.blue = color.blue << 3;   /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
-    ret.alpha = 0xFF;
-    return ret.full;
+        Color32 ret;
+        ret.red = color.red << 3;     /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
+        ret.green = color.green << 2; /* (2^8 - 1)/(2^6 - 1) = 255/63 = 4 */
+        ret.blue = color.blue << 3;   /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
+        ret.alpha = 0xFF;
+        return ret.full;
 #elif COLOR_DEPTH == 32
-    return color.full;
+        return color.full;
 #endif
-}
+    }
 
-uint32_t Color::ColorTo32(Color16 color, uint8_t alpha)
-{
-    Color32 ret;
-    /*
+    uint32_t Color::ColorTo32(Color16 color, uint8_t alpha)
+    {
+        Color32 ret;
+        /*
      * when 16-bitmap image is tansformed to 32-bitmap,
      * R should shift left 3 bits,
      * G should shift left 2 bits,
      * B should shift left 3 bits,
      */
-    ret.red = color.red << 3;     /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
-    ret.green = color.green << 2; /* (2^8 - 1)/(2^6 - 1) = 255/63 = 4 */
-    ret.blue = color.blue << 3;   /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
-    ret.alpha = alpha;
-    return ret.full;
-}
+        ret.red = color.red << 3;     /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
+        ret.green = color.green << 2; /* (2^8 - 1)/(2^6 - 1) = 255/63 = 4 */
+        ret.blue = color.blue << 3;   /* (2^8 - 1)/(2^5 - 1) = 255/31 = 8 */
+        ret.alpha = alpha;
+        return ret.full;
+    }
 
-uint16_t Color::ColorTo16(Color32 color)
-{
-    /*
+    uint16_t Color::ColorTo16(Color32 color)
+    {
+        /*
      * when 32-bitmap image is tansformed to 16-bitmap,
      * R should shift right 3 bits,
      * G should shift right 2 bits,
      * B should shift right 3 bits,
      */
-    Color16 rColor;
-    rColor.red = color.red >> 3;
-    rColor.green = color.green >> 2;
-    rColor.blue = color.blue >> 3;
-    return rColor.full;
-}
+        Color16 rColor;
+        rColor.red = color.red >> 3;
+        rColor.green = color.green >> 2;
+        rColor.blue = color.blue >> 3;
+        return rColor.full;
+    }
 
-ColorType Color::White()
-{
-    return GetColorFromRGB(0xFF, 0xFF, 0xFF);
-}
+    ColorType Color::White()
+    {
+        return GetColorFromRGB(0xFF, 0xFF, 0xFF);
+    }
 
-ColorType Color::Silver()
-{
-    return GetColorFromRGB(0xC0, 0xC0, 0xC0);
-}
+    ColorType Color::Silver()
+    {
+        return GetColorFromRGB(0xC0, 0xC0, 0xC0);
+    }
 
-ColorType Color::Gray()
-{
-    return GetColorFromRGB(0x80, 0x80, 0x80);
-}
+    ColorType Color::Gray()
+    {
+        return GetColorFromRGB(0x80, 0x80, 0x80);
+    }
 
-ColorType Color::Black()
-{
-    return GetColorFromRGB(0x00, 0x00, 0x00);
-}
+    ColorType Color::Black()
+    {
+        return GetColorFromRGB(0x00, 0x00, 0x00);
+    }
 
-ColorType Color::Red()
-{
-    return GetColorFromRGB(0xFF, 0x00, 0x00);
-}
+    ColorType Color::Red()
+    {
+        return GetColorFromRGB(0xFF, 0x00, 0x00);
+    }
 
-ColorType Color::Maroon()
-{
-    return GetColorFromRGB(0x80, 0x00, 0x00);
-}
+    ColorType Color::Maroon()
+    {
+        return GetColorFromRGB(0x80, 0x00, 0x00);
+    }
 
-ColorType Color::Yellow()
-{
-    return GetColorFromRGB(0xFF, 0xFF, 0x00);
-}
+    ColorType Color::Yellow()
+    {
+        return GetColorFromRGB(0xFF, 0xFF, 0x00);
+    }
 
-ColorType Color::Olive()
-{
-    return GetColorFromRGB(0x80, 0x80, 0x00);
-}
+    ColorType Color::Olive()
+    {
+        return GetColorFromRGB(0x80, 0x80, 0x00);
+    }
 
-ColorType Color::Lime()
-{
-    return GetColorFromRGB(0x00, 0xFF, 0x00);
-}
+    ColorType Color::Lime()
+    {
+        return GetColorFromRGB(0x00, 0xFF, 0x00);
+    }
 
-ColorType Color::Green()
-{
-    return GetColorFromRGB(0x00, 0xFF, 0x00);
-}
+    ColorType Color::Green()
+    {
+        return GetColorFromRGB(0x00, 0xFF, 0x00);
+    }
 
-ColorType Color::Cyan()
-{
-    return GetColorFromRGB(0x00, 0xFF, 0xFF);
-}
+    ColorType Color::Cyan()
+    {
+        return GetColorFromRGB(0x00, 0xFF, 0xFF);
+    }
 
-ColorType Color::Aqua()
-{
-    return GetColorFromRGB(0x00, 0xFF, 0xFF);
-}
+    ColorType Color::Aqua()
+    {
+        return GetColorFromRGB(0x00, 0xFF, 0xFF);
+    }
 
-ColorType Color::Teal()
-{
-    return GetColorFromRGB(0x00, 0x80, 0x80);
-}
+    ColorType Color::Teal()
+    {
+        return GetColorFromRGB(0x00, 0x80, 0x80);
+    }
 
-ColorType Color::Blue()
-{
-    return GetColorFromRGB(0x00, 0x00, 0xFF);
-}
+    ColorType Color::Blue()
+    {
+        return GetColorFromRGB(0x00, 0x00, 0xFF);
+    }
 
-ColorType Color::Navy()
-{
-    return GetColorFromRGB(0x00, 0x00, 0x80);
-}
+    ColorType Color::Navy()
+    {
+        return GetColorFromRGB(0x00, 0x00, 0x80);
+    }
 
-ColorType Color::Magenta()
-{
-    return GetColorFromRGB(0xFF, 0x00, 0xFF);
-}
+    ColorType Color::Magenta()
+    {
+        return GetColorFromRGB(0xFF, 0x00, 0xFF);
+    }
 
-ColorType Color::Purple()
-{
-    return GetColorFromRGB(0x80, 0x00, 0x80);
-}
+    ColorType Color::Purple()
+    {
+        return GetColorFromRGB(0x80, 0x00, 0x80);
+    }
 
-ColorType Color::Orange()
-{
-    return GetColorFromRGB(0xFF, 0xA5, 0x00);
-}
+    ColorType Color::Orange()
+    {
+        return GetColorFromRGB(0xFF, 0xA5, 0x00);
+    }
 
-OHOS::Rgba32::operator Rgba8() const
-{
-    return Rgba8(
-        Uround(redValue * COLOR_CONVERT),
-        Uround(greenValue * COLOR_CONVERT),
-        Uround(blueValue * COLOR_CONVERT),
-                Uround(alphaValue * COLOR_CONVERT));
-}
+    OHOS::Rgba32::operator Rgba8() const
+    {
+        return Rgba8(
+            Uround(redValue * COLOR_CONVERT),
+            Uround(greenValue * COLOR_CONVERT),
+            Uround(blueValue * COLOR_CONVERT),
+            Uround(alphaValue * COLOR_CONVERT));
+    }
 
-OHOS::Rgba32::operator Srgba8() const
-{
-    return Srgba8(
-        StandardRgbConv<ValueType>::RgbToStandardRgb(redValue),
-        StandardRgbConv<ValueType>::RgbToStandardRgb(greenValue),
-        StandardRgbConv<ValueType>::RgbToStandardRgb(blueValue),
-                StandardRgbConv<ValueType>::AlphaToStandardRgb(alphaValue));
-}
+    OHOS::Rgba32::operator Srgba8() const
+    {
+        return Srgba8(
+            StandardRgbConv<ValueType>::RgbToStandardRgb(redValue),
+            StandardRgbConv<ValueType>::RgbToStandardRgb(greenValue),
+            StandardRgbConv<ValueType>::RgbToStandardRgb(blueValue),
+            StandardRgbConv<ValueType>::AlphaToStandardRgb(alphaValue));
+    }
 
-Rgba32::SelfType &Rgba32::Clear()
-{
-    redValue = 0;
-    greenValue = 0;
-    blueValue = 0;
-    alphaValue = 0;
-    return *this;
-}
-
-Rgba32::SelfType &Rgba32::Opacity(float alpha)
-{
-    if (alpha < 0) {
+    Rgba32::SelfType& Rgba32::Clear()
+    {
+        redValue = 0;
+        greenValue = 0;
+        blueValue = 0;
         alphaValue = 0;
-    } else if (alpha > 1) {
-        alphaValue = 1;
-    } else {
-        alphaValue = ValueType(alpha);
+        return *this;
     }
-    return *this;
-}
 
-Rgba32::SelfType &Rgba32::Premultiply()
-{
-    if (alphaValue < 1) {
-        if (alphaValue <= 0) {
-            redValue = 0;
-            greenValue = 0;
-            blueValue = 0;
+    Rgba32::SelfType& Rgba32::Opacity(float alpha)
+    {
+        if (alpha < 0) {
+            alphaValue = 0;
+        } else if (alpha > 1) {
+            alphaValue = 1;
         } else {
-            redValue *= alphaValue;
-            greenValue *= alphaValue;
-            blueValue *= alphaValue;
+            alphaValue = ValueType(alpha);
         }
+        return *this;
     }
-    return *this;
-}
 
-Rgba32::SelfType &Rgba32::Demultiply()
-{
-    if (alphaValue < 1) {
-        if (alphaValue <= 0) {
-            redValue = 0;
-            greenValue = 0;
-            blueValue = 0;
-        } else {
-            redValue /= alphaValue;
-            greenValue /= alphaValue;
-            blueValue /= alphaValue;
-        }
+    Rgba32::SelfType Rgba32::Gradient(const Rgba32::SelfType& color, float k) const
+    {
+        SelfType ret;
+        ret.redValue = ValueType(redValue + (color.redValue - redValue) * k);
+        ret.greenValue = ValueType(greenValue + (color.greenValue - greenValue) * k);
+        ret.blueValue = ValueType(blueValue + (color.blueValue - blueValue) * k);
+        ret.alphaValue = ValueType(alphaValue + (color.alphaValue - alphaValue) * k);
+        return ret;
     }
-    return *this;
-}
-
-Rgba32::SelfType Rgba32::Gradient(const Rgba32::SelfType &color, float k) const
-{
-    SelfType ret;
-    ret.redValue = ValueType(redValue + (color.redValue - redValue) * k);
-    ret.greenValue = ValueType(greenValue + (color.greenValue - greenValue) * k);
-    ret.blueValue = ValueType(blueValue + (color.blueValue - blueValue) * k);
-    ret.alphaValue = ValueType(alphaValue + (color.alphaValue - alphaValue) * k);
-    return ret;
-}
-
-void Rgba32::Add(const Rgba32::SelfType &color, unsigned cover)
-{
-    if (cover == COVER_MASK) {
-        if (color.IsOpaque()) {
-            *this = color;
-            return;
-        } else {
-            redValue += color.redValue;
-            greenValue += color.greenValue;
-            blueValue += color.blueValue;
-            alphaValue += color.alphaValue;
-        }
-    } else {
-        redValue += MultCover(color.redValue, cover);
-        greenValue += MultCover(color.greenValue, cover);
-        blueValue += MultCover(color.blueValue, cover);
-        alphaValue += MultCover(color.alphaValue, cover);
-    }
-    if (alphaValue > 1) {
-        alphaValue = 1;
-    }
-    if (redValue > alphaValue) {
-        redValue = alphaValue;
-    }
-    if (greenValue > alphaValue) {
-        greenValue = alphaValue;
-    }
-    if (blueValue > alphaValue) {
-        blueValue = alphaValue;
-    }
-}
-
 
 } // namespace OHOS
