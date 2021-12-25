@@ -343,7 +343,12 @@ namespace OHOS {
         return CatromToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                               curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
-
+    /**
+     * @brief bspline曲线转换为3次贝塞尔曲线
+     * @param bspline曲线4个点，首尾和中间2个控制点
+     * @since 1.0
+     * @version 1.0
+     */
     inline CubicBezierCurvePoints UbsplineToBezier(double x1, double y1,
                                                    double x2, double y2,
                                                    double x3, double y3,
@@ -359,29 +364,42 @@ namespace OHOS {
             (x2 + OHOS::FOUR_TIMES * x3 + x4) / OHOS::SIX_TIMES,
             (y2 + OHOS::FOUR_TIMES * y3 + y4) / OHOS::SIX_TIMES);
     }
-
+    /**
+     * @brief bspline曲线转换为贝塞尔曲线
+     * @param bspline曲线4个点，首尾和中间2个控制点
+     * @since 1.0
+     * @version 1.0
+     */
     inline CubicBezierCurvePoints UbsplineToBezier(const CubicBezierCurvePoints& curve4Points)
     {
         return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
-
+    /**
+     * @brief Hermite曲线转换为3次数贝塞尔曲线
+     * @param Hermite曲线2个点，首尾点
+     * @since 1.0
+     * @version 1.0
+     */
     inline CubicBezierCurvePoints HermiteToBezier(double x1, double y1,
                                                   double x2, double y2,
                                                   double x3, double y3,
                                                   double x4, double y4)
     {
         return CubicBezierCurvePoints(
-            x1,
-            y1,
+            x1, y1,
             (OHOS::THREE_TIMES * x1 + x3) / OHOS::THREE_TIMES,
             (OHOS::THREE_TIMES * y1 + y3) / OHOS::THREE_TIMES,
             (OHOS::THREE_TIMES * x2 - x4) / OHOS::THREE_TIMES,
             (OHOS::THREE_TIMES * y2 - y4) / OHOS::THREE_TIMES,
-            x2,
-            y2);
+            x2, y2);
     }
-
+    /**
+     * @brief Hermite曲线转换为3次数贝塞尔曲线
+     * @param Hermite曲线2个点，首尾点
+     * @since 1.0
+     * @version 1.0
+     */
     inline CubicBezierCurvePoints HermiteToBezier(const CubicBezierCurvePoints& curve4Points)
     {
         return HermiteToBezier(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
@@ -720,5 +738,4 @@ namespace OHOS {
         CurveApproximationMethodEnum approximationMethod_;
     };
 } // namespace OHOS
-
 #endif

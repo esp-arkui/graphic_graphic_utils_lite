@@ -16,9 +16,9 @@
 #ifndef AGG_CONV_STROKE_INCLUDED
 #define AGG_CONV_STROKE_INCLUDED
 
-#include "graphic_depict_adaptor_vertex_generate.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.h"
+#include "graphic_depict_adaptor_vertex_generate.h"
 namespace OHOS {
     /**
     * @template<class VertexSource,class Markers> struct DepictStroke
@@ -39,10 +39,11 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        DepictStroke(VertexSource& vs)
-            : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
+        DepictStroke(VertexSource& vs) :
+            DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
         {
         }
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /*
         * ineCap 属性设置线条末端线帽的样式。
         * butt	默认。向线条的每个末端添加平直的边缘。
@@ -56,15 +57,6 @@ namespace OHOS {
         }
 
         /*
-        * lineJoin 属性设置所创建边角的类型，当两条线交汇时,
-        * 主要包括bevel	创建斜角。round	创建圆角。
-        * miter	默认。创建尖角。
-        */
-        void LineJoin(LineJoinEnum lineJoin)
-        {
-            base_type::GetGenerator().LineJoin(lineJoin);
-        }
-        /*
         * ineCap 属性返回线条末端线帽的样式。
         * butt	默认。向线条的每个末端添加平直的边缘。
         * round	向线条的每个末端添加圆形线帽。
@@ -75,6 +67,18 @@ namespace OHOS {
         {
             return base_type::GetGenerator().LineCap();
         }
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+        /*
+        * lineJoin 属性设置所创建边角的类型，当两条线交汇时,
+        * 主要包括bevel	创建斜角。round	创建圆角。
+        * miter	默认。创建尖角。
+        */
+        void LineJoin(LineJoinEnum lineJoin)
+        {
+            base_type::GetGenerator().LineJoin(lineJoin);
+        }
+
         /*
         * lineJoin 属性返回所创建边角的类型，当两条线交汇时,
         * 主要包括bevel	创建斜角。round	创建圆角。
@@ -84,13 +88,7 @@ namespace OHOS {
         {
             return base_type::GetGenerator().LineJoin();
         }
-        /*
-        * 轮廓线主要设置几何线条的线宽
-        */
-        void Width(double width)
-        {
-            base_type::GetGenerator().Width(width);
-        }
+
         /*
         * miterLimit 属性设置最大斜接长度。
         * 斜接长度指的是在两条线交汇处内角和外角之间的距离
@@ -101,6 +99,26 @@ namespace OHOS {
         void MiterLimit(double miterLimit)
         {
             base_type::GetGenerator().MiterLimit(miterLimit);
+        }
+        /*
+        * miterLimit 属性返回最大斜接长度。
+        * 斜接长度指的是在两条线交汇处内角和外角之间的距离
+        * 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
+        * 边角的角度越小，斜接长度就会越大。
+        * 为了避免斜接长度过长，我们可以使用 miterLimit 属性。
+        */
+        double MiterLimit() const
+        {
+            return base_type::GetGenerator().MiterLimit();
+        }
+#endif
+
+        /*
+        * 轮廓线主要设置几何线条的线宽
+        */
+        void Width(double width)
+        {
+            base_type::GetGenerator().Width(width);
         }
 
         /**
@@ -123,17 +141,7 @@ namespace OHOS {
         {
             return base_type::GetGenerator().Width();
         }
-        /*
-    * miterLimit 属性返回最大斜接长度。
-    * 斜接长度指的是在两条线交汇处内角和外角之间的距离
-    * 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
-    * 边角的角度越小，斜接长度就会越大。
-    * 为了避免斜接长度过长，我们可以使用 miterLimit 属性。
-    */
-        double MiterLimit() const
-        {
-            return base_type::GetGenerator().MiterLimit();
-        }
+
         /**
         * @brief 返回最终决定估算的精度。.
         * 在实际应用中，我们需要从点的世界坐标转换到屏幕坐标，因此总会存在一定的缩放因子。

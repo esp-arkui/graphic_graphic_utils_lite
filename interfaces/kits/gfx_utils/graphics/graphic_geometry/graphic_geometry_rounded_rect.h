@@ -39,6 +39,7 @@ namespace OHOS {
      * @version 1.0
      */
     class RoundedRect : public HeapBase {
+#if GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE && GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
     public:
         /**
          * @brief 构造圆角矩形.
@@ -173,8 +174,8 @@ namespace OHOS {
         double radiusYControlTwo;
         double radiusXEnd;
         double radiusYEnd;
+#endif
     };
-
 } // namespace OHOS
 
 #endif

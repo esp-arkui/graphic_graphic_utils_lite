@@ -29,6 +29,7 @@
 #include "gfx_utils/graphics/graphic_depict/graphic_depict_transform.h"
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
     const int BEZIER_ARC_VERTEX_NUM = 26; // 贝塞尔弧顶点坐标数
     /**
      * @brief 弧形转换为贝塞尔曲线.
@@ -258,6 +259,7 @@ namespace OHOS {
         BezierArc bezierArcModel;
         bool isRadiusJoinPath;
     };
+#endif
 } // namespace OHOS
 
 #endif

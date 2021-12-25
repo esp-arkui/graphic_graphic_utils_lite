@@ -18,6 +18,7 @@
 #include <cmath>
 
 namespace OHOS {
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
     const int16u BEZIER_ARC_SETUP = 2;
 
     const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
@@ -208,4 +209,5 @@ namespace OHOS {
             bezierArcModel.GetVertices()[bezierArcModel.GetNumberVertices() - 1] = y2;
         }
     }
+#endif
 } // namespace OHOS

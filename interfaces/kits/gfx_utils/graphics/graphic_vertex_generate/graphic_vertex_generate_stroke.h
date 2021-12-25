@@ -40,35 +40,37 @@ namespace OHOS {
         using CoordStorage = GeometryPlainDataBlockVector<PointD, BLOCK_SHIFT_SIZE>;
 
         VertexGenerateStroke();
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         void LineCap(LineCapEnum lc)
         {
             stroker_.SetLineCap(lc);
         }
-
-        void LineJoin(LineJoinEnum lj)
-        {
-            stroker_.SetLineJoin(lj);
-        }
-
         enum LineCapEnum LineCap() const
         {
             return stroker_.GetLineCap();
         }
-
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+        void LineJoin(LineJoinEnum lj)
+        {
+            stroker_.SetLineJoin(lj);
+        }
         enum LineJoinEnum LineJoin() const
         {
             return stroker_.GetLineJoin();
         }
-
-        void Width(double w)
-        {
-            stroker_.width(w);
-        }
-
         void MiterLimit(double ml)
         {
             stroker_.SetMiterLimit(ml);
+        }
+        double MiterLimit() const
+        {
+            return stroker_.GetMiterLimit();
+        }
+#endif
+        void Width(double w)
+        {
+            stroker_.width(w);
         }
 
         void ApproximationScale(double as)
@@ -79,11 +81,6 @@ namespace OHOS {
         double Width() const
         {
             return stroker_.width();
-        }
-
-        double MiterLimit() const
-        {
-            return stroker_.GetMiterLimit();
         }
 
         double ApproximationScale() const
