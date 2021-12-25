@@ -175,24 +175,40 @@ namespace OHOS {
                 double dx = (dx1 + dx2) * HALFNUM;
                 double dy = (dy1 + dy2) * HALFNUM;
                 double dbevel = std::sqrt(dx * dx + dy * dy);
-
-                if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
+                double lim = strokeWidthUsingAbs * miterLimitMeasure;
+                if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN ||
+                    lineJoinEnum == MITER_JOIN) {
                     if (approxScaleRadio * (strokeWidthUsingAbs - dbevel) < strokeWidthPercentDivision) {
                         if (CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
                                              vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
                                              vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
                                              vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
                                              &dx, &dy)) {
-                            AddVertex(vertexConsumer, dx, dy);
+                            if (lineJoinEnum == MITER_JOIN) {
+                                if (lim > CalcDistance(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, dx, dy)) {
+                                    AddVertex(vertexConsumer, dx, dy);
+                                } else {
+                                    CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimitMeasure, dbevel);
+                                }
+                            } else {
+                                AddVertex(vertexConsumer, dx, dy);
+                            }
                         } else {
-                            AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
+                            if (lineJoinEnum == MITER_JOIN) {
+                                if (lim > CalcDistance(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, dx, dy)) {
+                                    AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
+                                } else {
+                                    CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimitMeasure, dbevel);
+                                }
+                            } else {
+                                AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
+                            }
                         }
                         return;
                     }
                 }
 
                 switch (lineJoinEnum) {
-                    case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
                         CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2, lineJoinEnum, miterLimitMeasure, dbevel);
@@ -255,11 +271,9 @@ namespace OHOS {
                         AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                         AddVertex(vertexConsumer, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
                         break;
-
                     case MITER_JOIN_ROUND:
                         CalcArc(vertexConsumer, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
                         break;
-
                     default:
                         if (intersectionFailed) {
                             mlimit *= strokeWidthSignal;
