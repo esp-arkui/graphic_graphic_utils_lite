@@ -45,29 +45,30 @@ namespace OHOS {
         {
             stroker_.SetLineCap(lc);
         }
-        enum LineCapEnum LineCap() const
-        {
-            return stroker_.GetLineCap();
-        }
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         void LineJoin(LineJoinEnum lj)
         {
             stroker_.SetLineJoin(lj);
         }
-        enum LineJoinEnum LineJoin() const
-        {
-            return stroker_.GetLineJoin();
-        }
+
         void MiterLimit(double ml)
         {
             stroker_.SetMiterLimit(ml);
+        }
+#endif
+        enum LineCapEnum LineCap() const
+        {
+            return stroker_.GetLineCap();
+        }
+        enum LineJoinEnum LineJoin() const
+        {
+            return stroker_.GetLineJoin();
         }
         double MiterLimit() const
         {
             return stroker_.GetMiterLimit();
         }
-#endif
         void Width(double w)
         {
             stroker_.width(w);

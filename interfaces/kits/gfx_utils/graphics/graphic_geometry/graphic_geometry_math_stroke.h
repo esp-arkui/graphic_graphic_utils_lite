@@ -27,11 +27,11 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h"
 
 namespace OHOS {
-#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
     /**
      * @brief 线条末端线帽的样式。
      */
     enum LineCapEnum {
+        NONE_CAP = -1,
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -39,13 +39,12 @@ namespace OHOS {
         /** 向线条的每个末端添加圆形线帽 */
         ROUND_CAP
     };
-#endif
 
-#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
     /**
      * @brief 两条线相交时，所创建的拐角类型
      */
     enum LineJoinEnum {
+        MITER_NONE = -1,
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -55,7 +54,6 @@ namespace OHOS {
         BEVEL_JOIN = 3,
         MITER_JOIN_ROUND = 4
     };
-#endif
     template <class VertexConsumer>
     class MathStroke {
     public:
@@ -86,10 +84,7 @@ namespace OHOS {
         {
             lineCapEnum = lineCapE;
         }
-        LineCapEnum GetLineCap() const
-        {
-            return lineCapEnum;
-        }
+
         /**
          * @brief 计算端点样式
          */
@@ -150,10 +145,7 @@ namespace OHOS {
         {
             lineJoinEnum = lineJoinE;
         }
-        LineJoinEnum GetLineJoin() const
-        {
-            return lineJoinEnum;
-        }
+
         /**
          * @brief SetMiterLimit 设置最大斜接长度
          */
@@ -161,13 +153,7 @@ namespace OHOS {
         {
             miterLimitMeasure = miterLimit;
         }
-        /**
-         * @brief GetMiterLimit 返回最大斜接长度
-         */
-        double GetMiterLimit() const
-        {
-            return miterLimitMeasure;
-        }
+
         /**
          * @brief 计算相交和拐角
          */
@@ -189,14 +175,21 @@ namespace OHOS {
                 double dx = (dx1 + dx2) * HALFNUM;
                 double dy = (dy1 + dy2) * HALFNUM;
                 double dbevel = std::sqrt(dx * dx + dy * dy);
-
-                if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
+                double lim = strokeWidthUsingAbs * miterLimitMeasure;
+                bool isIntersection = CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
+                                                       vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
+                                                       vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
+                                                       vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
+                                                       &dx, &dy);
+                LineJoinEnum _lineJoinEnum = lineJoinEnum;
+                if (_lineJoinEnum == MITER_JOIN) {
+                    if (CalcDistance(vertexDistMiddle.vertexXCoord, vertexDistMiddle.vertexYCoord, dx, dy) > lim) {
+                        _lineJoinEnum = BEVEL_JOIN;
+                    }
+                }
+                if (_lineJoinEnum == ROUND_JOIN || _lineJoinEnum == BEVEL_JOIN) {
                     if (approxScaleRadio * (strokeWidthUsingAbs - dbevel) < strokeWidthPercentDivision) {
-                        if (CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
-                                             vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
-                                             vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
-                                             vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
-                                             &dx, &dy)) {
+                        if (isIntersection) {
                             AddVertex(vertexConsumer, dx, dy);
                         } else {
                             AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
@@ -205,7 +198,7 @@ namespace OHOS {
                     }
                 }
 
-                switch (lineJoinEnum) {
+                switch (_lineJoinEnum) {
                     case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
@@ -269,11 +262,9 @@ namespace OHOS {
                         AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                         AddVertex(vertexConsumer, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
                         break;
-
                     case MITER_JOIN_ROUND:
                         CalcArc(vertexConsumer, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
                         break;
-
                     default:
                         if (intersectionFailed) {
                             mlimit *= strokeWidthSignal;
@@ -332,7 +323,27 @@ namespace OHOS {
             AddVertex(vertexConsumer, x + dx2, y + dy2);
         }
 #endif
-
+        LineCapEnum GetLineCap() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+            return lineCapEnum;
+#endif
+            return NONE_CAP;
+        }
+        LineJoinEnum GetLineJoin() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+            return lineJoinEnum;
+#endif
+            return MITER_NONE;
+        }
+        /**
+         * @brief GetMiterLimit 返回最大斜接长度
+         */
+        double GetMiterLimit() const
+        {
+            return miterLimitMeasure;
+        }
         /**
          * @brief width 设置区域宽
          */
