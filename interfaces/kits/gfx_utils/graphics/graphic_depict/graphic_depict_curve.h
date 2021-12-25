@@ -231,5 +231,4 @@ namespace OHOS {
         return cmd;
     }
 } // namespace OHOS
-
 #endif

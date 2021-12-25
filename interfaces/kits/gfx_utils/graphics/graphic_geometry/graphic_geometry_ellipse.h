@@ -28,6 +28,7 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 
 namespace OHOS {
+#if GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE
     /**
      * @brief 椭圆类
      * 椭圆类，必须给定椭圆的长短半轴的半径，才能够绘制椭圆
@@ -167,7 +168,7 @@ namespace OHOS {
         circleInnerStep++;
         return ((circleInnerStep == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO);
     }
-
+#endif
 } // namespace OHOS
 
 #endif

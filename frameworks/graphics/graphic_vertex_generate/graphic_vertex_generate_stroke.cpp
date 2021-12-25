@@ -88,20 +88,24 @@ namespace OHOS {
                     outVertex_ = 0;
                     break;
                 case CAP1:
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[0],
                                      srcVertices_[1],
                                      srcVertices_[0].vertexDistance);
+#endif
                     srcVertex_ = 1;
                     prevStatus_ = OUTLINE1;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
                     break;
                 case CAP2:
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
                     stroker_.CalcCap(outVertices_,
                                      srcVertices_[srcVertices_.Size() - 1],
                                      srcVertices_[srcVertices_.Size() - verticesNum],
                                      srcVertices_[srcVertices_.Size() - verticesNum].vertexDistance);
+#endif
                     prevStatus_ = OUTLINE2;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
@@ -116,20 +120,25 @@ namespace OHOS {
                         status_ = CAP2;
                         break;
                     }
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
                     stroker_.CalcJoin(outVertices_,
                                       srcVertices_.Prev(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Next(srcVertex_),
                                       srcVertices_.Prev(srcVertex_).vertexDistance,
                                       srcVertices_.Curr(srcVertex_).vertexDistance);
+#endif
                     ++srcVertex_;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
                     break;
+
                 case CLOSE_FIRST:
                     status_ = OUTLINE2;
                     cmd = PATH_CMD_MOVE_TO;
+                    break;
+
                 case OUTLINE2:
                     if (srcVertex_ <= unsigned(closed_ == 0)) {
                         status_ = END_POLY2;
@@ -137,16 +146,19 @@ namespace OHOS {
                         break;
                     }
                     --srcVertex_;
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
                     stroker_.CalcJoin(outVertices_,
                                       srcVertices_.Next(srcVertex_),
                                       srcVertices_.Curr(srcVertex_),
                                       srcVertices_.Prev(srcVertex_),
                                       srcVertices_.Curr(srcVertex_).vertexDistance,
                                       srcVertices_.Prev(srcVertex_).vertexDistance);
+#endif
                     outVertex_ = 0;
                     prevStatus_ = status_;
                     status_ = OUT_VERTICES;
                     break;
+
                 case OUT_VERTICES:
                     if (outVertex_ >= outVertices_.Size()) {
                         status_ = prevStatus_;
@@ -160,12 +172,15 @@ namespace OHOS {
                 case END_POLY1:
                     status_ = prevStatus_;
                     return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_CLOCKWISE;
+                    break;
                 case END_POLY2:
                     status_ = prevStatus_;
                     return PATH_CMD_END_POLY | PATH_FLAGS_CLOSE | PATH_FLAGS_ANTI_CLOCKWISE;
+                    break;
                 case STOP:
                     cmd = PATH_CMD_STOP;
                     break;
+                default: break;
             }
         }
         return cmd;

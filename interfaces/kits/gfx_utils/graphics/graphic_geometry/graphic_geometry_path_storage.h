@@ -425,7 +425,6 @@ namespace OHOS {
                    bool largeArcFlag,
                    bool sweepFlag,
                    double x, double y);
-
         void EndPoly(unsigned flags = PATH_FLAGS_CLOSE);
         void ClosePolygon(unsigned flags = PATH_FLAGS_NONE);
 
@@ -571,6 +570,7 @@ namespace OHOS {
                                           bool sweepFlag,
                                           double x, double y)
     {
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         if (vertices_.TotalVertices() && IsVertex(vertices_.LastCommand())) {
             const double epsilon = 1e-30;
             double x0 = 0.0;
@@ -595,6 +595,7 @@ namespace OHOS {
         } else {
             MoveTo(x, y);
         }
+#endif
     }
 
     template <class VertexContainer>

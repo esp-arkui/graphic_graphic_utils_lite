@@ -28,6 +28,7 @@ namespace OHOS {
      * @version 1.0
      */
     class Arc : public HeapBase {
+#if GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
     public:
         Arc() :
             mInitialized(false), mExpansionRatio(1.0)
@@ -111,7 +112,9 @@ namespace OHOS {
         double mExpansionRatio; // 伸缩比
         double mDeltaAngle;     // 弧度变化率
         bool mIsClockwise;      // 方向
+#endif
     };
+
 } // namespace OHOS
 
 #endif
