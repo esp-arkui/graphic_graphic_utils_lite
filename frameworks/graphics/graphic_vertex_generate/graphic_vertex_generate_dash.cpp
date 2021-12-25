@@ -14,21 +14,23 @@
  */
 
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h"
+
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-    VertexGenerateDash::VertexGenerateDash()
-        :totalDashLen_(0.0),
-         numDashes_(0),
-         dashStart_(0.0),
-         shorten_(0.0),
-         currDashStart_(0.0),
-         currDash_(0),
-         srcVertices_(),
-         closed_(0),
-         status_(INITIAL),
-         srcVertex_(0)
-         {}
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
+    VertexGenerateDash::VertexGenerateDash() :
+        totalDashLen_(0.0),
+        numDashes_(0),
+        dashStart_(0.0),
+        shorten_(0.0),
+        currDashStart_(0.0),
+        currDash_(0),
+        srcVertices_(),
+        closed_(0),
+        status_(INITIAL),
+        srcVertex_(0)
+    {}
 
     void VertexGenerateDash::RemoveAllDashes()
     {
@@ -71,7 +73,7 @@ namespace OHOS {
             }
         }
     }
- 
+
     void VertexGenerateDash::RemoveAll()
     {
         status_ = INITIAL;
@@ -93,7 +95,6 @@ namespace OHOS {
         }
     }
 
-    
     void VertexGenerateDash::Rewind(unsigned)
     {
         if (status_ == INITIAL) {
@@ -103,7 +104,6 @@ namespace OHOS {
         status_ = READY;
         srcVertex_ = 0;
     }
-
 
     unsigned VertexGenerateDash::Vertex(double* x, double* y)
     {
@@ -129,55 +129,55 @@ namespace OHOS {
                     }
                     return PATH_CMD_MOVE_TO;
                 case POLYLINE: {
-                        double dashRest = dashes_[currDash_] - currDashStart_;
-                        unsigned cmd;
-                        if (currDash_ & 1) {
-                            cmd = PATH_CMD_MOVE_TO;
-                        } else {
-                            cmd = PATH_CMD_LINE_TO;
+                    double dashRest = dashes_[currDash_] - currDashStart_;
+                    unsigned cmd;
+                    if (currDash_ & 1) {
+                        cmd = PATH_CMD_MOVE_TO;
+                    } else {
+                        cmd = PATH_CMD_LINE_TO;
+                    }
+                    if (currRest > dashRest) {
+                        currRest -= dashRest;
+                        ++currDash_;
+                        if (currDash_ >= numDashes_) {
+                            currDash_ = 0;
                         }
-                        if (currRest > dashRest) {
-                            currRest -= dashRest;
-                            ++currDash_;
-                            if (currDash_ >= numDashes_) {
-                                currDash_ = 0;
-                            }
-                            currDashStart_ = 0.0;
-                            *x = vertexDist2_->vertexXCoord - (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
-                            *y = vertexDist2_->vertexYCoord - (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
-                        } else {
-                            currDashStart_ += currRest;
-                            *x = vertexDist2_->vertexXCoord;
-                            *y = vertexDist2_->vertexYCoord;
-                            ++srcVertex_;
-                            vertexDist1_ = vertexDist2_;
-                            currRest = vertexDist1_->vertexDistance;
-                            if (closed_) {
-                                if (srcVertex_ > srcVertices_.Size()) {
-                                    status_ = STOP;
-                                } else {
-                                    if (srcVertex_ >= srcVertices_.Size()) {
-                                        vertexDist2_ = &srcVertices_[0];
-                                    } else {
-                                        vertexDist2_ = &srcVertices_[srcVertex_];
-                                    }
-                                }
+                        currDashStart_ = 0.0;
+                        *x = vertexDist2_->vertexXCoord - (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
+                        *y = vertexDist2_->vertexYCoord - (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
+                    } else {
+                        currDashStart_ += currRest;
+                        *x = vertexDist2_->vertexXCoord;
+                        *y = vertexDist2_->vertexYCoord;
+                        ++srcVertex_;
+                        vertexDist1_ = vertexDist2_;
+                        currRest = vertexDist1_->vertexDistance;
+                        if (closed_) {
+                            if (srcVertex_ > srcVertices_.Size()) {
+                                status_ = STOP;
                             } else {
                                 if (srcVertex_ >= srcVertices_.Size()) {
-                                    status_ = STOP;
+                                    vertexDist2_ = &srcVertices_[0];
                                 } else {
                                     vertexDist2_ = &srcVertices_[srcVertex_];
                                 }
                             }
+                        } else {
+                            if (srcVertex_ >= srcVertices_.Size()) {
+                                status_ = STOP;
+                            } else {
+                                vertexDist2_ = &srcVertices_[srcVertex_];
+                            }
                         }
-                        return cmd;
                     }
-                    break;
+                    return cmd;
+                } break;
                 case STOP:
                     cmd = PATH_CMD_STOP;
                     break;
-                }
+            }
         }
         return PATH_CMD_STOP;
     }
+#endif
 } // namespace OHOS

@@ -25,9 +25,9 @@
 #ifndef GRAPHIC_GEOMETRY_DEPICT_DASH_INCLUDED
 #define GRAPHIC_GEOMETRY_DEPICT_DASH_INCLUDED
 
-#include "graphic_depict_adaptor_vertex_generate.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h"
+#include "graphic_depict_adaptor_vertex_generate.h"
 
 namespace OHOS {
     /**
@@ -39,10 +39,12 @@ namespace OHOS {
      */
     template <class VertexSource, class Markers = EmptyMarkers>
     struct DepictDash : public DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers> {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         typedef Markers marker_type;
         typedef DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers> base_type;
 
-        DepictDash(VertexSource& vs) : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers>(vs)
+        DepictDash(VertexSource& vs) :
+            DepictAdaptorVertexGenerator<VertexSource, VertexGenerateDash, Markers>(vs)
         {
         }
 
@@ -71,9 +73,10 @@ namespace OHOS {
         }
 
     private:
-        DepictDash(const DepictDash<VertexSource, Markers> &);
-        const DepictDash<VertexSource, Markers> &
-            operator=(const DepictDash<VertexSource, Markers> &);
+        DepictDash(const DepictDash<VertexSource, Markers>&);
+        const DepictDash<VertexSource, Markers>&
+            operator=(const DepictDash<VertexSource, Markers>&);
+#endif
     };
 } // namespace OHOS
 
