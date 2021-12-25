@@ -16,7 +16,7 @@
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_arc.h>
 
 namespace OHOS {
-#ifdef GRAPHIC_GEOMETYR_USE_ARC_VERTEX_SOURCE
+#if GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
     const int CURVERENUMSTEP = 4;
     Arc::Arc(double centerX, double centerY,
              double rx, double ry,
