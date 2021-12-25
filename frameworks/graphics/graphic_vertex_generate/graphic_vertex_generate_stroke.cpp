@@ -133,12 +133,10 @@ namespace OHOS {
                     status_ = OUT_VERTICES;
                     outVertex_ = 0;
                     break;
-
                 case CLOSE_FIRST:
                     status_ = OUTLINE2;
                     cmd = PATH_CMD_MOVE_TO;
                     break;
-
                 case OUTLINE2:
                     if (srcVertex_ <= unsigned(closed_ == 0)) {
                         status_ = END_POLY2;
