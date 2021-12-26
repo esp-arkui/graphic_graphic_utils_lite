@@ -19,13 +19,13 @@
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_vertex_sequence.h"
 
 namespace OHOS {
-
     /**
      * @brief dash线段生成器
      * @since 1.0
      * @version 1.0
      */
     class VertexGenerateDash {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
         enum Status {
             INITIAL,
             READY,
@@ -119,8 +119,8 @@ namespace OHOS {
         unsigned closed_;
         Status status_;
         unsigned srcVertex_;
+#endif
     };
-
 } // namespace OHOS
 
 #endif
