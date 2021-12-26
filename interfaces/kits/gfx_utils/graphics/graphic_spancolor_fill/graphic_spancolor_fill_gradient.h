@@ -38,6 +38,7 @@ namespace OHOS {
      */
     template <class ColorT, class Interpolator, class GradientF, class ColorF>
     class SpanFillColorGradient {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef Interpolator interpolator_type;
         typedef ColorT color_type;
@@ -227,7 +228,7 @@ namespace OHOS {
             }
             return index;
         }
+#endif
     };
 } // namespace OHOS
-
 #endif

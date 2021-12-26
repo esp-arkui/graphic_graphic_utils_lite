@@ -16,8 +16,9 @@
 #include <gfx_utils/graphics/graphic_geometry/graphic_geometry_rounded_rect.h>
 
 namespace OHOS {
-    RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r)
-        :arcCurveXStart(x1), arcCurveYStart(y1), arcCurveXEnd(x2), arcCurveYEnd(y2),
+#if GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE && GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
+    RoundedRect::RoundedRect(double x1, double y1, double x2, double y2, double r) :
+        arcCurveXStart(x1), arcCurveYStart(y1), arcCurveXEnd(x2), arcCurveYEnd(y2),
         radiusXStart(r), radiusYStart(r), radiusXControlOne(r), radiusYControlOne(r),
         radiusXControlTwo(r), radiusYControlTwo(r), radiusXEnd(r), radiusYEnd(r)
     {
@@ -147,7 +148,7 @@ namespace OHOS {
                 }
             case VERTEX_STATUS4:
                 arcCurveObject.Init(arcCurveXEnd - radiusXControlTwo, arcCurveYEnd - radiusYControlTwo, radiusXControlTwo, radiusYControlTwo,
-                          0.0, PI * HALFNUM);
+                                    0.0, PI * HALFNUM);
                 arcCurveObject.Rewind(0);
                 arcCurveStatus++;
             case VERTEX_STATUS5:
@@ -175,5 +176,5 @@ namespace OHOS {
         }
         return cmd;
     }
-
+#endif
 } // namespace OHOS

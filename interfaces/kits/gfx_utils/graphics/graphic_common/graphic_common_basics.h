@@ -37,7 +37,6 @@
 
 #include <cmath>
 
-#include "securec.h"
 namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
 
@@ -121,14 +120,25 @@ namespace OHOS {
         CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
     };
     template <class Type>
-    class RectBase;
+    struct RectBase;
 
     template <class Type>
-    class PointBase;
+    struct PointBase;
 
     template <class Type>
-    class VertexBase;
+    struct VertexBase;
 
+#define GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE 1
+#define GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR 1
     using int8 = signed char;
     using int8u = unsigned char;
     using int16 = short;

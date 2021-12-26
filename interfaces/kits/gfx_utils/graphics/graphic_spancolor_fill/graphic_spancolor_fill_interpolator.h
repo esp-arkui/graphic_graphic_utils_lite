@@ -23,7 +23,7 @@
 #ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 
-#include "gfx_utils/graphics/graphic_color/graphic_color_rgba.h"
+#include "gfx_utils/color.h"
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h"
 #include "gfx_utils/graphics/graphic_transform/graphic_transform_affine.h"
@@ -34,13 +34,15 @@ namespace OHOS {
      */
     template <class ColorT>
     struct ColorInterpolator {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef ColorT color_type;
 
         ColorInterpolator(const color_type& color1,
                           const color_type& color2,
-                          unsigned distance)
-            : colorStart(color1), colorEnd(color2), len(distance), place(0)
+                          unsigned distance) :
+            colorStart(color1),
+            colorEnd(color2), len(distance), place(0)
         {
         }
 
@@ -66,6 +68,7 @@ namespace OHOS {
         color_type colorEnd;
         unsigned len;
         unsigned place;
+#endif
     };
 
     /**
@@ -83,11 +86,13 @@ namespace OHOS {
         SpanInterpolatorLinear()
         {
         }
-        SpanInterpolatorLinear(trans_type& trans) : transType(&trans)
+        SpanInterpolatorLinear(trans_type& trans) :
+            transType(&trans)
         {
         }
         SpanInterpolatorLinear(trans_type& trans,
-                               double x, double y, unsigned len) : transType(&trans)
+                               double x, double y, unsigned len) :
+            transType(&trans)
         {
             Begin(x, y, len);
         }

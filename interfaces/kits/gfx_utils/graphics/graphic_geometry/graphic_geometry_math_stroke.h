@@ -31,6 +31,7 @@ namespace OHOS {
      * @brief 线条末端线帽的样式。
      */
     enum LineCapEnum {
+        NONE_CAP = -1,
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
         /** 向线条的每个末端添加正方形线帽 */
@@ -43,6 +44,7 @@ namespace OHOS {
      * @brief 两条线相交时，所创建的拐角类型
      */
     enum LineJoinEnum {
+        MITER_NONE = -1,
         /** 创建尖角 */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
@@ -52,7 +54,6 @@ namespace OHOS {
         BEVEL_JOIN = 3,
         MITER_JOIN_ROUND = 4
     };
-
     template <class VertexConsumer>
     class MathStroke {
     public:
@@ -63,91 +64,25 @@ namespace OHOS {
             strokeWidthPercentDivision(OHOS::ALPHAHALF / BUF_SIZE),
             strokeWidthSignal(1),
             miterLimitMeasure(OHOS::DEFAULTMITERLIMIT),
-            approxScaleRadio(1.0),
-            lineCapEnum(BUTT_CAP),
+            approxScaleRadio(1.0)
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+            ,
+            lineCapEnum(BUTT_CAP)
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+            ,
             lineJoinEnum(MITER_JOIN)
+#endif
+
         {
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
          * @brief SetLineCap 定义线条的结束端点样式
          */
         void SetLineCap(LineCapEnum lineCapE)
         {
             lineCapEnum = lineCapE;
-        }
-        /**
-         * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
-         */
-        void SetLineJoin(LineJoinEnum lineJoinE)
-        {
-            lineJoinEnum = lineJoinE;
-        }
-
-        LineCapEnum GetLineCap() const
-        {
-            return lineCapEnum;
-        }
-
-        LineJoinEnum GetLineJoin() const
-        {
-            return lineJoinEnum;
-        }
-
-        /**
-         * @brief width 设置区域宽
-         */
-        void width(double width)
-        {
-            strokeWidth = width * OHOS::ALPHAHALF;
-            if (strokeWidth < 0) {
-                strokeWidthUsingAbs = -strokeWidth;
-                strokeWidthSignal = -1;
-            } else {
-                strokeWidthUsingAbs = strokeWidth;
-                strokeWidthSignal = 1;
-            }
-            strokeWidthPercentDivision = strokeWidth / BUF_SIZE;
-        }
-
-        /**
-         * @brief SetMiterLimit 设置最大斜接长度
-         */
-        void SetMiterLimit(double miterLimit)
-        {
-            miterLimitMeasure = miterLimit;
-        }
-
-        /**
-         * @brief 添加近似值
-         */
-        void SetApproximationScale(double approximationScale)
-        {
-            approxScaleRadio = approximationScale;
-        }
-
-        /**
-         * @brief width 返回宽度
-         */
-        double width() const
-        {
-            return strokeWidth * TWO_TIMES;
-        }
-
-        /**
-         * @brief GetMiterLimit 返回最大斜接长度
-         */
-        double GetMiterLimit() const
-        {
-            return miterLimitMeasure;
-        }
-
-        /**
-         * @brief 返回设定的近似值
-         */
-        double GetApproximationScale() const
-        {
-            return approxScaleRadio;
         }
 
         /**
@@ -200,6 +135,24 @@ namespace OHOS {
                 AddVertex(vertexConsumer, vd0.vertexXCoord + dx1, vd0.vertexYCoord - dy1);
             }
         }
+#endif
+
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+        /**
+         * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
+         */
+        void SetLineJoin(LineJoinEnum lineJoinE)
+        {
+            lineJoinEnum = lineJoinE;
+        }
+
+        /**
+         * @brief SetMiterLimit 设置最大斜接长度
+         */
+        void SetMiterLimit(double miterLimit)
+        {
+            miterLimitMeasure = miterLimit;
+        }
 
         /**
          * @brief 计算相交和拐角
@@ -222,14 +175,21 @@ namespace OHOS {
                 double dx = (dx1 + dx2) * HALFNUM;
                 double dy = (dy1 + dy2) * HALFNUM;
                 double dbevel = std::sqrt(dx * dx + dy * dy);
-
-                if (lineJoinEnum == ROUND_JOIN || lineJoinEnum == BEVEL_JOIN) {
+                double lim = strokeWidthUsingAbs * miterLimitMeasure;
+                bool isIntersection = CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
+                                                       vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
+                                                       vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
+                                                       vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
+                                                       &dx, &dy);
+                LineJoinEnum _lineJoinEnum = lineJoinEnum;
+                if (_lineJoinEnum == MITER_JOIN) {
+                    if (CalcDistance(vertexDistMiddle.vertexXCoord, vertexDistMiddle.vertexYCoord, dx, dy) > lim) {
+                        _lineJoinEnum = BEVEL_JOIN;
+                    }
+                }
+                if (_lineJoinEnum == ROUND_JOIN || _lineJoinEnum == BEVEL_JOIN) {
                     if (approxScaleRadio * (strokeWidthUsingAbs - dbevel) < strokeWidthPercentDivision) {
-                        if (CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
-                                             vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
-                                             vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2,
-                                             vertexDistLast.vertexXCoord + dx2, vertexDistLast.vertexYCoord - dy2,
-                                             &dx, &dy)) {
+                        if (isIntersection) {
                             AddVertex(vertexConsumer, dx, dy);
                         } else {
                             AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
@@ -238,7 +198,7 @@ namespace OHOS {
                     }
                 }
 
-                switch (lineJoinEnum) {
+                switch (_lineJoinEnum) {
                     case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
@@ -256,54 +216,10 @@ namespace OHOS {
             }
         }
 
-    private:
-        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, double x, double y)
-        {
-            vertexConsumer.Add(coord_type(x, y));
-        }
-
-        void CalcArc(VertexConsumer& vertexConsumer,
-                     double x, double y,
-                     double dx1, double dy1,
-                     double dx2, double dy2)
-        {
-            const float limitScale = 0.125;
-            double angleStart = std::atan2(dy1 * strokeWidthSignal, dx1 * strokeWidthSignal);
-            double angleEnd = std::atan2(dy2 * strokeWidthSignal, dx2 * strokeWidthSignal);
-            double deltaAngle = angleStart - angleEnd;
-            int nIndex, divNumber;
-
-            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio)) * TWO_TIMES;
-
-            AddVertex(vertexConsumer, x + dx1, y + dy1);
-            if (strokeWidthSignal > 0) {
-                if (angleStart > angleEnd)
-                    angleEnd += TWO_TIMES * PI;
-                divNumber = int((angleEnd - angleStart) / deltaAngle);
-                deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
-                angleStart += deltaAngle;
-                for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                    AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth, y + std::sin(angleStart) * strokeWidth);
-                    angleStart += deltaAngle;
-                }
-            } else {
-                if (angleStart < angleEnd)
-                    angleEnd -= TWO_TIMES * PI;
-                divNumber = int((angleStart - angleEnd) / deltaAngle);
-                deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
-                angleStart -= deltaAngle;
-                for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                    AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth, y + std::sin(angleStart) * strokeWidth);
-                    angleStart -= deltaAngle;
-                }
-            }
-            AddVertex(vertexConsumer, x + dx2, y + dy2);
-        }
-
         /**
          * @brief 计算斜接长度
          */
-        void CalcMiter(VertexConsumer& vc,
+        void CalcMiter(VertexConsumer& vertexConsumer,
                        const VertexDist& vd0,
                        const VertexDist& vd1,
                        const VertexDist& vd2,
@@ -326,7 +242,7 @@ namespace OHOS {
                                  &xi, &yi)) {
                 di = CalcDistance(vd1.vertexXCoord, vd1.vertexYCoord, xi, yi);
                 if (di <= lim) {
-                    AddVertex(vc, xi, yi);
+                    AddVertex(vertexConsumer, xi, yi);
                     miterLimitExceeded = false;
                 }
                 intersectionFailed = false;
@@ -335,7 +251,7 @@ namespace OHOS {
                 double y2 = vd1.vertexYCoord - dy1;
                 if ((CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord, vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0) ==
                     (CrossProduct(vd1.vertexXCoord, vd1.vertexYCoord, vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0)) {
-                    AddVertex(vc, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
+                    AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                     miterLimitExceeded = false;
                 }
             }
@@ -343,31 +259,135 @@ namespace OHOS {
             if (miterLimitExceeded) {
                 switch (linejoin) {
                     case MITER_JOIN_REVERT:
-                        AddVertex(vc, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
-                        AddVertex(vc, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
+                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
+                        AddVertex(vertexConsumer, vd1.vertexXCoord + dx2, vd1.vertexYCoord - dy2);
                         break;
-
                     case MITER_JOIN_ROUND:
-                        CalcArc(vc, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
+                        CalcArc(vertexConsumer, vd1.vertexXCoord, vd1.vertexYCoord, dx1, -dy1, dx2, -dy2);
                         break;
-
                     default:
                         if (intersectionFailed) {
                             mlimit *= strokeWidthSignal;
-                            AddVertex(vc, vd1.vertexXCoord + dx1 + dy1 * mlimit, vd1.vertexYCoord - dy1 + dx1 * mlimit);
-                            AddVertex(vc, vd1.vertexXCoord + dx2 - dy2 * mlimit, vd1.vertexYCoord - dy2 - dx2 * mlimit);
+                            AddVertex(vertexConsumer, vd1.vertexXCoord + dx1 + dy1 * mlimit, vd1.vertexYCoord - dy1 + dx1 * mlimit);
+                            AddVertex(vertexConsumer, vd1.vertexXCoord + dx2 - dy2 * mlimit, vd1.vertexYCoord - dy2 - dx2 * mlimit);
                         } else {
                             double x1 = vd1.vertexXCoord + dx1;
                             double y1 = vd1.vertexYCoord - dy1;
                             double x2 = vd1.vertexXCoord + dx2;
                             double y2 = vd1.vertexYCoord - dy2;
                             di = (lim - dbevel) / (di - dbevel);
-                            AddVertex(vc, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
-                            AddVertex(vc, x2 + (xi - x2) * di, y2 + (yi - y2) * di);
+                            AddVertex(vertexConsumer, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
+                            AddVertex(vertexConsumer, x2 + (xi - x2) * di, y2 + (yi - y2) * di);
                         }
                         break;
                 }
             }
+        }
+        void CalcArc(VertexConsumer& vertexConsumer,
+                     double x, double y,
+                     double dx1, double dy1,
+                     double dx2, double dy2)
+        {
+            const float limitScale = 0.125;
+            double angleStart = std::atan2(dy1 * strokeWidthSignal, dx1 * strokeWidthSignal);
+            double angleEnd = std::atan2(dy2 * strokeWidthSignal, dx2 * strokeWidthSignal);
+            double deltaAngle = angleStart - angleEnd;
+            int nIndex, divNumber;
+
+            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio)) * TWO_TIMES;
+
+            AddVertex(vertexConsumer, x + dx1, y + dy1);
+            if (strokeWidthSignal > 0) {
+                if (angleStart > angleEnd) {
+                    angleEnd += TWO_TIMES * PI;
+                }
+                divNumber = int((angleEnd - angleStart) / deltaAngle);
+                deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
+                angleStart += deltaAngle;
+                for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                    AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth, y + std::sin(angleStart) * strokeWidth);
+                    angleStart += deltaAngle;
+                }
+            } else {
+                if (angleStart < angleEnd) {
+                    angleEnd -= TWO_TIMES * PI;
+                }
+                divNumber = int((angleStart - angleEnd) / deltaAngle);
+                deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
+                angleStart -= deltaAngle;
+                for (nIndex = 0; nIndex < divNumber; nIndex++) {
+                    AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth, y + std::sin(angleStart) * strokeWidth);
+                    angleStart -= deltaAngle;
+                }
+            }
+            AddVertex(vertexConsumer, x + dx2, y + dy2);
+        }
+#endif
+        LineCapEnum GetLineCap() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
+            return lineCapEnum;
+#endif
+            return NONE_CAP;
+        }
+        LineJoinEnum GetLineJoin() const
+        {
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+            return lineJoinEnum;
+#endif
+            return MITER_NONE;
+        }
+        /**
+         * @brief GetMiterLimit 返回最大斜接长度
+         */
+        double GetMiterLimit() const
+        {
+            return miterLimitMeasure;
+        }
+        /**
+         * @brief width 设置区域宽
+         */
+        void width(double width)
+        {
+            strokeWidth = width * OHOS::ALPHAHALF;
+            if (strokeWidth < 0) {
+                strokeWidthUsingAbs = -strokeWidth;
+                strokeWidthSignal = -1;
+            } else {
+                strokeWidthUsingAbs = strokeWidth;
+                strokeWidthSignal = 1;
+            }
+            strokeWidthPercentDivision = strokeWidth / BUF_SIZE;
+        }
+
+        /**
+         * @brief 添加近似值
+         */
+        void SetApproximationScale(double approximationScale)
+        {
+            approxScaleRadio = approximationScale;
+        }
+
+        /**
+         * @brief width 返回宽度
+         */
+        double width() const
+        {
+            return strokeWidth * TWO_TIMES;
+        }
+
+        /**
+         * @brief 返回设定的近似值
+         */
+        double GetApproximationScale() const
+        {
+            return approxScaleRadio;
+        }
+
+    private:
+        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, double x, double y)
+        {
+            vertexConsumer.Add(coord_type(x, y));
         }
 
         double strokeWidth;
@@ -376,8 +396,12 @@ namespace OHOS {
         int strokeWidthSignal;
         double miterLimitMeasure;
         double approxScaleRadio;
+#if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCapEnum lineCapEnum;
+#endif
+#if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoinEnum lineJoinEnum;
+#endif
     };
 } // namespace OHOS
 

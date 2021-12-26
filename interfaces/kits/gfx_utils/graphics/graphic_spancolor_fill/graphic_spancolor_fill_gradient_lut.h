@@ -23,8 +23,9 @@
 #ifndef GRAPHIC_GRADIENT_LUT_INCLUDED
 #define GRAPHIC_GRADIENT_LUT_INCLUDED
 
-#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_dda_line.h"
+#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_array.h"
+#include "gfx_utils/graphics/graphic_geometry/graphic_geometry_plaindata_blockvector.h"
 
 namespace OHOS {
     const unsigned COLOR_PROFILE_SIZE = 4;
@@ -36,6 +37,7 @@ namespace OHOS {
     */
     template <class ColorInterpolator, unsigned ColorLutSize = MAX_COLOR_SIZE>
     class GradientColorCalibration {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
@@ -185,6 +187,7 @@ namespace OHOS {
 
         using colorLutType = OHOS::GeometryPlainDataArray<color_type>;
         colorLutType colorType;
+#endif
     };
 } // namespace OHOS
 

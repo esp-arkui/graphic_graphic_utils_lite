@@ -119,8 +119,8 @@ namespace OHOS {
     }
 
     void QuadraticBezierCurveDividOperate::Init(double x1, double y1,
-                         double x2, double y2,
-                         double x3, double y3)
+                                                double x2, double y2,
+                                                double x3, double y3)
     {
         points_.RemoveAll();
         distanceToleranceSquare_ = HALFNUM / approximationScale_;
@@ -130,9 +130,9 @@ namespace OHOS {
     }
 
     void QuadraticBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
-                                    double x2, double y2,
-                                    double x3, double y3,
-                                    unsigned level)
+                                                           double x2, double y2,
+                                                           double x3, double y3,
+                                                           unsigned level)
     {
         if (level > CURVERECURSIONLIMIT) {
             return;
@@ -200,8 +200,8 @@ namespace OHOS {
     }
 
     void QuadraticBezierCurveDividOperate::Bezier(double x1, double y1,
-                           double x2, double y2,
-                           double x3, double y3)
+                                                  double x2, double y2,
+                                                  double x3, double y3)
     {
         points_.Add(PointD(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, 0);
@@ -219,9 +219,9 @@ namespace OHOS {
     }
 
     void CubicBezierCurveIncrement::Init(double x1, double y1,
-                         double x2, double y2,
-                         double x3, double y3,
-                         double x4, double y4)
+                                         double x2, double y2,
+                                         double x3, double y3,
+                                         double x4, double y4)
     {
         startXCoordinate = x1;
         startYCoordinate = y1;
@@ -333,9 +333,9 @@ namespace OHOS {
     }
 
     void CubicBezierCurveDividOperate::Init(double x1, double y1,
-                         double x2, double y2,
-                         double x3, double y3,
-                         double x4, double y4)
+                                            double x2, double y2,
+                                            double x3, double y3,
+                                            double x4, double y4)
     {
         points_.RemoveAll();
         distanceToleranceSquare_ = HALFNUM / approximationScale_;
@@ -345,10 +345,10 @@ namespace OHOS {
     }
 
     void CubicBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
-                                    double x2, double y2,
-                                    double x3, double y3,
-                                    double x4, double y4,
-                                    unsigned level)
+                                                       double x2, double y2,
+                                                       double x3, double y3,
+                                                       double x4, double y4,
+                                                       unsigned level)
     {
         if (level > CURVERECURSIONLIMIT) {
             return;
@@ -523,9 +523,9 @@ namespace OHOS {
     }
 
     void CubicBezierCurveDividOperate::Bezier(double x1, double y1,
-                           double x2, double y2,
-                           double x3, double y3,
-                           double x4, double y4)
+                                              double x2, double y2,
+                                              double x3, double y3,
+                                              double x4, double y4)
     {
         points_.Add(PointD(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, x4, y4, 0);
