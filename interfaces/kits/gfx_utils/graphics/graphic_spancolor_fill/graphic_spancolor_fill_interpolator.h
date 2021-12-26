@@ -34,13 +34,15 @@ namespace OHOS {
      */
     template <class ColorT>
     struct ColorInterpolator {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef ColorT color_type;
 
         ColorInterpolator(const color_type& color1,
                           const color_type& color2,
-                          unsigned distance)
-            : colorStart(color1), colorEnd(color2), len(distance), place(0)
+                          unsigned distance) :
+            colorStart(color1),
+            colorEnd(color2), len(distance), place(0)
         {
         }
 
@@ -66,6 +68,7 @@ namespace OHOS {
         color_type colorEnd;
         unsigned len;
         unsigned place;
+#endif
     };
 
     /**
@@ -83,11 +86,13 @@ namespace OHOS {
         SpanInterpolatorLinear()
         {
         }
-        SpanInterpolatorLinear(trans_type& trans) : transType(&trans)
+        SpanInterpolatorLinear(trans_type& trans) :
+            transType(&trans)
         {
         }
         SpanInterpolatorLinear(trans_type& trans,
-                               double x, double y, unsigned len) : transType(&trans)
+                               double x, double y, unsigned len) :
+            transType(&trans)
         {
             Begin(x, y, len);
         }

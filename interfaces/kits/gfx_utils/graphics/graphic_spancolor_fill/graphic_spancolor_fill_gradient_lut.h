@@ -37,6 +37,7 @@ namespace OHOS {
     */
     template <class ColorInterpolator, unsigned ColorLutSize = MAX_COLOR_SIZE>
     class GradientColorCalibration {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
@@ -186,6 +187,7 @@ namespace OHOS {
 
         using colorLutType = OHOS::GeometryPlainDataArray<color_type>;
         colorLutType colorType;
+#endif
     };
 } // namespace OHOS
 

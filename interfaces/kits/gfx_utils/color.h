@@ -240,7 +240,7 @@ namespace OHOS {
             }
             return *this;
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * @brief 渐变
          *
@@ -258,7 +258,7 @@ namespace OHOS {
             ret.alphaValue = alphaValue + (rgba.alphaValue - alphaValue) * k;
             return ret;
         }
-
+#endif
         /**
          * @brief 重载操作符+=函数
          *
@@ -995,7 +995,7 @@ namespace OHOS {
         {
             return float(alphaValue) / float(BASEMASK);
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
          * @brief 渐变，根据变化系数计算出新的Rgba8T对象
          *
@@ -1014,7 +1014,7 @@ namespace OHOS {
             ret.alphaValue = Lerp(alphaValue, color.alphaValue, increaseK);
             return ret;
         }
-
+#endif
         static SelfType NoColor()
         {
             return SelfType(0, 0, 0, 0);
