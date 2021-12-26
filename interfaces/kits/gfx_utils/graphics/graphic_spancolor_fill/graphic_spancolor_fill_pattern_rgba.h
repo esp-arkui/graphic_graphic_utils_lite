@@ -26,6 +26,7 @@
 namespace OHOS {
     template <class Source>
     class SpanPatternFillRgba {
+#if GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR
     public:
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
@@ -81,6 +82,7 @@ namespace OHOS {
         PatternSource* patternSource;
         unsigned offsetX;
         unsigned offsetY;
+#endif
     };
 } // namespace OHOS
 
