@@ -24,6 +24,7 @@
 #include "render/graphic_render_pixfmt_transposer.h"
 
 namespace OHOS {
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     template <class T>
     struct StackBlurTables {
         static int16u const stackBlur8Multiplication[OHOS::MAX_COLOR_NUM];
@@ -67,9 +68,10 @@ namespace OHOS {
         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
         24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24};
-
+#endif
     template <class ColorType, class CalculatorType>
     class StackBlur {
+#if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     public:
         /**
          * @brief x轴方向进行模糊
@@ -268,6 +270,7 @@ namespace OHOS {
             vColor.blueValue = ValueType((blueValue * mul) >> shr);
             vColor.alphaValue = ValueType((alphaValue * mul) >> shr);
         }
+#endif
     };
 } // namespace OHOS
 
