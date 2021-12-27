@@ -62,8 +62,8 @@ namespace OHOS {
         {
             xPixel_ = xSpanPixel_ = x;
             yPixel_ = y;
-            if (x >= 0 && x+len <= (int)pixFormat_->Width() &&
-                    y >= 0 && y < (int)pixFormat_->Height()) {
+            if (x >= 0 && x+len <= (int)pixFormat_->GetWidth() &&
+                    y >= 0 && y < (int)pixFormat_->GetHeight()) {
                 return pixPtr_ = pixFormat_->PixPtr(x, y);
             }
             pixPtr_ = 0;
@@ -94,7 +94,7 @@ namespace OHOS {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
             if ( pixPtr_ != 0 &&
-                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->GetHeight()) {
                 return pixPtr_ = pixFormat_->PixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
@@ -116,14 +116,14 @@ namespace OHOS {
             if (x < 0) {
                 x = 0;
             }
-            if (x >= (int)pixFormat_->Width()) {
-                x = pixFormat_->Width() - 1;
+            if (x >= (int)pixFormat_->GetWidth()) {
+                x = pixFormat_->GetWidth() - 1;
             }
             if (y < 0) {
                 y = 0;
             }
-            if (y >= (int)pixFormat_->Height()) {
-                y = pixFormat_->Height() - 1;
+            if (y >= (int)pixFormat_->GetHeight()) {
+                y = pixFormat_->GetHeight() - 1;
             }
             return pixFormat_->PixPtr(x, y);
         }
@@ -173,8 +173,8 @@ namespace OHOS {
         {
             xPixel_ = xSpanPixel_ = x;
             yPixel_ = y;
-            if (x >= 0 && x+len <= (int)pixFormat_->Width() &&
-            y >= 0 && y < (int)pixFormat_->Height()) {
+            if (x >= 0 && x+len <= (int)pixFormat_->GetWidth() &&
+            y >= 0 && y < (int)pixFormat_->GetHeight()) {
                 return pixPtr_ = pixFormat_->PixPtr(x, y);
             }
             pixPtr_ = 0;
@@ -205,7 +205,7 @@ namespace OHOS {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
             if ( pixPtr_ != 0 &&
-                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->GetHeight()) {
                 return pixPtr_ = pixFormat_->pixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
@@ -226,8 +226,8 @@ namespace OHOS {
             if (x < 0) {
                 x = 0;
             }
-            if (x >= (int)pixFormat_->Width()) {
-                x = pixFormat_->Width() - 1;
+            if (x >= (int)pixFormat_->GetWidth()) {
+                x = pixFormat_->GetWidth() - 1;
                 return NULL;
             }
             if (y < 0) {
@@ -264,8 +264,8 @@ namespace OHOS {
         ImageAccessorWrap()
         {}
         explicit ImageAccessorWrap(PixelFormatType& pixFormat) : pixFormat_(&pixFormat),
-            wrapX_(pixFormat.Width()),
-            wrapY_(pixFormat.Height())
+            wrapX_(pixFormat.GetWidth()),
+            wrapY_(pixFormat.GetHeight())
         {}
 
         /**
@@ -427,7 +427,7 @@ namespace OHOS {
         ImageAccessorRepeatY()
         {}
         explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) : pixFormat_(&pixFormat),
-            wrapY_(pixFormat.Height())
+            wrapY_(pixFormat.GetHeight())
         {}
         /**
          * @brief 关联像素集
