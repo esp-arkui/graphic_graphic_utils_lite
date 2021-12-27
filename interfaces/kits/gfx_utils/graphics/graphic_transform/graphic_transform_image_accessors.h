@@ -205,7 +205,7 @@ namespace OHOS {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
             if ( pixPtr_ != 0 &&
-                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->Height()) {
+                 yPixel_ >= 0 && yPixel_ < (int)pixFormat_->GetHeight()) {
                 return pixPtr_ = pixFormat_->pixPtr(xPixel_, yPixel_);
             }
             pixPtr_ = 0;
