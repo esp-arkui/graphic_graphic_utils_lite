@@ -41,6 +41,10 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
+
+#if ENABLE_ARM_MATH
+#    include "arm_math.h"
+#endif
 namespace OHOS {
     const float PURPLE_MIN = 380.0f;
     const float PURPLE_MIDDLE = 420.0f;
@@ -684,7 +688,11 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
         {
+#if ENABLE_ARM_MATH
+            CalcType calcType = __SMUAD(valueA, valueB) + BASEMSB;
+#else
             CalcType calcType = valueA * valueB + BASEMSB;
+#endif
             return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
         }
 
@@ -695,7 +703,11 @@ namespace OHOS {
             } else if (valueA >= valueB) {
                 return BASEMASK;
             } else {
+#if ENABLE_ARM_MATH
+                return ValueType(__UDIV(__SMUAD(valueA, BASEMASK) + (valueB >> 1), valueB));
+#else
                 return ValueType((valueA * BASEMASK + (valueB >> 1)) / valueB);
+#endif
             }
         }
 
@@ -728,7 +740,12 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType valueA)
         {
+#if ENABLE_ARM_MATH
+            int t = __SMUAD((valueQ - valueP), valueA) + BASEMSB - (valueP > valueQ);
+#else
             int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
+
+#endif
             return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
         }
 
