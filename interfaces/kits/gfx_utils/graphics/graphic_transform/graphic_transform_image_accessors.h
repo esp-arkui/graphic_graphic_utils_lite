@@ -132,6 +132,88 @@ namespace OHOS {
         const int8u* pixPtr_;
     };
 
+
+    //-----------------------------------------------------ImageAccessorClip
+    template<class PixFmt> class ImageAccessorClip
+    {
+    public:
+        typedef PixFmt   PixelFormatType;
+        typedef typename PixelFormatType::ColorType color_type;
+        typedef typename PixelFormatType::OrderType order_type;
+        typedef typename PixelFormatType::ValueType value_type;
+        enum pix_width_e { pix_width = PixelFormatType::PIX_WIDTH };
+
+        ImageAccessorClip() {}
+        explicit ImageAccessorClip(PixelFormatType& pixf,const color_type& bk) :
+            pixFormat_(&pixf)
+        {
+            PixelFormatType::MakePix(m_bk_buf, bk);
+        }
+
+        void attach(PixelFormatType& pixf)
+        {
+            pixFormat_ = &pixf;
+        }
+
+        void background_color(const color_type& bk)
+        {
+            PixelFormatType::MakePix(m_bk_buf, bk);
+        }
+
+    private:
+        GRAPHIC_GEOMETRY_INLINE const int8u* pixel() const
+        {
+            if (m_y >= 0 && m_y < (int)pixFormat_->Height() &&
+                m_x >= 0 && m_x < (int)pixFormat_->Width())
+            {
+                return pixFormat_->PixPtr(m_x, m_y);
+            }
+            return m_bk_buf;
+        }
+
+    public:
+        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        {
+            m_x = m_x0 = x;
+            m_y = y;
+            if (y >= 0 && y < (int)pixFormat_->Height() &&
+                x >= 0 && x + (int)len <= (int)pixFormat_->Width())
+            {
+                return pixPtr_ = pixFormat_->PixPtr(x, y);
+            }
+            pixPtr_ = 0;
+            return pixel();
+        }
+
+        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        {
+            if (pixPtr_) return pixPtr_ += pix_width;
+            ++m_x;
+            return pixel();
+        }
+
+        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+        {
+            ++m_y;
+            m_x = m_x0;
+            if (pixPtr_ &&
+                m_y >= 0 && m_y < (int)pixFormat_->Height())
+            {
+                return pixPtr_ = pixFormat_->PixPtr(m_x, m_y);
+            }
+            pixPtr_ = 0;
+            return pixel();
+        }
+
+    private:
+        const PixelFormatType* pixFormat_;
+        int8u              m_bk_buf[pix_width];
+        int                m_x, m_x0, m_y;
+        const int8u* pixPtr_;
+    };
+
+
+
     /**
      * @brief 图像存取器
      * @since 1.0
