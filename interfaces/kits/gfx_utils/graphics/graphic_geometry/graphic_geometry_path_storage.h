@@ -163,13 +163,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(unsigned index, double* x, double* y) const
+        unsigned Vertex(unsigned idx, double* x, double* y) const
         {
-            unsigned nb = index >> BLOCK_SHIFT;
-            const double* pv = croodBlocks_[nb] + ((index & BLOCK_MASK) << 1);
+            unsigned nb = idx >> BLOCK_SHIFT;
+            const double* pv = croodBlocks_[nb] + ((idx & BLOCK_MASK) << 1);
             *x = pv[0];
             *y = pv[1];
-            return cmdBlocks_[nb][index & BLOCK_MASK];
+            return cmdBlocks_[nb][idx & BLOCK_MASK];
         }
         /**
          * @brief 获取特定的顶点对应的指令类型

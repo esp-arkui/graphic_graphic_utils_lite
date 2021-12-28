@@ -836,10 +836,10 @@ namespace OHOS {
         }
 
         // Allocate the array of cell pointers
-        m_sorted_cells.Allocate(m_num_cells, ARRAY_SIZE);
+        m_sorted_cells.Allocate(m_num_cells, CELLS_SIZE);
 
         // Allocate and zero the Y array
-        m_sorted_y.Allocate(m_max_y - m_min_y + 1, ARRAY_SIZE);
+        m_sorted_y.Allocate(m_max_y - m_min_y + 1, CELLS_SIZE);
         m_sorted_y.CleanData();
 
         // Create the Y-histogram (count the numbers of cells for each Y)
