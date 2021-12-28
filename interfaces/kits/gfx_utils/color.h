@@ -101,6 +101,10 @@ namespace OHOS {
             GREEN = 1,
             RED = 2,
             ALPHA = 3
+            //#define NEON_A            3
+            //#define NEON_R            2
+            //#define NEON_G            1
+            //#define NEON_B            0
         };
     };
 
