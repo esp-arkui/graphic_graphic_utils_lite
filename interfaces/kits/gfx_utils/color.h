@@ -41,6 +41,10 @@
 #include "gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
+
+#if ENABLE_ARM_MATH
+#    include "arm_math.h"
+#endif
 namespace OHOS {
     const float PURPLE_MIN = 380.0f;
     const float PURPLE_MIDDLE = 420.0f;
@@ -53,6 +57,79 @@ namespace OHOS {
     const float RED_MAX = 780.0f;
     const float FIXED_VALUE = 0.3f;
     const float COLOR_CONVERT = 255.0f;
+    template <class Colorspace>
+    struct Rgba8T;
+    struct Linear {
+    };
+
+    struct StandardRgb {
+    };
+    using OpacityType = uint8_t;
+    using Rgba8 = Rgba8T<Linear>;
+    using Srgba8 = Rgba8T<StandardRgb>;
+    /**
+     * @brief Enumerates opacity values.
+     */
+    enum {
+        /** The opacity is 0. */
+        OPA_TRANSPARENT = 0,
+        /** The opacity is 100%. */
+        OPA_OPAQUE = 255,
+    };
+
+    /**
+     * @brief Defines the color attribute when the color depth is <b>16</b>.
+     */
+    typedef union {
+        struct {
+            /** Blue */
+            uint16_t blue : 5;
+            /** Green */
+            uint16_t green : 6;
+            /** Red */
+            uint16_t red : 5;
+        };
+        /** Full RGB data */
+        uint16_t full;
+    } Color16;
+
+    /**
+     * @brief Defines the color attribute when the color depth is <b>24</b>.
+     */
+    struct Color24 {
+        /** Blue */
+        uint8_t blue;
+        /** Green */
+        uint8_t green;
+        /** Red */
+        uint8_t red;
+    };
+
+    /**
+     * @brief Defines the color attribute when the color depth is <b>32</b>.
+     */
+    typedef union {
+        struct {
+            /** Blue */
+            uint8_t blue;
+            /** Green */
+            uint8_t green;
+            /** Red */
+            uint8_t red;
+            /** Alpha (how opaque each pixel is) */
+            uint8_t alpha;
+        };
+        /** Full RGB data */
+        uint32_t full;
+    } Color32;
+
+#if COLOR_DEPTH == 16
+    typedef Color16 ColorType;
+#elif COLOR_DEPTH == 32
+    typedef Color32 ColorType;
+#else
+#    error "Invalid COLOR_DEPTH, Set it to 16 or 32!"
+#endif
 
     struct OrderRgb {
         enum RgbEnum {
@@ -101,20 +178,18 @@ namespace OHOS {
             GREEN = 1,
             RED = 2,
             ALPHA = 3
+            //#define NEON_A            3
+            //#define NEON_R            2
+            //#define NEON_G            1
+            //#define NEON_B            0
         };
-    };
-
-    struct Linear {
-    };
-
-    struct StandardRgb {
     };
 
     /**
      * @brief Rgba
      *
      * 颜色排列顺序：红、绿、蓝、透明度
-     *
+     * 注意这个里面的颜色支持浮点处理的
      * @see Rgba
      * @since 1.0
      * @version 1.0
@@ -419,70 +494,309 @@ namespace OHOS {
         }
     };
 
+    inline Rgba Rgba::InitColorByWaveLength(float waveLength)
+    {
+        Rgba rgba(0.0, 0.0, 0.0);
+        rgba += IsPurpleWave(waveLength);
+        rgba += IsBlueWave(waveLength);
+        rgba += IsCyanWave(waveLength);
+        rgba += IsGreenWave(waveLength);
+        rgba += IsOrangeWave(waveLength);
+        rgba += IsRedWave(waveLength);
+        return rgba;
+    }
+    inline Rgba Rgba::FromWavelength(float waveLength, float gamma)
+    {
+        Rgba rgba(0.0, 0.0, 0.0);
+        rgba += rgba.InitColorByWaveLength(waveLength);
+        // 计算比系数
+        float ratio = 1.0;
+        if (waveLength > RED_MIN) {
+            ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
+        } else if (waveLength < PURPLE_MIDDLE) {
+            ratio = FIXED_VALUE + COEFFICIENT * (waveLength - PURPLE_MIN) / (PURPLE_MIDDLE - PURPLE_MIN);
+        }
+        return Rgba(std::pow(rgba.redValue * ratio, gamma),
+                    std::pow(rgba.greenValue * ratio, gamma),
+                    std::pow(rgba.blueValue * ratio, gamma));
+    }
+
     /**
-     * @brief Defines the color attribute when the color depth is <b>16</b>.
+     * @brief Rgba8T颜色序列转化
+     *
+     * 颜色排列顺序：红、绿、蓝、透明度
+     *
+     * @see Rgba8T
+     * @since 1.0
+     * @version 1.0
      */
-    typedef union {
-        struct {
-            /** Blue */
-            uint16_t blue : 5;
-            /** Green */
-            uint16_t green : 6;
-            /** Red */
-            uint16_t red : 5;
+    template <class Colorspace>
+    struct Rgba8T {
+        using ValueType = int8u;
+        using CalcType = int32u;
+        using LongType = int32;
+        using SelfType = Rgba8T;
+
+        ValueType redValue;
+        ValueType greenValue;
+        ValueType blueValue;
+        ValueType alphaValue;
+
+        enum BaseScaleEnum {
+            BASESHIFT = 8,
+            BASESCALE = 1 << BASESHIFT,
+            BASEMASK = BASESCALE - 1,
+            BASEMSB = 1 << (BASESHIFT - 1)
         };
-        /** Full RGB data */
-        uint16_t full;
-    } Color16;
 
-    /**
-     * @brief Defines the color attribute when the color depth is <b>24</b>.
-     */
-    struct Color24 {
-        /** Blue */
-        uint8_t blue;
-        /** Green */
-        uint8_t green;
-        /** Red */
-        uint8_t red;
-    };
+        Rgba8T()
+        {}
 
-    /**
-     * @brief Defines the color attribute when the color depth is <b>32</b>.
-     */
-    typedef union {
-        struct {
-            /** Blue */
-            uint8_t blue;
-            /** Green */
-            uint8_t green;
-            /** Red */
-            uint8_t red;
-            /** Alpha (how opaque each pixel is) */
-            uint8_t alpha;
-        };
-        /** Full RGB data */
-        uint32_t full;
-    } Color32;
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
+            redValue(ValueType(red)),
+            greenValue(ValueType(green)),
+            blueValue(ValueType(blue)),
+            alphaValue(ValueType(alpha))
+        {}
 
-#if COLOR_DEPTH == 16
-    typedef Color16 ColorType;
-#elif COLOR_DEPTH == 32
-    typedef Color32 ColorType;
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba对象的引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(const Rgba& color)
+        {
+            Convert(*this, color);
+        }
+
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba8T对象的引用，alpha为透明度
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        Rgba8T(const SelfType& color, unsigned alpha) :
+            redValue(color.redValue),
+            greenValue(color.greenValue),
+            blueValue(color.blueValue),
+            alphaValue(ValueType(alpha))
+        {}
+
+        /**
+         * @brief Rgba8T构造函数
+         *
+         * @param color为Rgba8T<T>对象的引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        template <class T>
+        Rgba8T(const Rgba8T<T>& color)
+        {
+            Convert(*this, color);
+        }
+
+        /**
+         * @brief 重载Rgba函数
+         *
+         * @param 无
+         * @return 返回Rgba对象
+         * @since 1.0
+         * @version 1.0
+         */
+        operator Rgba() const
+        {
+            Rgba color;
+            Convert(color, *this);
+            return color;
+        }
+
+        /**
+         * @brief 将Rgba中的颜色值赋值到Rgba8T<Linear>中
+         *
+         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0
+         */
+        static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
+        {
+            dst.redValue = ValueType(Uround(src.redValue * BASEMASK));
+            dst.greenValue = ValueType(Uround(src.greenValue * BASEMASK));
+            dst.blueValue = ValueType(Uround(src.blueValue * BASEMASK));
+            dst.alphaValue = ValueType(Uround(src.alphaValue * BASEMASK));
+        }
+
+        /**
+         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba中
+         *
+         * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
+         * @return 无
+         * @since 1.0
+         * @version 1.0.
+         */
+        static void Convert(Rgba& dst, const Rgba8T<StandardRgb>& src)
+        {
+            dst.redValue = StandardRgbConv<float>::RgbFromSrgb(src.redValue);
+            dst.greenValue = StandardRgbConv<float>::RgbFromSrgb(src.greenValue);
+            dst.blueValue = StandardRgbConv<float>::RgbFromSrgb(src.blueValue);
+            dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE float ToFloat(ValueType valueType)
+        {
+            return float(valueType) / BASEMASK;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType FromFloat(float value)
+        {
+            return ValueType(Uround(value * BASEMASK));
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
+        {
+            return 0;
+        }
+
+        GRAPHIC_GEOMETRY_INLINE bool IsTransparent() const
+        {
+            return alphaValue == 0;
+        }
+
+        GRAPHIC_GEOMETRY_INLINE bool IsOpaque() const
+        {
+            return alphaValue == BASEMASK;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Invert(ValueType valueType)
+        {
+            return BASEMASK - valueType;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
+        {
+#if ENABLE_ARM_MATH
+            CalcType calcType = __SMUAD(valueA, valueB) + BASEMSB;
 #else
-#    error "Invalid COLOR_DEPTH, Set it to 16 or 32!"
+            CalcType calcType = valueA * valueB + BASEMSB;
 #endif
+            return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
+        }
 
-    using OpacityType = uint8_t;
+        static GRAPHIC_GEOMETRY_INLINE ValueType DividMultiply(ValueType valueA, ValueType valueB)
+        {
+            if (valueA * valueB == 0) {
+                return 0;
+            } else if (valueA >= valueB) {
+                return BASEMASK;
+            } else {
+#if ENABLE_ARM_MATH
+                return ValueType(__UDIV(__SMUAD(valueA, BASEMASK) + (valueB >> 1), valueB));
+#else
+                return ValueType((valueA * BASEMASK + (valueB >> 1)) / valueB);
+#endif
+            }
+        }
 
-    /**
-     * @brief Enumerates opacity values.
-     */
-    enum {
-        /** The opacity is 0. */
-        OPA_TRANSPARENT = 0,
-        /** The opacity is 100%. */
-        OPA_OPAQUE = 255,
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downshift(T value, unsigned digit)
+        {
+            return value >> digit;
+        }
+
+        template <typename T>
+        static GRAPHIC_GEOMETRY_INLINE T Downscale(T value)
+        {
+            return value >> BASESHIFT;
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType MultCover(ValueType valueA, CoverType coverValue)
+        {
+            return Multiply(valueA, coverValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, ValueType value)
+        {
+            return Multiply(value, coverValue);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Prelerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        {
+            return valueP + valueQ - Multiply(valueP, valueA);
+        }
+
+        static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        {
+#if ENABLE_ARM_MATH
+            int t = __SMUAD((valueQ - valueP), valueA) + BASEMSB - (valueP > valueQ);
+#else
+            int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
+
+#endif
+            return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
+        }
+
+        /**
+         * @brief 设置透明度
+         *
+         * @param alpha为透明度
+         * @return 返回Rgba8T对象的引用
+         * @since 1.0
+         * @version 1.0
+         */
+        SelfType& Opacity(float alpha)
+        {
+            if (alpha < 0) {
+                alphaValue = 0;
+            } else if (alpha > 1) {
+                alphaValue = 1;
+            } else {
+                alphaValue = (ValueType)Uround(alpha * float(BASEMASK));
+            }
+            return *this;
+        }
+
+        float Opacity() const
+        {
+            return float(alphaValue) / float(BASEMASK);
+        }
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+        /**
+         * @brief 渐变，根据变化系数计算出新的Rgba8T对象
+         *
+         * @param color为Rgba8T对象的引用，k为变化系数
+         * @return 返回Rgba8T对象
+         * @since 1.0
+         * @version 1.0
+         */
+        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
+        {
+            SelfType ret;
+            CalcType increaseK = Uround(k * BASEMASK);
+            ret.redValue = Lerp(redValue, color.redValue, increaseK);
+            ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
+            ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);
+            ret.alphaValue = Lerp(alphaValue, color.alphaValue, increaseK);
+            return ret;
+        }
+#endif
+        static SelfType NoColor()
+        {
+            return SelfType(0, 0, 0, 0);
+        }
     };
 
     /**
@@ -729,300 +1043,6 @@ namespace OHOS {
         static ColorType Orange();
     };
 
-    inline Rgba Rgba::InitColorByWaveLength(float waveLength)
-    {
-        Rgba rgba(0.0, 0.0, 0.0);
-        rgba += IsPurpleWave(waveLength);
-        rgba += IsBlueWave(waveLength);
-        rgba += IsCyanWave(waveLength);
-        rgba += IsGreenWave(waveLength);
-        rgba += IsOrangeWave(waveLength);
-        rgba += IsRedWave(waveLength);
-        return rgba;
-    }
-    inline Rgba Rgba::FromWavelength(float waveLength, float gamma)
-    {
-        Rgba rgba(0.0, 0.0, 0.0);
-        rgba += rgba.InitColorByWaveLength(waveLength);
-        // 计算比系数
-        float ratio = 1.0;
-        if (waveLength > RED_MIN) {
-            ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
-        } else if (waveLength < PURPLE_MIDDLE) {
-            ratio = FIXED_VALUE + COEFFICIENT * (waveLength - PURPLE_MIN) / (PURPLE_MIDDLE - PURPLE_MIN);
-        }
-        return Rgba(std::pow(rgba.redValue * ratio, gamma),
-                    std::pow(rgba.greenValue * ratio, gamma),
-                    std::pow(rgba.blueValue * ratio, gamma));
-    }
-
-    /**
-     * @brief Rgba8T颜色序列转化
-     *
-     * 颜色排列顺序：红、绿、蓝、透明度
-     *
-     * @see Rgba8T
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class Colorspace>
-    struct Rgba8T {
-        using ValueType = int8u;
-        using CalcType = int32u;
-        using LongType = int32;
-        using SelfType = Rgba8T;
-
-        ValueType redValue;
-        ValueType greenValue;
-        ValueType blueValue;
-        ValueType alphaValue;
-
-        enum BaseScaleEnum {
-            BASESHIFT = 8,
-            BASESCALE = 1 << BASESHIFT,
-            BASEMASK = BASESCALE - 1,
-            BASEMSB = 1 << (BASESHIFT - 1)
-        };
-
-        Rgba8T()
-        {}
-
-        /**
-         * @brief Rgba8T构造函数
-         *
-         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
-            redValue(ValueType(red)),
-            greenValue(ValueType(green)),
-            blueValue(ValueType(blue)),
-            alphaValue(ValueType(alpha))
-        {}
-
-        /**
-         * @brief Rgba8T构造函数
-         *
-         * @param color为Rgba对象的引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        Rgba8T(const Rgba& color)
-        {
-            Convert(*this, color);
-        }
-
-        /**
-         * @brief Rgba8T构造函数
-         *
-         * @param color为Rgba8T对象的引用，alpha为透明度
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        Rgba8T(const SelfType& color, unsigned alpha) :
-            redValue(color.redValue),
-            greenValue(color.greenValue),
-            blueValue(color.blueValue),
-            alphaValue(ValueType(alpha))
-        {}
-
-        /**
-         * @brief Rgba8T构造函数
-         *
-         * @param color为Rgba8T<T>对象的引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        template <class T>
-        Rgba8T(const Rgba8T<T>& color)
-        {
-            Convert(*this, color);
-        }
-
-        /**
-         * @brief 重载Rgba函数
-         *
-         * @param 无
-         * @return 返回Rgba对象
-         * @since 1.0
-         * @version 1.0
-         */
-        operator Rgba() const
-        {
-            Rgba color;
-            Convert(color, *this);
-            return color;
-        }
-
-        /**
-         * @brief 将Rgba中的颜色值赋值到Rgba8T<Linear>中
-         *
-         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
-        {
-            dst.redValue = ValueType(Uround(src.redValue * BASEMASK));
-            dst.greenValue = ValueType(Uround(src.greenValue * BASEMASK));
-            dst.blueValue = ValueType(Uround(src.blueValue * BASEMASK));
-            dst.alphaValue = ValueType(Uround(src.alphaValue * BASEMASK));
-        }
-
-        /**
-         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba中
-         *
-         * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
-         * @return 无
-         * @since 1.0
-         * @version 1.0
-         */
-        static void Convert(Rgba& dst, const Rgba8T<StandardRgb>& src)
-        {
-            dst.redValue = StandardRgbConv<float>::RgbFromSrgb(src.redValue);
-            dst.greenValue = StandardRgbConv<float>::RgbFromSrgb(src.greenValue);
-            dst.blueValue = StandardRgbConv<float>::RgbFromSrgb(src.blueValue);
-            dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE float ToFloat(ValueType valueType)
-        {
-            return float(valueType) / BASEMASK;
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType FromFloat(float value)
-        {
-            return ValueType(Uround(value * BASEMASK));
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
-        {
-            return 0;
-        }
-
-        GRAPHIC_GEOMETRY_INLINE bool IsTransparent() const
-        {
-            return alphaValue == 0;
-        }
-
-        GRAPHIC_GEOMETRY_INLINE bool IsOpaque() const
-        {
-            return alphaValue == BASEMASK;
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType Invert(ValueType valueType)
-        {
-            return BASEMASK - valueType;
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
-        {
-            CalcType calcType = valueA * valueB + BASEMSB;
-            return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType DividMultiply(ValueType valueA, ValueType valueB)
-        {
-            if (valueA * valueB == 0) {
-                return 0;
-            } else if (valueA >= valueB) {
-                return BASEMASK;
-            } else {
-                return ValueType((valueA * BASEMASK + (valueB >> 1)) / valueB);
-            }
-        }
-
-        template <typename T>
-        static GRAPHIC_GEOMETRY_INLINE T Downshift(T value, unsigned digit)
-        {
-            return value >> digit;
-        }
-
-        template <typename T>
-        static GRAPHIC_GEOMETRY_INLINE T Downscale(T value)
-        {
-            return value >> BASESHIFT;
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType MultCover(ValueType valueA, CoverType coverValue)
-        {
-            return Multiply(valueA, coverValue);
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, ValueType value)
-        {
-            return Multiply(value, coverValue);
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType Prelerp(ValueType valueP, ValueType valueQ, ValueType valueA)
-        {
-            return valueP + valueQ - Multiply(valueP, valueA);
-        }
-
-        static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType valueA)
-        {
-            int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
-            return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
-        }
-
-        /**
-         * @brief 设置透明度
-         *
-         * @param alpha为透明度
-         * @return 返回Rgba8T对象的引用
-         * @since 1.0
-         * @version 1.0
-         */
-        SelfType& Opacity(float alpha)
-        {
-            if (alpha < 0) {
-                alphaValue = 0;
-            } else if (alpha > 1) {
-                alphaValue = 1;
-            } else {
-                alphaValue = (ValueType)Uround(alpha * float(BASEMASK));
-            }
-            return *this;
-        }
-
-        float Opacity() const
-        {
-            return float(alphaValue) / float(BASEMASK);
-        }
-#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
-        /**
-         * @brief 渐变，根据变化系数计算出新的Rgba8T对象
-         *
-         * @param color为Rgba8T对象的引用，k为变化系数
-         * @return 返回Rgba8T对象
-         * @since 1.0
-         * @version 1.0
-         */
-        GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
-        {
-            SelfType ret;
-            CalcType increaseK = Uround(k * BASEMASK);
-            ret.redValue = Lerp(redValue, color.redValue, increaseK);
-            ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
-            ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);
-            ret.alphaValue = Lerp(alphaValue, color.alphaValue, increaseK);
-            return ret;
-        }
-#endif
-        static SelfType NoColor()
-        {
-            return SelfType(0, 0, 0, 0);
-        }
-    };
-
-    using Rgba8 = Rgba8T<Linear>;
-    using Srgba8 = Rgba8T<StandardRgb>;
 } // namespace OHOS
 
 #endif

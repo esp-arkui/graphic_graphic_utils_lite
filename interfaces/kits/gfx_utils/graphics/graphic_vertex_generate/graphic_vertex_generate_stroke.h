@@ -20,105 +20,105 @@
 
 namespace OHOS {
 
-    class VertexGenerateStroke {
-        enum Status {
-            INITIAL,
-            READY,
-            CAP1,
-            CAP2,
-            OUTLINE1,
-            CLOSE_FIRST,
-            OUTLINE2,
-            OUT_VERTICES,
-            END_POLY1,
-            END_POLY2,
-            STOP
-        };
+class VertexGenerateStroke {
+    enum Status {
+        INITIAL,
+        READY,
+        CAP1,
+        CAP2,
+        OUTLINE1,
+        CLOSE_FIRST,
+        OUTLINE2,
+        OUT_VERTICES,
+        END_POLY1,
+        END_POLY2,
+        STOP
+    };
 
-    public:
-        using VertexStorage = VertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
-        using CoordStorage = GeometryPlainDataBlockVector<PointD, BLOCK_SHIFT_SIZE>;
+public:
+    using VertexStorage = VertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
+    using CoordStorage = GeometryPlainDataBlockVector<PointD, BLOCK_SHIFT_SIZE>;
 
-        VertexGenerateStroke();
+    VertexGenerateStroke();
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
-        void LineCap(LineCapEnum lc)
-        {
-            stroker_.SetLineCap(lc);
-        }
+    void LineCap(LineCapEnum lc)
+    {
+        stroker_.SetLineCap(lc);
+    }
+    enum LineCapEnum LineCap() const
+    {
+        return stroker_.GetLineCap();
+    }
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
-        void LineJoin(LineJoinEnum lj)
-        {
-            stroker_.SetLineJoin(lj);
-        }
+    void LineJoin(LineJoinEnum lj)
+    {
+        stroker_.SetLineJoin(lj);
+    }
 
-        void MiterLimit(double ml)
-        {
-            stroker_.SetMiterLimit(ml);
-        }
+    void MiterLimit(double ml)
+    {
+        stroker_.SetMiterLimit(ml);
+    }
+    enum LineJoinEnum LineJoin() const
+    {
+        return stroker_.GetLineJoin();
+    }
+    double MiterLimit() const
+    {
+        return stroker_.GetMiterLimit();
+    }
 #endif
-        enum LineCapEnum LineCap() const
-        {
-            return stroker_.GetLineCap();
-        }
-        enum LineJoinEnum LineJoin() const
-        {
-            return stroker_.GetLineJoin();
-        }
-        double MiterLimit() const
-        {
-            return stroker_.GetMiterLimit();
-        }
-        void Width(double w)
-        {
-            stroker_.width(w);
-        }
+    void Width(double w)
+    {
+        stroker_.width(w);
+    }
 
-        void ApproximationScale(double as)
-        {
-            stroker_.SetApproximationScale(as);
-        }
+    void ApproximationScale(double as)
+    {
+        stroker_.SetApproximationScale(as);
+    }
 
-        double Width() const
-        {
-            return stroker_.width();
-        }
+    double Width() const
+    {
+        return stroker_.width();
+    }
 
-        double ApproximationScale() const
-        {
-            return stroker_.GetApproximationScale();
-        }
+    double ApproximationScale() const
+    {
+        return stroker_.GetApproximationScale();
+    }
 
-        void Shorten(double s)
-        {
-            shorten_ = s;
-        }
+    void Shorten(double s)
+    {
+        shorten_ = s;
+    }
 
-        double Shorten() const
-        {
-            return shorten_;
-        }
+    double Shorten() const
+    {
+        return shorten_;
+    }
 
-        void RemoveAll();
+    void RemoveAll();
 
-        void AddVertex(double x, double y, unsigned cmd);
+    void AddVertex(double x, double y, unsigned cmd);
 
-        void Rewind(unsigned pathId);
-        unsigned Vertex(double* x, double* y);
+    void Rewind(unsigned pathId);
+    unsigned Vertex(double* x, double* y);
 
-    private:
-        VertexGenerateStroke(const VertexGenerateStroke&);
-        const VertexGenerateStroke& operator=(const VertexGenerateStroke&);
-        MathStroke<CoordStorage> stroker_;
-        VertexStorage srcVertices_;
-        CoordStorage outVertices_;
-        double shorten_;
-        unsigned closed_;
-        Status status_;
-        Status prevStatus_;
-        unsigned srcVertex_;
-        unsigned outVertex_;
-    };
+private:
+    VertexGenerateStroke(const VertexGenerateStroke&);
+    const VertexGenerateStroke& operator=(const VertexGenerateStroke&);
+    MathStroke<CoordStorage> stroker_;
+    VertexStorage srcVertices_;
+    CoordStorage outVertices_;
+    double shorten_;
+    unsigned closed_;
+    Status status_;
+    Status prevStatus_;
+    unsigned srcVertex_;
+    unsigned outVertex_;
+};
 
 } // namespace OHOS
 
