@@ -17,6 +17,7 @@
 #define GRAPHIC_PATH_STORAGE_INCLUDED
 
 #include <cstring>
+
 #include "gfx_utils/graphics/graphic_common/graphic_common_math.h"
 #include "gfx_utils/graphics/graphic_geometry/graphic_geometry_array.h"
 #include "graphic_geometry_bezier_arc.h"
@@ -36,17 +37,17 @@ namespace OHOS {
             BLOCK_POOL = OHOS::MAX_COLOR_SIZE
         };
 
-        ~VertexBlockStorage(){
+        ~VertexBlockStorage()
+        {
             FreeAll();
         };
 
-        VertexBlockStorage()
-            :totalVertices_(0),
+        VertexBlockStorage() :
+            totalVertices_(0),
             totalBlocks_(0),
             maxBlocks_(0),
             croodBlocks_(0),
-            cmdBlocks_(0)
-        {};
+            cmdBlocks_(0){};
 
         const VertexBlockStorage& operator=(const VertexBlockStorage& vertexBlockStorage)
         {
@@ -182,6 +183,7 @@ namespace OHOS {
         {
             return cmdBlocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
+
     private:
         void AllocateBlock(unsigned nb)
         {
@@ -202,7 +204,7 @@ namespace OHOS {
                              maxBlocks_ * sizeof(unsigned char*));
 
                     GeometryArrayAllocator<double*>::Deallocate(croodBlocks_,
-                                                                   maxBlocks_ * OHOS::TWO_TIMES);
+                                                                maxBlocks_ * OHOS::TWO_TIMES);
                 }
                 croodBlocks_ = new_coords;
                 cmdBlocks_ = new_cmds;
@@ -210,7 +212,7 @@ namespace OHOS {
             }
             croodBlocks_[nb] =
                 GeometryArrayAllocator<double>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
-                                                            BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
+                                                         BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
 
             cmdBlocks_[nb] =
                 (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
@@ -226,15 +228,16 @@ namespace OHOS {
             *xy_ptr = croodBlocks_[nb] + ((totalVertices_ & BLOCK_MASK) << 1);
             return cmdBlocks_[nb] + (totalVertices_ & BLOCK_MASK);
         }
+
     private:
         unsigned totalVertices_;
         unsigned totalBlocks_;
         unsigned maxBlocks_;
-        double** croodBlocks_;//输入的点
-        int8u** cmdBlocks_;//标记点状态
+        double** croodBlocks_; //输入的点
+        int8u** cmdBlocks_;    //标记点状态
     };
 
-    class UICanvasVertices : public HeapBase{
+    class UICanvasVertices : public HeapBase {
     public:
         UICanvasVertices() :
             vertices_(), iterator_(0)
@@ -318,12 +321,16 @@ namespace OHOS {
                 if (CalcDistance(x0, y0, x, y) < epsilon) {
                     return;
                 }
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
                 BezierArcSvg bezierArcSvg(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
                 if (bezierArcSvg.RadiiOK()) {
                     JoinPath(bezierArcSvg);
                 } else {
                     LineTo(x, y);
                 }
+#else
+                LineTo(x, y);
+#endif
             } else {
                 MoveTo(x, y);
             }
@@ -378,7 +385,6 @@ namespace OHOS {
          */
         unsigned Vertex(unsigned idx, double* x, double* y) const;
 
-
         /**
          * @brief 迭代器回退到某一个顶点
          * @param pathId 回退的顶点序号
@@ -405,7 +411,7 @@ namespace OHOS {
             }
             return vertices_.Vertex(iterator_++, x, y);
         }
-
+#if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         /**
          * @brief 连接路径
          * @param vs 要连接的顶点源
@@ -466,7 +472,7 @@ namespace OHOS {
                 }
             }
         }
-
+#endif
     private:
         VertexBlockStorage vertices_;
         unsigned iterator_;

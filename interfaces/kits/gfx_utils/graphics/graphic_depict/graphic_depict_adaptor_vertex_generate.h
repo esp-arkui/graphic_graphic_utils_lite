@@ -24,8 +24,10 @@
 
 #ifndef GRAPHIC_GEOMETRY_DEPICT_ADAPTOR_VERTEX_GENERATE_INCLUDED
 #define GRAPHIC_GEOMETRY_DEPICT_ADAPTOR_VERTEX_GENERATE_INCLUDED
+#include <typeinfo>
 
 #include "gfx_utils/graphics/graphic_common/graphic_common_basics.h"
+#include "gfx_utils/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.h"
 
 namespace OHOS {
     /**
@@ -114,8 +116,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit DepictAdaptorVertexGenerator(VertexSource& source)
-            : m_source(&source), m_status(INITIAL)
+        explicit DepictAdaptorVertexGenerator(VertexSource& source) :
+            m_source(&source), m_status(INITIAL)
         {}
 
         /**
@@ -188,9 +190,9 @@ namespace OHOS {
         unsigned Vertex(double* x, double* y);
 
     private:
-        DepictAdaptorVertexGenerator(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers> &);
-        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers> &
-            operator=(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers> &);
+        DepictAdaptorVertexGenerator(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
+        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&
+            operator=(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
 
         VertexSource* m_source;
         Generator m_generator;
@@ -224,9 +226,16 @@ namespace OHOS {
                         return PATH_CMD_STOP;
 
                     m_markers.AddVertex(m_start_x, m_start_y, PATH_CMD_MOVE_TO);
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                     m_generator.RemoveAll();
                     m_generator.AddVertex(m_start_x, m_start_y, PATH_CMD_MOVE_TO);
 
+#else
+                    if (typeid(m_generator) != typeid(VertexGenerateDash)) {
+                        m_generator.RemoveAll();
+                        m_generator.AddVertex(m_start_x, m_start_y, PATH_CMD_MOVE_TO);
+                    }
+#endif
                     while (1) {
                         cmd = m_source->Vertex(x, y);
                         if (IsVertex(cmd)) {
@@ -237,19 +246,34 @@ namespace OHOS {
                                 break;
                             }
                             m_markers.AddVertex(*x, *y, PATH_CMD_LINE_TO);
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                             m_generator.AddVertex(*x, *y, cmd);
+#else
+                            if (typeid(m_generator) != typeid(VertexGenerateDash)) {
+                                m_generator.AddVertex(*x, *y, cmd);
+                            }
+#endif
                         } else {
                             if (IsStop(cmd)) {
                                 m_last_cmd = PATH_CMD_STOP;
                                 break;
                             }
                             if (IsEndPoly(cmd)) {
+#if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
                                 m_generator.AddVertex(*x, *y, cmd);
+#else
+                                if (typeid(m_generator) != typeid(VertexGenerateDash)) {
+                                    m_generator.AddVertex(*x, *y, cmd);
+                                }
+
+#endif
                                 break;
                             }
                         }
                     }
-                    m_generator.Rewind(0);
+                    if (typeid(m_generator) != typeid(VertexGenerateDash)) {
+                        m_generator.Rewind(0);
+                    }
                     m_status = GENERATE;
                     break;
                 case GENERATE:

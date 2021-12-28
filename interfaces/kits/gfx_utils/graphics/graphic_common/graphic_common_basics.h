@@ -45,10 +45,8 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    enum FillingRuleEnum {
-        FILL_NON_ZERO,
-        FILL_EVEN_ODD
-    };
+    enum FillingRuleEnum { FILL_NON_ZERO,
+                           FILL_EVEN_ODD };
 
     /**
      * @brief 子像素的偏移以及掩码标志.
@@ -105,12 +103,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    enum RecursiveBezierEnum {
-        COLLINEAR = 0,
-        COLLINEAR1,
-        COLLINEAR2,
-        COLLINEAR3
-    };
+    enum RecursiveBezierEnum { COLLINEAR = 0,
+                               COLLINEAR1,
+                               COLLINEAR2,
+                               COLLINEAR3 };
     enum ClippingFlagsEnum {
         CLIPPING_FLAGS_X1_CLIPPED = 4,
         CLIPPING_FLAGS_X2_CLIPPED = 1,
@@ -134,7 +130,7 @@ namespace OHOS {
 #define GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE 1
-#define GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE 1
+#define GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE 0
 #define GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE 1
@@ -162,103 +158,103 @@ namespace OHOS {
     const double VERTEX_DIST_EPSILON = 1e-14;
     const double INTERSECTIONEPSILON = 1.0e-30;
     /**
-     * @brief 圆周率
-     */
+ * @brief 圆周率
+ */
     const double PI = 3.14159265358979323846;
     /**
-     * @brief 半圆弧角度
-     */
+ * @brief 半圆弧角度
+ */
     const double RAD_BASE = 180.0;
     const double ROUND_BASE = 0.5;
 
     /**
-     * @brief 平角的度数
-     */
+ * @brief 平角的度数
+ */
     const double BOXER = 180.0;
 
     /**
-     * @brief BUF_SIZE
-     */
+ * @brief BUF_SIZE
+ */
     const double BUF_SIZE = 1024.0;
     /**
-     * @brief 颜色的最大值
-     */
+ * @brief 颜色的最大值
+ */
     const unsigned MAX_COLOR_NUM = 255;
     /**
-     * @brief 颜色的最大值数组长度
-     */
+ * @brief 颜色的最大值数组长度
+ */
     const unsigned MAX_COLOR_SIZE = 256;
 
     /**
-     * @brief 颜色的最大值的一半
-     */
+ * @brief 颜色的最大值的一半
+ */
     const unsigned HALF_COLOR_NUM = 128;
     /**
-     * @brief 颜色的最大值的八分之一
-     */
+ * @brief 颜色的最大值的八分之一
+ */
     const unsigned EIGHTH_COLOR_NUM = 32;
     /**
-     * @brief 颜色的最大值的三十二分之一
-     */
+ * @brief 颜色的最大值的三十二分之一
+ */
     const unsigned THIRTY_TWO_COLOR_NUM = 8;
 
     /**
-     * @brief 默认最大斜接
-     */
+ * @brief 默认最大斜接
+ */
     const unsigned DEFAULTMITERLIMIT = 10;
     /**
-     * @brief 一个字节的长度
-     */
+ * @brief 一个字节的长度
+ */
     const int BYTE_LENGTH = 8;
     const int ARRAY_SIZE = 16;
     /**
-     * @brief dash数组最大长度
-     */
+ * @brief dash数组最大长度
+ */
     const int MAX_DASHES = 32;
     /**
-     * @brief 默认的块偏移量
-     */
+ * @brief 默认的块偏移量
+ */
     const int BLOCK_SHIFT_SIZE = 6;
     /**
-     * @brief 绘制椭圆所需的顶点数
-     */
+ * @brief 绘制椭圆所需的顶点数
+ */
     const int ELLIPSE_VERTEX_NUM = 4;
     /**
-     * 一般步幅是宽度的四倍
-     */
+ * 一般步幅是宽度的四倍
+ */
     const int STRIDE_FACTOR = 4;
     const int PXSIZE2STRIDE_FACTOR = 3;
     /**
-     * @brief 1/√2 即1 除以 √2
-     */
+ * @brief 1/√2 即1 除以 √2
+ */
     const double SIN45 = 0.7071068;
     /**
-     * @brief 1/√2 即1 除以 √2
-     */
+ * @brief 1/√2 即1 除以 √2
+ */
     const double COS45 = 0.7071068;
     /**
-     * @brief 两倍
-     */
+ * @brief 两倍
+ */
     const int TWO_TIMES = 2;
     /**
-     * @brief 三倍
-     */
+ * @brief 三倍
+ */
     const int THREE_TIMES = 3;
     /**
-     * @brief 四倍
-     */
+ * @brief 四倍
+ */
     const int FOUR_TIMES = 4;
     /**
-     * @brief 六倍
-     */
+ * @brief 六倍
+ */
     const int SIX_TIMES = 6;
     /**
-     * @brief 一百倍
-     */
+ * @brief 一百倍
+ */
     const int HUNDRED_TIMES = 100;
     /**
-     * @brief 一次走两步
-     */
+ * @brief 一次走两步
+ */
     const int TWO_STEP = 2;
     const double HALFNUM = 0.5;
     const double DOUBLENUM = 2.0;
@@ -266,12 +262,12 @@ namespace OHOS {
 
     const int CONSTITUTION = 16384;
     /**
-     * @brief 正下方
-     */
+ * @brief 正下方
+ */
     const int DIRECTLY_BELOW = 10;
     /**
-     * 下标
-     */
+ * 下标
+ */
     const int INDEX_ZERO = 0;
     const int INDEX_ONE = 1;
     const int INDEX_TWO = 2;
@@ -308,13 +304,13 @@ namespace OHOS {
     }
 
     /**
-     * @brief 两个数是否相近.
-     *
-     * @param val1,val2 两个数,epsilon 误差.
-     * @return Returns 两个数是否相近.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 两个数是否相近.
+ *
+ * @param val1,val2 两个数,epsilon 误差.
+ * @return Returns 两个数是否相近.
+ * @since 1.0
+ * @version 1.0
+ */
     template <class T>
     bool IsEqualEps(T val1, T val2, T epsilon)
     {
@@ -338,209 +334,209 @@ namespace OHOS {
     }
 
     /**
-     * @brief 弧度转度.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 弧度转度.
+ * @since 1.0
+ * @version 1.0
+ */
     inline double RadianToDegree(double val)
     {
         return val * RAD_BASE / PI;
     }
     /**
-     * @brief 度转弧度.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 度转弧度.
+ * @since 1.0
+ * @version 1.0
+ */
     inline double DegreeToRadian(double val)
     {
         return val * PI / RAD_BASE;
     }
 
     /**
-     * @brief 判断是否在绘制图元.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断是否在绘制图元.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsDrawing(unsigned val)
     {
         return val < PATH_CMD_END_POLY && val >= PATH_CMD_LINE_TO;
     }
 
     /**
-     * @brief 判断值是否是顶点.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断值是否是顶点.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsVertex(unsigned val)
     {
         return val < PATH_CMD_END_POLY && val >= PATH_CMD_MOVE_TO;
     }
 
     /**
-     * @brief 判断当前状态是否MOVE_TO.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否MOVE_TO.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsMoveTo(unsigned val)
     {
         return PATH_CMD_MOVE_TO == val;
     }
 
     /**
-     * @brief 判断当前状态是否Stop状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否Stop状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsStop(unsigned val)
     {
         return PATH_CMD_STOP == val;
     }
 
     /**
-     * @brief 判断当前状态是否LINE_TO状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否LINE_TO状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsLineTo(unsigned val)
     {
         return PATH_CMD_LINE_TO == val;
     }
 
     /**
-     * @brief 判断当前状态是否是绘制贝塞尔曲线CURVE状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制贝塞尔曲线CURVE状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsCurve(unsigned val)
     {
         return PATH_CMD_CURVE4 == val || PATH_CMD_CURVE3 == val;
     }
 
     /**
-     * @brief 判断当前状态是否是绘制二次贝塞尔曲线CURVE状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制二次贝塞尔曲线CURVE状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsQuadraticBezierCurve(unsigned val)
     {
         return PATH_CMD_CURVE3 == val;
     }
 
     /**
-     * @brief 判断当前状态是否是绘制三次贝塞尔曲线CURVE状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制三次贝塞尔曲线CURVE状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsCubicBezierCurve(unsigned val)
     {
         return PATH_CMD_CURVE4 == val;
     }
 
     /**
-     * @brief 判断当前状态是否是绘制曲线结尾状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制曲线结尾状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsEndPoly(unsigned val)
     {
         return PATH_CMD_END_POLY == (val & PATH_CMD_MASK);
     }
 
     /**
-     * @brief 判断当前状态是否是绘制曲线闭合状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制曲线闭合状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsClose(unsigned val)
     {
         return (val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) == (PATH_CMD_END_POLY | PATH_FLAGS_CLOSE);
     }
 
     /**
-     * @brief 判断当前状态是否是绘制曲线下一个多边形状态.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是绘制曲线下一个多边形状态.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsNextPoly(unsigned val)
     {
         return IsStop(val) || IsMoveTo(val) || IsEndPoly(val);
     }
 
     /**
-     * @brief 判断当前状态是否是逆时针.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是逆时针.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsAntiClockWise(unsigned val)
     {
         return (val & PATH_FLAGS_ANTI_CLOCKWISE) != 0;
     }
 
     /**
-     * @brief 判断当前状态是否是顺时针.
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前状态是否是顺时针.
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsClockWise(unsigned val)
     {
         return (val & PATH_FLAGS_CLOCKWISE) != 0;
     }
 
     /**
-     * @brief 判断当前方向
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前方向
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsOriented(unsigned val)
     {
         return (val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) != 0;
     }
 
     /**
-     * @brief 判断当前是否封闭
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 判断当前是否封闭
+ * @since 1.0
+ * @version 1.0
+ */
     inline bool IsClosed(unsigned val)
     {
         return (val & PATH_FLAGS_CLOSE) != 0;
     }
 
     /**
-     * @brief 清除方向标记
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 清除方向标记
+ * @since 1.0
+ * @version 1.0
+ */
     inline unsigned ClearOrientation(unsigned val)
     {
         return val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
     }
 
     /**
-     * @brief 获取封闭状态
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 获取封闭状态
+ * @since 1.0
+ * @version 1.0
+ */
     inline unsigned GetCloseFlag(unsigned val)
     {
         return val & PATH_FLAGS_CLOSE;
     }
 
     /**
-     * @brief 设置朝向
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 设置朝向
+ * @since 1.0
+ * @version 1.0
+ */
     inline unsigned SetOrientation(unsigned cleanVal, unsigned addVal)
     {
         return ClearOrientation(cleanVal) | addVal;
     }
 
     /**
-     * @brief 获取朝向
-     * @since 1.0
-     * @version 1.0
-     */
+ * @brief 获取朝向
+ * @since 1.0
+ * @version 1.0
+ */
     inline unsigned GetOrientation(unsigned val)
     {
         return val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
@@ -552,19 +548,19 @@ namespace OHOS {
     template <class T>
     struct GeometryObjectAllocator {
         /**
-         * @brief 对象内存分配
-         * @since 1.0
-         * @version 1.0
-         */
+     * @brief 对象内存分配
+     * @since 1.0
+     * @version 1.0
+     */
         static T* Allocate()
         {
             return new T;
         }
         /**
-         * @brief 对象内存释放
-         * @since 1.0
-         * @version 1.0
-         */
+     * @brief 对象内存释放
+     * @since 1.0
+     * @version 1.0
+     */
         static void Deallocate(T* ptr)
         {
             delete ptr;
@@ -574,10 +570,10 @@ namespace OHOS {
     template <class T>
     struct GeometryArrayAllocator {
         /**
-         * @brief 数组内存分配
-         * @since 1.0
-         * @version 1.0
-         */
+     * @brief 数组内存分配
+     * @since 1.0
+     * @version 1.0
+     */
         static T* Allocate(unsigned num)
         {
             if (num < 1) {
@@ -586,10 +582,10 @@ namespace OHOS {
             return new T[num];
         }
         /**
-         * @brief 数组内存释放
-         * @since 1.0
-         * @version 1.0
-         */
+     * @brief 数组内存释放
+     * @since 1.0
+     * @version 1.0
+     */
         static void Deallocate(T* ptr, unsigned)
         {
             delete[] ptr;
@@ -599,10 +595,10 @@ namespace OHOS {
     using CoverType = unsigned char;
 
     /**
-    * @brief 定义矩形类.
-    * @since 1.0
-    * @version 1.0
-    */
+ * @brief 定义矩形类.
+ * @since 1.0
+ * @version 1.0
+ */
     template <class T>
     struct RectBase {
         using ValueType = T;
@@ -618,10 +614,10 @@ namespace OHOS {
         RectBase()
         {}
         /**
-         * @brief 规范化矩形.
-         * @since 1.0
-         * @version 1.0
-         */
+     * @brief 规范化矩形.
+     * @since 1.0
+     * @version 1.0
+     */
         const SelfType& Normalize()
         {
             T t;
@@ -647,10 +643,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 坐标裁剪到指定范围内.
-        * @since 1.0
-        * @version 1.0
-        */
+     * @brief 坐标裁剪到指定范围内.
+     * @since 1.0
+     * @version 1.0
+     */
         bool Clip(const SelfType& rect)
         {
             if (x2 > rect.x2) {
@@ -669,30 +665,30 @@ namespace OHOS {
         }
 
         /**
-        * @brief 坐标是否有效.
-        * @since 1.0
-        * @version 1.0
-        */
+     * @brief 坐标是否有效.
+     * @since 1.0
+     * @version 1.0
+     */
         bool IsValid() const
         {
             return y1 <= y2 && x1 <= x2;
         }
 
         /**
-        * @brief 坐标的有效范围.
-        * @since 1.0
-        * @version 1.0
-        */
+     * @brief 坐标的有效范围.
+     * @since 1.0
+     * @version 1.0
+     */
         bool Overlaps(const SelfType& rect) const
         {
             return !(rect.y1 > y2 || rect.y2 < y1 || rect.x1 > x2 || rect.x2 < x1);
         }
 
         /**
-        * @brief 判断坐标在指定范围内.
-        * @since 1.0
-        * @version 1.0
-        */
+     * @brief 判断坐标在指定范围内.
+     * @since 1.0
+     * @version 1.0
+     */
         bool HitTest(T x, T y) const
         {
             return (y >= y1 && y <= y2 && x >= x1 && x <= x2);
@@ -700,13 +696,13 @@ namespace OHOS {
     };
 
     /**
-    * @brief 获取两矩形是否相交区域.
-    *
-    * @param rect1,rect2 两个矩形.
-    * @return Returns 相交的矩形.
-    * @since 1.0
-    * @version 1.0
-    */
+ * @brief 获取两矩形是否相交区域.
+ *
+ * @param rect1,rect2 两个矩形.
+ * @return Returns 相交的矩形.
+ * @since 1.0
+ * @version 1.0
+ */
     template <class Rect>
     Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
     {
@@ -727,13 +723,13 @@ namespace OHOS {
     }
 
     /**
-    * @brief 获取两矩形的并集区域.
-    *
-    * @param rect1,rect2 两个矩形.
-    * @return Returns 并集区域的矩形.
-    * @since 1.0
-    * @version 1.0
-    */
+ * @brief 获取两矩形的并集区域.
+ *
+ * @param rect1,rect2 两个矩形.
+ * @return Returns 并集区域的矩形.
+ * @since 1.0
+ * @version 1.0
+ */
     template <class Rect>
     Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
     {
