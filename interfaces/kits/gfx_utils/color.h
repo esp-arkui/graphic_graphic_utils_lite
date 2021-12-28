@@ -646,7 +646,7 @@ namespace OHOS {
          * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
          * @return 无
          * @since 1.0
-         * @version 1.0
+         * @version 1.0.
          */
         static void Convert(Rgba& dst, const Rgba8T<StandardRgb>& src)
         {
