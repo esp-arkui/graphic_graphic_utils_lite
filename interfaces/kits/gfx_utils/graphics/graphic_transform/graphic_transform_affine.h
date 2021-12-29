@@ -28,14 +28,14 @@ namespace OHOS {
      * @version 1.0
      */
     struct TransAffine {
-        double scaleX, shearY, shearX, scaleY, translateX, translateY;
+        double scaleX_, shearY, shearX, scaleY_, translateX, translateY;
         /**
          * @brief 初始化为单位矩阵
          * @since 1.0
          * @version 1.0
          */
         TransAffine() :
-            scaleX(1.0), shearY(0.0), shearX(0.0), scaleY(1.0), translateX(0.0), translateY(0.0)
+            scaleX_(1.0), shearY(0.0), shearX(0.0), scaleY_(1.0), translateX(0.0), translateY(0.0)
         {}
         /**
          * @brief 自定义矩阵
@@ -43,7 +43,7 @@ namespace OHOS {
          * @version 1.0
          */
         TransAffine(double v0, double v1, double v2, double v3, double v4, double v5) :
-            scaleX(v0), shearY(v1), shearX(v2), scaleY(v3), translateX(v4), translateY(v5)
+            scaleX_(v0), shearY(v1), shearX(v2), scaleY_(v3), translateX(v4), translateY(v5)
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
@@ -160,7 +160,7 @@ namespace OHOS {
          */
         double DeterminantReciprocal() const
         {
-            return 1.0 / (scaleX * scaleY - shearY * shearX);
+            return 1.0 / (scaleX_ * scaleY_ - shearY * shearX);
         }
 
         /**
@@ -190,8 +190,8 @@ namespace OHOS {
     inline void TransAffine::Transform(double* x, double* y) const
     {
         double tmp = *x;
-        *x = tmp * scaleX + *y * shearX + translateX;
-        *y = tmp * shearY + *y * scaleY + translateY;
+        *x = tmp * scaleX_ + *y * shearX + translateX;
+        *y = tmp * shearY + *y * scaleY_ + translateY;
     }
 
     inline void TransAffine::InverseTransform(double* x, double* y) const
@@ -199,8 +199,8 @@ namespace OHOS {
         double reciprocal = DeterminantReciprocal();
         double a = (*x - translateX) * reciprocal;
         double b = (*y - translateY) * reciprocal;
-        *x = a * scaleY - b * shearX;
-        *y = b * scaleX - a * shearY;
+        *x = a * scaleY_ - b * shearX;
+        *y = b * scaleX_ - a * shearY;
     }
 
     inline const TransAffine& TransAffine::Translate(double deltaX, double deltaY)
@@ -212,13 +212,13 @@ namespace OHOS {
 
     inline const TransAffine& TransAffine::Rotate(double angle)
     {
-        double scaleXTemp = scaleX * std::cos(angle) - shearY * std::sin(angle);
-        double shearXTemp = shearX * std::cos(angle) - scaleY * std::sin(angle);
+        double scaleXTemp = scaleX_ * std::cos(angle) - shearY * std::sin(angle);
+        double shearXTemp = shearX * std::cos(angle) - scaleY_ * std::sin(angle);
         double translateXTemp = translateX * std::cos(angle) - translateY * std::sin(angle);
-        shearY = scaleX * std::sin(angle) + shearY * std::cos(angle);
-        scaleY = shearX * std::sin(angle) + scaleY * std::cos(angle);
+        shearY = scaleX_ * std::sin(angle) + shearY * std::cos(angle);
+        scaleY_ = shearX * std::sin(angle) + scaleY_ * std::cos(angle);
         translateY = translateX * std::sin(angle) + translateY * std::cos(angle);
-        scaleX = scaleXTemp;
+        scaleX_ = scaleXTemp;
         shearX = shearXTemp;
         translateX = translateXTemp;
         return *this;
@@ -228,11 +228,11 @@ namespace OHOS {
     {
         double mm0 = scaleX;
         double mm3 = scaleY;
-        scaleX *= mm0;
+        scaleX_ *= mm0;
         shearX *= mm0;
         translateX *= mm0;
         shearY *= mm3;
-        scaleY *= mm3;
+        scaleY_ *= mm3;
         translateY *= mm3;
         return *this;
     }
@@ -240,19 +240,19 @@ namespace OHOS {
     inline const TransAffine& TransAffine::Scale(double scale)
     {
         double m = scale;
-        scaleX *= m;
+        scaleX_ *= m;
         shearX *= m;
         translateX *= m;
         shearY *= m;
-        scaleY *= m;
+        scaleY_ *= m;
         translateY *= m;
         return *this;
     }
 
     inline void TransAffine::ScalingAbs(double* x, double* y) const
     {
-        *x = std::sqrt(scaleX * scaleX + shearX * shearX);
-        *y = std::sqrt(shearY * shearY + scaleY * scaleY);
+        *x = std::sqrt(scaleX_ * scaleX_ + shearX * shearX);
+        *y = std::sqrt(shearY * shearY + scaleY_ * scaleY_);
     }
 
     /**

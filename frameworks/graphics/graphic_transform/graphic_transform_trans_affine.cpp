@@ -18,10 +18,10 @@ namespace OHOS {
     const TransAffine& TransAffine::ParlToParl(const double* src,
                                                const double* dst)
     {
-        scaleX = src[INDEX_TWO] - src[INDEX_ZERO];
+        scaleX_ = src[INDEX_TWO] - src[INDEX_ZERO];
         shearY = src[INDEX_THREE] - src[INDEX_ONE];
         shearX = src[INDEX_FOUR] - src[INDEX_ZERO];
-        scaleY = src[INDEX_FIVE] - src[INDEX_ONE];
+        scaleY_ = src[INDEX_FIVE] - src[INDEX_ONE];
         translateX = src[INDEX_ZERO];
         translateY = src[INDEX_ONE];
         Invert();
@@ -49,13 +49,13 @@ namespace OHOS {
 
     const TransAffine& TransAffine::Multiply(const TransAffine& metrix)
     {
-        double t0 = scaleX * metrix.scaleX + shearY * metrix.shearX;
-        double t2 = shearX * metrix.scaleX + scaleY * metrix.shearX;
-        double t4 = translateX * metrix.scaleX + translateY * metrix.shearX + metrix.translateX;
-        shearY = scaleX * metrix.shearY + shearY * metrix.scaleY;
-        scaleY = shearX * metrix.shearY + scaleY * metrix.scaleY;
-        translateY = translateX * metrix.shearY + translateY * metrix.scaleY + metrix.translateY;
-        scaleX = t0;
+        double t0 = scaleX_ * metrix.scaleX_ + shearY * metrix.shearX;
+        double t2 = shearX * metrix.scaleX_ + scaleY_ * metrix.shearX;
+        double t4 = translateX * metrix.scaleX_ + translateY * metrix.shearX + metrix.translateX;
+        shearY = scaleX_ * metrix.shearY + shearY * metrix.scaleY_;
+        scaleY_ = shearX * metrix.shearY + scaleY_ * metrix.scaleY_;
+        translateY = translateX * metrix.shearY + translateY * metrix.scaleY_ + metrix.translateY;
+        scaleX_ = t0;
         shearX = t2;
         translateX = t4;
         return *this;
@@ -65,38 +65,38 @@ namespace OHOS {
     {
         double d = DeterminantReciprocal();
 
-        double t0 = scaleY * d;
-        scaleY = scaleX * d;
+        double t0 = scaleY_ * d;
+        scaleY_ = scaleX_ * d;
         shearY = -shearY * d;
         shearX = -shearX * d;
 
         double t4 = -translateX * t0 - translateY * shearX;
-        translateY = -translateX * shearY - translateY * scaleY;
+        translateY = -translateX * shearY - translateY * scaleY_;
 
-        scaleX = t0;
+        scaleX_ = t0;
         translateX = t4;
         return *this;
     }
 
     const TransAffine& TransAffine::Reset()
     {
-        scaleX = scaleY = 1.0;
+        scaleX_ = scaleY_ = 1.0;
         shearY = shearX = translateX = translateY = 0.0;
         return *this;
     }
 
     bool TransAffine::IsIdentity(double epsilon) const
     {
-        return IsEqualEps(scaleX, 1.0, epsilon) &&
+        return IsEqualEps(scaleX_, 1.0, epsilon) &&
                IsEqualEps(shearY, 0.0, epsilon) &&
                IsEqualEps(shearX, 0.0, epsilon) &&
-               IsEqualEps(scaleY, 1.0, epsilon) &&
+               IsEqualEps(scaleY_, 1.0, epsilon) &&
                IsEqualEps(translateX, 0.0, epsilon) &&
                IsEqualEps(translateY, 0.0, epsilon);
     }
 
     bool TransAffine::IsValid(double epsilon) const
     {
-        return std::fabs(scaleX) > epsilon && std::fabs(scaleY) > epsilon;
+        return std::fabs(scaleX_) > epsilon && std::fabs(scaleY_) > epsilon;
     }
 } // namespace OHOS
