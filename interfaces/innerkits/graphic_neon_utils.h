@@ -15,7 +15,7 @@
 
 #ifndef GRAPHIC_LITE_GRAPHIC_NEON_UTILS_H
 #define GRAPHIC_LITE_GRAPHIC_NEON_UTILS_H
-
+#define ARM_NEON_OPT
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
 #    include <arm_neon.h>
@@ -25,6 +25,7 @@
 #    include "gfx_utils/graphic_types.h"
 
 namespace OHOS {
+#    define BASEMSB 128
 #    define NEON_STEP_4 4
 #    define NEON_STEP_8 8
 #    define NEON_STEP_32 32
@@ -35,30 +36,26 @@ namespace OHOS {
 
     static inline uint8x8_t Multipling(uint8x8_t a, uint8x8_t b)
     {
-        const int16_t BASEMSB = 128;
-        uint8x8_t calcType = vqadd_u8(vmull_u8(a, b), vdup_n_u8(BASEMSB));
-
-        calcType = vqadd_u8(vshlq_n_u8(calcType, -BASEMSB), calcType);
-        return vshl_n_u8(calcType, -BASEMSB);
+        uint16x8_t calcType;
+        uint8x8_t result;
+        calcType = vmlal_u8(vdup_n_u8(BASEMSB), a, b);
+        result = vshrn_n_u16(calcType, NEON_STEP_8);
+        return vshrn_n_u16(vqadd_u16(vmovl_u8(result), calcType), NEON_STEP_8);
     }
+
     static inline uint8x8_t NeonPreLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
     {
-        return vqadd_u8(p, q) - (Multiply(p, a));
+        uint16x8_t calcType;
+        calcType = vaddl_u8(p, q);
+        return vsubq_u8(vshrn_n_u16(calcType, NEON_STEP_8), Multipling(p, a));
     }
 
-    static inline uint8x8_t NeonLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
+    static inline uint8x8_t NeonLerp(uint8x8_t p, uint8x8_t q, uint8x8_t alpha)
     {
-        uint16x8_t mulRes = vmull_u8(vsub_u8(p, q), a);
+        uint16x8_t mulRes = vmlal_u8(vdup_n_u8(BASEMSB), alpha, vsub_u8(p, q));
+        uint8x8_t result = vshrn_n_u16(mulRes, NEON_STEP_8);
 
-        const int16_t BASEMSB = 128;
-        uint8x8_t basereb = vdup_n_u8(BASEMSB);
-        mulRes = vaddl_u8(mulRes, basereb);
-        mulRes = vsubl_u8(mulRes, vcge_u8(p, q));
-        uint8x8_t middleValue = vshrn_n_u16(mulRes, 8);
-        uint8x8_t val = vqadd_u8(vshl_n_u8(middleValue, BASEMSB), middleValue);
-        const int16_t BASESHIFT = 8;
-        val = vshl_n_u8(val, BASESHIFT);
-        return vqadd_u8(p, val);
+        return vqadd_u8(p, vshrn_n_u16(vqadd_u16(vmovl_u8(result), mulRes), NEON_STEP_8));
     }
     // return vIn / 255
     static inline uint8x8_t NeonFastDiv255(uint16x8_t vIn)
