@@ -199,7 +199,7 @@ namespace OHOS {
         r = vmovn_u16(vshlq_n_u16(vshrq_n_u16(vBuf, 11), 3));
         a = vdup_n_u8(opa);
     }
-    static inline void SetPixelColor_ARGB8888(uint8_t* buf, const uint8& r, const uint8& g, const uint8& b, const uint8& a)
+    static inline void SetPixelColor_ARGB8888(uint8_t* buf, const uint8_t& r, const uint8_t& g, const uint8_t& b, const uint8_t& a)
     {
         uint8x8x4_t vBuf;
         vBuf.val[NEON_R] = vdup_n_u8(r);
