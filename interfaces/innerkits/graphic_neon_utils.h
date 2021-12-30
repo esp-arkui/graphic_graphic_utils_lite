@@ -36,7 +36,7 @@ namespace OHOS {
     static inline uint8x8_t Multiply(uint8x8_t a, uint8x8_t b)
     {
         const int16_t BASEMSB = 128;
-        uint16x8_t calcTypetemp = vqadd_u8(vmull_u8(a, b), vdup_n_u8(BASEMSB));
+        uint16x8_t calcTypetemp = vqaddl_u8(vmull_u8(a, b), vdup_n_u8(BASEMSB));
         uint8x8_t calcType = vshrn_n_u16(calcTypetemp, 8);
         calcType = vqadd_u8(vshlq_n_u8(calcType, -BASEMSB), calcType);
         return vshl_n_u8(calcType, -BASEMSB);
