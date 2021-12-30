@@ -78,7 +78,7 @@ config("graphic_utils_public_config") {
     "interfaces/kits",
   ]
   if (ohos_kernel_type == "liteos_a") {
-    defines += [ 
+    defines = [ 
       "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE=1",
@@ -94,7 +94,7 @@ config("graphic_utils_public_config") {
     ]
   }
   if (ohos_kernel_type == "liteos_m") {
-    defines += [ 
+    defines = [ 
       "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
       "GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE=1",
