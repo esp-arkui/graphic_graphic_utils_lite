@@ -61,7 +61,7 @@ namespace OHOS {
     static inline uint8x8_t NeonFastDiv255(uint16x8_t vIn)
     {
         // 257: 2^8 + 1; 8: number of shifts
-        return vmov_n_u16(vshrq_n_u16(vIn + vshrq_n_u16(vIn + vdupq_n_u16(257), 8), 8));
+        return vmovn_u16(vshrq_n_u16(vIn + vshrq_n_u16(vIn + vdupq_n_u16(257), 8), 8));
     }
 
     // return a * b / 255
