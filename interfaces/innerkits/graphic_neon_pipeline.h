@@ -100,7 +100,7 @@ namespace OHOS {
             storeDstFunc_(dst, r1_, g1_, b1_, a1_);
         }
 
-        static void inline void NeonPrelerp_ARGB8888(uint8_t* buf, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+        void NeonPrelerp_ARGB8888(uint8_t* buf, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
         {
             uint8x8x4_t vBuf = vld4_u8(buf);
             uint8x8_t r0 = vBuf.val[NEON_R];
@@ -118,9 +118,10 @@ namespace OHOS {
             uint8x8_t bs = NeonPreLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            StoreBuf_ARGB8888(vBuf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
-        static void inline void NeonPrelerp_ARGB8888(uint8_t* buf, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, uint8_t cover)
+
+        void NeonPrelerp_ARGB8888(uint8_t* buf, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, uint8_t cover)
         {
             uint8x8x4_t vBuf = vld4_u8(buf);
             uint8x8_t r0 = vBuf.val[NEON_R];
@@ -128,19 +129,20 @@ namespace OHOS {
             uint8x8_t b0 = vBuf.val[NEON_B];
             uint8x8_t a0 = vBuf.val[NEON_A];
 
-            uint8x8_t r1 = Multipling(vdup_n_u8(red), cover);
-            uint8x8_t g1 = Multipling(vdup_n_u8(green), cover);
-            uint8x8_t b1 = Multipling(vdup_n_u8(blue), cover);
-            uint8x8_t a1 = Multipling(vdup_n_u8(alpha), cover);
+            uint8x8_t r1 = Multipling(vdup_n_u8(red), vdup_n_u8(cover));
+            uint8x8_t g1 = Multipling(vdup_n_u8(green), vdup_n_u8(cover));
+            uint8x8_t b1 = Multipling(vdup_n_u8(blue), vdup_n_u8(cover));
+            uint8x8_t a1 = Multipling(vdup_n_u8(alpha), vdup_n_u8(cover));
 
             uint8x8_t rs = NeonPreLerp(r0, r1, a1);
             uint8x8_t gs = NeonPreLerp(g0, g1, a1);
             uint8x8_t bs = NeonPreLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            StoreBuf_ARGB8888(vBuf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
-        static void inline void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+
+        void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         {
             uint8x8x4_t vBuf = vld4_u8(buf);
             uint8x8_t r0 = vBuf.val[NEON_R];
@@ -158,9 +160,10 @@ namespace OHOS {
             uint8x8_t bs = NeonLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            StoreBuf_ARGB8888(vBuf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
-        static void inline void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
+
+        void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
         {
             uint8x8x4_t vBuf = vld4_u8(buf);
             uint8x8_t r0 = vBuf.val[NEON_R];
@@ -178,7 +181,7 @@ namespace OHOS {
             uint8x8_t bs = NeonLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            StoreBuf_ARGB8888(vBuf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
     private:
