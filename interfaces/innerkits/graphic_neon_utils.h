@@ -38,7 +38,7 @@ namespace OHOS {
     {
         uint16x8_t calcType;
         uint8x8_t result;
-        calcType = vmlal_u8(vdup_n_u16(BASEMSB), a, b);
+        calcType = vmlal_u8(vdupq_n_u16(BASEMSB), a, b);
         result = vshrn_n_u16(calcType, NEON_STEP_8);
         return vshrn_n_u16(vqadd_u16(vmovl_u8(result), calcType), NEON_STEP_8);
     }
@@ -47,7 +47,7 @@ namespace OHOS {
     {
         uint16x8_t calcType;
         calcType = vaddl_u8(p, q);
-        return vsubq_u8(vshrn_n_u16(calcType, NEON_STEP_8), Multipling(p, a));
+        return vsub_u8(vshrn_n_u16(calcType, NEON_STEP_8), Multipling(p, a));
     }
 
     static inline uint8x8_t NeonLerp(uint8x8_t p, uint8x8_t q, uint8x8_t alpha)
