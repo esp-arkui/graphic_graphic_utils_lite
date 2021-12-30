@@ -15,7 +15,7 @@
 
 #ifndef GRAPHIC_LITE_GRAPHIC_NEON_UTILS_H
 #define GRAPHIC_LITE_GRAPHIC_NEON_UTILS_H
-#define ARM_NEON_OPT
+
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
 #    include <arm_neon.h>
@@ -38,7 +38,7 @@ namespace OHOS {
     {
         uint16x8_t calcType;
         uint8x8_t result;
-        calcType = vmlal_u8(vdup_n_u8(BASEMSB), a, b);
+        calcType = vmlal_u8(vdup_n_u16(BASEMSB), a, b);
         result = vshrn_n_u16(calcType, NEON_STEP_8);
         return vshrn_n_u16(vqadd_u16(vmovl_u8(result), calcType), NEON_STEP_8);
     }
