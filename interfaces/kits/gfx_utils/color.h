@@ -38,7 +38,7 @@
 #include <cmath>
 #include <cstdint>
 
-#include "gfx_utils/graphics/graphic_common/graphic_common_gamma_lut.h"
+#include "gfx_utils/graphics/common/graphic_common_gamma_lut.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
 
