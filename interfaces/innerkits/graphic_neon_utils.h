@@ -33,10 +33,6 @@ namespace OHOS {
 #    define NEON_G 1
 #    define NEON_B 0
 
-    static inline uint8x8_t NeonPreLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
-    {
-        return vqadd_u8(p, q) - (Multiply(p, a));
-    }
     static inline uint8x8_t Multiply(uint8x8_t a, uint8x8_t b)
     {
         const int16_t BASEMSB = 128;
@@ -45,6 +41,11 @@ namespace OHOS {
         calcType = vqadd_u8(vshlq_n_u8(calcType, -BASEMSB), calcType);
         return vshl_n_u8(calcType, -BASEMSB);
     }
+    static inline uint8x8_t NeonPreLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
+    {
+        return vqadd_u8(p, q) - (Multiply(p, a));
+    }
+
     static inline uint8x8_t NeonLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
     {
         uint16x8_t mulRes = vmull_u8(vsub_u8（(p, q), a);
