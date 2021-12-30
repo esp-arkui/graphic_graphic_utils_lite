@@ -32,6 +32,33 @@ namespace OHOS {
 #define NEON_G            1
 #define NEON_B            0
 
+static inline uint8x8_t NeonPreLerp(uint8x8_t p,uint8x8_t q,uint8x8_t a)
+{
+    return vqadd_u8(p, q) - (Multiply(p, a));
+
+}
+static inline uint8x8_t Multiply(uint8x8_t a,uint8x8_t b){
+
+    const int16_t BASEMSB = 128;
+    uint8x8_t calcType = vqadd_u8(vmull_u8(a, b),vdup_n_u8(BASEMSB));
+    calcType = vqadd_u8(vshlq_n_u8(calcType,-BASEMSB),calcType);
+    return vshl_n_u8(calcType,-BASEMSB);
+}
+static inline uint8x8_t NeonLerp(uint8x8_t p,uint8x8_t q,uint8x8_t a)
+{
+    uint8x8_t mulRes = vmull_u8(vsub_u8（(p, q), a);
+    const int16_t BASEMSB = 128;
+    uint8x8_t basereb = vdup_n_u8(r);
+    mulRes = vqadd_u8(mulRes, basereb);
+    uint8x8_t pThanQ = vcge_u8(p, q);
+    uint8x8_t t = vsub_u8(mulRes,pThanQ);
+
+    uint8x8_t val = vqadd_u8(vshl_n_u8(t,BASEMSB), t);
+    const int16_t BASESHIFT = 8;
+    val = vshl_n_u8(val, BASESHIFT);
+    return vqadd_u8(p,val);
+
+}
 // return vIn / 255
 static inline uint8x8_t NeonFastDiv255(uint16x8_t vIn)
 {
@@ -59,6 +86,7 @@ static inline float32x4_t NeonDiv(float32x4_t a, float32x4_t b)
 // a is a 16-bits integer, b and result are 8-bits integers.
 static inline uint8x8_t NeonDivInt(uint16x8_t a, uint8x8_t b)
 {
+
     float32x4_t low = NeonDiv(vcvtq_f32_u32(vmovl_u16(vget_low_u16(a))),
                               vcvtq_f32_u32(vmovl_u16(vget_low_u16(vmovl_u8(b)))));
     float32x4_t high = NeonDiv(vcvtq_f32_u32(vmovl_u16(vget_high_u16(a))),

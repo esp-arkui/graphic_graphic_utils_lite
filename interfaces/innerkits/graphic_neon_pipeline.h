@@ -98,24 +98,8 @@ public:
         blendFunc_(r1_, g1_, b1_, a1_, r, g, b, a);
         storeDstFunc_(dst, r1_, g1_, b1_, a1_);
     }
-    static inline uint8x8_t Multiply(uint8x8_t a,uint8x8_t b){
-//        CalcType calcType = valueA * valueB + BASEMSB;
-//        return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
-        const int16_t BASEMSB = 128;
-        uint8x8_t calcType = vqadd_u8(vmull_u8(a, b),vdup_n_u8(BASEMSB));
-        calcType = vqadd_u8(vshlq_n_u8(calcType,-BASEMSB),calcType);
-        return vshl_n_u8(calcType,-BASEMSB);
-    }
-    static inline uint8x8_t NeonPreLerp(uint8x8_t p,uint8x8_t q,uint8x8_t a)
-    {
-        //        vmull_u8(,) //乘发
-        //        vqadd_u8(,) //加发
-        //        vsub_u8（,）//减法
-        //        vshlq_n_u8  //移位
-        return vqadd_u8(p, q) - (Multiply(p, a));
 
-    }
-    static inline void NeonPPPP_ARGB8888(uint8_t* buf, uint8_t* srcBuf)
+    void inline void NeonPPPP_ARGB8888(uint8_t* buf, uint8_t* srcBuf)
     {
         uint8x8x4_t vBuf = vld4_u8(buf);
         uint8x8x4_t vSrcBuf = vld4_u8(srcBuf);
@@ -137,32 +121,7 @@ public:
         StoreBuf_ARGB8888(vBuf,rs,gs,bs,as);
     }
 
-    static inline uint8x8_t NeonLerp(uint8x8_t p,uint8x8_t q,uint8x8_t a)
-    {
-        //        vmull_u8(,) //乘发
-        //        vqadd_u8(,) //加发
-        //        vsub_u8（,）//减法
-        //        vshl_n_u8  //移位
-        /*
-                int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
-                return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
-        */
-        uint8x8_t mulRes = vmull_u8(vsub_u8（(p, q), a);
-        const int16_t BASEMSB = 128;
-        uint8x8_t basereb = vdup_n_u8(r);
-        mulRes = vqadd_u8(mulRes, basereb);
-        uint8x8_t pThanQ = vcge_u8(p, q);
-        uint8x8_t t = vsub_u8(mulRes,pThanQ);
-
-        uint8x8_t val = vqadd_u8(vshl_n_u8(t,BASEMSB), t);
-        const int16_t BASESHIFT = 8;
-        val = vshl_n_u8(val, BASESHIFT);
-        return vqadd_u8(p,val);
-
-    }
-
-
-    static inline void NeonLLLP_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+    void inline void NeonLLLP_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
         uint8x8x4_t vBuf = vld4_u8(buf);
         uint8x8_t r0 = vBuf.val[NEON_R];
