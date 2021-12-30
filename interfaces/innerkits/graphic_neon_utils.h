@@ -33,7 +33,7 @@ namespace OHOS {
 #    define NEON_G 1
 #    define NEON_B 0
 
-    static inline uint8x8_t Multiply(uint8x8_t a, uint8x8_t b)
+    static inline uint8x8_t Multipling(uint8x8_t a, uint8x8_t b)
     {
         const int16_t BASEMSB = 128;
         uint8x8_t calcType = vqadd_u8(vmull_u8(a, b), vdup_n_u8(BASEMSB));
@@ -64,7 +64,7 @@ namespace OHOS {
     static inline uint8x8_t NeonFastDiv255(uint16x8_t vIn)
     {
         // 257: 2^8 + 1; 8: number of shifts
-        return vmovn_u16(vshrq_n_u16(vIn + vshrq_n_u16(vIn + vdupq_n_u16(257), 8), 8));
+        return vmov_n_u16(vshrq_n_u16(vIn + vshrq_n_u16(vIn + vdupq_n_u16(257), 8), 8));
     }
 
     // return a * b / 255

@@ -128,10 +128,10 @@ namespace OHOS {
             uint8x8_t b0 = vBuf.val[NEON_B];
             uint8x8_t a0 = vBuf.val[NEON_A];
 
-            uint8x8_t r1 = Multiply(vdup_n_u8(red), cover);
-            uint8x8_t g1 = Multiply(vdup_n_u8(green), cover);
-            uint8x8_t b1 = Multiply(vdup_n_u8(blue), cover);
-            uint8x8_t a1 = Multiply(vdup_n_u8(alpha), cover);
+            uint8x8_t r1 = Multipling(vdup_n_u8(red), cover);
+            uint8x8_t g1 = Multipling(vdup_n_u8(green), cover);
+            uint8x8_t b1 = Multipling(vdup_n_u8(blue), cover);
+            uint8x8_t a1 = Multipling(vdup_n_u8(alpha), cover);
 
             uint8x8_t rs = NeonPreLerp(r0, r1, a1);
             uint8x8_t gs = NeonPreLerp(g0, g1, a1);
@@ -168,10 +168,10 @@ namespace OHOS {
             uint8x8_t b0 = vBuf.val[NEON_B];
             uint8x8_t a0 = vBuf.val[NEON_A];
 
-            uint8x8_t r1 = Multiply(vdup_n_u8(r), cover);
-            uint8x8_t g1 = Multiply(vdup_n_u8(g), cover);
-            uint8x8_t b1 = Multiply(vdup_n_u8(b), cover);
-            uint8x8_t a1 = Multiply(vdup_n_u8(a), cover);
+            uint8x8_t r1 = Multipling(vdup_n_u8(r), cover);
+            uint8x8_t g1 = Multipling(vdup_n_u8(g), cover);
+            uint8x8_t b1 = Multipling(vdup_n_u8(b), cover);
+            uint8x8_t a1 = Multipling(vdup_n_u8(a), cover);
 
             uint8x8_t rs = NeonLerp(r0, r1, a1);
             uint8x8_t gs = NeonLerp(g0, g1, a1);
