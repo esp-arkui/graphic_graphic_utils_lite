@@ -171,10 +171,10 @@ namespace OHOS {
             uint8x8_t b0 = vBuf.val[NEON_B];
             uint8x8_t a0 = vBuf.val[NEON_A];
 
-            uint8x8_t r1 = Multipling(vdup_n_u8(r), cover);
-            uint8x8_t g1 = Multipling(vdup_n_u8(g), cover);
-            uint8x8_t b1 = Multipling(vdup_n_u8(b), cover);
-            uint8x8_t a1 = Multipling(vdup_n_u8(a), cover);
+            uint8x8_t r1 = Multipling(vdup_n_u8(r), vdup_n_u8(cover));
+            uint8x8_t g1 = Multipling(vdup_n_u8(g), vdup_n_u8(cover));
+            uint8x8_t b1 = Multipling(vdup_n_u8(b), vdup_n_u8(cover));
+            uint8x8_t a1 = Multipling(vdup_n_u8(a), vdup_n_u8(cover));
 
             uint8x8_t rs = NeonLerp(r0, r1, a1);
             uint8x8_t gs = NeonLerp(g0, g1, a1);
