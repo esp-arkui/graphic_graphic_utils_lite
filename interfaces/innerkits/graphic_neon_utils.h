@@ -52,10 +52,10 @@ namespace OHOS {
 
     static inline uint8x8_t NeonLerp(uint8x8_t p, uint8x8_t q, uint8x8_t alpha)
     {
-        uint16x8_t mulRes = vmlal_u8(vdup_n_u8(BASEMSB), alpha, vsub_u8(p, q));
+        uint16x8_t mulRes = vmlal_u8(vdupq_n_u16(BASEMSB), alpha, vsub_u8(p, q));
         uint8x8_t result = vshrn_n_u16(mulRes, NEON_STEP_8);
 
-        return vqadd_u8(p, vshrn_n_u16(vqadd_u16(vmovl_u8(result), mulRes), NEON_STEP_8));
+        return vqadd_u8(p, vshrn_n_u16(vaddq_u16(vmovl_u8(result), mulRes), NEON_STEP_8));
     }
     // return vIn / 255
     static inline uint8x8_t NeonFastDiv255(uint16x8_t vIn)
