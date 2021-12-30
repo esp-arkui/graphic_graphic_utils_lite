@@ -118,7 +118,7 @@ namespace OHOS {
             uint8x8_t bs = NeonPreLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            //StoreBuf_ARGB8888(buf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
         void NeonPrelerp_ARGB8888(uint8_t* buf, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, uint8_t cover)
@@ -139,7 +139,7 @@ namespace OHOS {
             uint8x8_t bs = NeonPreLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            //StoreBuf_ARGB8888(buf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
         void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
@@ -160,7 +160,7 @@ namespace OHOS {
             uint8x8_t bs = OHOS::NeonLerp(b0, b1, a1);
             uint8x8_t as = OHOS::NeonPreLerp(a0, a1, a1);
 
-            //StoreBuf_ARGB8888(buf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
         void NeonLerp_ARGB8888(uint8_t* buf, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t cover)
@@ -181,7 +181,7 @@ namespace OHOS {
             uint8x8_t bs = NeonLerp(b0, b1, a1);
             uint8x8_t as = NeonPreLerp(a0, a1, a1);
 
-            //StoreBuf_ARGB8888(buf, rs, gs, bs, as);
+            StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
     private:
