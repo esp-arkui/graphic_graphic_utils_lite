@@ -15,8 +15,6 @@
 
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_bezier_arc.h>
 
-#include <cmath>
-
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
     const int16u BEZIER_ARC_SETUP = 2;
