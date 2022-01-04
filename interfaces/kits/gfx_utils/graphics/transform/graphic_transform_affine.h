@@ -34,16 +34,20 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        TransAffine() :
-            scaleX_(1.0), shearY(0.0), shearX(0.0), scaleY_(1.0), translateX(0.0), translateY(0.0)
+        TransAffine()
+            : scaleX_(1.0), shearY(0.0),
+              shearX(0.0), scaleY_(1.0),
+              translateX(0.0), translateY(0.0)
         {}
         /**
          * @brief 自定义矩阵
          * @since 1.0
          * @version 1.0
          */
-        TransAffine(double v0, double v1, double v2, double v3, double v4, double v5) :
-            scaleX_(v0), shearY(v1), shearX(v2), scaleY_(v3), translateX(v4), translateY(v5)
+        TransAffine(double v0, double v1, double v2, double v3, double v4, double v5)
+            : scaleX_(v0), shearY(v1),
+              shearX(v2), scaleY_(v3),
+              translateX(v4), translateY(v5)
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
@@ -262,8 +266,8 @@ namespace OHOS {
      */
     class TransAffineRotation : public TransAffine {
     public:
-        TransAffineRotation(double angle) :
-            TransAffine(std::cos(angle), std::sin(angle), -std::sin(angle), std::cos(angle), 0.0, 0.0)
+        TransAffineRotation(double angle)
+            : TransAffine(std::cos(angle), std::sin(angle), -std::sin(angle), std::cos(angle), 0.0, 0.0)
         {}
     };
 
@@ -274,12 +278,10 @@ namespace OHOS {
      */
     class TransAffineScaling : public TransAffine {
     public:
-        TransAffineScaling(double x, double y) :
-            TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
+        TransAffineScaling(double x, double y) : TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
         {}
 
-        TransAffineScaling(double scale) :
-            TransAffine(scale, 0.0, 0.0, scale, 0.0, 0.0)
+        TransAffineScaling(double scale) : TransAffine(scale, 0.0, 0.0, scale, 0.0, 0.0)
         {}
     };
     /**
@@ -289,10 +291,8 @@ namespace OHOS {
      */
     class TransAffineTranslation : public TransAffine {
     public:
-        TransAffineTranslation(double x, double y) :
-            TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
+        TransAffineTranslation(double x, double y) : TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
         {}
     };
 } // namespace OHOS
-
 #endif

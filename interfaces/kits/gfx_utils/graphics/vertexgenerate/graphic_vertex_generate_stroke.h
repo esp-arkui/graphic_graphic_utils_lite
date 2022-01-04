@@ -19,7 +19,6 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_math_stroke.h"
 
 namespace OHOS {
-
     class VertexGenerateStroke {
         enum Status {
             INITIAL,

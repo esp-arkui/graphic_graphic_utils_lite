@@ -70,8 +70,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2))) :
-            m_outline(cell_block_limit),
+        RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2)))
+            : m_outline(cell_block_limit),
             m_clipper(),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -86,8 +86,8 @@ namespace OHOS {
         }
 
         template <typename GammaF>
-        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit) :
-            m_outline(cell_block_limit),
+        RasterizerScanlineAntiAlias(const GammaF& gamma_function, unsigned cell_block_limit)
+            : m_outline(cell_block_limit),
             m_clipper(m_outline),
             m_filling_rule(FILL_NON_ZERO),
             m_auto_close(true),
@@ -320,7 +320,7 @@ namespace OHOS {
             }
             sl.ResetSpans();
             unsigned num_cells = m_outline.ScanlineNumCells(m_scan_y);
-            const CellBuildAntiAlias* const* cells = m_outline.ScanlineCells(m_scan_y);
+            const CellBuildAntiAlias* const *cells = m_outline.ScanlineCells(m_scan_y);
             int cover = 0;
 
             while (num_cells) {

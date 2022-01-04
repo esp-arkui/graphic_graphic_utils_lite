@@ -483,7 +483,8 @@ namespace OHOS {
                 break;
 
             case COLLINEAR3:
-                if ((delta2 + delta3) * (delta2 + delta3) <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
+                if ((delta2 + delta3) * (delta2 + delta3) <=
+                        distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                     // 如果曲率未超过距离公差值
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
                         points_.Add(PointD(x23, y23));

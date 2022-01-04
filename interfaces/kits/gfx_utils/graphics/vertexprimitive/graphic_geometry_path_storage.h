@@ -42,12 +42,13 @@ namespace OHOS {
             FreeAll();
         };
 
-        VertexBlockStorage() :
-            totalVertices_(0),
+        VertexBlockStorage()
+            : totalVertices_(0),
             totalBlocks_(0),
             maxBlocks_(0),
             croodBlocks_(0),
-            cmdBlocks_(0){};
+            cmdBlocks_(0)
+        {};
 
         const VertexBlockStorage& operator=(const VertexBlockStorage& vertexBlockStorage)
         {
@@ -233,14 +234,13 @@ namespace OHOS {
         unsigned totalVertices_;
         unsigned totalBlocks_;
         unsigned maxBlocks_;
-        double** croodBlocks_; //输入的点
-        int8u** cmdBlocks_;    //标记点状态
+        double** croodBlocks_; // 输入的点
+        int8u** cmdBlocks_;    // 标记点状态
     };
 
     class UICanvasVertices : public HeapBase {
     public:
-        UICanvasVertices() :
-            vertices_(), iterator_(0)
+        UICanvasVertices() : vertices_(), iterator_(0)
         {}
 
         /**

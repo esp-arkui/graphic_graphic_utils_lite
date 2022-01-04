@@ -102,8 +102,8 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        RasterizerScanlineClip() :
-            m_clip_box(0, 0, 0, 0),
+        RasterizerScanlineClip()
+            : m_clip_box(0, 0, 0, 0),
             m_x1(0),
             m_y1(0),
             m_clipping_flags(0),
@@ -187,8 +187,7 @@ namespace OHOS {
         typedef RasterDepictInt conv_type;
         typedef int coord_type;
 
-        RasterizerScanlineNoClip() :
-            m_x1(0), m_y1(0)
+        RasterizerScanlineNoClip() : m_x1(0), m_y1(0)
         {}
 
         void ResetClipping()
@@ -336,8 +335,10 @@ namespace OHOS {
                 case 0x01:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
-                    LineClipY(rasterLine, x1, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne, m_clip_box.x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    LineClipY(rasterLine, x1, y1, m_clip_box.x2, yPilotOne,
+                              clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne,
+                              m_clip_box.x2, y2, yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x1 > clip.x2
@@ -345,14 +346,17 @@ namespace OHOS {
                 case 0x02:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
-                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne, x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2,
+                              yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne, x2, y2,
+                              yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x1 > clip.x2 && x2 > clip.x2
                 */
                 case 0x03:
-                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, y2,
+                              clipFlagsMoveToPoint, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x2 < clip.x1
@@ -360,8 +364,10 @@ namespace OHOS {
                 case 0x04:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
-                    LineClipY(rasterLine, x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, m_clip_box.x1, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    LineClipY(rasterLine, x1, y1, m_clip_box.x1, yPilotOne,
+                              clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, m_clip_box.x1, y2,
+                              yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x1 > clip.x2 && x2 < clip.x1
@@ -371,9 +377,12 @@ namespace OHOS {
                     yPilotTwo = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
                     yClipFlagsTwo = ClippingFlagsY(yPilotTwo, m_clip_box);
-                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne, m_clip_box.x1, yPilotTwo, yClipFlagsOne, yClipFlagsTwo);
-                    LineClipY(rasterLine, m_clip_box.x1, yPilotTwo, m_clip_box.x1, y2, yClipFlagsTwo, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, yPilotOne,
+                              clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x2, yPilotOne, m_clip_box.x1, yPilotTwo,
+                              yClipFlagsOne, yClipFlagsTwo);
+                    LineClipY(rasterLine, m_clip_box.x1, yPilotTwo, m_clip_box.x1, y2,
+                              yClipFlagsTwo, cFlagsLineToPoint);
                     break;
 
                 /*
@@ -382,8 +391,10 @@ namespace OHOS {
                 case 0x08:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
-                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, x2, y2, yClipFlagsOne, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne,
+                              clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, x2, y2,
+                              yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x1 < clip.x1 && x2 > clip.x2
@@ -393,21 +404,27 @@ namespace OHOS {
                     yPilotTwo = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
                     yClipFlagsOne = ClippingFlagsY(yPilotOne, m_clip_box);
                     yClipFlagsTwo = ClippingFlagsY(yPilotTwo, m_clip_box);
-                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne, clipFlagsMoveToPoint, yClipFlagsOne);
-                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, m_clip_box.x2, yPilotTwo, yClipFlagsOne, yClipFlagsTwo);
-                    LineClipY(rasterLine, m_clip_box.x2, yPilotTwo, m_clip_box.x2, y2, yClipFlagsTwo, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, yPilotOne,
+                              clipFlagsMoveToPoint, yClipFlagsOne);
+                    LineClipY(rasterLine, m_clip_box.x1, yPilotOne, m_clip_box.x2, yPilotTwo,
+                              yClipFlagsOne, yClipFlagsTwo);
+                    LineClipY(rasterLine, m_clip_box.x2, yPilotTwo, m_clip_box.x2, y2,
+                              yClipFlagsTwo, cFlagsLineToPoint);
                     break;
                 /*
                 * 表明 x1 < clip.x1 && x2 < clip.x1
                 */
                 case 0x0c:
-                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
+                    LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, y2,
+                              clipFlagsMoveToPoint, cFlagsLineToPoint);
                     break;
             }
             m_clipping_flags = cFlagsLineToPoint;
         } else {
-            rasterLine.LineOperate(RasterDepictInt::GetXCoordinateValue(m_x1), RasterDepictInt::GetYCoordinateValue(m_y1),
-                                   RasterDepictInt::GetXCoordinateValue(x2), RasterDepictInt::GetYCoordinateValue(y2));
+            rasterLine.LineOperate(RasterDepictInt::GetXCoordinateValue(m_x1),
+                                   RasterDepictInt::GetYCoordinateValue(m_y1),
+                                   RasterDepictInt::GetXCoordinateValue(x2),
+                                   RasterDepictInt::GetYCoordinateValue(y2));
         }
         m_x1 = x2;
         m_y1 = y2;

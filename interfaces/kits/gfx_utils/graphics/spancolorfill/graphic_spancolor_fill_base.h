@@ -30,7 +30,6 @@ namespace OHOS {
     class SpanFillColorAllocator {
     public:
         typedef ColorT color_type;
-
         /**
          * @brief Resize 重新分配计算m_span长度
          * @param span_len 扫描线长度
@@ -47,7 +46,5 @@ namespace OHOS {
     private:
         GeometryPlainDataArray<color_type> spans;
     };
-
 } // namespace OHOS
-
 #endif
