@@ -21,8 +21,8 @@ namespace OHOS {
     Arc::Arc(double centerX, double centerY,
              double rx, double ry,
              double start_, double end_,
-             bool isClockwise) :
-        mCenterX(centerX),
+             bool isClockwise)
+        : mCenterX(centerX),
         mCenterY(centerY), mRadiusX(rx), mRadiusY(ry), mExpansionRatio(1.0)
     {
         Normalize(start_, end_, isClockwise);

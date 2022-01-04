@@ -15,8 +15,6 @@
 
 #include <gfx_utils/graphics/vertexprimitive/graphic_geometry_bezier_arc.h>
 
-#include <cmath>
-
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
     const int16u BEZIER_ARC_SETUP = 2;
@@ -199,7 +197,8 @@ namespace OHOS {
         bezierArcModel.Init(0.0, 0.0, rx, ry, startAngle, sweepAngle);
         TransAffine mtx = TransAffineRotation(angle);
         mtx *= TransAffineTranslation(cx, cy);
-        for (unsigned i = BEZIER_ARC_SETUP; i < bezierArcModel.GetNumberVertices() - BEZIER_ARC_SETUP; i += BEZIER_ARC_SETUP) {
+        unsigned limit = bezierArcModel.GetNumberVertices() - BEZIER_ARC_SETUP;
+        for (unsigned i = BEZIER_ARC_SETUP; i < limit; i += BEZIER_ARC_SETUP) {
             mtx.Transform(bezierArcModel.GetVertices() + i, bezierArcModel.GetVertices() + i + 1);
         }
         bezierArcModel.GetVertices()[0] = x0;

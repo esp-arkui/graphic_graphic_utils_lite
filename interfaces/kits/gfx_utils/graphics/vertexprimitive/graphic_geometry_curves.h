@@ -35,14 +35,14 @@ namespace OHOS {
 
     class QuadraticBezierCurveIncrement {
     public:
-        QuadraticBezierCurveIncrement() :
-            numberSteps(0), currentStep(0), approximationScale(1.0)
+        QuadraticBezierCurveIncrement()
+            : numberSteps(0), currentStep(0), approximationScale(1.0)
         {}
 
         QuadraticBezierCurveIncrement(double x1, double y1,
                                       double x2, double y2,
-                                      double x3, double y3) :
-            numberSteps(0),
+                                      double x3, double y3)
+            : numberSteps(0),
             currentStep(0), approximationScale(1.0)
         {
             Init(x1, y1, x2, y2, x3, y3);
@@ -107,14 +107,14 @@ namespace OHOS {
 
     class QuadraticBezierCurveDividOperate {
     public:
-        QuadraticBezierCurveDividOperate() :
-            approximationScale_(1.0), angleTolerance_(0.0), count_(0)
+        QuadraticBezierCurveDividOperate()
+            : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {}
 
         QuadraticBezierCurveDividOperate(double x1, double y1,
                                          double x2, double y2,
-                                         double x3, double y3) :
-            approximationScale_(1.0),
+                                         double x3, double y3)
+            : approximationScale_(1.0),
             angleTolerance_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3);
@@ -239,20 +239,20 @@ namespace OHOS {
 
     class CubicBezierCurveIncrement {
     public:
-        CubicBezierCurveIncrement() :
-            numberSteps(0), currentStep(0), approximationScale(1.0)
+        CubicBezierCurveIncrement()
+            : numberSteps(0), currentStep(0), approximationScale(1.0)
         {}
 
         CubicBezierCurveIncrement(double x1, double y1, double x2, double y2,
-                                  double x3, double y3, double x4, double y4) :
-            numberSteps(0),
+                                  double x3, double y3, double x4, double y4)
+            : numberSteps(0),
             currentStep(0), approximationScale(1.0)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        CubicBezierCurveIncrement(const CubicBezierCurvePoints& curve4Points) :
-            numberSteps(0), currentStep(0), approximationScale(1.0)
+        CubicBezierCurveIncrement(const CubicBezierCurvePoints& curve4Points)
+            : numberSteps(0), currentStep(0), approximationScale(1.0)
         {
             Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
@@ -410,18 +410,21 @@ namespace OHOS {
 
     class CubicBezierCurveDividOperate {
     public:
-        CubicBezierCurveDividOperate() :
-            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
+        CubicBezierCurveDividOperate()
+            : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {}
 
-        CubicBezierCurveDividOperate(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4) :
-            approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
+        CubicBezierCurveDividOperate(double x1, double y1,
+                                     double x2, double y2,
+                                     double x3, double y3,
+                                     double x4, double y4)
+            : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        CubicBezierCurveDividOperate(const CubicBezierCurvePoints& curve4Points) :
-            approximationScale_(1.0), angleTolerance_(0.0), count_(0)
+        CubicBezierCurveDividOperate(const CubicBezierCurvePoints& curve4Points)
+            : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {
             Init(curve4Points[OHOS::INDEX_ZERO], curve4Points[OHOS::INDEX_ONE],
                  curve4Points[OHOS::INDEX_TWO], curve4Points[OHOS::INDEX_THREE],
@@ -531,12 +534,12 @@ namespace OHOS {
      */
     class QuadraticBezierCurve {
     public:
-        QuadraticBezierCurve() :
-            approximationMethod_(CURVEDIVIDOPERATE)
+        QuadraticBezierCurve()
+            : approximationMethod_(CURVEDIVIDOPERATE)
         {}
 
-        QuadraticBezierCurve(double x1, double y1, double x2, double y2, double x3, double y3) :
-            approximationMethod_(CURVEDIVIDOPERATE)
+        QuadraticBezierCurve(double x1, double y1, double x2, double y2, double x3, double y3)
+            : approximationMethod_(CURVEDIVIDOPERATE)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
@@ -631,21 +634,21 @@ namespace OHOS {
      */
     class CubicBezierCurve {
     public:
-        CubicBezierCurve() :
-            approximationMethod_(CURVEDIVIDOPERATE)
+        CubicBezierCurve()
+            : approximationMethod_(CURVEDIVIDOPERATE)
         {}
 
         CubicBezierCurve(double x1, double y1,
                          double x2, double y2,
                          double x3, double y3,
-                         double x4, double y4) :
-            approximationMethod_(CURVEDIVIDOPERATE)
+                         double x4, double y4)
+            : approximationMethod_(CURVEDIVIDOPERATE)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
         }
 
-        CubicBezierCurve(const CubicBezierCurvePoints& curve4Points) :
-            approximationMethod_(CURVEDIVIDOPERATE)
+        CubicBezierCurve(const CubicBezierCurvePoints& curve4Points)
+            : approximationMethod_(CURVEDIVIDOPERATE)
         {
             Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);

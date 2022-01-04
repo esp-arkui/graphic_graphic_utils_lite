@@ -56,8 +56,8 @@ namespace OHOS {
     class MathStroke {
     public:
         typedef typename VertexConsumer::ValueType coord_type;
-        MathStroke() :
-            strokeWidth(OHOS::ALPHAHALF),
+        MathStroke()
+            : strokeWidth(OHOS::ALPHAHALF),
             strokeWidthUsingAbs(OHOS::ALPHAHALF),
             strokeWidthPercentDivision(OHOS::ALPHAHALF / BUF_SIZE),
             strokeWidthSignal(1),
@@ -110,7 +110,8 @@ namespace OHOS {
                 AddVertex(vertexConsumer, vd0.vertexXCoord + dx1 - dx2, vd0.vertexYCoord - dy1 - dy2);
             } else {
                 double deltaAngle =
-                    std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + RADDALETAELPS / approxScaleRadio)) * TWO_TIMES;
+                    std::acos(strokeWidthUsingAbs /
+                              (strokeWidthUsingAbs + RADDALETAELPS / approxScaleRadio)) * TWO_TIMES;
                 double angleStart;
                 int nIndex;
                 int divNumber = int(PI / deltaAngle);
@@ -213,17 +214,21 @@ namespace OHOS {
                     case MITER_JOIN:
                     case MITER_JOIN_REVERT:
                     case MITER_JOIN_ROUND:
-                        CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2,
+                        CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle,
+                                  vertexDistLast, dx1, dy1, dx2, dy2,
                                   lineJoinEnum, miterLimitMeasure, dbevel);
                         break;
                     case ROUND_JOIN:
-                        CalcArc(vertexConsumer, vertexDistMiddle.vertexXCoord, vertexDistMiddle.vertexYCoord, dx1, -dy1,
+                        CalcArc(vertexConsumer, vertexDistMiddle.vertexXCoord,
+                                vertexDistMiddle.vertexYCoord, dx1, -dy1,
                                 dx2, -dy2);
                         break;
 
                     default:
-                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1);
-                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx2, vertexDistMiddle.vertexYCoord - dy2);
+                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx1,
+                                  vertexDistMiddle.vertexYCoord - dy1);
+                        AddVertex(vertexConsumer, vertexDistMiddle.vertexXCoord + dx2,
+                                  vertexDistMiddle.vertexYCoord - dy2);
                         break;
                 }
             }
@@ -262,8 +267,10 @@ namespace OHOS {
             } else {
                 double x2 = vd1.vertexXCoord + dx1;
                 double y2 = vd1.vertexYCoord - dy1;
-                if ((CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord, vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0) ==
-                    (CrossProduct(vd1.vertexXCoord, vd1.vertexYCoord, vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0)) {
+                if ((CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord,
+                                  vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0) ==
+                    (CrossProduct(vd1.vertexXCoord, vd1.vertexYCoord,
+                                  vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0)) {
                     AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                     miterLimitExceeded = false;
                 }

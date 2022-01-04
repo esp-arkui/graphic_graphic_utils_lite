@@ -44,8 +44,7 @@ namespace OHOS {
         enum {
             colorLutSize_ = ColorLutSize
         };
-        GradientColorCalibration() :
-            colorType(colorLutSize_)
+        GradientColorCalibration() : colorType(colorLutSize_)
         {
         }
 
@@ -150,8 +149,8 @@ namespace OHOS {
              * @param offset_ (0-1)
              * @param color_ 添加的颜色
              */
-            ColorPoint(double offset_, const color_type& color_) :
-                offset(offset_), color(color_)
+            ColorPoint(double offset_, const color_type& color_)
+                : offset(offset_), color(color_)
             {
                 if (offset < 0.0)
                     offset = 0.0;

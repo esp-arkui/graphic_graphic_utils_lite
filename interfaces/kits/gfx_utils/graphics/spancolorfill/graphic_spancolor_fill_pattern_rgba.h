@@ -36,8 +36,8 @@ namespace OHOS {
         {
         }
         SpanPatternFillRgba(PatternSource& source,
-                            unsigned offset_x, unsigned offset_y) :
-            patternSource(&source),
+                            unsigned offset_x, unsigned offset_y)
+            : patternSource(&source),
             offsetX(offset_x), offsetY(offset_y)
         {
         }

@@ -356,14 +356,14 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(unsigned blockPtrInc) :
-        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(unsigned blockPtrInc)
+        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(blockPtrInc)
     {
     }
 
     template <class T, unsigned S>
-    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v) :
-        size_(v.size_),
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v)
+        : size_(v.size_),
         numBlocks_(v.numBlocks_),
         maxBlocks_(v.maxBlocks_),
         blocks_(v.maxBlocks_ ? GeometryArrayAllocator<T*>::Allocate(v.maxBlocks_) : 0),
@@ -380,7 +380,8 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    const GeometryPlainDataBlockVector<T, S>& GeometryPlainDataBlockVector<T, S>::operator=(const GeometryPlainDataBlockVector<T, S>& v)
+    const GeometryPlainDataBlockVector<T, S>&
+    GeometryPlainDataBlockVector<T, S>::operator=(const GeometryPlainDataBlockVector<T, S>& v)
     {
         unsigned i;
         for (i = numBlocks_; i < v.numBlocks_; ++i) {
@@ -419,7 +420,7 @@ namespace OHOS {
     template <class T, unsigned S>
     inline T* GeometryPlainDataBlockVector<T, S>::DataPtr()
     {
-        unsigned blockNum = size_ >> BLOCK_SHIFT; //解释含义
+        unsigned blockNum = size_ >> BLOCK_SHIFT; // 解释含义
         if (blockNum >= numBlocks_) {
             AllocateBlock(blockNum);
         }

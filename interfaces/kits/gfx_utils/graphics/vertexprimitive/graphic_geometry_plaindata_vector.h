@@ -353,14 +353,16 @@ namespace OHOS {
     }
 
     template <class T>
-    GeometryPlainDataVector<T>::GeometryPlainDataVector(unsigned cap, unsigned extraTail) :
-        size_(0), capacity_(cap + extraTail), data_(GeometryArrayAllocator<T>::Allocate(capacity_))
+    GeometryPlainDataVector<T>::GeometryPlainDataVector(unsigned cap, unsigned extraTail)
+        : size_(0), capacity_(cap + extraTail),
+          data_(GeometryArrayAllocator<T>::Allocate(capacity_))
     {
     }
 
     template <class T>
-    GeometryPlainDataVector<T>::GeometryPlainDataVector(const GeometryPlainDataVector<T>& v) :
-        size_(v.size_), capacity_(v.capacity_), data_(v.capacity_ ? GeometryArrayAllocator<T>::Allocate(v.capacity_) : 0)
+    GeometryPlainDataVector<T>::GeometryPlainDataVector(const GeometryPlainDataVector<T>& v)
+        : size_(v.size_), capacity_(v.capacity_),
+          data_(v.capacity_ ? GeometryArrayAllocator<T>::Allocate(v.capacity_) : 0)
     {
         memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
     }

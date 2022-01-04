@@ -37,7 +37,7 @@ ndk_lib("lite_graphic_hals_ndk") {
 
 shared_library("graphic_utils") {
   if (enable_graphic_dualcore == true) {
-    defines = [ "HAL_CPU_NUM = 2" ]
+    defines = [ "HAL_CPU_NUM = 2", ]
   }
 
   sources = [
@@ -54,13 +54,13 @@ shared_library("graphic_utils") {
     "frameworks/style.cpp",
     "frameworks/transform.cpp",
     "frameworks/version.cpp",
-    "frameworks/graphics/graphic_geometry/graphic_geometry_arc.cpp",
-    "frameworks/graphics/graphic_geometry/graphic_geometry_bezier_arc.cpp",
-    "frameworks/graphics/graphic_geometry/graphic_geometry_curves.cpp",
-    "frameworks/graphics/graphic_geometry/graphic_geometry_rounded_rect.cpp",
-    "frameworks/graphics/graphic_transform/graphic_transform_trans_affine.cpp",
-    "frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_dash.cpp",
-    "frameworks/graphics/graphic_vertex_generate/graphic_vertex_generate_stroke.cpp",
+    "frameworks/graphics/vertexprimitive/graphic_geometry_arc.cpp",
+    "frameworks/graphics/vertexprimitive/graphic_geometry_bezier_arc.cpp",
+    "frameworks/graphics/vertexprimitive/graphic_geometry_curves.cpp",
+    "frameworks/graphics/vertexprimitive/graphic_geometry_rounded_rect.cpp",
+    "frameworks/graphics/transform/graphic_transform_trans_affine.cpp",
+    "frameworks/graphics/vertexgenerate/graphic_vertex_generate_dash.cpp",
+    "frameworks/graphics/vertexgenerate/graphic_vertex_generate_stroke.cpp",
   ]
   include_dirs = [ "frameworks","interfaces/kits" ]
   public_configs = [ ":graphic_utils_public_config" ]
@@ -77,6 +77,38 @@ config("graphic_utils_public_config") {
     "interfaces/innerkits",
     "interfaces/kits",
   ]
+  if (ohos_kernel_type == "liteos_a") {
+    defines = [ 
+      "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR=1",
+      "GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR=1",
+      "GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE=1",
+    ]
+  }
+  if (ohos_kernel_type == "liteos_m") {
+    defines = [ 
+      "GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_ROUNDEDRECT_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE=1",
+      "GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE=0",
+      "GRAPHIC_GEOMETYR_ENABLE_SHADOW_EFFECT_VERTEX_SOURCE=0",
+      "GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR=0",
+      "GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR=0",
+      "GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE=0",
+    ]
+  }
 }
 
 shared_library("graphic_hals") {

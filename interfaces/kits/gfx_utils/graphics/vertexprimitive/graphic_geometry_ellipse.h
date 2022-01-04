@@ -45,8 +45,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Ellipse() :
-            circleCenterX(0.0), circleCenterY(0.0), circleRadiusX(1.0), circleRadiusY(1.0), scaleRadio(1.0),
+        Ellipse()
+            : circleCenterX(0.0), circleCenterY(0.0),
+              circleRadiusX(1.0), circleRadiusY(1.0), scaleRadio(1.0),
             vertexNumber(ELLIPSE_VERTEX_NUM), circleInnerStep(0), isClockwise(false)
         {}
 
@@ -170,5 +171,4 @@ namespace OHOS {
     }
 #endif
 } // namespace OHOS
-
 #endif
