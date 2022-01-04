@@ -51,8 +51,8 @@ namespace OHOS {
      */
     class BezierArc : public HeapBase {
     public:
-        BezierArc() :
-            vertexIndex(BEZIER_ARC_VERTEX_NUM), numberVertices(0), currentCommand(PATH_CMD_LINE_TO)
+        BezierArc()
+            : vertexIndex(BEZIER_ARC_VERTEX_NUM), numberVertices(0), currentCommand(PATH_CMD_LINE_TO)
         {}
 
         /**
@@ -160,8 +160,7 @@ namespace OHOS {
      */
     class BezierArcSvg : public HeapBase {
     public:
-        BezierArcSvg() :
-            bezierArcModel(), isRadiusJoinPath(false)
+        BezierArcSvg() : bezierArcModel(), isRadiusJoinPath(false)
         {}
 
         /**

@@ -36,8 +36,8 @@ namespace OHOS {
 
         ImageAccessorClone()
         {}
-        explicit ImageAccessorClone(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat)
+        explicit ImageAccessorClone(PixelFormatType& pixFormat)
+            : pixFormat_(&pixFormat)
         {}
         /**
          * @brief 关联像素集
@@ -132,7 +132,6 @@ namespace OHOS {
         const int8u* pixPtr_;
     };
 
-    //-----------------------------------------------------ImageAccessorClip
     template <class PixFmt>
     class ImageAccessorClip {
     public:
@@ -144,8 +143,8 @@ namespace OHOS {
 
         ImageAccessorClip()
         {}
-        explicit ImageAccessorClip(PixelFormatType& pixf, const color_type& bk) :
-            pixFormat_(&pixf)
+        explicit ImageAccessorClip(PixelFormatType& pixf, const color_type& bk)
+            : pixFormat_(&pixf)
         {
             PixelFormatType::MakePix(m_bk_buf, bk);
         }
@@ -160,17 +159,6 @@ namespace OHOS {
             PixelFormatType::MakePix(m_bk_buf, bk);
         }
 
-    private:
-        GRAPHIC_GEOMETRY_INLINE const int8u* pixel() const
-        {
-            if (m_y >= 0 && m_y < (int)pixFormat_->Height() &&
-                m_x >= 0 && m_x < (int)pixFormat_->Width()) {
-                return pixFormat_->PixPtr(m_x, m_y);
-            }
-            return m_bk_buf;
-        }
-
-    public:
         GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
         {
             m_x = m_x0 = x;
@@ -204,6 +192,15 @@ namespace OHOS {
         }
 
     private:
+        GRAPHIC_GEOMETRY_INLINE const int8u* pixel() const
+        {
+            if (m_y >= 0 && m_y < (int)pixFormat_->Height() &&
+                m_x >= 0 && m_x < (int)pixFormat_->Width()) {
+                return pixFormat_->PixPtr(m_x, m_y);
+            }
+            return m_bk_buf;
+        }
+
         const PixelFormatType* pixFormat_;
         int8u m_bk_buf[pix_width];
         int m_x, m_x0, m_y;
@@ -227,8 +224,8 @@ namespace OHOS {
 
         ImageAccessorNoRepeat()
         {}
-        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat)
+        explicit ImageAccessorNoRepeat(PixelFormatType& pixFormat)
+            : pixFormat_(&pixFormat)
         {}
         /**
          * @brief 关联像素集
@@ -344,8 +341,8 @@ namespace OHOS {
 
         ImageAccessorWrap()
         {}
-        explicit ImageAccessorWrap(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorWrap(PixelFormatType& pixFormat)
+            : pixFormat_(&pixFormat),
             wrapX_(pixFormat.Width()),
             wrapY_(pixFormat.Height())
         {}
@@ -424,8 +421,8 @@ namespace OHOS {
 
         ImageAccessorRepeatX()
         {}
-        explicit ImageAccessorRepeatX(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorRepeatX(PixelFormatType& pixFormat)
+            : pixFormat_(&pixFormat),
             wrapX_(pixFormat.Width())
         {}
         /**
@@ -509,8 +506,8 @@ namespace OHOS {
 
         ImageAccessorRepeatY()
         {}
-        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat) :
-            pixFormat_(&pixFormat),
+        explicit ImageAccessorRepeatY(PixelFormatType& pixFormat)
+            : pixFormat_(&pixFormat),
             wrapY_(pixFormat.Height())
         {}
         /**
@@ -579,8 +576,8 @@ namespace OHOS {
     public:
         WrapModeRepeat()
         {}
-        WrapModeRepeat(unsigned size) :
-            size_(size),
+        WrapModeRepeat(unsigned size)
+            : size_(size),
             add_(size * (0x3FFFFFFF / size)),
             value_(0)
         {}
@@ -605,5 +602,4 @@ namespace OHOS {
         unsigned value_;
     };
 } // namespace OHOS
-
 #endif

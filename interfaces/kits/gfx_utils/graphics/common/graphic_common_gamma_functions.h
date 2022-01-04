@@ -84,11 +84,9 @@ namespace OHOS {
      */
     class GammaMultiply {
     public:
-        GammaMultiply() :
-            multiply_(1.0)
+        GammaMultiply() : multiply_(1.0)
         {}
-        GammaMultiply(double value) :
-            multiply_(value)
+        GammaMultiply(double value) : multiply_(value)
         {}
 
         void Value(double value)

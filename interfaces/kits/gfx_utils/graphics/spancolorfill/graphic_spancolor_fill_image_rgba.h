@@ -63,8 +63,8 @@ namespace OHOS {
          * @brief 构造函数传参
          */
         SpanFillImage(source_type& src,
-                      interpolator_type& interpolator) :
-            src_(&src),
+                      interpolator_type& interpolator)
+            : src_(&src),
             interpolator_(&interpolator)
         {
         }
@@ -114,8 +114,8 @@ namespace OHOS {
         SpanImageRgba()
         {
         }
-        SpanImageRgba(source_type& src, interpolator_type& interpolator) :
-            spanImage(src, interpolator)
+        SpanImageRgba(source_type& src, interpolator_type& interpolator)
+            : spanImage(src, interpolator)
         {
         }
         /**

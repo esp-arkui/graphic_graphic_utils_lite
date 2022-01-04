@@ -143,8 +143,10 @@ namespace OHOS {
                             currDash_ = 0;
                         }
                         currDashStart_ = 0.0;
-                        *x = vertexDist2_->vertexXCoord - (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
-                        *y = vertexDist2_->vertexYCoord - (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
+                        *x = vertexDist2_->vertexXCoord -
+                                (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
+                        *y = vertexDist2_->vertexYCoord -
+                                (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
                     } else {
                         currDashStart_ += currRest;
                         *x = vertexDist2_->vertexXCoord;

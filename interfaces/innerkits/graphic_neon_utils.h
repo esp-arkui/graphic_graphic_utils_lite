@@ -170,7 +170,8 @@ namespace OHOS {
         r = vmovn_u16(vshlq_n_u16(vshrq_n_u16(vBuf, 11), 3));
     }
 
-    static inline void LoadBufA_ARGB8888(uint8_t* buf, uint8x8_t& r, uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
+    static inline void LoadBufA_ARGB8888(uint8_t* buf, uint8x8_t& r,
+                                         uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
     {
         uint8x8x4_t vBuf = vld4_u8(buf);
         r = vBuf.val[NEON_R];
@@ -179,7 +180,8 @@ namespace OHOS {
         a = NeonMulDiv255(vBuf.val[NEON_A], vdup_n_u8(opa));
     }
 
-    static inline void LoadBufA_RGB888(uint8_t* buf, uint8x8_t& r, uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
+    static inline void LoadBufA_RGB888(uint8_t* buf, uint8x8_t& r,
+                                       uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
     {
         uint8x8x3_t vBuf = vld3_u8(buf);
         r = vBuf.val[NEON_R];
@@ -188,7 +190,8 @@ namespace OHOS {
         a = vdup_n_u8(opa);
     }
 
-    static inline void LoadBufA_RGB565(uint8_t* buf, uint8x8_t& r, uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
+    static inline void LoadBufA_RGB565(uint8_t* buf, uint8x8_t& r,
+                                       uint8x8_t& g, uint8x8_t& b, uint8x8_t& a, uint8_t opa)
     {
         uint16x8_t vBuf = vld1q_u16(reinterpret_cast<uint16_t*>(buf));
         // 3: RRRRRGGG|GGGBBBBB => RRGGGGGG|BBBBB000
@@ -199,7 +202,8 @@ namespace OHOS {
         r = vmovn_u16(vshlq_n_u16(vshrq_n_u16(vBuf, 11), 3));
         a = vdup_n_u8(opa);
     }
-    static inline void SetPixelColor_ARGB8888(uint8_t* buf, const uint8_t& r, const uint8_t& g, const uint8_t& b, const uint8_t& a)
+    static inline void SetPixelColor_ARGB8888(uint8_t* buf, const uint8_t& r,
+                                              const uint8_t& g, const uint8_t& b, const uint8_t& a)
     {
         uint8x8x4_t vBuf;
         vBuf.val[NEON_R] = vdup_n_u8(r);

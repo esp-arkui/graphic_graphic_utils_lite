@@ -51,8 +51,7 @@ namespace OHOS {
             GeometryArrayAllocator<T>::Deallocate(data_, size_);
         }
 
-        GeometryPlainDataArray() :
-            data_(0), size_(0)
+        GeometryPlainDataArray() : data_(0), size_(0)
         {}
         /**
          *
@@ -61,8 +60,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GeometryPlainDataArray(unsigned size) :
-            data_(GeometryArrayAllocator<T>::Allocate(size)), size_(size)
+        GeometryPlainDataArray(unsigned size)
+            : data_(GeometryArrayAllocator<T>::Allocate(size)), size_(size)
         {}
 
         GeometryPlainDataArray(const SelfType& podArray) :
@@ -177,6 +176,5 @@ namespace OHOS {
         T* data_;
         unsigned size_;
     };
-
 } // namespace OHOS
 #endif

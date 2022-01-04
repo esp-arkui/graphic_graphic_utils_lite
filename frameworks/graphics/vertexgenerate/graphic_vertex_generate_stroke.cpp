@@ -17,8 +17,8 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_shorten_path.h"
 
 namespace OHOS {
-    VertexGenerateStroke::VertexGenerateStroke() :
-        stroker_(),
+    VertexGenerateStroke::VertexGenerateStroke()
+        : stroker_(),
         srcVertices_(),
         outVertices_(),
         shorten_(0.0),

@@ -46,8 +46,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    enum FillingRuleEnum { FILL_NON_ZERO,
-                           FILL_EVEN_ODD };
+    enum FillingRuleEnum {
+        FILL_NON_ZERO,
+        FILL_EVEN_ODD
+    };
 
     /**
      * @brief 子像素的偏移以及掩码标志.
@@ -104,10 +106,12 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    enum RecursiveBezierEnum { COLLINEAR = 0,
-                               COLLINEAR1,
-                               COLLINEAR2,
-                               COLLINEAR3 };
+    enum RecursiveBezierEnum {
+        COLLINEAR = 0,
+        COLLINEAR1,
+        COLLINEAR2,
+        COLLINEAR3
+    };
     enum ClippingFlagsEnum {
         CLIPPING_FLAGS_X1_CLIPPED = 4,
         CLIPPING_FLAGS_X2_CLIPPED = 1,
@@ -596,8 +600,7 @@ namespace OHOS {
         T x2;
         T y2;
 
-        RectBase(T x1_, T y1_, T x2_, T y2_) :
-            x1(x1_), y1(y1_), x2(x2_), y2(y2_)
+        RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_)
         {}
         RectBase()
         {}
@@ -744,8 +747,7 @@ namespace OHOS {
         T y;
         PointBase()
         {}
-        PointBase(T x_, T y_) :
-            x(x_), y(y_)
+        PointBase(T x_, T y_) : x(x_), y(y_)
         {}
     };
 
@@ -757,8 +759,7 @@ namespace OHOS {
         unsigned cmd;
         VertexBase()
         {}
-        VertexBase(T x_, T y_, unsigned cmd_) :
-            x(x_), y(y_), cmd(cmd_)
+        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
         {}
     };
 
@@ -781,12 +782,10 @@ namespace OHOS {
         T* ptr;
         RowInfo()
         {}
-        RowInfo(int x1_, int x2_, T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS
-
 #endif
 
 #endif
