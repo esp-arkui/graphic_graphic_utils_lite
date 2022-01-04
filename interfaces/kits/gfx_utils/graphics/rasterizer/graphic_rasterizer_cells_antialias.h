@@ -161,7 +161,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const CellType* const* ScanlineCells(unsigned yLevel) const
+        const CellType* const *ScanlineCells(unsigned yLevel) const
         {
             return m_sorted_cells.Data() + m_sorted_y[yLevel - m_min_y].start;
         }
@@ -427,7 +427,7 @@ namespace OHOS {
         increase = 1;
 
         /**
-         *从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
+         * 从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
          */
         deltay_mask = (POLY_SUBPIXEL_SCALE - submask_flags_x1) * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1);
         dx = (long long)x2 - (long long)x1;

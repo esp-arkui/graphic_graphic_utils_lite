@@ -30,8 +30,7 @@ namespace OHOS {
     class Arc : public HeapBase {
 #if GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
     public:
-        Arc() :
-            mInitialized(false), mExpansionRatio(1.0)
+        Arc() : mInitialized(false), mExpansionRatio(1.0)
         {
         }
 
@@ -114,7 +113,6 @@ namespace OHOS {
         bool mIsClockwise;      // 方向
 #endif
     };
-
 } // namespace OHOS
 
 #endif

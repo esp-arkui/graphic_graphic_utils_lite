@@ -221,8 +221,11 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0.
          */
-        Rgba(const Rgba& color, float alpha) :
-            redValue(color.redValue), greenValue(color.greenValue), blueValue(color.blueValue), alphaValue(alpha)
+        Rgba(const Rgba& color, float alpha)
+            : redValue(color.redValue),
+              greenValue(color.greenValue),
+              blueValue(color.blueValue),
+              alphaValue(alpha)
         {}
 
         /**
@@ -556,8 +559,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK) :
-            redValue(ValueType(red)),
+        Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK)
+            : redValue(ValueType(red)),
             greenValue(ValueType(green)),
             blueValue(ValueType(blue)),
             alphaValue(ValueType(alpha))
@@ -584,8 +587,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Rgba8T(const SelfType& color, unsigned alpha) :
-            redValue(color.redValue),
+        Rgba8T(const SelfType& color, unsigned alpha)
+            : redValue(color.redValue),
             greenValue(color.greenValue),
             blueValue(color.blueValue),
             alphaValue(ValueType(alpha))

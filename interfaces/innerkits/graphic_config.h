@@ -338,8 +338,10 @@ namespace OHOS {
     static constexpr uint8_t DEFAULT_TASK_PERIOD = 16;
     /* Window manager execution period. The default value is <b>16</b> ms. */
     static constexpr uint8_t WMS_MAIN_TASK_PERIOD = 16;
-    static constexpr uint8_t IMG_CACHE_SIZE = 5;     /* Maximum number of cached images. The default value is <b>5</b>. */
-    static constexpr uint8_t INDEV_READ_PERIOD = 10; /* Input event read cycle. The default value is <b>10</b> ms. */
+    /* Maximum number of cached images. The default value is <b>5</b>. */
+    static constexpr uint8_t IMG_CACHE_SIZE = 5;
+    /* Input event read cycle. The default value is <b>10</b> ms. */
+    static constexpr uint8_t INDEV_READ_PERIOD = 10;
     /* Drag distance threshold of a drag event. The default value is <b>10px</b>. */
     static constexpr uint8_t INDEV_DRAG_LIMIT = 10;
     /* Maximum depth of view nesting. The default value is <b>64</b>. */

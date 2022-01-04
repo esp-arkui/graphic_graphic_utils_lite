@@ -53,10 +53,10 @@ namespace OHOS {
             coord_type spanLength;
             cover_type* covers;
         };
-        using Iterator = SpanBlock*;
-        using ConstIterator = const SpanBlock*;
-        ScanlineUnPackedContainer() :
-            minScaneLineXCoord(0),
+        using Iterator = SpanBlock* ;
+        using ConstIterator = const SpanBlock* ;
+        ScanlineUnPackedContainer()
+            : minScaneLineXCoord(0),
             lastScaneLineXCoord(0x7FFFFFF0),
             curSpanBlock(0)
         {}
