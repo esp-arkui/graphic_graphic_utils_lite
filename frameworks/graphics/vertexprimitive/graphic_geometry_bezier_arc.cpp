@@ -59,7 +59,7 @@ namespace OHOS {
         }
     }
 
-    void BezierArc::Init(float x, float y,
+    void BezierArc::Init(float centerX, float centerY,
                          float rx, float ry,
                          float startAngle,
                          float sweepAngle)
@@ -74,10 +74,10 @@ namespace OHOS {
         if (std::fabs(sweepAngle) < 1e-10) {
             numberVertices = BEZIER_ARC_POINTS;
             currentCommand = PATH_CMD_LINE_TO;
-            arrayVertices[INDEX_ZERO] = x + rx * std::cos(startAngle);
-            arrayVertices[INDEX_ONE] = y + ry * std::sin(startAngle);
-            arrayVertices[INDEX_TWO] = x + rx * std::cos(startAngle + sweepAngle);
-            arrayVertices[INDEX_THREE] = y + ry * std::sin(startAngle + sweepAngle);
+            arrayVertices[INDEX_ZERO] = centerX + rx * std::cos(startAngle);
+            arrayVertices[INDEX_ONE] = centerY + ry * std::sin(startAngle);
+            arrayVertices[INDEX_TWO] = centerX + rx * std::cos(startAngle + sweepAngle);
+            arrayVertices[INDEX_THREE] = centerY + ry * std::sin(startAngle + sweepAngle);
             return;
         }
 
@@ -106,7 +106,7 @@ namespace OHOS {
                 }
             }
 
-            ArcToBezier(x, y, rx, ry, startAngle, localSweep, arrayVertices + numberVertices - BEZIER_ARC_SETUP);
+            ArcToBezier(centerX, centerY, rx, ry, startAngle, localSweep, arrayVertices + numberVertices - BEZIER_ARC_SETUP);
 
             startAngle += localSweep;
             numberVertices += BEZIER_ARC_VERTICES_SIZE_STEP;

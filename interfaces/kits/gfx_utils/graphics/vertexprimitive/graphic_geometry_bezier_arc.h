@@ -74,7 +74,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Init(float x, float y,
+        void Init(float centerX, float centerY,
                   float rx, float ry,
                   float startAngle,
                   float sweepAngle);
