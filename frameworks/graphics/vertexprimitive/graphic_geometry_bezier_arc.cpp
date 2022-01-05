@@ -82,8 +82,8 @@ namespace OHOS {
         }
 
         float prevSweep;
-        float totalSweep = 0.0;
-        float localSweep = 0.0;
+        float totalSweep = 0.0f;
+        float localSweep = 0.0f;
         numberVertices = BEZIER_ARC_SETUP;
         currentCommand = PATH_CMD_CURVE4;
         bool done = false;
