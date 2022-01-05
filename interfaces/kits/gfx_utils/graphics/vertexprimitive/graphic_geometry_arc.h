@@ -41,9 +41,9 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Arc(double centerX, double centerY,
-            double rx, double ry,
-            double angle1, double angle2,
+        Arc(float centerX, float centerY,
+            float rx, float ry,
+            float angle1, float angle2,
             bool isClockwise = true);
         /**
          * @brief 设置为初始步骤.
@@ -60,7 +60,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void ApproximationScale(double scale);
+        void ApproximationScale(float scale);
 
         /**
          * @brief 获取近似级别
@@ -69,7 +69,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return mExpansionRatio;
         }
@@ -81,15 +81,15 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* y, double* x);
+        unsigned Vertex(float* y, float* x);
         /**
          * @brief 初始化一个弧线.
          *
          * @since 1.0
          * @version 1.0
          */
-        void Init(double centerX, double centerY, double rx, double ry,
-                  double angle1, double angle2, bool isClockwise = true);
+        void Init(float centerX, float centerY, float rx, float ry,
+                  float angle1, float angle2, bool isClockwise = true);
 
     private:
         /**
@@ -98,18 +98,18 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Normalize(double angle1, double angle2, bool isClockwise);
+        void Normalize(float angle1, float angle2, bool isClockwise);
         bool mInitialized;      // 是否被Init
         unsigned mPathCommand;  // 连接命令
-        double mCenterX;        // 中心X坐标
-        double mCenterY;        // 中心Y坐标
-        double mRadiusX;        // X短半轴
-        double mRadiusY;        // Y长半轴
-        double mCurrentAngle;   // 当前角度
-        double mBeginAngle;     // 起始角度
-        double mEndAngle;       // 结束角度
-        double mExpansionRatio; // 伸缩比
-        double mDeltaAngle;     // 弧度变化率
+        float mCenterX;        // 中心X坐标
+        float mCenterY;        // 中心Y坐标
+        float mRadiusX;        // X短半轴
+        float mRadiusY;        // Y长半轴
+        float mCurrentAngle;   // 当前角度
+        float mBeginAngle;     // 起始角度
+        float mEndAngle;       // 结束角度
+        float mExpansionRatio; // 伸缩比
+        float mDeltaAngle;     // 弧度变化率
         bool mIsClockwise;      // 方向
 #endif
     };

@@ -39,18 +39,18 @@ namespace OHOS {
             : numberSteps(0), currentStep(0), approximationScale(1.0)
         {}
 
-        QuadraticBezierCurveIncrement(double x1, double y1,
-                                      double x2, double y2,
-                                      double x3, double y3)
+        QuadraticBezierCurveIncrement(float x1, float y1,
+                                      float x2, float y2,
+                                      float x3, float y3)
             : numberSteps(0),
             currentStep(0), approximationScale(1.0)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
 
-        void Init(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3);
+        void Init(float x1, float y1,
+                  float x2, float y2,
+                  float x3, float y3);
 
         void Reset()
         {
@@ -65,44 +65,44 @@ namespace OHOS {
             return CURVEINCREMENT;
         }
 
-        void ApproximationScale(double scale);
-        double ApproximationScale() const;
+        void ApproximationScale(float scale);
+        float ApproximationScale() const;
 
-        void AngleTolerance(double)
+        void AngleTolerance(float)
         {}
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return 0.0;
         }
 
-        void CuspLimit(double)
+        void CuspLimit(float)
         {}
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return 0.0;
         }
 
         void Rewind(unsigned pathId);
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         int numberSteps;
         int currentStep;
-        double approximationScale;
-        double startXCoordinate;
-        double startYCoordinate;
-        double endXCoordinate;
-        double endYCoordinate;
-        double finalXCoordinate;
-        double finalYCoordinate;
-        double deltaFinalXCoordinate;
-        double deltaFinalYCoordinate;
-        double doubleDeltaFinalXCoordinate;
-        double doubleDeltaFinalYCoordinate;
-        double savedFinalXCoordinate;
-        double savedFinalYCoordinate;
-        double savedDeltaFinalXCoordinate;
-        double savedDeltaFinalYCoordinate;
+        float approximationScale;
+        float startXCoordinate;
+        float startYCoordinate;
+        float endXCoordinate;
+        float endYCoordinate;
+        float finalXCoordinate;
+        float finalYCoordinate;
+        float deltaFinalXCoordinate;
+        float deltaFinalYCoordinate;
+        float floatDeltaFinalXCoordinate;
+        float floatDeltaFinalYCoordinate;
+        float savedFinalXCoordinate;
+        float savedFinalYCoordinate;
+        float savedDeltaFinalXCoordinate;
+        float savedDeltaFinalYCoordinate;
     };
 
     class QuadraticBezierCurveDividOperate {
@@ -111,16 +111,16 @@ namespace OHOS {
             : approximationScale_(1.0), angleTolerance_(0.0), count_(0)
         {}
 
-        QuadraticBezierCurveDividOperate(double x1, double y1,
-                                         double x2, double y2,
-                                         double x3, double y3)
+        QuadraticBezierCurveDividOperate(float x1, float y1,
+                                         float x2, float y2,
+                                         float x3, float y3)
             : approximationScale_(1.0),
             angleTolerance_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
 
-        void Init(double x1, double y1, double x2, double y2, double x3, double y3);
+        void Init(float x1, float y1, float x2, float y2, float x3, float y3);
 
         void Reset()
         {
@@ -135,27 +135,27 @@ namespace OHOS {
             return CURVEDIVIDOPERATE;
         }
 
-        void ApproximationScale(double scale)
+        void ApproximationScale(float scale)
         {
             approximationScale_ = scale;
         }
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return approximationScale_;
         }
 
-        void AngleTolerance(double angle)
+        void AngleTolerance(float angle)
         {
             angleTolerance_ = angle;
         }
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return angleTolerance_;
         }
 
-        void CuspLimit(double)
+        void CuspLimit(float)
         {}
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return 0.0;
         }
@@ -165,7 +165,7 @@ namespace OHOS {
             count_ = 0;
         }
 
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (count_ >= points_.Size()) {
                 return PATH_CMD_STOP;
@@ -177,30 +177,30 @@ namespace OHOS {
         }
 
     private:
-        void Bezier(double x1, double y1,
-                    double x2, double y2,
-                    double x3, double y3);
-        void RecursiveBezier(double x1, double y1,
-                             double x2, double y2,
-                             double x3, double y3,
+        void Bezier(float x1, float y1,
+                    float x2, float y2,
+                    float x3, float y3);
+        void RecursiveBezier(float x1, float y1,
+                             float x2, float y2,
+                             float x3, float y3,
                              unsigned level);
 
-        double approximationScale_;
-        double distanceToleranceSquare_;
-        double angleTolerance_;
+        float approximationScale_;
+        float distanceToleranceSquare_;
+        float angleTolerance_;
         unsigned count_;
         GeometryPlainDataBlockVector<PointD> points_;
     };
 
     struct CubicBezierCurvePoints {
-        double cpArray[8];
+        float cpArray[8];
 
         CubicBezierCurvePoints()
         {}
-        CubicBezierCurvePoints(double x1, double y1,
-                               double x2, double y2,
-                               double x3, double y3,
-                               double x4, double y4)
+        CubicBezierCurvePoints(float x1, float y1,
+                               float x2, float y2,
+                               float x3, float y3,
+                               float x4, float y4)
         {
             cpArray[OHOS::INDEX_ZERO] = x1;
             cpArray[OHOS::INDEX_ONE] = y1;
@@ -212,10 +212,10 @@ namespace OHOS {
             cpArray[OHOS::INDEX_SEVEN] = y4;
         }
 
-        void Init(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3,
-                  double x4, double y4)
+        void Init(float x1, float y1,
+                  float x2, float y2,
+                  float x3, float y3,
+                  float x4, float y4)
         {
             cpArray[OHOS::INDEX_ZERO] = x1;
             cpArray[OHOS::INDEX_ONE] = y1;
@@ -227,11 +227,11 @@ namespace OHOS {
             cpArray[OHOS::INDEX_SEVEN] = y4;
         }
 
-        double operator[](unsigned i) const
+        float operator[](unsigned i) const
         {
             return cpArray[i];
         }
-        double& operator[](unsigned i)
+        float& operator[](unsigned i)
         {
             return cpArray[i];
         }
@@ -243,8 +243,8 @@ namespace OHOS {
             : numberSteps(0), currentStep(0), approximationScale(1.0)
         {}
 
-        CubicBezierCurveIncrement(double x1, double y1, double x2, double y2,
-                                  double x3, double y3, double x4, double y4)
+        CubicBezierCurveIncrement(float x1, float y1, float x2, float y2,
+                                  float x3, float y3, float x4, float y4)
             : numberSteps(0),
             currentStep(0), approximationScale(1.0)
         {
@@ -258,7 +258,7 @@ namespace OHOS {
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void Init(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
+        void Init(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4);
         void Init(const CubicBezierCurvePoints& curve4Points)
         {
             Init(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
@@ -278,54 +278,54 @@ namespace OHOS {
             return CURVEINCREMENT;
         }
 
-        void ApproximationScale(double scale);
-        double ApproximationScale() const;
+        void ApproximationScale(float scale);
+        float ApproximationScale() const;
 
-        void AngleTolerance(double)
+        void AngleTolerance(float)
         {}
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return 0.0;
         }
 
-        void CuspLimit(double)
+        void CuspLimit(float)
         {}
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return 0.0;
         }
 
         void Rewind(unsigned pathId);
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         int numberSteps;
         int currentStep;
-        double approximationScale;
-        double startXCoordinate;
-        double startYCoordinate;
-        double endXCoordinate;
-        double endYCoordinate;
-        double finalXCoordinate;
-        double finalYCoordinate;
-        double deltaFinalXCoordinate;
-        double deltaFinalYCoordinate;
-        double doubleDeltaFinalXCoordinate;
-        double doubleDeltaFinalYCoordinate;
-        double doubleDoubleDeltaFinalXCoordinate;
-        double doubleDoubleDeltaFinalYCoordinate;
-        double savedFinalXCoordinate;
-        double savedFinalYCoordinate;
-        double savedDeltaFinalXCoordinate;
-        double savedDeltaFinalYCoordinate;
-        double savedDoubleDeltaFinalXCoordinate;
-        double savedDoubleDeltaFinalYCoordinate;
+        float approximationScale;
+        float startXCoordinate;
+        float startYCoordinate;
+        float endXCoordinate;
+        float endYCoordinate;
+        float finalXCoordinate;
+        float finalYCoordinate;
+        float deltaFinalXCoordinate;
+        float deltaFinalYCoordinate;
+        float floatDeltaFinalXCoordinate;
+        float floatDeltaFinalYCoordinate;
+        float floatfloatDeltaFinalXCoordinate;
+        float floatfloatDeltaFinalYCoordinate;
+        float savedFinalXCoordinate;
+        float savedFinalYCoordinate;
+        float savedDeltaFinalXCoordinate;
+        float savedDeltaFinalYCoordinate;
+        float savedfloatDeltaFinalXCoordinate;
+        float savedfloatDeltaFinalYCoordinate;
     };
 
-    inline CubicBezierCurvePoints CatromToBezier(double x1, double y1,
-                                                 double x2, double y2,
-                                                 double x3, double y3,
-                                                 double x4, double y4)
+    inline CubicBezierCurvePoints CatromToBezier(float x1, float y1,
+                                                 float x2, float y2,
+                                                 float x3, float y3,
+                                                 float x4, float y4)
     {
         return CubicBezierCurvePoints(
             x2,
@@ -349,10 +349,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline CubicBezierCurvePoints UbsplineToBezier(double x1, double y1,
-                                                   double x2, double y2,
-                                                   double x3, double y3,
-                                                   double x4, double y4)
+    inline CubicBezierCurvePoints UbsplineToBezier(float x1, float y1,
+                                                   float x2, float y2,
+                                                   float x3, float y3,
+                                                   float x4, float y4)
     {
         return CubicBezierCurvePoints(
             (x1 + OHOS::FOUR_TIMES * x2 + x3) / OHOS::SIX_TIMES,
@@ -381,10 +381,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    inline CubicBezierCurvePoints HermiteToBezier(double x1, double y1,
-                                                  double x2, double y2,
-                                                  double x3, double y3,
-                                                  double x4, double y4)
+    inline CubicBezierCurvePoints HermiteToBezier(float x1, float y1,
+                                                  float x2, float y2,
+                                                  float x3, float y3,
+                                                  float x4, float y4)
     {
         return CubicBezierCurvePoints(
             x1, y1,
@@ -414,10 +414,10 @@ namespace OHOS {
             : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {}
 
-        CubicBezierCurveDividOperate(double x1, double y1,
-                                     double x2, double y2,
-                                     double x3, double y3,
-                                     double x4, double y4)
+        CubicBezierCurveDividOperate(float x1, float y1,
+                                     float x2, float y2,
+                                     float x3, float y3,
+                                     float x4, float y4)
             : approximationScale_(1.0), angleTolerance_(0.0), cuspLimit_(0.0), count_(0)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -432,10 +432,10 @@ namespace OHOS {
                  curve4Points[OHOS::INDEX_SIX], curve4Points[OHOS::INDEX_SEVEN]);
         }
 
-        void Init(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3,
-                  double x4, double y4);
+        void Init(float x1, float y1,
+                  float x2, float y2,
+                  float x3, float y3,
+                  float x4, float y4);
 
         void Init(const CubicBezierCurvePoints& curve4Points)
         {
@@ -459,30 +459,30 @@ namespace OHOS {
             return CURVEDIVIDOPERATE;
         }
 
-        void ApproximationScale(double scale)
+        void ApproximationScale(float scale)
         {
             approximationScale_ = scale;
         }
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return approximationScale_;
         }
 
-        void AngleTolerance(double a)
+        void AngleTolerance(float a)
         {
             angleTolerance_ = a;
         }
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return angleTolerance_;
         }
 
-        void CuspLimit(double angleValue)
+        void CuspLimit(float angleValue)
         {
             cuspLimit_ = (angleValue == 0.0) ? 0.0 : PI - angleValue;
         }
 
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return (cuspLimit_ == 0.0) ? 0.0 : PI - cuspLimit_;
         }
@@ -492,7 +492,7 @@ namespace OHOS {
             count_ = 0;
         }
 
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (count_ >= points_.Size()) {
                 return PATH_CMD_STOP;
@@ -504,21 +504,21 @@ namespace OHOS {
         }
 
     private:
-        void Bezier(double x1, double y1,
-                    double x2, double y2,
-                    double x3, double y3,
-                    double x4, double y4);
+        void Bezier(float x1, float y1,
+                    float x2, float y2,
+                    float x3, float y3,
+                    float x4, float y4);
 
-        void RecursiveBezier(double x1, double y1,
-                             double x2, double y2,
-                             double x3, double y3,
-                             double x4, double y4,
+        void RecursiveBezier(float x1, float y1,
+                             float x2, float y2,
+                             float x3, float y3,
+                             float x4, float y4,
                              unsigned level);
 
-        double approximationScale_;
-        double distanceToleranceSquare_;
-        double angleTolerance_;
-        double cuspLimit_;
+        float approximationScale_;
+        float distanceToleranceSquare_;
+        float angleTolerance_;
+        float cuspLimit_;
         unsigned count_;
         GeometryPlainDataBlockVector<PointD> points_;
     };
@@ -538,13 +538,13 @@ namespace OHOS {
             : approximationMethod_(CURVEDIVIDOPERATE)
         {}
 
-        QuadraticBezierCurve(double x1, double y1, double x2, double y2, double x3, double y3)
+        QuadraticBezierCurve(float x1, float y1, float x2, float y2, float x3, float y3)
             : approximationMethod_(CURVEDIVIDOPERATE)
         {
             Init(x1, y1, x2, y2, x3, y3);
         }
 
-        void Init(double x1, double y1, double x2, double y2, double x3, double y3)
+        void Init(float x1, float y1, float x2, float y2, float x3, float y3)
         {
             if (approximationMethod_ == CURVEINCREMENT) {
                 curveInc_.Init(x1, y1, x2, y2, x3, y3);
@@ -569,33 +569,33 @@ namespace OHOS {
             return approximationMethod_;
         }
 
-        void SetApproximationScale(double scale)
+        void SetApproximationScale(float scale)
         {
             curveInc_.ApproximationScale(scale);
             curveDiv_.ApproximationScale(scale);
         }
 
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return curveInc_.ApproximationScale();
         }
 
-        void AngleTolerance(double angle)
+        void AngleTolerance(float angle)
         {
             curveDiv_.AngleTolerance(angle);
         }
 
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return curveDiv_.AngleTolerance();
         }
 
-        void CuspLimit(double angleValue)
+        void CuspLimit(float angleValue)
         {
             curveDiv_.CuspLimit(angleValue);
         }
 
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return curveDiv_.CuspLimit();
         }
@@ -609,7 +609,7 @@ namespace OHOS {
             }
         }
 
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (approximationMethod_ == CURVEINCREMENT) {
                 return curveInc_.Vertex(x, y);
@@ -638,10 +638,10 @@ namespace OHOS {
             : approximationMethod_(CURVEDIVIDOPERATE)
         {}
 
-        CubicBezierCurve(double x1, double y1,
-                         double x2, double y2,
-                         double x3, double y3,
-                         double x4, double y4)
+        CubicBezierCurve(float x1, float y1,
+                         float x2, float y2,
+                         float x3, float y3,
+                         float x4, float y4)
             : approximationMethod_(CURVEDIVIDOPERATE)
         {
             Init(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -654,10 +654,10 @@ namespace OHOS {
                  curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
         }
 
-        void Init(double x1, double y1,
-                  double x2, double y2,
-                  double x3, double y3,
-                  double x4, double y4)
+        void Init(float x1, float y1,
+                  float x2, float y2,
+                  float x3, float y3,
+                  float x4, float y4)
         {
             if (approximationMethod_ == CURVEINCREMENT) {
                 curveInc_.Init(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -688,32 +688,32 @@ namespace OHOS {
             return approximationMethod_;
         }
 
-        void SetApproximationScale(double scale)
+        void SetApproximationScale(float scale)
         {
             curveInc_.ApproximationScale(scale);
             curveDiv_.ApproximationScale(scale);
         }
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return curveInc_.ApproximationScale();
         }
 
-        void AngleTolerance(double angleValue)
+        void AngleTolerance(float angleValue)
         {
             curveDiv_.AngleTolerance(angleValue);
         }
 
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return curveDiv_.AngleTolerance();
         }
 
-        void CuspLimit(double angleValue)
+        void CuspLimit(float angleValue)
         {
             curveDiv_.CuspLimit(angleValue);
         }
 
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return curveDiv_.CuspLimit();
         }
@@ -727,7 +727,7 @@ namespace OHOS {
             }
         }
 
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (approximationMethod_ == CURVEINCREMENT) {
                 return curveInc_.Vertex(x, y);

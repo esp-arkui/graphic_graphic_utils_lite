@@ -145,29 +145,29 @@ namespace OHOS {
     using VertexD = VertexBase<double>;
     using VertexI = VertexBase<int>;
 
-    const double COEFFICIENT = 0.7;
-    const double ALPHAHALF = 0.5;
-    const double VERTEX_DIST_EPSILON = 1e-14;
-    const double INTERSECTIONEPSILON = 1.0e-30;
+    const float COEFFICIENT = 0.7f;
+    const float ALPHAHALF = 0.5f;
+    const float VERTEX_DIST_EPSILON = 1e-14;
+    const float INTERSECTIONEPSILON = 1.0e-30;
     /**
  * @brief 圆周率
  */
-    const double PI = 3.14159265358979323846;
+    const float PI = 3.1415926f;
     /**
  * @brief 半圆弧角度
  */
-    const double RAD_BASE = 180.0;
-    const double ROUND_BASE = 0.5;
+    const float RAD_BASE = 180.0f;
+    const float ROUND_BASE = 0.5f;
 
     /**
  * @brief 平角的度数
  */
-    const double BOXER = 180.0;
+    const float BOXER = 180.0f;
 
     /**
  * @brief BUF_SIZE
  */
-    const double BUF_SIZE = 1024.0;
+    const float BUF_SIZE = 1024.0f;
     /**
  * @brief 颜色的最大值
  */
@@ -219,11 +219,11 @@ namespace OHOS {
     /**
  * @brief 1/√2 即1 除以 √2
  */
-    const double SIN45 = 0.7071068;
+    const float SIN45 = 0.7071068f;
     /**
  * @brief 1/√2 即1 除以 √2
  */
-    const double COS45 = 0.7071068;
+    const float COS45 = 0.7071068f;
     /**
  * @brief 两倍
  */
@@ -248,9 +248,9 @@ namespace OHOS {
  * @brief 一次走两步
  */
     const int TWO_STEP = 2;
-    const double HALFNUM = 0.5;
-    const double DOUBLENUM = 2.0;
-    const double RADDALETAELPS = 0.125;
+    const float HALFNUM = 0.5f;
+    const float FLOATNUM = 2.0f;
+    const float RADDALETAELPS = 0.125f;
 
     const int CONSTITUTION = 16384;
     /**

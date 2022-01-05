@@ -60,7 +60,7 @@ namespace OHOS {
          */
         color_type GetColor() const
         {
-            return colorStart.Gradient(colorEnd, double(place) / len);
+            return colorStart.Gradient(colorEnd, float(place) / len);
         }
 
     private:
@@ -90,7 +90,7 @@ namespace OHOS {
         {
         }
         SpanInterpolatorLinear(trans_type& trans,
-                               double x, double y, unsigned len) : transType(&trans)
+                               float x, float y, unsigned len) : transType(&trans)
         {
             Begin(x, y, len);
         }
@@ -106,10 +106,10 @@ namespace OHOS {
         /*
          * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
          */
-        void Begin(double x, double y, unsigned len)
+        void Begin(float x, float y, unsigned len)
         {
-            double tx;
-            double ty;
+            float tx;
+            float ty;
 
             tx = x;
             ty = y;
@@ -131,7 +131,7 @@ namespace OHOS {
         /*
          * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
          */
-        void Resynchronize(double xe, double ye, unsigned len)
+        void Resynchronize(float xe, float ye, unsigned len)
         {
             transType->transform(&xe, &ye);
             dda2LineInterpolatorX = DdaTwoLineInterpolator(

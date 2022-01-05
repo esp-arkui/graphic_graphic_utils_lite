@@ -36,7 +36,7 @@ namespace OHOS {
         status_ = INITIAL;
     }
 
-    void VertexGenerateStroke::AddVertex(double x, double y, unsigned cmd)
+    void VertexGenerateStroke::AddVertex(float x, float y, unsigned cmd)
     {
         status_ = INITIAL;
         if (IsMoveTo(cmd)) {
@@ -65,7 +65,7 @@ namespace OHOS {
         outVertex_ = 0;
     }
 
-    unsigned VertexGenerateStroke::Vertex(double* x, double* y)
+    unsigned VertexGenerateStroke::Vertex(float* x, float* y)
     {
         const unsigned verticesNum = 2;
         unsigned cmd = PATH_CMD_LINE_TO;

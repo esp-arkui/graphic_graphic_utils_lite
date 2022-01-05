@@ -18,35 +18,35 @@
 #include "gfx_utils/graphics/common/graphic_common_math.h"
 
 namespace OHOS {
-    const double CURVECOLLINEARITYEPSILON = 1e-30;
-    const double CURVEANGLETOLERANCEEPSILON = 0.01;
+    const float CURVECOLLINEARITYEPSILON = 1e-30;
+    const float CURVEANGLETOLERANCEEPSILON = 0.01;
     const int CURVERECURSIONLIMIT = 32;
-    const double CURVES_NUM_STEP_LEN = 0.25;
-    double QuadraticBezierCurveIncrement::ApproximationScale() const
+    const float CURVES_NUM_STEP_LEN = 0.25;
+    float QuadraticBezierCurveIncrement::ApproximationScale() const
     {
         return approximationScale;
     }
 
-    void QuadraticBezierCurveIncrement::ApproximationScale(double scale)
+    void QuadraticBezierCurveIncrement::ApproximationScale(float scale)
     {
         approximationScale = scale;
     }
 
-    void QuadraticBezierCurveIncrement::Init(double x1, double y1,
-                                             double x2, double y2,
-                                             double x3, double y3)
+    void QuadraticBezierCurveIncrement::Init(float x1, float y1,
+                                             float x2, float y2,
+                                             float x3, float y3)
     {
         startXCoordinate = x1;
         startYCoordinate = y1;
         endXCoordinate = x3;
         endYCoordinate = y3;
 
-        double deltaX1 = x2 - x1;
-        double deltaY1 = y2 - y1;
-        double deltaX2 = x3 - x2;
-        double deltaY2 = y3 - y2;
+        float deltaX1 = x2 - x1;
+        float deltaY1 = y2 - y1;
+        float deltaX2 = x3 - x2;
+        float deltaY2 = y3 - y2;
 
-        double len = std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
+        float len = std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                      std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
 
         numberSteps = Uround(len * CURVES_NUM_STEP_LEN * approximationScale);
@@ -54,24 +54,24 @@ namespace OHOS {
         if (numberSteps < NUM_STEPS_MAX) {
             numberSteps = NUM_STEPS_MAX;
         }
-        double subdivideStep = 1.0 / numberSteps;
-        double subdivideStep2 = subdivideStep * subdivideStep;
+        float subdivideStep = 1.0f / numberSteps;
+        float subdivideStep2 = subdivideStep * subdivideStep;
 
-        double tmpX = (x1 - x2 * DOUBLENUM + x3) * subdivideStep2;
-        double tmpY = (y1 - y2 * DOUBLENUM + y3) * subdivideStep2;
+        float tmpX = (x1 - x2 * FLOATNUM + x3) * subdivideStep2;
+        float tmpY = (y1 - y2 * FLOATNUM + y3) * subdivideStep2;
 
         savedFinalXCoordinate = x1;
         finalXCoordinate = x1;
         savedFinalYCoordinate = y1;
         finalYCoordinate = y1;
 
-        savedDeltaFinalXCoordinate = tmpX + (x2 - x1) * (DOUBLENUM * subdivideStep);
-        deltaFinalXCoordinate = tmpY + (x2 - x1) * (DOUBLENUM * subdivideStep);
-        savedDeltaFinalYCoordinate = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
-        deltaFinalYCoordinate = tmpY + (y2 - y1) * (DOUBLENUM * subdivideStep);
+        savedDeltaFinalXCoordinate = tmpX + (x2 - x1) * (FLOATNUM * subdivideStep);
+        deltaFinalXCoordinate = tmpY + (x2 - x1) * (FLOATNUM * subdivideStep);
+        savedDeltaFinalYCoordinate = tmpY + (y2 - y1) * (FLOATNUM * subdivideStep);
+        deltaFinalYCoordinate = tmpY + (y2 - y1) * (FLOATNUM * subdivideStep);
 
-        doubleDeltaFinalXCoordinate = tmpX * DOUBLENUM;
-        doubleDeltaFinalYCoordinate = tmpY * DOUBLENUM;
+        floatDeltaFinalXCoordinate = tmpX * FLOATNUM;
+        floatDeltaFinalYCoordinate = tmpY * FLOATNUM;
 
         currentStep = numberSteps;
     }
@@ -90,7 +90,7 @@ namespace OHOS {
         deltaFinalYCoordinate = savedDeltaFinalYCoordinate;
     }
 
-    unsigned QuadraticBezierCurveIncrement::Vertex(double* x, double* y)
+    unsigned QuadraticBezierCurveIncrement::Vertex(float* x, float* y)
     {
         if (currentStep < 0) {
             return PATH_CMD_STOP;
@@ -110,17 +110,17 @@ namespace OHOS {
 
         finalXCoordinate += deltaFinalXCoordinate;
         finalYCoordinate += deltaFinalYCoordinate;
-        deltaFinalXCoordinate += doubleDeltaFinalXCoordinate;
-        deltaFinalYCoordinate += doubleDeltaFinalYCoordinate;
+        deltaFinalXCoordinate += floatDeltaFinalXCoordinate;
+        deltaFinalYCoordinate += floatDeltaFinalYCoordinate;
         *x = finalXCoordinate;
         *y = finalYCoordinate;
         --currentStep;
         return PATH_CMD_LINE_TO;
     }
 
-    void QuadraticBezierCurveDividOperate::Init(double x1, double y1,
-                                                double x2, double y2,
-                                                double x3, double y3)
+    void QuadraticBezierCurveDividOperate::Init(float x1, float y1,
+                                                float x2, float y2,
+                                                float x3, float y3)
     {
         points_.RemoveAll();
         distanceToleranceSquare_ = HALFNUM / approximationScale_;
@@ -129,9 +129,9 @@ namespace OHOS {
         count_ = 0;
     }
 
-    void QuadraticBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
-                                                           double x2, double y2,
-                                                           double x3, double y3,
+    void QuadraticBezierCurveDividOperate::RecursiveBezier(float x1, float y1,
+                                                           float x2, float y2,
+                                                           float x3, float y3,
                                                            unsigned level)
     {
         if (level > CURVERECURSIONLIMIT) {
@@ -139,17 +139,17 @@ namespace OHOS {
         }
 
         // 计算线段的所有中点
-        double x12 = (x1 + x2) / DOUBLENUM;
-        double y12 = (y1 + y2) / DOUBLENUM;
-        double x23 = (x2 + x3) / DOUBLENUM;
-        double y23 = (y2 + y3) / DOUBLENUM;
-        double x123 = (x12 + x23) / DOUBLENUM;
-        double y123 = (y12 + y23) / DOUBLENUM;
+        float x12 = (x1 + x2) / FLOATNUM;
+        float y12 = (y1 + y2) / FLOATNUM;
+        float x23 = (x2 + x3) / FLOATNUM;
+        float y23 = (y2 + y3) / FLOATNUM;
+        float x123 = (x12 + x23) / FLOATNUM;
+        float y123 = (y12 + y23) / FLOATNUM;
 
-        double deltaX = x3 - x1;
-        double deltaY = y3 - y1;
-        double distance = std::fabs(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
-        double da;
+        float deltaX = x3 - x1;
+        float deltaY = y3 - y1;
+        float distance = std::fabs(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
+        float da;
 
         if (distance > CURVECOLLINEARITYEPSILON) {
             if (distance * distance <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
@@ -199,43 +199,43 @@ namespace OHOS {
         RecursiveBezier(x123, y123, x23, y23, x3, y3, level + 1);
     }
 
-    void QuadraticBezierCurveDividOperate::Bezier(double x1, double y1,
-                                                  double x2, double y2,
-                                                  double x3, double y3)
+    void QuadraticBezierCurveDividOperate::Bezier(float x1, float y1,
+                                                  float x2, float y2,
+                                                  float x3, float y3)
     {
         points_.Add(PointD(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, 0);
         points_.Add(PointD(x3, y3));
     }
 
-    void CubicBezierCurveIncrement::ApproximationScale(double scale)
+    void CubicBezierCurveIncrement::ApproximationScale(float scale)
     {
         approximationScale = scale;
     }
 
-    double CubicBezierCurveIncrement::ApproximationScale() const
+    float CubicBezierCurveIncrement::ApproximationScale() const
     {
         return approximationScale;
     }
 
-    void CubicBezierCurveIncrement::Init(double x1, double y1,
-                                         double x2, double y2,
-                                         double x3, double y3,
-                                         double x4, double y4)
+    void CubicBezierCurveIncrement::Init(float x1, float y1,
+                                         float x2, float y2,
+                                         float x3, float y3,
+                                         float x4, float y4)
     {
         startXCoordinate = x1;
         startYCoordinate = y1;
         endXCoordinate = x4;
         endYCoordinate = y4;
 
-        double deltaX1 = x2 - x1;
-        double deltaY1 = y2 - y1;
-        double deltaX2 = x3 - x2;
-        double deltaY2 = y3 - y2;
-        double deltaX3 = x4 - x3;
-        double deltaY3 = y4 - y3;
+        float deltaX1 = x2 - x1;
+        float deltaY1 = y2 - y1;
+        float deltaX2 = x3 - x2;
+        float deltaY2 = y3 - y2;
+        float deltaX3 = x4 - x3;
+        float deltaY3 = y4 - y3;
 
-        double len = (std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
+        float len = (std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                       std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2) +
                       std::sqrt(deltaX3 * deltaX3 + deltaY3 * deltaY3)) *
                      CURVES_NUM_STEP_LEN * approximationScale;
@@ -246,22 +246,22 @@ namespace OHOS {
             numberSteps = cuvereNumStep;
         }
 
-        double subdivideStep = 1.0 / numberSteps;
-        double subdivideStep2 = subdivideStep * subdivideStep;
-        double subdivideStep3 = subdivideStep * subdivideStep * subdivideStep;
-        const double PrelMin = 3.0;
-        const double PrelMax = 6.0;
+        float subdivideStep = 1.0 / numberSteps;
+        float subdivideStep2 = subdivideStep * subdivideStep;
+        float subdivideStep3 = subdivideStep * subdivideStep * subdivideStep;
+        const float PrelMin = 3.0;
+        const float PrelMax = 6.0;
 
-        double pre1 = PrelMin * subdivideStep;
-        double pre2 = PrelMin * subdivideStep2;
-        double pre4 = PrelMax * subdivideStep2;
-        double pre5 = PrelMax * subdivideStep3;
+        float pre1 = PrelMin * subdivideStep;
+        float pre2 = PrelMin * subdivideStep2;
+        float pre4 = PrelMax * subdivideStep2;
+        float pre5 = PrelMax * subdivideStep3;
 
-        double tmp1X = x1 - x2 * DOUBLENUM + x3;
-        double tmp1Y = y1 - y2 * DOUBLENUM + y3;
+        float tmp1X = x1 - x2 * FLOATNUM + x3;
+        float tmp1Y = y1 - y2 * FLOATNUM + y3;
 
-        double tmp2X = (x2 - x3) * PrelMin - x1 + x4;
-        double tmp2Y = (y2 - y3) * PrelMin - y1 + y4;
+        float tmp2X = (x2 - x3) * PrelMin - x1 + x4;
+        float tmp2Y = (y2 - y3) * PrelMin - y1 + y4;
 
         savedFinalXCoordinate = x1;
         finalXCoordinate = x1;
@@ -273,13 +273,13 @@ namespace OHOS {
         savedDeltaFinalYCoordinate = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
         deltaFinalYCoordinate = (y2 - y1) * pre1 + tmp1Y * pre2 + tmp2Y * subdivideStep3;
 
-        savedDoubleDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
-        doubleDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
-        savedDoubleDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
-        doubleDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
+        savedfloatDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
+        floatDeltaFinalXCoordinate = tmp1X * pre4 + tmp2X * pre5;
+        savedfloatDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
+        floatDeltaFinalYCoordinate = tmp1Y * pre4 + tmp2Y * pre5;
 
-        doubleDoubleDeltaFinalXCoordinate = tmp2X * pre5;
-        doubleDoubleDeltaFinalYCoordinate = tmp2Y * pre5;
+        floatfloatDeltaFinalXCoordinate = tmp2X * pre5;
+        floatfloatDeltaFinalYCoordinate = tmp2Y * pre5;
 
         currentStep = numberSteps;
     }
@@ -296,11 +296,11 @@ namespace OHOS {
         finalYCoordinate = savedFinalYCoordinate;
         deltaFinalXCoordinate = savedDeltaFinalXCoordinate;
         deltaFinalYCoordinate = savedDeltaFinalYCoordinate;
-        doubleDeltaFinalXCoordinate = savedDoubleDeltaFinalXCoordinate;
-        doubleDeltaFinalYCoordinate = savedDoubleDeltaFinalYCoordinate;
+        floatDeltaFinalXCoordinate = savedfloatDeltaFinalXCoordinate;
+        floatDeltaFinalYCoordinate = savedfloatDeltaFinalYCoordinate;
     }
 
-    unsigned CubicBezierCurveIncrement::Vertex(double* x, double* y)
+    unsigned CubicBezierCurveIncrement::Vertex(float* x, float* y)
     {
         if (currentStep < 0) {
             return PATH_CMD_STOP;
@@ -321,10 +321,10 @@ namespace OHOS {
 
         finalXCoordinate += deltaFinalXCoordinate;
         finalYCoordinate += deltaFinalYCoordinate;
-        deltaFinalXCoordinate += doubleDeltaFinalXCoordinate;
-        deltaFinalYCoordinate += doubleDeltaFinalYCoordinate;
-        doubleDeltaFinalXCoordinate += doubleDoubleDeltaFinalXCoordinate;
-        doubleDeltaFinalYCoordinate += doubleDoubleDeltaFinalYCoordinate;
+        deltaFinalXCoordinate += floatDeltaFinalXCoordinate;
+        deltaFinalYCoordinate += floatDeltaFinalYCoordinate;
+        floatDeltaFinalXCoordinate += floatfloatDeltaFinalXCoordinate;
+        floatDeltaFinalYCoordinate += floatfloatDeltaFinalYCoordinate;
 
         *x = finalXCoordinate;
         *y = finalYCoordinate;
@@ -332,10 +332,10 @@ namespace OHOS {
         return PATH_CMD_LINE_TO;
     }
 
-    void CubicBezierCurveDividOperate::Init(double x1, double y1,
-                                            double x2, double y2,
-                                            double x3, double y3,
-                                            double x4, double y4)
+    void CubicBezierCurveDividOperate::Init(float x1, float y1,
+                                            float x2, float y2,
+                                            float x3, float y3,
+                                            float x4, float y4)
     {
         points_.RemoveAll();
         distanceToleranceSquare_ = HALFNUM / approximationScale_;
@@ -344,10 +344,10 @@ namespace OHOS {
         count_ = 0;
     }
 
-    void CubicBezierCurveDividOperate::RecursiveBezier(double x1, double y1,
-                                                       double x2, double y2,
-                                                       double x3, double y3,
-                                                       double x4, double y4,
+    void CubicBezierCurveDividOperate::RecursiveBezier(float x1, float y1,
+                                                       float x2, float y2,
+                                                       float x3, float y3,
+                                                       float x4, float y4,
                                                        unsigned level)
     {
         if (level > CURVERECURSIONLIMIT) {
@@ -355,29 +355,29 @@ namespace OHOS {
         }
 
         // 计算线段的所有中点
-        double x12 = (x1 + x2) / DOUBLENUM;
-        double y12 = (y1 + y2) / DOUBLENUM;
-        double x23 = (x2 + x3) / DOUBLENUM;
-        double y23 = (y2 + y3) / DOUBLENUM;
-        double x34 = (x3 + x4) / DOUBLENUM;
-        double y34 = (y3 + y4) / DOUBLENUM;
-        double x123 = (x12 + x23) / DOUBLENUM;
-        double y123 = (y12 + y23) / DOUBLENUM;
-        double x234 = (x23 + x34) / DOUBLENUM;
-        double y234 = (y23 + y34) / DOUBLENUM;
-        double x1234 = (x123 + x234) / DOUBLENUM;
-        double y1234 = (y123 + y234) / DOUBLENUM;
+        float x12 = (x1 + x2) / FLOATNUM;
+        float y12 = (y1 + y2) / FLOATNUM;
+        float x23 = (x2 + x3) / FLOATNUM;
+        float y23 = (y2 + y3) / FLOATNUM;
+        float x34 = (x3 + x4) / FLOATNUM;
+        float y34 = (y3 + y4) / FLOATNUM;
+        float x123 = (x12 + x23) / FLOATNUM;
+        float y123 = (y12 + y23) / FLOATNUM;
+        float x234 = (x23 + x34) / FLOATNUM;
+        float y234 = (y23 + y34) / FLOATNUM;
+        float x1234 = (x123 + x234) / FLOATNUM;
+        float y1234 = (y123 + y234) / FLOATNUM;
 
         // 试着用一条直线近似整个三次曲线
-        double deltaX = x4 - x1;
-        double deltaY = y4 - y1;
+        float deltaX = x4 - x1;
+        float deltaY = y4 - y1;
 
-        double delta2 = std::fabs(((x2 - x4) * deltaY - (y2 - y4) * deltaX));
-        double delta3 = std::fabs(((x3 - x4) * deltaY - (y3 - y4) * deltaX));
+        float delta2 = std::fabs(((x2 - x4) * deltaY - (y2 - y4) * deltaX));
+        float delta3 = std::fabs(((x3 - x4) * deltaY - (y3 - y4) * deltaX));
 
-        double da1;
-        double da2;
-        double gradient;
+        float da1;
+        float da2;
+        float gradient;
 
         switch ((int(delta2 > CURVECOLLINEARITYEPSILON) << 1) + int(delta3 > CURVECOLLINEARITYEPSILON)) {
             case COLLINEAR:
@@ -439,7 +439,7 @@ namespace OHOS {
                     // 角度条件
                     da1 = std::fabs(std::atan2(y4 - y3, x4 - x3) - std::atan2(y3 - y2, x3 - x2));
                     if (da1 >= PI) {
-                        da1 = DOUBLENUM * PI - da1;
+                        da1 = FLOATNUM * PI - da1;
                     }
 
                     if (da1 < angleTolerance_) {
@@ -466,7 +466,7 @@ namespace OHOS {
                     // 角度条件
                     da1 = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
                     if (da1 >= PI) {
-                        da1 = DOUBLENUM * PI - da1;
+                        da1 = FLOATNUM * PI - da1;
                     }
 
                     if (da1 < angleTolerance_) {
@@ -495,10 +495,10 @@ namespace OHOS {
                     da1 = std::fabs(gradient - std::atan2(y2 - y1, x2 - x1));
                     da2 = std::fabs(std::atan2(y4 - y3, x4 - x3) - gradient);
                     if (da1 >= PI) {
-                        da1 = DOUBLENUM * PI - da1;
+                        da1 = FLOATNUM * PI - da1;
                     }
                     if (da2 >= PI) {
-                        da2 = DOUBLENUM * PI - da2;
+                        da2 = FLOATNUM * PI - da2;
                     }
 
                     if (da1 + da2 < angleTolerance_) {
@@ -523,10 +523,10 @@ namespace OHOS {
         RecursiveBezier(x1234, y1234, x234, y234, x34, y34, x4, y4, level + 1);
     }
 
-    void CubicBezierCurveDividOperate::Bezier(double x1, double y1,
-                                              double x2, double y2,
-                                              double x3, double y3,
-                                              double x4, double y4)
+    void CubicBezierCurveDividOperate::Bezier(float x1, float y1,
+                                              float x2, float y2,
+                                              float x3, float y3,
+                                              float x4, float y4)
     {
         points_.Add(PointD(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, x4, y4, 0);

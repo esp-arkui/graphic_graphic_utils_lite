@@ -58,7 +58,7 @@ namespace OHOS {
             m_source->Rewind(path_id);
         }
 
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             unsigned cmd = m_source->Vertex(x, y);
             if (IsVertex(cmd)) {
