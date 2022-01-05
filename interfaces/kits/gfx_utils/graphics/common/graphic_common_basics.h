@@ -138,11 +138,11 @@ namespace OHOS {
     using int64 = signed long long;
     using int64u = unsigned long long;
     using RectI = RectBase<int>;
-    using RectD = RectBase<double>;
-    using PointD = PointBase<double>;
+    using RectD = RectBase<float>;
+    using PointD = PointBase<float>;
     using PointI = PointBase<int>;
     using VertexF = VertexBase<float>;
-    using VertexD = VertexBase<double>;
+    using VertexD = VertexBase<float>;
     using VertexI = VertexBase<int>;
 
     const float COEFFICIENT = 0.7f;
@@ -269,28 +269,28 @@ namespace OHOS {
     const int INDEX_SIX = 6;
     const int INDEX_SEVEN = 7;
 
-    GRAPHIC_GEOMETRY_INLINE int Iceil(double val)
+    GRAPHIC_GEOMETRY_INLINE int Iceil(float val)
     {
         return int(std::ceil(val));
     }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(double val)
+    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(float val)
     {
         return unsigned(std::ceil(val));
     }
-    GRAPHIC_GEOMETRY_INLINE int Iround(double val)
+    GRAPHIC_GEOMETRY_INLINE int Iround(float val)
     {
         return int((val < 0.0) ? val - ROUND_BASE : val + ROUND_BASE);
     }
-    GRAPHIC_GEOMETRY_INLINE int Uround(double val)
+    GRAPHIC_GEOMETRY_INLINE int Uround(float val)
     {
         return unsigned(val + ROUND_BASE);
     }
-    GRAPHIC_GEOMETRY_INLINE int Ifloor(double val)
+    GRAPHIC_GEOMETRY_INLINE int Ifloor(float val)
     {
         int i = int(val);
         return i - (i > val);
     }
-    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(double val)
+    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(float val)
     {
         return unsigned(val);
     }
@@ -330,7 +330,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-    inline double RadianToDegree(double val)
+    inline float RadianToDegree(float val)
     {
         return val * RAD_BASE / PI;
     }
@@ -339,7 +339,7 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-    inline double DegreeToRadian(double val)
+    inline float DegreeToRadian(float val)
     {
         return val * PI / RAD_BASE;
     }
