@@ -36,7 +36,7 @@ namespace OHOS {
     class QuadraticBezierCurveIncrement {
     public:
         QuadraticBezierCurveIncrement()
-            : numberSteps(0), currentStep(0), approximationScale(1.0)
+            : numberSteps(0), currentStep(0), approximationScale(1.0f)
         {}
 
         QuadraticBezierCurveIncrement(float x1, float y1,
@@ -72,14 +72,14 @@ namespace OHOS {
         {}
         float AngleTolerance() const
         {
-            return 0.0;
+            return 0.0f;
         }
 
         void CuspLimit(float)
         {}
         float CuspLimit() const
         {
-            return 0.0;
+            return 0.0f;
         }
 
         void Rewind(unsigned pathId);

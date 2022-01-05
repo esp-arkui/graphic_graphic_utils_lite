@@ -37,7 +37,7 @@ namespace OHOS {
     {
         float y0 = std::sin(sweepAngle / FLOATNUM);
         float x0 = std::cos(sweepAngle / FLOATNUM);
-        float tx = (1.0 - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
+        float tx = (1.0f - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
         float ty = y0 - tx * x0 / y0;
         float px[BEZIER_ARC_POINTS];
         float py[BEZIER_ARC_POINTS];
@@ -53,7 +53,7 @@ namespace OHOS {
         float cosVal = std::cos(startAngle + sweepAngle / FLOATNUM);
         float sinVal = std::sin(startAngle + sweepAngle / FLOATNUM);
 
-        for (unsigned i = 0; i < BEZIER_ARC_POINTS; i++) {
+        for (int i = 0; i < BEZIER_ARC_POINTS; i++) {
             curve[i * BEZIER_ARC_SETUP] = cx + rx * (px[i] * cosVal - py[i] * sinVal);
             curve[i * BEZIER_ARC_SETUP + 1] = cy + ry * (px[i] * sinVal + py[i] * cosVal);
         }
@@ -88,7 +88,7 @@ namespace OHOS {
         currentCommand = PATH_CMD_CURVE4;
         bool done = false;
         do {
-            if (0.0 > sweepAngle) {
+            if (0.0f > sweepAngle) {
                 prevSweep = totalSweep;
                 totalSweep -= PI * HALFNUM;
                 localSweep = -PI * HALFNUM;
@@ -120,10 +120,10 @@ namespace OHOS {
                             bool sweepFlag,
                             float x2, float y2)
     {
-        if (ry < 0.0) {
+        if (ry < 0.0f) {
             ry = -rx;
         }
-        if (rx < 0.0) {
+        if (rx < 0.0f) {
             rx = -rx;
         }
         isRadiusJoinPath = true;
@@ -143,7 +143,7 @@ namespace OHOS {
         float py1 = y1 * y1;
 
         float radiiCheck = px1 / prx + py1 / pry;
-        if (radiiCheck > 1.0) {
+        if (radiiCheck > 1.0f) {
             ry = std::sqrt(radiiCheck) * ry;
             rx = std::sqrt(radiiCheck) * rx;
             pry = ry * ry;
@@ -152,7 +152,7 @@ namespace OHOS {
                 isRadiusJoinPath = false;
             }
         }
-        float sign = (largeArcFlag == sweepFlag) ? -1.0 : 1.0;
+        float sign = (largeArcFlag == sweepFlag) ? -1.0f : 1.0f;
         float sq = (prx * pry - prx * py1 - pry * px1) / (prx * py1 + pry * px1);
         float coef = sign * std::sqrt((sq < 0) ? 0 : sq);
         float cx1 = coef * ((rx * y1) / ry);
@@ -171,27 +171,27 @@ namespace OHOS {
 
         p = ux;
         n = std::sqrt(ux * ux + uy * uy);
-        sign = (uy < 0) ? -1.0 : 1.0;
+        sign = (uy < 0) ? -1.0f : 1.0f;
         float v = p / n;
-        if (v > 1.0)
-            v = 1.0;
-        if (v < -1.0)
-            v = -1.0;
+        if (v > 1.0f)
+            v = 1.0f;
+        if (v < -1.0f)
+            v = -1.0f;
         float startAngle = sign * std::acos(v);
         n = std::sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
         p = ux * vx + uy * vy;
-        sign = (ux * vy - uy * vx < 0) ? -1.0 : 1.0;
+        sign = (ux * vy - uy * vx < 0) ? -1.0f : 1.0f;
         v = p / n;
-        if (v < -1.0) {
-            v = -1.0;
+        if (v < -1.0f) {
+            v = -1.0f;
         }
-        if (v > 1.0) {
-            v = 1.0;
+        if (v > 1.0f) {
+            v = 1.0f;
         }
         float sweepAngle = sign * std::acos(v);
-        if (!sweepFlag && sweepAngle > 0) {
+        if (!sweepFlag && sweepAngle > 0.0f) {
             sweepAngle -= PI * FLOATNUM;
-        } else if (sweepFlag && sweepAngle < 0) {
+        } else if (sweepFlag && sweepAngle < 0.0f) {
             sweepAngle += PI * FLOATNUM;
         }
         bezierArcModel.Init(0.0, 0.0, rx, ry, startAngle, sweepAngle);
