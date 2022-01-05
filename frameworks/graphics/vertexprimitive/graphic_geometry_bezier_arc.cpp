@@ -173,10 +173,12 @@ namespace OHOS {
         n = std::sqrt(ux * ux + uy * uy);
         sign = (uy < 0) ? -1.0f : 1.0f;
         float v = p / n;
-        if (v > 1.0f)
+        if (v > 1.0f) {
             v = 1.0f;
-        if (v < -1.0f)
+        }
+        if (v < -1.0f) {
             v = -1.0f;
+        }
         float startAngle = sign * std::acos(v);
         n = std::sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
         p = ux * vx + uy * vy;
