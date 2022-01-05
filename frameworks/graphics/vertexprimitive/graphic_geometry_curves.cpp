@@ -19,9 +19,9 @@
 
 namespace OHOS {
     const float CURVECOLLINEARITYEPSILON = 1e-30;
-    const float CURVEANGLETOLERANCEEPSILON = 0.01;
+    const float CURVEANGLETOLERANCEEPSILON = 0.01f;
     const int CURVERECURSIONLIMIT = 32;
-    const float CURVES_NUM_STEP_LEN = 0.25;
+    const float CURVES_NUM_STEP_LEN = 0.25f;
     float QuadraticBezierCurveIncrement::ApproximationScale() const
     {
         return approximationScale;

@@ -23,13 +23,13 @@ namespace OHOS {
 
     const int16u BEZIER_ARC_POINTS = 4;
     /* 贝塞尔弧角度极限值 */
-    const float BEZIER_ARC_ANGLE_EPSILON = 0.01;
+    const float BEZIER_ARC_ANGLE_EPSILON = 0.01f;
 
-    const float BEZIER_ARC_DELTAX = 4.0;
+    const float BEZIER_ARC_DELTAX = 4.0f;
 
-    const float BEZIER_ARC_EQUAL_DIVISION = 3.0;
+    const float BEZIER_ARC_EQUAL_DIVISION = 3.0f;
 
-    const float BEZIER_ARC_RADIICHECK = 10.0;
+    const float BEZIER_ARC_RADIICHECK = 10.0f;
 
     void ArcToBezier(float cx, float cy, float rx, float ry,
                      float startAngle, float sweepAngle,
