@@ -58,18 +58,18 @@ namespace OHOS {
     void VertexGenerateDash::CalcDashStart(float ds)
     {
         currDash_ = 0;
-        currDashStart_ = 0.0;
-        for (; ds > 0.0;) {
+        currDashStart_ = 0.0f;
+        for (; ds > 0.0f;) {
             if (ds > dashes_[currDash_]) {
                 ds -= dashes_[currDash_];
                 ++currDash_;
-                currDashStart_ = 0.0;
+                currDashStart_ = 0.0f;
                 if (currDash_ >= numDashes_) {
                     currDash_ = 0;
                 }
             } else {
                 currDashStart_ = ds;
-                ds = 0.0;
+                ds = 0.0f;
             }
         }
     }
@@ -124,7 +124,7 @@ namespace OHOS {
                     currRest = vertexDist1_->vertexDistance;
                     *x = vertexDist1_->vertexXCoord;
                     *y = vertexDist1_->vertexYCoord;
-                    if (dashStart_ >= 0.0) {
+                    if (dashStart_ >= 0.0f) {
                         CalcDashStart(dashStart_);
                     }
                     return PATH_CMD_MOVE_TO;
@@ -142,7 +142,7 @@ namespace OHOS {
                         if (currDash_ >= numDashes_) {
                             currDash_ = 0;
                         }
-                        currDashStart_ = 0.0;
+                        currDashStart_ = 0.0f;
                         *x = vertexDist2_->vertexXCoord -
                                 (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
                         *y = vertexDist2_->vertexYCoord -
