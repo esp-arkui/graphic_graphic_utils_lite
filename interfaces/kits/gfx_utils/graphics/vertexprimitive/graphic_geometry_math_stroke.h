@@ -87,8 +87,9 @@ namespace OHOS {
             return lineCapEnum;
         }
         /**
-     * @brief 计算端点样式
-     */
+         * @brief 计算端点样式
+         * 注意在拐角的两端要做90度的旋转处理
+         */
         void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
             vertexConsumer.RemoveAll();
@@ -142,24 +143,26 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
-     * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
-     */
+         * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
+         * 注意在拐角的两端要做90度的旋转处理
+         */
         void SetLineJoin(LineJoinEnum lineJoinE)
         {
             lineJoinEnum = lineJoinE;
         }
 
         /**
-     * @brief SetMiterLimit 设置最大斜接长度
-     */
+         * @brief SetMiterLimit 设置最大斜接长度
+         */
         void SetMiterLimit(float miterLimit)
         {
             miterLimitMeasure = miterLimit;
         }
 
         /**
-     * @brief 计算相交和拐角
-     */
+         * @brief 计算相交和拐角
+         * 注意在拐角的两端要做90度的旋转处理
+         */
         void CalcJoin(VertexConsumer& vertexConsumer,
                       const VertexDist& vertexDistBegin,
                       const VertexDist& vertexDistMiddle,
@@ -235,8 +238,8 @@ namespace OHOS {
         }
 
         /**
-     * @brief 计算斜接长度
-     */
+         * @brief 计算斜接长度
+         */
         void CalcMiter(VertexConsumer& vertexConsumer,
                        const VertexDist& vd0,
                        const VertexDist& vd1,
@@ -348,8 +351,8 @@ namespace OHOS {
             return lineJoinEnum;
         }
         /**
-     * @brief GetMiterLimit 返回最大斜接长度
-     */
+         * @brief GetMiterLimit 返回最大斜接长度
+         */
         float GetMiterLimit() const
         {
             return miterLimitMeasure;
@@ -357,8 +360,8 @@ namespace OHOS {
 #endif
 
         /**
-     * @brief width 设置区域宽
-     */
+         * @brief width 设置区域宽
+         */
         void width(float width)
         {
             strokeWidth = width * OHOS::ALPHAHALF;
@@ -373,24 +376,24 @@ namespace OHOS {
         }
 
         /**
-     * @brief 添加近似值
-     */
+         * @brief 添加近似值
+         */
         void SetApproximationScale(float approximationScale)
         {
             approxScaleRadio = approximationScale;
         }
 
         /**
-     * @brief width 返回宽度
-     */
+         * @brief width 返回宽度
+         */
         float width() const
         {
             return strokeWidth * TWO_TIMES;
         }
 
         /**
-     * @brief 返回设定的近似值
-     */
+         * @brief 返回设定的近似值
+         */
         float GetApproximationScale() const
         {
             return approxScaleRadio;
