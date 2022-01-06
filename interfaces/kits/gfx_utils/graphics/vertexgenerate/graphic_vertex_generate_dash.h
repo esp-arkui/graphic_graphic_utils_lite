@@ -50,21 +50,21 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AddDash(double dashLen, double gapLen);
+        void AddDash(float dashLen, float gapLen);
         /**
          * @brief 设定dashStart_
          * @param 设定值
          * @since 1.0
          * @version 1.0
          */
-        void DashStart(double ds);
+        void DashStart(float ds);
         /**
          * @brief 设定shorten_
          * @param 设定值
          * @since 1.0
          * @version 1.0
          */
-        void Shorten(double s)
+        void Shorten(float s)
         {
             shorten_ = s;
         }
@@ -74,7 +74,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double Shorten() const
+        float Shorten() const
         {
             return shorten_;
         }
@@ -92,26 +92,26 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AddVertex(double x, double y, unsigned cmd);
+        void AddVertex(float x, float y, unsigned cmd);
 
         void Rewind(unsigned pathId);
 
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         VertexGenerateDash(const VertexGenerateDash&);
         const VertexGenerateDash& operator=(const VertexGenerateDash&);
 
-        void CalcDashStart(double ds);
+        void CalcDashStart(float ds);
 
-        double dashes_[MAX_DASHES];
-        double totalDashLen_;
+        float dashes_[MAX_DASHES];
+        float totalDashLen_;
         unsigned numDashes_;
-        double dashStart_;
-        double shorten_;
-        double currDashStart_;
+        float dashStart_;
+        float shorten_;
+        float currDashStart_;
         unsigned currDash_;
-        double currRest;
+        float currRest;
         const VertexDist* vertexDist1_;
         const VertexDist* vertexDist2_;
 

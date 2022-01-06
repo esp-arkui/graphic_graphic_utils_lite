@@ -111,9 +111,9 @@ namespace OHOS {
     }
 
     struct VertexDist {
-        double vertexXCoord;
-        double vertexYCoord;
-        double vertexDistance;
+        float vertexXCoord;
+        float vertexYCoord;
+        float vertexDistance;
 
         VertexDist()
         {}
@@ -124,7 +124,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        VertexDist(double x, double y)
+        VertexDist(float x, float y)
             : vertexXCoord(x), vertexYCoord(y), vertexDistance(0.0)
         {
         }
@@ -159,7 +159,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-        VertexDistCmd(double x_, double y_, unsigned cmd_)
+        VertexDistCmd(float x_, float y_, unsigned cmd_)
             : VertexDist(x_, y_), cmd(cmd_)
         {
         }

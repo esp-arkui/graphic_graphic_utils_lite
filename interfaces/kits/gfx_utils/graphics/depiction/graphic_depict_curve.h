@@ -90,13 +90,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void ApproximationScale(double aScale)
+        void ApproximationScale(float aScale)
         {
             m_quadratic_bezier.SetApproximationScale(aScale);
             m_cubic_bezier.SetApproximationScale(aScale);
         }
 
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return m_cubic_bezier.ApproximationScale();
         }
@@ -107,13 +107,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AngleTolerance(double angleRate)
+        void AngleTolerance(float angleRate)
         {
             m_quadratic_bezier.AngleTolerance(angleRate);
             m_cubic_bezier.AngleTolerance(angleRate);
         }
 
-        double AngleTolerance() const
+        float AngleTolerance() const
         {
             return m_cubic_bezier.AngleTolerance();
         }
@@ -126,13 +126,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void CuspLimit(double v)
+        void CuspLimit(float v)
         {
             m_quadratic_bezier.CuspLimit(v);
             m_cubic_bezier.CuspLimit(v);
         }
 
-        double CuspLimit() const
+        float CuspLimit() const
         {
             return m_cubic_bezier.CuspLimit();
         }
@@ -149,15 +149,15 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         DepictCurve(const self_type&);
         const self_type& operator=(const self_type&);
 
         VertexSource* m_source;
-        double m_last_x;
-        double m_last_y;
+        float m_last_x;
+        float m_last_y;
         QuadraticBezierCurveType m_quadratic_bezier;
         CubicBezierCurveType m_cubic_bezier;
     };
@@ -184,7 +184,7 @@ namespace OHOS {
         * @version 1.0
         */
     template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
-    unsigned DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Vertex(double* x, double* y)
+    unsigned DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Vertex(float* x, float* y)
     {
         if (!IsStop(m_quadratic_bezier.Vertex(x, y))) {
             m_last_x = *x;
@@ -198,10 +198,10 @@ namespace OHOS {
             return PATH_CMD_LINE_TO;
         }
 
-        double ct2_x = 0;
-        double ct2_y = 0;
-        double end_x = 0;
-        double end_y = 0;
+        float ct2_x = 0;
+        float ct2_y = 0;
+        float end_x = 0;
+        float end_y = 0;
 
         unsigned cmd = m_source->Vertex(x, y);
         switch (cmd) {

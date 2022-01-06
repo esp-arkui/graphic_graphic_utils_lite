@@ -134,7 +134,7 @@ namespace OHOS {
         * @version 1.0
         */
         void ResetClipping();
-        void ClipBox(double x1, double y1, double x2, double y2);
+        void ClipBox(float x1, float y1, float x2, float y2);
 
         /**
         * @brief 设置填充规则，FILL_NON_ZERO（是
@@ -173,7 +173,7 @@ namespace OHOS {
         {
             int coverIndex;
             for (coverIndex = 0; coverIndex < AA_SCALE; coverIndex++) {
-                m_gamma[coverIndex] = Uround(gamma_function(double(coverIndex) / AA_MASK) * AA_MASK);
+                m_gamma[coverIndex] = Uround(gamma_function(float(coverIndex) / AA_MASK) * AA_MASK);
             }
         }
 
@@ -199,13 +199,13 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        void MoveToByDouble(double x, double y);
+        void MoveToByfloat(float x, float y);
         /**
         * @brief 按照像素单元的设置图元的移动位置。
         * @since 1.0
         * @version 1.0
         */
-        void LineToByDouble(double x, double y);
+        void LineToByfloat(float x, float y);
 
         /**
         * @brief 闭合多边形处理。
@@ -213,7 +213,7 @@ namespace OHOS {
         * @version 1.0
         */
         void ClosePolygon();
-        void AddVertex(double x, double y, unsigned cmd);
+        void AddVertex(float x, float y, unsigned cmd);
 
         /**
         * @brief 利用裁剪器按照1/256像素单元裁剪出一条边且构建轮廓线。
@@ -226,7 +226,7 @@ namespace OHOS {
         * @since 1.0
         * @version 1.0
         */
-        void EdgeMakeUsingDouble(double x1, double y1, double x2, double y2);
+        void EdgeMakeUsingfloat(float x1, float y1, float x2, float y2);
 
         /**
         * @brief 从顶点源中获取顶点信息坐标，且按照扫描过程
@@ -237,8 +237,8 @@ namespace OHOS {
         template <typename VertexSource>
         void AddPath(VertexSource& vs, unsigned path_id = 0)
         {
-            double x;
-            double y;
+            float x;
+            float y;
 
             unsigned cmd;
             vs.Rewind(path_id);
@@ -427,8 +427,8 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::ClipBox(double x1, double y1,
-                                                    double x2, double y2)
+    void RasterizerScanlineAntiAlias<Clip>::ClipBox(float x1, float y1,
+                                                    float x2, float y2)
     {
         Reset();
         m_clipper.ClipBox(depict_type::UpScale(x1), depict_type::UpScale(y1),
@@ -473,7 +473,7 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::MoveToByDouble(double x, double y)
+    void RasterizerScanlineAntiAlias<Clip>::MoveToByfloat(float x, float y)
     {
         if (m_outline.GetSorted())
             Reset();
@@ -485,7 +485,7 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::LineToByDouble(double x, double y)
+    void RasterizerScanlineAntiAlias<Clip>::LineToByfloat(float x, float y)
     {
         m_clipper.LineTo(m_outline,
                          depict_type::UpScale(x),
@@ -494,12 +494,12 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::AddVertex(double x, double y, unsigned cmd)
+    void RasterizerScanlineAntiAlias<Clip>::AddVertex(float x, float y, unsigned cmd)
     {
         if (IsMoveTo(cmd)) {
-            MoveToByDouble(x, y);
+            MoveToByfloat(x, y);
         } else if (IsVertex(cmd)) {
-            LineToByDouble(x, y);
+            LineToByfloat(x, y);
         } else if (IsClose(cmd)) {
             ClosePolygon();
         }
@@ -518,8 +518,8 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::EdgeMakeUsingDouble(double x1, double y1,
-                                                                double x2, double y2)
+    void RasterizerScanlineAntiAlias<Clip>::EdgeMakeUsingfloat(float x1, float y1,
+                                                                float x2, float y2)
     {
         if (m_outline.GetSorted())
             Reset();

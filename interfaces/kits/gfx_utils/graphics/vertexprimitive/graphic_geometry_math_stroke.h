@@ -89,14 +89,14 @@ namespace OHOS {
         /**
      * @brief 计算端点样式
      */
-        void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, double len)
+        void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
             vertexConsumer.RemoveAll();
 
-            double dx1 = (vd1.vertexYCoord - vd0.vertexYCoord) / len;
-            double dy1 = (vd1.vertexXCoord - vd0.vertexXCoord) / len;
-            double dx2 = 0;
-            double dy2 = 0;
+            float dx1 = (vd1.vertexYCoord - vd0.vertexYCoord) / len;
+            float dy1 = (vd1.vertexXCoord - vd0.vertexXCoord) / len;
+            float dx2 = 0;
+            float dy2 = 0;
 
             dx1 *= strokeWidth;
             dy1 *= strokeWidth;
@@ -109,10 +109,10 @@ namespace OHOS {
                 AddVertex(vertexConsumer, vd0.vertexXCoord - dx1 - dx2, vd0.vertexYCoord + dy1 - dy2);
                 AddVertex(vertexConsumer, vd0.vertexXCoord + dx1 - dx2, vd0.vertexYCoord - dy1 - dy2);
             } else {
-                double deltaAngle =
+                float deltaAngle =
                     std::acos(strokeWidthUsingAbs /
                               (strokeWidthUsingAbs + RADDALETAELPS / approxScaleRadio)) * TWO_TIMES;
-                double angleStart;
+                float angleStart;
                 int nIndex;
                 int divNumber = int(PI / deltaAngle);
 
@@ -152,7 +152,7 @@ namespace OHOS {
         /**
      * @brief SetMiterLimit 设置最大斜接长度
      */
-        void SetMiterLimit(double miterLimit)
+        void SetMiterLimit(float miterLimit)
         {
             miterLimitMeasure = miterLimit;
         }
@@ -164,29 +164,29 @@ namespace OHOS {
                       const VertexDist& vertexDistBegin,
                       const VertexDist& vertexDistMiddle,
                       const VertexDist& vertexDistLast,
-                      double deltaLengthPrev,
-                      double deltaLengthLast)
+                      float deltaLengthPrev,
+                      float deltaLengthLast)
         {
-            double dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;
-            double dy1 = strokeWidth * (vertexDistMiddle.vertexXCoord - vertexDistBegin.vertexXCoord) / deltaLengthPrev;
-            double dx2 = strokeWidth * (vertexDistLast.vertexYCoord - vertexDistMiddle.vertexYCoord) / deltaLengthLast;
-            double dy2 = strokeWidth * (vertexDistLast.vertexXCoord - vertexDistMiddle.vertexXCoord) / deltaLengthLast;
+            float dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;
+            float dy1 = strokeWidth * (vertexDistMiddle.vertexXCoord - vertexDistBegin.vertexXCoord) / deltaLengthPrev;
+            float dx2 = strokeWidth * (vertexDistLast.vertexYCoord - vertexDistMiddle.vertexYCoord) / deltaLengthLast;
+            float dy2 = strokeWidth * (vertexDistLast.vertexXCoord - vertexDistMiddle.vertexXCoord) / deltaLengthLast;
 
             vertexConsumer.RemoveAll();
 
-            double crossProduct =
+            float crossProduct =
                 CrossProduct(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, vertexDistMiddle.vertexXCoord,
                              vertexDistMiddle.vertexYCoord, vertexDistLast.vertexXCoord, vertexDistLast.vertexYCoord);
             if (crossProduct != 0 && (crossProduct > 0) == (strokeWidth > 0)) {
-                double limit =
+                float limit =
                     ((deltaLengthPrev < deltaLengthLast) ? deltaLengthPrev : deltaLengthLast) / strokeWidthUsingAbs;
                 CalcMiter(vertexConsumer, vertexDistBegin, vertexDistMiddle, vertexDistLast, dx1, dy1, dx2, dy2,
                           MITER_JOIN_REVERT, limit, 0);
             } else {
-                double dx = (dx1 + dx2) * HALFNUM;
-                double dy = (dy1 + dy2) * HALFNUM;
-                double dbevel = std::sqrt(dx * dx + dy * dy);
-                double lim = strokeWidthUsingAbs * miterLimitMeasure;
+                float dx = (dx1 + dx2) * HALFNUM;
+                float dy = (dy1 + dy2) * HALFNUM;
+                float dbevel = std::sqrt(dx * dx + dy * dy);
+                float lim = strokeWidthUsingAbs * miterLimitMeasure;
                 bool isIntersection =
                     CalcIntersection(vertexDistBegin.vertexXCoord + dx1, vertexDistBegin.vertexYCoord - dy1,
                                      vertexDistMiddle.vertexXCoord + dx1, vertexDistMiddle.vertexYCoord - dy1,
@@ -241,18 +241,18 @@ namespace OHOS {
                        const VertexDist& vd0,
                        const VertexDist& vd1,
                        const VertexDist& vd2,
-                       double dx1,
-                       double dy1,
-                       double dx2,
-                       double dy2,
+                       float dx1,
+                       float dy1,
+                       float dx2,
+                       float dy2,
                        LineJoinEnum linejoin,
-                       double mlimit,
-                       double dbevel)
+                       float mlimit,
+                       float dbevel)
         {
-            double xi = vd1.vertexXCoord;
-            double yi = vd1.vertexYCoord;
-            double di = 1;
-            double lim = strokeWidthUsingAbs * mlimit;
+            float xi = vd1.vertexXCoord;
+            float yi = vd1.vertexYCoord;
+            float di = 1;
+            float lim = strokeWidthUsingAbs * mlimit;
             bool miterLimitExceeded = true;
             bool intersectionFailed = true;
             if (CalcIntersection(vd0.vertexXCoord + dx1, vd0.vertexYCoord - dy1, vd1.vertexXCoord + dx1,
@@ -265,12 +265,12 @@ namespace OHOS {
                 }
                 intersectionFailed = false;
             } else {
-                double x2 = vd1.vertexXCoord + dx1;
-                double y2 = vd1.vertexYCoord - dy1;
+                float x2 = vd1.vertexXCoord + dx1;
+                float y2 = vd1.vertexYCoord - dy1;
                 if ((CrossProduct(vd0.vertexXCoord, vd0.vertexYCoord,
-                                  vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0) ==
+                                  vd1.vertexXCoord, vd1.vertexYCoord, x2, y2) < 0.0f) ==
                     (CrossProduct(vd1.vertexXCoord, vd1.vertexYCoord,
-                                  vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0)) {
+                                  vd2.vertexXCoord, vd2.vertexYCoord, x2, y2) < 0.0f)) {
                     AddVertex(vertexConsumer, vd1.vertexXCoord + dx1, vd1.vertexYCoord - dy1);
                     miterLimitExceeded = false;
                 }
@@ -293,10 +293,10 @@ namespace OHOS {
                             AddVertex(vertexConsumer, vd1.vertexXCoord + dx2 - dy2 * mlimit,
                                       vd1.vertexYCoord - dy2 - dx2 * mlimit);
                         } else {
-                            double x1 = vd1.vertexXCoord + dx1;
-                            double y1 = vd1.vertexYCoord - dy1;
-                            double x2 = vd1.vertexXCoord + dx2;
-                            double y2 = vd1.vertexYCoord - dy2;
+                            float x1 = vd1.vertexXCoord + dx1;
+                            float y1 = vd1.vertexYCoord - dy1;
+                            float x2 = vd1.vertexXCoord + dx2;
+                            float y2 = vd1.vertexYCoord - dy2;
                             di = (lim - dbevel) / (di - dbevel);
                             AddVertex(vertexConsumer, x1 + (xi - x1) * di, y1 + (yi - y1) * di);
                             AddVertex(vertexConsumer, x2 + (xi - x2) * di, y2 + (yi - y2) * di);
@@ -305,12 +305,12 @@ namespace OHOS {
                 }
             }
         }
-        void CalcArc(VertexConsumer& vertexConsumer, double x, double y, double dx1, double dy1, double dx2, double dy2)
+        void CalcArc(VertexConsumer& vertexConsumer, float x, float y, float dx1, float dy1, float dx2, float dy2)
         {
             const float limitScale = 0.125;
-            double angleStart = std::atan2(dy1 * strokeWidthSignal, dx1 * strokeWidthSignal);
-            double angleEnd = std::atan2(dy2 * strokeWidthSignal, dx2 * strokeWidthSignal);
-            double deltaAngle = angleStart - angleEnd;
+            float angleStart = std::atan2(dy1 * strokeWidthSignal, dx1 * strokeWidthSignal);
+            float angleEnd = std::atan2(dy2 * strokeWidthSignal, dx2 * strokeWidthSignal);
+            float deltaAngle = angleStart - angleEnd;
             int nIndex, divNumber;
 
             deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio)) * TWO_TIMES;
@@ -350,7 +350,7 @@ namespace OHOS {
         /**
      * @brief GetMiterLimit 返回最大斜接长度
      */
-        double GetMiterLimit() const
+        float GetMiterLimit() const
         {
             return miterLimitMeasure;
         }
@@ -359,7 +359,7 @@ namespace OHOS {
         /**
      * @brief width 设置区域宽
      */
-        void width(double width)
+        void width(float width)
         {
             strokeWidth = width * OHOS::ALPHAHALF;
             if (strokeWidth < 0) {
@@ -375,7 +375,7 @@ namespace OHOS {
         /**
      * @brief 添加近似值
      */
-        void SetApproximationScale(double approximationScale)
+        void SetApproximationScale(float approximationScale)
         {
             approxScaleRadio = approximationScale;
         }
@@ -383,7 +383,7 @@ namespace OHOS {
         /**
      * @brief width 返回宽度
      */
-        double width() const
+        float width() const
         {
             return strokeWidth * TWO_TIMES;
         }
@@ -391,29 +391,29 @@ namespace OHOS {
         /**
      * @brief 返回设定的近似值
      */
-        double GetApproximationScale() const
+        float GetApproximationScale() const
         {
             return approxScaleRadio;
         }
 
     private:
-        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, double x, double y)
+        GRAPHIC_GEOMETRY_INLINE void AddVertex(VertexConsumer& vertexConsumer, float x, float y)
         {
             vertexConsumer.Add(coord_type(x, y));
         }
 
-        double strokeWidth;
-        double strokeWidthUsingAbs;
-        double strokeWidthPercentDivision;
+        float strokeWidth;
+        float strokeWidthUsingAbs;
+        float strokeWidthPercentDivision;
         int strokeWidthSignal;
 
-        double approxScaleRadio;
+        float approxScaleRadio;
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         LineCapEnum lineCapEnum;
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         LineJoinEnum lineJoinEnum;
-        double miterLimitMeasure;
+        float miterLimitMeasure;
 #endif
     };
 } // namespace OHOS

@@ -53,7 +53,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AddVertex(double, double, unsigned)
+        void AddVertex(float, float, unsigned)
         {}
 
         /**
@@ -78,7 +78,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double*, double*)
+        unsigned Vertex(float*, float*)
         {
             return PATH_CMD_STOP;
         }
@@ -187,7 +187,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         DepictAdaptorVertexGenerator(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
@@ -199,8 +199,8 @@ namespace OHOS {
         Markers m_markers;
         VertexGeneratorEnum m_status;
         unsigned m_last_cmd;
-        double m_start_x;
-        double m_start_y;
+        float m_start_x;
+        float m_start_y;
     };
 
     /**
@@ -210,7 +210,7 @@ namespace OHOS {
     * @version 1.0
     */
     template <class VertexSource, class Generator, class Markers>
-    unsigned DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>::Vertex(double* x, double* y)
+    unsigned DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>::Vertex(float* x, float* y)
     {
         unsigned cmd = PATH_CMD_STOP;
         bool done = false;

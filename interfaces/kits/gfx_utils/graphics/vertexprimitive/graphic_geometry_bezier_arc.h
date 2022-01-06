@@ -37,9 +37,9 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    void ArcToBezier(double cx, double cy, double rx, double ry,
-                     double startAngle, double sweepAngle,
-                     double* curve);
+    void ArcToBezier(float cx, float cy, float rx, float ry,
+                     float startAngle, float sweepAngle,
+                     float* curve);
 
     /**
      * @file graphic_geometry_bezier_arc.h
@@ -61,10 +61,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        BezierArc(double centerX, double centerY,
-                  double rx, double ry,
-                  double startAngle,
-                  double sweepAngle)
+        BezierArc(float centerX, float centerY,
+                  float rx, float ry,
+                  float startAngle,
+                  float sweepAngle)
         {
             Init(centerX, centerY, rx, ry, startAngle, sweepAngle);
         }
@@ -74,10 +74,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Init(double x, double y,
-                  double rx, double ry,
-                  double startAngle,
-                  double sweepAngle);
+        void Init(float centerX, float centerY,
+                  float rx, float ry,
+                  float startAngle,
+                  float sweepAngle);
 
         /**
          * @brief 回到最开始步骤.
@@ -97,7 +97,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (vertexIndex >= numberVertices) {
                 return PATH_CMD_STOP;
@@ -129,7 +129,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const double* GetVertices() const
+        const float* GetVertices() const
         {
             return arrayVertices;
         }
@@ -140,7 +140,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double* GetVertices()
+        float* GetVertices()
         {
             return arrayVertices;
         }
@@ -148,7 +148,7 @@ namespace OHOS {
     private:
         unsigned vertexIndex;
         unsigned numberVertices;
-        double arrayVertices[BEZIER_ARC_VERTEX_NUM];
+        float arrayVertices[BEZIER_ARC_VERTEX_NUM];
         unsigned currentCommand;
     };
 
@@ -171,13 +171,13 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        BezierArcSvg(double x1,
-                     double y1,
-                     double rx, double ry,
-                     double angle,
+        BezierArcSvg(float x1,
+                     float y1,
+                     float rx, float ry,
+                     float angle,
                      bool largeArcFlag, // 大弧线标志
                      bool sweepFlag,    // 扫掠角标志
-                     double x2, double y2) :
+                     float x2, float y2) :
             bezierArcModel(),
             isRadiusJoinPath(false)
         {
@@ -189,15 +189,15 @@ namespace OHOS {
             return isRadiusJoinPath;
         }
 
-        void Init(double x1,
-                  double y1,
-                  double rx,
-                  double ry,
-                  double angle,
+        void Init(float x1,
+                  float y1,
+                  float rx,
+                  float ry,
+                  float angle,
                   bool largeArcFlag,
                   bool sweepFlag,
-                  double x2,
-                  double y2);
+                  float x2,
+                  float y2);
 
         /**
         * @brief 回到最开始步骤.
@@ -217,7 +217,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             return bezierArcModel.Vertex(x, y);
         }
@@ -228,7 +228,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const double* GetVertices() const
+        const float* GetVertices() const
         {
             return bezierArcModel.GetVertices();
         }
@@ -239,7 +239,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        double* GetVertices()
+        float* GetVertices()
         {
             return bezierArcModel.GetVertices();
         }
