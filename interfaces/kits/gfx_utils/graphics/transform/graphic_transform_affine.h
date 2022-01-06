@@ -18,7 +18,7 @@
 #include <cmath>
 
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
-
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
     const float affineEpsilon = 1e-14;
 
@@ -27,17 +27,19 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    struct TransAffine {
-        float scaleX_, shearY, shearX, scaleY_, translateX, translateY;
+    class TransAffine : public Matrix3<float> {
+    public:
+        //float scaleX_, shearY, shearX, scaleY_, translateX, translateY;
         /**
          * @brief 初始化为单位矩阵
          * @since 1.0
          * @version 1.0
          */
         TransAffine()
-            : scaleX_(1.0), shearY(0.0),
-              shearX(0.0), scaleY_(1.0),
-              translateX(0.0), translateY(0.0)
+            :Matrix3<float>()
+//            : scaleX_(1.0), shearY(0.0),
+//              shearX(0.0), scaleY_(1.0),
+//              translateX(0.0), translateY(0.0)
         {}
         /**
          * @brief 自定义矩阵
@@ -45,9 +47,10 @@ namespace OHOS {
          * @version 1.0
          */
         TransAffine(float v0, float v1, float v2, float v3, float v4, float v5)
-            : scaleX_(v0), shearY(v1),
+            : Matrix3<float>(v0,v2,v4,v1,v3,v5,0,0,1)
+              /*scaleX_(v0), shearY(v1),
               shearX(v2), scaleY_(v3),
-              translateX(v4), translateY(v5)
+              translateX(v4), translateY(v5)*/
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
@@ -58,7 +61,10 @@ namespace OHOS {
         {
             RectToParl(x1, y1, x2, y2, parl);
         }
-
+        void SetData(int iIndex,float fValue)
+        {
+            data_[iIndex] = fValue;
+        }
         /**
          * @brief 将原平行四边形转换为目标平行四边形
          * @param src 原平行四边形
@@ -164,7 +170,7 @@ namespace OHOS {
          */
         float DeterminantReciprocal() const
         {
-            return 1.0 / (scaleX_ * scaleY_ - shearY * shearX);
+            return 1.0 / (data_[0] * data_[4] - data_[3] * data_[1]);
         }
 
         /**
@@ -194,69 +200,66 @@ namespace OHOS {
     inline void TransAffine::Transform(float* x, float* y) const
     {
         float tmp = *x;
-        *x = tmp * scaleX_ + *y * shearX + translateX;
-        *y = tmp * shearY + *y * scaleY_ + translateY;
+        *x = tmp * data_[0] + *y * data_[1] + data_[2];
+        *y = tmp * data_[3] + *y * data_[4] + data_[5];
     }
 
     inline void TransAffine::InverseTransform(float* x, float* y) const
     {
         float reciprocal = DeterminantReciprocal();
-        float a = (*x - translateX) * reciprocal;
-        float b = (*y - translateY) * reciprocal;
-        *x = a * scaleY_ - b * shearX;
-        *y = b * scaleX_ - a * shearY;
+        float a = (*x - data_[2]) * reciprocal;
+        float b = (*y - data_[5]) * reciprocal;
+        *x = a * data_[4] - b * data_[1];
+        *y = b * data_[0] - a * data_[3];
     }
 
     inline const TransAffine& TransAffine::Translate(float deltaX, float deltaY)
     {
-        translateX += deltaX;
-        translateY += deltaY;
+        data_[2] += deltaX;
+        data_[5] += deltaY;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Rotate(float angle)
     {
-        float scaleXTemp = scaleX_ * std::cos(angle) - shearY * std::sin(angle);
-        float shearXTemp = shearX * std::cos(angle) - scaleY_ * std::sin(angle);
-        float translateXTemp = translateX * std::cos(angle) - translateY * std::sin(angle);
-        shearY = scaleX_ * std::sin(angle) + shearY * std::cos(angle);
-        scaleY_ = shearX * std::sin(angle) + scaleY_ * std::cos(angle);
-        translateY = translateX * std::sin(angle) + translateY * std::cos(angle);
-        scaleX_ = scaleXTemp;
-        shearX = shearXTemp;
-        translateX = translateXTemp;
+        float scaleXTemp = data_[0] * std::cos(angle) - data_[3] * std::sin(angle);
+        float shearXTemp = data_[1] * std::cos(angle) - data_[4] * std::sin(angle);
+        float translateXTemp = data_[2] * std::cos(angle) - data_[5] * std::sin(angle);
+        data_[3] = data_[0] * std::sin(angle) + data_[3] * std::cos(angle);
+        data_[4] = data_[1] * std::sin(angle) + data_[4] * std::cos(angle);
+        data_[5] = data_[2] * std::sin(angle) + data_[5] * std::cos(angle);
+        data_[0] = scaleXTemp;
+        data_[1] = shearXTemp;
+        data_[2] = translateXTemp;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Scale(float scaleX, float scaleY)
     {
-        float mm0 = scaleX;
-        float mm3 = scaleY;
-        scaleX_ *= mm0;
-        shearX *= mm0;
-        translateX *= mm0;
-        shearY *= mm3;
-        scaleY_ *= mm3;
-        translateY *= mm3;
+        data_[0] *= scaleX;
+        data_[1] *= scaleX;
+        data_[2] *= scaleX;
+        data_[3] *= scaleY;
+        data_[4] *= scaleY;
+        data_[5] *= scaleY;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Scale(float scale)
     {
-        float m = scale;
-        scaleX_ *= m;
-        shearX *= m;
-        translateX *= m;
-        shearY *= m;
-        scaleY_ *= m;
-        translateY *= m;
+        data_[0] *= scale;
+        data_[1] *= scale;
+        data_[2] *= scale;
+        data_[3] *= scale;
+        data_[4] *= scale;
+        data_[5] *= scale;
         return *this;
     }
 
     inline void TransAffine::ScalingAbs(float* x, float* y) const
     {
-        *x = std::sqrt(scaleX_ * scaleX_ + shearX * shearX);
-        *y = std::sqrt(shearY * shearY + scaleY_ * scaleY_);
+        *x = std::sqrt(data_[0] * data_[0] + data_[1] * data_[1]);
+        *y = std::sqrt(data_[3] * data_[3] + data_[4] * data_[4]);
     }
 
     /**
@@ -278,10 +281,10 @@ namespace OHOS {
      */
     class TransAffineScaling : public TransAffine {
     public:
-        TransAffineScaling(float x, float y) : TransAffine(x, 0.0, 0.0, y, 0.0, 0.0)
+        TransAffineScaling(float x, float y) : TransAffine(x, 0.0f, 0.0f, y, 0.0f, 0.0f)
         {}
 
-        TransAffineScaling(float scale) : TransAffine(scale, 0.0, 0.0, scale, 0.0, 0.0)
+        TransAffineScaling(float scale) : TransAffine(scale, 0.0f, 0.0f, scale, 0.0f, 0.0f)
         {}
     };
     /**
@@ -291,7 +294,7 @@ namespace OHOS {
      */
     class TransAffineTranslation : public TransAffine {
     public:
-        TransAffineTranslation(float x, float y) : TransAffine(1.0, 0.0, 0.0, 1.0, x, y)
+        TransAffineTranslation(float x, float y) : TransAffine(1.0f, 0.0f, 0.0f, 1.0f, x, y)
         {}
     };
 } // namespace OHOS
