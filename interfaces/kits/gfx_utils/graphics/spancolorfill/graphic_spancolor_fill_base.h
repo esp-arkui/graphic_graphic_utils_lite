@@ -46,5 +46,72 @@ namespace OHOS {
     private:
         GeometryPlainDataArray<color_type> spans;
     };
+
+    template <class ColorT>
+    class SpanSoildColor {
+    public:
+        typedef ColorT color_type;
+        SpanSoildColor(ColorT color){
+            color_ = color;
+
+        }
+        void Prepare()
+        {
+        }
+        void Generate(color_type* span, int, int, unsigned len)
+        {
+            for (; len; --len) {
+                *span++ = color_;
+            }
+        }
+    private:
+        color_type color_;
+    };
+
+
+    template <class SpanGenerator,class ColorT>
+    class SpanBlendColor {
+    public:
+        typedef SpanGenerator SpanGen;
+        typedef ColorT color_type;
+        SpanBlendColor(SpanGen spanGenerator1,SpanGen spanGenerator2){
+            spanGenerator1_ = spanGenerator1;
+            spanGenerator2_ = spanGenerator2;
+        }
+        void Prepare()
+        {
+            spanGenerator1_.Prepare();
+            spanGenerator2_.Prepare();
+        }
+        void Generate(color_type* span, int x, int y, unsigned len)
+        {
+            typedef OHOS::SpanFillColorAllocator<color_type> SpanAllocator;
+
+            SpanAllocator allocator1;
+            SpanAllocator allocator2;
+
+            color_type* colors1 = allocator1.Resize(len);
+            color_type* colors2 = allocator2.Resize(len);
+
+            spanGenerator1_.Generate(colors1,x,y,len);
+            spanGenerator1_.Generate(colors2,x,y,len);
+
+            for (; len; --len,++span,colors1++,colors2++) {
+                span->redValue = (colors1->redValue+colors2->redValue) >= MAX_COLOR_NUM ?
+                            MAX_COLOR_NUM:(colors1->redValue+colors2->redValue);
+                span->greenValue = (colors1->greenValue+colors2->greenValue) >= MAX_COLOR_NUM ?
+                            MAX_COLOR_NUM:(colors1->greenValue+colors2->greenValue);
+                span->blueValue = (colors1->blueValue+colors2->blueValue) >= MAX_COLOR_NUM ?
+                            MAX_COLOR_NUM:(colors1->blueValue+colors2->blueValue);
+                span->alphaValue = (colors1->alphaValue+colors2->alphaValue) >= MAX_COLOR_NUM ?
+                            MAX_COLOR_NUM:(colors1->alphaValue+colors2->alphaValue);
+            }
+        }
+    private:
+        SpanGen spanGenerator1_;
+        SpanGen spanGenerator2_;
+    };
+
+
 } // namespace OHOS
 #endif
