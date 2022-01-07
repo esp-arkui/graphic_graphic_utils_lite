@@ -120,6 +120,21 @@ namespace OHOS {
         CLIPPING_FLAGS_X_CLIPPED = CLIPPING_FLAGS_X1_CLIPPED | CLIPPING_FLAGS_X2_CLIPPED,
         CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
     };
+
+    enum GlobalCompositeOperation {
+        SOURCE_OVER,      // 默认。在目标图像上显示源图像。
+        SOURCE_ATOP,      // 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
+        SOURCE_IN,        // 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。
+        SOURCE_OUT,       // 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。
+        DESTINATION_OVER, // 在源图像上显示目标图像。
+        DESTINATION_ATOP, // 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。
+        DESTINATION_IN,   // 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。
+        DESTINATION_OUT,  // 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。
+        LIGHTER,          // 显示源图像 + 目标图像。
+        COPY,             // 显示源图像。忽略目标图像。
+        XOR               // 使用异或操作对源图像与目标图像进行组合。
+    };
+
     template <class Type>
     struct RectBase;
 
