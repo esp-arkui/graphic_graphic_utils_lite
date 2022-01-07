@@ -188,7 +188,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Serialize(int8u* ptr) const;
+        void Serialize(uint8_t* ptr) const;
 
         /**
          *
@@ -197,7 +197,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Deserialize(const int8u* data, unsigned byteSize);
+        void Deserialize(const uint8_t* data, unsigned byteSize);
         /**
          *
          * @brief 获取指定索引元素.
