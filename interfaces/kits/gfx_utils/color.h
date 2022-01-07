@@ -531,7 +531,7 @@ namespace OHOS {
      */
     template <class Colorspace>
     struct Rgba8T {
-        using ValueType = int8u;
+        using ValueType = uint8_t;
         using CalcType = int32u;
         using LongType = int32;
         using SelfType = Rgba8T;

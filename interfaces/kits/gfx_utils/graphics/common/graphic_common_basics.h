@@ -144,18 +144,12 @@ namespace OHOS {
     template <class Type>
     struct VertexBase;
 
-    using int8 = signed char;
-    using int8u = unsigned char;
-    using int16 = short;
-    using int16u = unsigned short;
-    using int32 = int;
-    using int32u = unsigned;
-    using int64 = signed long long;
-    using int64u = unsigned long long;
+    using CoverType = unsigned char;
     using RectI = RectBase<int>;
     using RectD = RectBase<float>;
     using PointD = PointBase<float>;
     using PointI = PointBase<int>;
+
     using VertexF = VertexBase<float>;
     using VertexD = VertexBase<float>;
     using VertexI = VertexBase<int>;
@@ -165,75 +159,75 @@ namespace OHOS {
     const float VERTEX_DIST_EPSILON = 1e-14;
     const float INTERSECTIONEPSILON = 1.0e-30;
     /**
- * @brief 圆周率
- */
+     * @brief 圆周率
+     */
     const float PI = 3.1415926f;
     /**
- * @brief 半圆弧角度
- */
+     * @brief 半圆弧角度
+     */
     const float RAD_BASE = 180.0f;
     const float ROUND_BASE = 0.5f;
 
     /**
- * @brief 平角的度数
- */
+     * @brief 平角的度数
+     */
     const float BOXER = 180.0f;
 
     /**
- * @brief BUF_SIZE
- */
+     * @brief BUF_SIZE
+     */
     const float BUF_SIZE = 1024.0f;
     /**
- * @brief 颜色的最大值
- */
+     * @brief 颜色的最大值
+     */
     const unsigned MAX_COLOR_NUM = 255;
     /**
- * @brief 颜色的最大值数组长度
- */
+     * @brief 颜色的最大值数组长度
+     */
     const unsigned MAX_COLOR_SIZE = 256;
 
     /**
- * @brief 颜色的最大值的一半
- */
+     * @brief 颜色的最大值的一半
+     */
     const unsigned HALF_COLOR_NUM = 128;
     /**
- * @brief 颜色的最大值的八分之一
- */
+     * @brief 颜色的最大值的八分之一
+     */
     const unsigned EIGHTH_COLOR_NUM = 32;
     /**
- * @brief 颜色的最大值的三十二分之一
- */
+     * @brief 颜色的最大值的三十二分之一
+     */
     const unsigned THIRTY_TWO_COLOR_NUM = 8;
 
     /**
- * @brief 默认最大斜接
- */
+     * @brief 默认最大斜接
+     */
     const unsigned DEFAULTMITERLIMIT = 10;
     /**
- * @brief 一个字节的长度
- */
+     * @brief 一个字节的长度
+     */
     const int BYTE_LENGTH = 8;
     const int CELLS_SIZE = 16;
     /**
- * @brief dash数组最大长度
- */
+     * @brief dash数组最大长度
+     */
     const int MAX_DASHES = 32;
     /**
- * @brief 默认的块偏移量
- */
+     * @brief 默认的块偏移量
+     */
     const int BLOCK_SHIFT_SIZE = 6;
     /**
- * @brief 绘制椭圆所需的顶点数
- */
+     * @brief 绘制椭圆所需的顶点数
+     */
     const int ELLIPSE_VERTEX_NUM = 4;
     /**
- * 一般步幅是宽度的四倍
- */
+     * 一般步幅是宽度的四倍
+     */
     const int STRIDE_FACTOR = 4;
     const int PXSIZE2STRIDE_FACTOR = 3;
     /**
- * @brief 1/√2 即1 除以 √2
- */
+     * @brief 1/√2 即1 除以 √2
+     */
     const float SIN45 = 0.7071068f;
     /**
  * @brief 1/√2 即1 除以 √2
@@ -252,8 +246,8 @@ namespace OHOS {
  */
     const int FOUR_TIMES = 4;
     /**
- * @brief 六倍
- */
+     * @brief 六倍
+     */
     const int SIX_TIMES = 6;
     /**
  * @brief 一百倍
@@ -599,8 +593,6 @@ namespace OHOS {
             delete[] ptr;
         }
     };
-
-    using CoverType = unsigned char;
 
     /**
  * @brief 定义矩形类.

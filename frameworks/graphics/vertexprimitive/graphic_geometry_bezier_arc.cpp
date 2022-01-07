@@ -17,11 +17,11 @@
 
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
-    const int16u BEZIER_ARC_SETUP = 2;
+    const uint16_t BEZIER_ARC_SETUP = 2;
 
-    const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
+    const uint16_t BEZIER_ARC_VERTICES_SIZE_STEP = 6;
 
-    const int16u BEZIER_ARC_POINTS = 4;
+    const uint16_t BEZIER_ARC_POINTS = 4;
     /* 贝塞尔弧角度极限值 */
     const float BEZIER_ARC_ANGLE_EPSILON = 0.01f;
 

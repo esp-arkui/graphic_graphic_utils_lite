@@ -59,7 +59,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned len)
         {
             xPixel_ = xSpanPixel_ = x;
             yPixel_ = y;
@@ -76,7 +76,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             if (pixPtr_) {
                 return pixPtr_ += PIX_WIDTH;
@@ -90,7 +90,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Nexty()
         {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
@@ -109,7 +109,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Pixel() const
         {
             int x = xPixel_;
             int y = yPixel_;
@@ -129,7 +129,7 @@ namespace OHOS {
         }
         const PixelFormatType* pixFormat_;
         int xPixel_, xSpanPixel_, yPixel_;
-        const int8u* pixPtr_;
+        const uint8_t* pixPtr_;
     };
 
     template <class PixFmt>
@@ -159,7 +159,7 @@ namespace OHOS {
             PixelFormatType::MakePix(m_bk_buf, bk);
         }
 
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned len)
         {
             m_x = m_x0 = x;
             m_y = y;
@@ -171,7 +171,7 @@ namespace OHOS {
             return pixel();
         }
 
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             if (pixPtr_)
                 return pixPtr_ += pix_width;
@@ -179,7 +179,7 @@ namespace OHOS {
             return pixel();
         }
 
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Nexty()
         {
             ++m_y;
             m_x = m_x0;
@@ -192,7 +192,7 @@ namespace OHOS {
         }
 
     private:
-        GRAPHIC_GEOMETRY_INLINE const int8u* pixel() const
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* pixel() const
         {
             if (m_y >= 0 && m_y < (int)pixFormat_->Height() &&
                 m_x >= 0 && m_x < (int)pixFormat_->Width()) {
@@ -202,9 +202,9 @@ namespace OHOS {
         }
 
         const PixelFormatType* pixFormat_;
-        int8u m_bk_buf[pix_width];
+        uint8_t m_bk_buf[pix_width];
         int m_x, m_x0, m_y;
-        const int8u* pixPtr_;
+        const uint8_t* pixPtr_;
     };
 
     /**
@@ -246,7 +246,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned len)
         {
             xPixel_ = xSpanPixel_ = x;
             yPixel_ = y;
@@ -263,7 +263,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             if (pixPtr_ != 0) {
                 return pixPtr_ += PIX_WIDTH;
@@ -277,7 +277,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextY()
         {
             ++yPixel_;
             xPixel_ = xSpanPixel_;
@@ -296,7 +296,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Pixel() const
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Pixel() const
         {
             int x = xPixel_;
             int y = yPixel_;
@@ -320,7 +320,7 @@ namespace OHOS {
 
         const PixelFormatType* pixFormat_;
         int xPixel_, xSpanPixel_, yPixel_;
-        const int8u* pixPtr_;
+        const uint8_t* pixPtr_;
     };
 
     /**
@@ -365,7 +365,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned)
         {
             x_ = x;
             rowPtr_ = pixFormat_->PixPtr(0, wrapY_(y));
@@ -377,7 +377,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             int x = ++wrapX_;
             return rowPtr_ + x * PIX_WIDTH;
@@ -389,7 +389,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextY()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + wrapX_(x_) * PIX_WIDTH;
@@ -397,7 +397,7 @@ namespace OHOS {
 
     private:
         const PixelFormatType* pixFormat_;
-        const int8u* rowPtr_;
+        const uint8_t* rowPtr_;
         int x_;
         WrapX wrapX_;
         WrapY wrapY_;
@@ -444,7 +444,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned len)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned len)
         {
             xPixel_ = x;
             yPixel_ = y;
@@ -461,7 +461,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             if (yPixel_ >= (int)pixFormat_->Height()) {
                 return NULL;
@@ -475,7 +475,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextY()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextY()
         {
             rowPtr_ = pixFormat_->pixPtr(0, yPixel_);
             return rowPtr_ + wrapX_(xPixel_) * PIX_WIDTH;
@@ -483,7 +483,7 @@ namespace OHOS {
 
     private:
         const PixelFormatType* pixFormat_;
-        const int8u* rowPtr_;
+        const uint8_t* rowPtr_;
         int xPixel_;
         int yPixel_;
         WrapX wrapX_;
@@ -528,7 +528,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Span(int x, int y, unsigned)
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Span(int x, int y, unsigned)
         {
             xPixel_ = x;
             if (x >= (int)pixFormat_->Width()) {
@@ -544,7 +544,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* NextX()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* NextX()
         {
             int x = ++xPixel_;
             if (x >= (int)pixFormat_->Width()) {
@@ -559,7 +559,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        GRAPHIC_GEOMETRY_INLINE const int8u* Nexty()
+        GRAPHIC_GEOMETRY_INLINE const uint8_t* Nexty()
         {
             rowPtr_ = pixFormat_->pixPtr(0, ++wrapY_);
             return rowPtr_ + xPixel_ * PIX_WIDTH;
@@ -567,7 +567,7 @@ namespace OHOS {
 
     private:
         const PixelFormatType* pixFormat_;
-        const int8u* rowPtr_;
+        const uint8_t* rowPtr_;
         int xPixel_;
         WrapY wrapY_;
     };

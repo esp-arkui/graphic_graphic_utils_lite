@@ -63,7 +63,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        LinearType GetDirTableValue(int8u index) const
+        LinearType GetDirTableValue(uint8_t index) const
         {
             return dirTable_[index];
         }
@@ -71,14 +71,14 @@ namespace OHOS {
         /**
          * @brief 根据lineValue值查找颜色值
          * @param lineValue为线性颜色值
-         * @return 返回int8u类型的颜色值
+         * @return 返回uint8_t类型的颜色值
          * @since 1.0
          * @version 1.0
          */
-        int8u GetInverseTableValue(LinearType lineValue) const
+        uint8_t GetInverseTableValue(LinearType lineValue) const
         {
             // 折半查找
-            int8u value = 0;
+            uint8_t value = 0;
             if (lineValue > inverseTable_[TABLESIZE_HALF]) {
                 value = TABLESIZE_HALF;
             }
@@ -141,14 +141,14 @@ namespace OHOS {
     };
 
     /**
-     * @brief Srgb查找类、int16u类型
+     * @brief Srgb查找类、uint16_t类型
      *
      * @see SrgbLut
      * @since 1.0
      * @version 1.0
      */
     template <>
-    class SrgbLut<int16u> : public SrgbLutBase<int16u> {
+    class SrgbLut<uint16_t> : public SrgbLutBase<uint16_t> {
     public:
         SrgbLut()
         {
@@ -164,14 +164,14 @@ namespace OHOS {
     };
 
     /**
-     * @brief Srgb查找类、int8u类型
+     * @brief Srgb查找类、uint8_t类型
      *
      * @see SrgbLut
      * @since 1.0
      * @version 1.0
      */
     template <>
-    class SrgbLut<int8u> : public SrgbLutBase<int8u> {
+    class SrgbLut<uint8_t> : public SrgbLutBase<uint8_t> {
     public:
         SrgbLut()
         {
@@ -188,11 +188,11 @@ namespace OHOS {
         /**
          * @brief 根据下标查找inverseTable_中的颜色值
          * @param index为下标值
-         * @return 返回int8u类型的颜色值
+         * @return 返回uint8_t类型的颜色值
          * @since 1.0
          * @version 1.0
          */
-        int8u GetInverseTableValue(int8u index) const
+        uint8_t GetInverseTableValue(uint8_t index) const
         {
             // 在这种情况下，逆变换是一个简单的查找。
             return inverseTable_[index];
@@ -216,7 +216,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static T RgbFromSrgb(int8u srgb)
+        static T RgbFromSrgb(uint8_t srgb)
         {
             return lut_.GetDirTableValue(srgb);
         }
@@ -228,7 +228,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int8u RgbToStandardRgb(T rgb)
+        static uint8_t RgbToStandardRgb(T rgb)
         {
             return lut_.GetInverseTableValue(rgb);
         }
@@ -260,7 +260,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int8u AlphaToStandardRgb(float alphaValue)
+        static uint8_t AlphaToStandardRgb(float alphaValue)
         {
             if (alphaValue < 0) {
                 return 0;
@@ -268,7 +268,7 @@ namespace OHOS {
             if (alphaValue > 1) {
                 return ALPHAMAX;
             }
-            return int8u(HALF + alphaValue * ALPHAMAX);
+            return uint8_t(HALF + alphaValue * ALPHAMAX);
         }
 
         /**
@@ -278,7 +278,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static float AlphaFromSrgb(int8u srgbValue)
+        static float AlphaFromSrgb(uint8_t srgbValue)
         {
             static const double y = 1 / SRGBVALUE;
             return float(srgbValue * y);
@@ -286,14 +286,14 @@ namespace OHOS {
     };
 
     /**
-     * @brief StandardRgbConv转化类、int16u类型
+     * @brief StandardRgbConv转化类、uint16_t类型
      *
      * @see StandardRgbConv
      * @since 1.0
      * @version 1.0
      */
     template <>
-    class StandardRgbConv<int16u> : public StandardRgbConvBase<int16u> {
+    class StandardRgbConv<uint16_t> : public StandardRgbConvBase<uint16_t> {
     public:
         /**
          * @brief 由Alpha值转为Srgb值
@@ -302,7 +302,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int8u AlphaToStandardRgb(int16u alphaValue)
+        static uint8_t AlphaToStandardRgb(uint16_t alphaValue)
         {
             return alphaValue >> MOVEBIT;
         }
@@ -314,21 +314,21 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int16u AlphaFromSrgb(int8u srgbValue)
+        static uint16_t AlphaFromSrgb(uint8_t srgbValue)
         {
             return (srgbValue << MOVEBIT) | srgbValue;
         }
     };
 
     /**
-     * @brief StandardRgbConv转化类、int8u类型
+     * @brief StandardRgbConv转化类、uint8_t类型
      *
      * @see StandardRgbConv
      * @since 1.0
      * @version 1.0
      */
     template <>
-    class StandardRgbConv<int8u> : public StandardRgbConvBase<int8u> {
+    class StandardRgbConv<uint8_t> : public StandardRgbConvBase<uint8_t> {
     public:
         /**
          * @brief 由Srgb值转为Alpha值
@@ -337,7 +337,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int8u AlphaFromSrgb(int8u srgbValue)
+        static uint8_t AlphaFromSrgb(uint8_t srgbValue)
         {
             return srgbValue;
         }
@@ -349,7 +349,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        static int8u AlphaToStandardRgb(int8u alphaValue)
+        static uint8_t AlphaToStandardRgb(uint8_t alphaValue)
         {
             return alphaValue;
         }

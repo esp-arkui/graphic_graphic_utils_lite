@@ -27,12 +27,12 @@ namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     template <class T>
     struct StackBlurTables {
-        static int16u const stackBlur8Multiplication[OHOS::MAX_COLOR_NUM];
-        static int8u const stackBlur8Shear[OHOS::MAX_COLOR_NUM];
+        static uint16_t const stackBlur8Multiplication[OHOS::MAX_COLOR_NUM];
+        static uint8_t const stackBlur8Shear[OHOS::MAX_COLOR_NUM];
     };
 
     template <class T>
-    int16u const StackBlurTables<T>::stackBlur8Multiplication[OHOS::MAX_COLOR_NUM] = {
+    uint16_t const StackBlurTables<T>::stackBlur8Multiplication[OHOS::MAX_COLOR_NUM] = {
         512, 512, 456, 512, 328, 456, 335, 512, 405, 328, 271, 456, 388, 335, 292, 512,
         454, 405, 364, 328, 298, 271, 496, 456, 420, 388, 360, 335, 312, 292, 273, 512,
         482, 454, 428, 405, 383, 364, 345, 328, 312, 298, 284, 271, 259, 496, 475, 456,
@@ -51,7 +51,7 @@ namespace OHOS {
         289, 287, 285, 282, 280, 278, 275, 273, 271, 269, 267, 265, 263, 261, 259};
 
     template <class T>
-    int8u const StackBlurTables<T>::stackBlur8Shear[OHOS::MAX_COLOR_NUM] = {
+    uint8_t const StackBlurTables<T>::stackBlur8Shear[OHOS::MAX_COLOR_NUM] = {
         9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17,
         17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
         19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
