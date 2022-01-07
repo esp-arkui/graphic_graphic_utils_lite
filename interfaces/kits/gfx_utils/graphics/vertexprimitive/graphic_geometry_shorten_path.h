@@ -38,12 +38,12 @@ namespace OHOS {
     * @version 1.0
     */
     template <class VertexSequence>
-    void ShortenPath(VertexSequence& vtxSeq, double distence, unsigned closed = 0)
+    void ShortenPath(VertexSequence& vtxSeq, float distence, unsigned closed = 0)
     {
         using VertexType = typename VertexSequence::ValueType;
 
         if (vtxSeq.Size() > 1 && distence > 0.0) {
-            double vtxSeqDistance;
+            float vtxSeqDistance;
             int nSize = int(vtxSeq.Size() - TWO_STEP);
             while (nSize) {
                 vtxSeqDistance = vtxSeq[nSize].vertexDistance;
@@ -59,8 +59,8 @@ namespace OHOS {
                 VertexType& prev = vtxSeq[nSize - 1];
                 VertexType& last = vtxSeq[nSize];
                 vtxSeqDistance = (prev.vertexDistance - distence) / prev.vertexDistance;
-                double x = prev.vertexXCoord + (last.vertexXCoord - prev.vertexXCoord) * vtxSeqDistance;
-                double y = prev.vertexYCoord + (last.vertexYCoord - prev.vertexYCoord) * vtxSeqDistance;
+                float x = prev.vertexXCoord + (last.vertexXCoord - prev.vertexXCoord) * vtxSeqDistance;
+                float y = prev.vertexYCoord + (last.vertexYCoord - prev.vertexYCoord) * vtxSeqDistance;
                 last.vertexXCoord = x;
                 last.vertexYCoord = y;
                 if (!prev(last)) {       // 计算两个顶点距离是否很近

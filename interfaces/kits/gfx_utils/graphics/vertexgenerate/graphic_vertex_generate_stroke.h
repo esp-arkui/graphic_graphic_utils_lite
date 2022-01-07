@@ -56,7 +56,7 @@ namespace OHOS {
             stroker_.SetLineJoin(lj);
         }
 
-        void MiterLimit(double ml)
+        void MiterLimit(float ml)
         {
             stroker_.SetMiterLimit(ml);
         }
@@ -64,47 +64,47 @@ namespace OHOS {
         {
             return stroker_.GetLineJoin();
         }
-        double MiterLimit() const
+        float MiterLimit() const
         {
             return stroker_.GetMiterLimit();
         }
 #endif
-        void Width(double w)
+        void Width(float w)
         {
             stroker_.width(w);
         }
 
-        void ApproximationScale(double as)
+        void ApproximationScale(float as)
         {
             stroker_.SetApproximationScale(as);
         }
 
-        double Width() const
+        float Width() const
         {
             return stroker_.width();
         }
 
-        double ApproximationScale() const
+        float ApproximationScale() const
         {
             return stroker_.GetApproximationScale();
         }
 
-        void Shorten(double s)
+        void Shorten(float s)
         {
             shorten_ = s;
         }
 
-        double Shorten() const
+        float Shorten() const
         {
             return shorten_;
         }
 
         void RemoveAll();
 
-        void AddVertex(double x, double y, unsigned cmd);
+        void AddVertex(float x, float y, unsigned cmd);
 
         void Rewind(unsigned pathId);
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         VertexGenerateStroke(const VertexGenerateStroke&);
@@ -112,7 +112,7 @@ namespace OHOS {
         MathStroke<CoordStorage> stroker_;
         VertexStorage srcVertices_;
         CoordStorage outVertices_;
-        double shorten_;
+        float shorten_;
         unsigned closed_;
         Status status_;
         Status prevStatus_;

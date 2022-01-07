@@ -18,9 +18,9 @@
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_ARC_VERTEX_SOURCE
     const int CURVERENUMSTEP = 4;
-    Arc::Arc(double centerX, double centerY,
-             double rx, double ry,
-             double start_, double end_,
+    Arc::Arc(float centerX, float centerY,
+             float rx, float ry,
+             float start_, float end_,
              bool isClockwise)
         : mCenterX(centerX),
         mCenterY(centerY), mRadiusX(rx), mRadiusY(ry), mExpansionRatio(1.0)
@@ -28,7 +28,7 @@ namespace OHOS {
         Normalize(start_, end_, isClockwise);
     }
 
-    void Arc::ApproximationScale(double sale)
+    void Arc::ApproximationScale(float sale)
     {
         mExpansionRatio = sale;
         if (mInitialized) {
@@ -36,7 +36,7 @@ namespace OHOS {
         }
     }
 
-    unsigned Arc::Vertex(double* x, double* y)
+    unsigned Arc::Vertex(float* x, float* y)
     {
         // 当前命令是结束点没有顶点
         if (IsStop(mPathCommand)) {
@@ -65,17 +65,17 @@ namespace OHOS {
         mCurrentAngle = mBeginAngle;
     }
 
-    void Arc::Normalize(double startAngle, double endAngle, bool isClockwise)
+    void Arc::Normalize(float startAngle, float endAngle, bool isClockwise)
     {
-        double ra = (std::fabs(mRadiusX) + std::fabs(mRadiusY)) / DOUBLENUM;
-        mDeltaAngle = std::acos(ra / (ra + RADDALETAELPS / mExpansionRatio)) * DOUBLENUM; // 计算出弧度变化率
+        float ra = (std::fabs(mRadiusX) + std::fabs(mRadiusY)) / FLOATNUM;
+        mDeltaAngle = std::acos(ra / (ra + RADDALETAELPS / mExpansionRatio)) * FLOATNUM; // 计算出弧度变化率
         if (isClockwise) {
             while (endAngle < startAngle) {
-                endAngle += PI * DOUBLENUM;
+                endAngle += PI * FLOATNUM;
             }
         } else {
             while (startAngle < endAngle) {
-                startAngle += PI * DOUBLENUM;
+                startAngle += PI * FLOATNUM;
             }
             mDeltaAngle = -mDeltaAngle;
         }
@@ -85,8 +85,8 @@ namespace OHOS {
         mInitialized = true;
     }
 
-    void Arc::Init(double centerX, double centerY, double rx, double ry,
-                   double startAngle, double endAngle, bool isClockwise)
+    void Arc::Init(float centerX, float centerY, float rx, float ry,
+                   float startAngle, float endAngle, bool isClockwise)
     {
         mCenterX = centerX;
         mCenterY = centerY;

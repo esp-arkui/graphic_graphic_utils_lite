@@ -61,7 +61,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        Ellipse(double x, double y, double rx, double ry,
+        Ellipse(float x, float y, float rx, float ry,
                 unsigned numSteps = 0, bool clockwise = false) :
             circleCenterX(x),
             circleCenterY(y), circleRadiusX(rx), circleRadiusY(ry), scaleRadio(1.0),
@@ -82,7 +82,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void Init(double x, double y, double rx, double ry,
+        void Init(float x, float y, float rx, float ry,
                   unsigned numSteps = 0, bool clockwise = false);
 
         /**
@@ -92,7 +92,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void ApproximationScale(double scale);
+        void ApproximationScale(float scale);
 
         /**
          * @brief 在采样阶段调用
@@ -101,7 +101,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y);
+        unsigned Vertex(float* x, float* y);
 
     private:
         /**
@@ -113,17 +113,17 @@ namespace OHOS {
          */
         void CalcNumSteps();
 
-        double circleCenterX;     // 圆心的X坐标
-        double circleCenterY;     // 圆心的Y坐标
-        double circleRadiusX;     // 圆形的X半径
-        double circleRadiusY;     // 圆形的Y半径
-        double scaleRadio;        // 缩放比例
+        float circleCenterX;     // 圆心的X坐标
+        float circleCenterY;     // 圆心的Y坐标
+        float circleRadiusX;     // 圆形的X半径
+        float circleRadiusY;     // 圆形的Y半径
+        float scaleRadio;        // 缩放比例
         unsigned vertexNumber;    // 顶点数量
         unsigned circleInnerStep; // 构建的是一个圆内接多边形
         bool isClockwise;         // 顺时针，还是逆时针渲染
     };
 
-    inline void Ellipse::Init(double x, double y, double rx, double ry,
+    inline void Ellipse::Init(float x, float y, float rx, float ry,
                               unsigned numSteps, bool clockwise)
     {
         circleCenterX = x;
@@ -138,7 +138,7 @@ namespace OHOS {
         }
     }
 
-    inline void Ellipse::ApproximationScale(double scale)
+    inline void Ellipse::ApproximationScale(float scale)
     {
         scaleRadio = scale;
         CalcNumSteps();
@@ -146,12 +146,12 @@ namespace OHOS {
 
     inline void Ellipse::CalcNumSteps()
     {
-        double ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / 2;
-        double da = std::acos(ra / (ra + 0.125 / scaleRadio)) * 2;
+        float ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / 2;
+        float da = std::acos(ra / (ra + 0.125 / scaleRadio)) * 2;
         vertexNumber = Uround(TWO_TIMES * PI / da);
     }
 
-    inline unsigned Ellipse::Vertex(double* x, double* y)
+    inline unsigned Ellipse::Vertex(float* x, float* y)
     {
         if (circleInnerStep == vertexNumber) {
             ++circleInnerStep;
@@ -160,9 +160,9 @@ namespace OHOS {
         if (circleInnerStep > vertexNumber) {
             return PATH_CMD_STOP;
         }
-        double angle = double(circleInnerStep) / double(vertexNumber) * DOUBLENUM * PI;
+        float angle = float(circleInnerStep) / float(vertexNumber) * FLOATNUM * PI;
         if (isClockwise) {
-            angle = DOUBLENUM * PI - angle;
+            angle = FLOATNUM * PI - angle;
         }
         *x = circleCenterX + std::cos(angle) * circleRadiusX;
         *y = circleCenterY + std::sin(angle) * circleRadiusY;

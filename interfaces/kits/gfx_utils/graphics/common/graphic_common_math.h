@@ -37,9 +37,9 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    GRAPHIC_GEOMETRY_INLINE double CrossProduct(double x1, double y1,
-                                                double x2, double y2,
-                                                double x, double y)
+    GRAPHIC_GEOMETRY_INLINE float CrossProduct(float x1, float y1,
+                                                float x2, float y2,
+                                                float x, float y)
     {
         return (x - x2) * (y2 - y1) - (y - y2) * (x2 - x1);
     }
@@ -51,10 +51,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    GRAPHIC_GEOMETRY_INLINE double CalcDistance(double x1, double y1, double x2, double y2)
+    GRAPHIC_GEOMETRY_INLINE float CalcDistance(float x1, float y1, float x2, float y2)
     {
-        double dx = x2 - x1;
-        double dy = y2 - y1;
+        float dx = x2 - x1;
+        float dy = y2 - y1;
         return std::sqrt(dx * dx + dy * dy);
     }
 
@@ -65,10 +65,10 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    GRAPHIC_GEOMETRY_INLINE double CalcSqDistance(double x1, double y1, double x2, double y2)
+    GRAPHIC_GEOMETRY_INLINE float CalcSqDistance(float x1, float y1, float x2, float y2)
     {
-        double dx = x2 - x1;
-        double dy = y2 - y1;
+        float dx = x2 - x1;
+        float dy = y2 - y1;
         return dx * dx + dy * dy;
     }
 
@@ -80,16 +80,16 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    GRAPHIC_GEOMETRY_INLINE bool CalcIntersection(double aX, double aY, double bX, double bY,
-                                                  double cX, double cY, double dX, double dY,
-                                                  double* x, double* y)
+    GRAPHIC_GEOMETRY_INLINE bool CalcIntersection(float aX, float aY, float bX, float bY,
+                                                  float cX, float cY, float dX, float dY,
+                                                  float* x, float* y)
     {
-        double num = (aY - cY) * (dX - cX) - (aX - cX) * (dY - cY);
-        double den = (bX - aX) * (dY - cY) - (bY - aY) * (dX - cX);
+        float num = (aY - cY) * (dX - cX) - (aX - cX) * (dY - cY);
+        float den = (bX - aX) * (dY - cY) - (bY - aY) * (dX - cX);
         if (std::fabs(den) < INTERSECTIONEPSILON) {
             return false;
         }
-        double r = num / den;
+        float r = num / den;
         *x = aX + r * (bX - aX);
         *y = aY + r * (bY - aY);
         return true;
@@ -103,14 +103,14 @@ namespace OHOS {
      * @version 1.0
      */
     template <class Storage>
-    double CalcPolygonArea(const Storage& storageVertex)
+    float CalcPolygonArea(const Storage& storageVertex)
     {
         unsigned i;
-        double sum = 0.0;
-        double x = storageVertex[0].x;
-        double y = storageVertex[0].y;
-        double xs = x;
-        double ys = y;
+        float sum = 0.0;
+        float x = storageVertex[0].x;
+        float y = storageVertex[0].y;
+        float xs = x;
+        float ys = y;
 
         for (i = 1; i < storageVertex.size(); i++) {
             const typename Storage::value_type& valueType = storageVertex[i];

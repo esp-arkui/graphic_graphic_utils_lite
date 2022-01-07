@@ -40,7 +40,7 @@ namespace OHOS {
         currDash_ = 0;
     }
 
-    void VertexGenerateDash::AddDash(double dashLen, double gapLen)
+    void VertexGenerateDash::AddDash(float dashLen, float gapLen)
     {
         if (numDashes_ < MAX_DASHES) {
             totalDashLen_ += dashLen + gapLen;
@@ -49,27 +49,27 @@ namespace OHOS {
         }
     }
 
-    void VertexGenerateDash::DashStart(double ds)
+    void VertexGenerateDash::DashStart(float ds)
     {
         dashStart_ = ds;
         CalcDashStart(std::fabs(ds));
     }
 
-    void VertexGenerateDash::CalcDashStart(double ds)
+    void VertexGenerateDash::CalcDashStart(float ds)
     {
         currDash_ = 0;
-        currDashStart_ = 0.0;
-        for (; ds > 0.0;) {
+        currDashStart_ = 0.0f;
+        for (; ds > 0.0f;) {
             if (ds > dashes_[currDash_]) {
                 ds -= dashes_[currDash_];
                 ++currDash_;
-                currDashStart_ = 0.0;
+                currDashStart_ = 0.0f;
                 if (currDash_ >= numDashes_) {
                     currDash_ = 0;
                 }
             } else {
                 currDashStart_ = ds;
-                ds = 0.0;
+                ds = 0.0f;
             }
         }
     }
@@ -81,7 +81,7 @@ namespace OHOS {
         closed_ = 0;
     }
 
-    void VertexGenerateDash::AddVertex(double x, double y, unsigned cmd)
+    void VertexGenerateDash::AddVertex(float x, float y, unsigned cmd)
     {
         status_ = INITIAL;
         if (IsMoveTo(cmd)) {
@@ -105,7 +105,7 @@ namespace OHOS {
         srcVertex_ = 0;
     }
 
-    unsigned VertexGenerateDash::Vertex(double* x, double* y)
+    unsigned VertexGenerateDash::Vertex(float* x, float* y)
     {
         unsigned cmd = PATH_CMD_MOVE_TO;
         while (!IsStop(cmd)) {
@@ -113,7 +113,7 @@ namespace OHOS {
                 case INITIAL:
                     Rewind(0);
                 case READY:
-                    if (numDashes_ < DOUBLENUM || srcVertices_.Size() < DOUBLENUM) {
+                    if (numDashes_ < FLOATNUM || srcVertices_.Size() < FLOATNUM) {
                         cmd = PATH_CMD_STOP;
                         break;
                     }
@@ -124,12 +124,12 @@ namespace OHOS {
                     currRest = vertexDist1_->vertexDistance;
                     *x = vertexDist1_->vertexXCoord;
                     *y = vertexDist1_->vertexYCoord;
-                    if (dashStart_ >= 0.0) {
+                    if (dashStart_ >= 0.0f) {
                         CalcDashStart(dashStart_);
                     }
                     return PATH_CMD_MOVE_TO;
                 case POLYLINE: {
-                    double dashRest = dashes_[currDash_] - currDashStart_;
+                    float dashRest = dashes_[currDash_] - currDashStart_;
                     unsigned cmd;
                     if (currDash_ & 1) {
                         cmd = PATH_CMD_MOVE_TO;
@@ -142,7 +142,7 @@ namespace OHOS {
                         if (currDash_ >= numDashes_) {
                             currDash_ = 0;
                         }
-                        currDashStart_ = 0.0;
+                        currDashStart_ = 0.0f;
                         *x = vertexDist2_->vertexXCoord -
                                 (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
                         *y = vertexDist2_->vertexYCoord -

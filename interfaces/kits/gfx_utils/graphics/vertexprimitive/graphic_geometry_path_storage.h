@@ -55,7 +55,7 @@ namespace OHOS {
             RemoveAll();
             unsigned iIndex;
             for (iIndex = 0; iIndex < vertexBlockStorage.TotalVertices(); iIndex++) {
-                double x, y;
+                float x, y;
                 unsigned cmd = vertexBlockStorage.Vertex(iIndex, &x, &y);
                 AddVertex(x, y, cmd);
             }
@@ -85,15 +85,15 @@ namespace OHOS {
         void FreeAll()
         {
             if (totalBlocks_) {
-                double** coordBLK = croodBlocks_ + totalBlocks_ - 1;
+                float** coordBLK = croodBlocks_ + totalBlocks_ - 1;
                 for (; totalBlocks_ > 0; totalBlocks_--) {
-                    GeometryArrayAllocator<double>::Deallocate(
+                    GeometryArrayAllocator<float>::Deallocate(
                         *coordBLK,
                         BLOCK_SIZE * OHOS::TWO_TIMES +
-                            BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
+                            BLOCK_SIZE / (sizeof(float) / sizeof(unsigned char)));
                     --coordBLK;
                 }
-                GeometryArrayAllocator<double*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
+                GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 totalBlocks_ = 0;
                 maxBlocks_ = 0;
                 croodBlocks_ = 0;
@@ -110,12 +110,12 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void AddVertex(double x, double y, unsigned cmd)
+        void AddVertex(float x, float y, unsigned cmd)
         {
-            double* coord_ptr = 0;
+            float* coord_ptr = 0;
             *StoragePtrs(&coord_ptr) = (int8u)cmd;
-            coord_ptr[0] = double(x);
-            coord_ptr[1] = double(y);
+            coord_ptr[0] = float(x);
+            coord_ptr[1] = float(y);
             totalVertices_++;
         }
         /**
@@ -139,7 +139,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned LastVertex(double* x, double* y) const
+        unsigned LastVertex(float* x, float* y) const
         {
             if (totalVertices_) {
                 return Vertex(totalVertices_ - 1, x, y);
@@ -165,10 +165,10 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(unsigned idx, double* x, double* y) const
+        unsigned Vertex(unsigned idx, float* x, float* y) const
         {
             unsigned nb = idx >> BLOCK_SHIFT;
-            const double* pv = croodBlocks_[nb] + ((idx & BLOCK_MASK) << 1);
+            const float* pv = croodBlocks_[nb] + ((idx & BLOCK_MASK) << 1);
             *x = pv[0];
             *y = pv[1];
             return cmdBlocks_[nb][idx & BLOCK_MASK];
@@ -189,22 +189,22 @@ namespace OHOS {
         void AllocateBlock(unsigned nb)
         {
             if (nb >= maxBlocks_) {
-                double** new_coords = GeometryArrayAllocator<double*>::Allocate(
+                float** new_coords = GeometryArrayAllocator<float*>::Allocate(
                     (maxBlocks_ + BLOCK_POOL) * OHOS::TWO_TIMES);
 
                 unsigned char** new_cmds =
                     (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
 
                 if (croodBlocks_) {
-                    memcpy_s(new_coords, maxBlocks_ * sizeof(double*),
+                    memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
                              croodBlocks_,
-                             maxBlocks_ * sizeof(double*));
+                             maxBlocks_ * sizeof(float*));
 
-                    memcpy_s(new_cmds, maxBlocks_ * sizeof(double*),
+                    memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
                              cmdBlocks_,
                              maxBlocks_ * sizeof(unsigned char*));
 
-                    GeometryArrayAllocator<double*>::Deallocate(croodBlocks_,
+                    GeometryArrayAllocator<float*>::Deallocate(croodBlocks_,
                                                                 maxBlocks_ * OHOS::TWO_TIMES);
                 }
                 croodBlocks_ = new_coords;
@@ -212,15 +212,15 @@ namespace OHOS {
                 maxBlocks_ += BLOCK_POOL;
             }
             croodBlocks_[nb] =
-                GeometryArrayAllocator<double>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
-                                                         BLOCK_SIZE / (sizeof(double) / sizeof(unsigned char)));
+                GeometryArrayAllocator<float>::Allocate(BLOCK_SIZE * OHOS::TWO_TIMES +
+                                                         BLOCK_SIZE / (sizeof(float) / sizeof(unsigned char)));
 
             cmdBlocks_[nb] =
                 (unsigned char*)(croodBlocks_[nb] + BLOCK_SIZE * OHOS::TWO_TIMES);
 
             totalBlocks_++;
         }
-        int8u* StoragePtrs(double** xy_ptr)
+        int8u* StoragePtrs(float** xy_ptr)
         {
             unsigned nb = totalVertices_ >> BLOCK_SHIFT;
             if (nb >= totalBlocks_) {
@@ -234,7 +234,7 @@ namespace OHOS {
         unsigned totalVertices_;
         unsigned totalBlocks_;
         unsigned maxBlocks_;
-        double** croodBlocks_; // 输入的点
+        float** croodBlocks_; // 输入的点
         int8u** cmdBlocks_;    // 标记点状态
     };
 
@@ -272,7 +272,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void MoveTo(double x, double y)
+        void MoveTo(float x, float y)
         {
             vertices_.AddVertex(x, y, PATH_CMD_MOVE_TO);
         }
@@ -283,7 +283,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void LineTo(double x, double y)
+        void LineTo(float x, float y)
         {
             vertices_.AddVertex(x, y, PATH_CMD_LINE_TO);
         }
@@ -300,16 +300,16 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        void ArcTo(double rx, double ry,
-                   double angle,
+        void ArcTo(float rx, float ry,
+                   float angle,
                    bool largeArcFlag,
                    bool sweepFlag,
-                   double x, double y)
+                   float x, float y)
         {
             if (vertices_.TotalVertices() && IsVertex(vertices_.LastCommand())) {
-                const double epsilon = 1e-30;
-                double x0 = 0.0;
-                double y0 = 0.0;
+                const float epsilon = 1e-30;
+                float x0 = 0.0;
+                float y0 = 0.0;
                 vertices_.LastVertex(&x0, &y0);
 
                 rx = std::fabs(rx);
@@ -370,7 +370,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned LastVertex(double* x, double* y) const
+        unsigned LastVertex(float* x, float* y) const
         {
             return vertices_.LastVertex(x, y);
         }
@@ -383,7 +383,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(unsigned idx, double* x, double* y) const;
+        unsigned Vertex(unsigned idx, float* x, float* y) const;
 
         /**
          * @brief 迭代器回退到某一个顶点
@@ -404,7 +404,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        unsigned Vertex(double* x, double* y)
+        unsigned Vertex(float* x, float* y)
         {
             if (iterator_ >= vertices_.TotalVertices()) {
                 return PATH_CMD_STOP;
@@ -421,7 +421,7 @@ namespace OHOS {
          */
         void ConcatPath(BezierArc& path, unsigned pathId = 0)
         {
-            double x, y;
+            float x, y;
             unsigned cmd;
             path.Rewind(pathId);
             while (!IsStop(cmd = path.Vertex(&x, &y))) {
@@ -438,13 +438,13 @@ namespace OHOS {
          */
         void JoinPath(BezierArcSvg& path, unsigned pathId = 0)
         {
-            double x, y;
+            float x, y;
             unsigned pathCommand;
             path.Rewind(pathId);
             pathCommand = path.Vertex(&x, &y);
             if (!IsStop(pathCommand)) {
                 if (IsVertex(pathCommand)) {
-                    double x0, y0;
+                    float x0, y0;
                     unsigned cmd0 = LastVertex(&x0, &y0);
                     if (IsVertex(cmd0) && (CalcDistance(x, y, x0, y0) > VERTEX_DIST_EPSILON)) {
                         if (IsMoveTo(pathCommand)) {
