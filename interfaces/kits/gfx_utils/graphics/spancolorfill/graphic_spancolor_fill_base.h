@@ -74,9 +74,10 @@ namespace OHOS {
     public:
         typedef SpanGenerator SpanGen;
         typedef ColorT color_type;
-        SpanBlendColor(SpanGen spanGenerator1,SpanGen spanGenerator2){
-            spanGenerator1_ = spanGenerator1;
-            spanGenerator2_ = spanGenerator2;
+        SpanBlendColor(SpanGen& spanGenerator1,SpanGen& spanGenerator2)
+            : spanGenerator1_(spanGenerator1),
+              spanGenerator2_(spanGenerator2)
+        {
         }
         void Prepare()
         {
@@ -94,7 +95,7 @@ namespace OHOS {
             color_type* colors2 = allocator2.Resize(len);
 
             spanGenerator1_.Generate(colors1,x,y,len);
-            spanGenerator1_.Generate(colors2,x,y,len);
+            spanGenerator2_.Generate(colors2,x,y,len);
 
             for (; len; --len,++span,colors1++,colors2++) {
                 span->redValue = (colors1->redValue+colors2->redValue) >= MAX_COLOR_NUM ?
