@@ -17,7 +17,7 @@
 #define GRAPHIC_VCGEN_STROKE_INCLUDED
 
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_math_stroke.h"
-
+#include "draw/clip_utils.h"
 namespace OHOS {
     class VertexGenerateStroke {
         enum Status {
@@ -36,7 +36,7 @@ namespace OHOS {
 
     public:
         using VertexStorage = VertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
-        using CoordStorage = GeometryPlainDataBlockVector<PointD, BLOCK_SHIFT_SIZE>;
+        using CoordStorage = GeometryPlainDataBlockVector<PointF, BLOCK_SHIFT_SIZE>;
 
         VertexGenerateStroke();
 

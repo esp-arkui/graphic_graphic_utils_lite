@@ -86,7 +86,7 @@ namespace OHOS {
             colorProfile.CutAt(RemoveDuplicates(colorProfile, OffsetEqual));
             if (colorProfile.Size() > 1) {
                 unsigned index;
-                unsigned start = Uround(colorProfile[0].offset * colorLutSize_);
+                unsigned start = MATH_UROUND(colorProfile[0].offset * colorLutSize_);
                 unsigned end;
                 color_type color = colorProfile[0].color;
 
@@ -100,7 +100,7 @@ namespace OHOS {
                  * 从1到colorProfile.size() 间进行插值颜色计算.
                  */
                 for (index = 1; index < colorProfile.Size(); index++) {
-                    end = Uround(colorProfile[index].offset * colorLutSize_);
+                    end = MATH_UROUND(colorProfile[index].offset * colorLutSize_);
                     interpolator_type ci(colorProfile[index - 1].color,
                                          colorProfile[index].color,
                                          end - start + 1);

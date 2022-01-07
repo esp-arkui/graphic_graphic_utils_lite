@@ -89,7 +89,7 @@ namespace OHOS {
         void AddCell(int x, unsigned cover)
         {
             x -= minScaneLineXCoord;
-            arrayCovers[x] = (CoverType)cover;
+            arrayCovers[x] = (uint8_t)cover;
             if (x == lastScaneLineXCoord + 1) {
                 curSpanBlock->spanLength++;
             } else {
@@ -104,10 +104,10 @@ namespace OHOS {
         /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
         * 还是添加cells单元数组 。
         */
-        void AddCells(int x, unsigned cellLength, const CoverType* covers)
+        void AddCells(int x, unsigned cellLength, const uint8_t* covers)
         {
             x -= minScaneLineXCoord;
-            memcpy_s(&arrayCovers[x], cellLength * sizeof(CoverType), covers, cellLength * sizeof(CoverType));
+            memcpy_s(&arrayCovers[x], cellLength * sizeof(uint8_t), covers, cellLength * sizeof(uint8_t));
             if (x == lastScaneLineXCoord + 1) {
                 curSpanBlock->spanLength += (coord_type)cellLength;
             } else {
@@ -176,7 +176,7 @@ namespace OHOS {
         int minScaneLineXCoord;
         int lastScaneLineXCoord;
         int scaneLineYCoord;
-        GeometryPlainDataArray<CoverType> arrayCovers;
+        GeometryPlainDataArray<uint8_t> arrayCovers;
         GeometryPlainDataArray<SpanBlock> arraySpans;
         SpanBlock* curSpanBlock;
     };

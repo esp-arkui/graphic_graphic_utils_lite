@@ -41,7 +41,7 @@
 #include "gfx_utils/graphics/common/graphic_common_gamma_lut.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
-
+#include "graphic_math.h"
 #if ENABLE_ARM_MATH
 #    include "arm_math.h"
 #endif
@@ -630,10 +630,10 @@ namespace OHOS {
          */
         static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
         {
-            dst.redValue = uint8_t(Uround(src.redValue * BASEMASK));
-            dst.greenValue = uint8_t(Uround(src.greenValue * BASEMASK));
-            dst.blueValue = uint8_t(Uround(src.blueValue * BASEMASK));
-            dst.alphaValue = uint8_t(Uround(src.alphaValue * BASEMASK));
+            dst.redValue = uint8_t(MATH_UROUND(src.redValue * BASEMASK));
+            dst.greenValue = uint8_t(MATH_UROUND(src.greenValue * BASEMASK));
+            dst.blueValue = uint8_t(MATH_UROUND(src.blueValue * BASEMASK));
+            dst.alphaValue = uint8_t(MATH_UROUND(src.alphaValue * BASEMASK));
         }
 
         /**
@@ -659,7 +659,7 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE uint8_t FromFloat(float value)
         {
-            return uint8_t(Uround(value * BASEMASK));
+            return uint8_t(MATH_UROUND(value * BASEMASK));
         }
 
         static GRAPHIC_GEOMETRY_INLINE uint8_t EmptyValue()
@@ -719,12 +719,12 @@ namespace OHOS {
             return value >> BASESHIFT;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE uint8_t MultCover(uint8_t valueA, CoverType coverValue)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t MultCover(uint8_t valueA, uint8_t coverValue)
         {
             return Multiply(valueA, coverValue);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, uint8_t value)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t ScaleCover(uint8_t coverValue, uint8_t value)
         {
             return Multiply(value, coverValue);
         }
@@ -760,7 +760,7 @@ namespace OHOS {
             } else if (alpha > 1) {
                 alphaValue = 1;
             } else {
-                alphaValue = (uint8_t)Uround(alpha * float(BASEMASK));
+                alphaValue = (uint8_t)MATH_UROUND(alpha * float(BASEMASK));
             }
             return *this;
         }
@@ -781,7 +781,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
         {
             SelfType ret;
-            uint32_t increaseK = Uround(k * BASEMASK);
+            uint32_t increaseK = MATH_UROUND(k * BASEMASK);
             ret.redValue = Lerp(redValue, color.redValue, increaseK);
             ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
             ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);

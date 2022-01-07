@@ -141,18 +141,8 @@ namespace OHOS {
     template <class Type>
     struct PointBase;
 
-    template <class Type>
-    struct VertexBase;
-
-    using CoverType = unsigned char;
     using RectI = RectBase<int>;
     using RectD = RectBase<float>;
-    using PointD = PointBase<float>;
-    //using PointI = PointBase<int>;
-
-    using VertexF = VertexBase<float>;
-    using VertexD = VertexBase<float>;
-    using VertexI = VertexBase<int>;
 
     const float COEFFICIENT = 0.7f;
     const float ALPHAHALF = 0.5f;
@@ -279,32 +269,6 @@ namespace OHOS {
     const int INDEX_SEVEN = 7;
     const int INDEX_EIGHT = 8;
 
-    GRAPHIC_GEOMETRY_INLINE int Iceil(float val)
-    {
-        return int(std::ceil(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Uceil(float val)
-    {
-        return unsigned(std::ceil(val));
-    }
-    GRAPHIC_GEOMETRY_INLINE int Iround(float val)
-    {
-        return int((val < 0.0) ? val - ROUND_BASE : val + ROUND_BASE);
-    }
-    GRAPHIC_GEOMETRY_INLINE int Uround(float val)
-    {
-        return unsigned(val + ROUND_BASE);
-    }
-    GRAPHIC_GEOMETRY_INLINE int Ifloor(float val)
-    {
-        int i = int(val);
-        return i - (i > val);
-    }
-    GRAPHIC_GEOMETRY_INLINE unsigned Ufloor(float val)
-    {
-        return unsigned(val);
-    }
-
     /**
  * @brief 两个数是否相近.
  *
@@ -333,35 +297,6 @@ namespace OHOS {
         val2 = std::ldexp(val2, -min12);
 
         return std::fabs(val1 - val2) < epsilon;
-    }
-
-    /**
- * @brief 弧度转度.
- * @since 1.0
- * @version 1.0
- */
-    inline float RadianToDegree(float val)
-    {
-        return val * RAD_BASE / PI;
-    }
-    /**
- * @brief 度转弧度.
- * @since 1.0
- * @version 1.0
- */
-    inline float DegreeToRadian(float val)
-    {
-        return val * PI / RAD_BASE;
-    }
-
-    /**
- * @brief 判断是否在绘制图元.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsDrawing(unsigned val)
-    {
-        return val < PATH_CMD_END_POLY && val >= PATH_CMD_LINE_TO;
     }
 
     /**
@@ -395,46 +330,6 @@ namespace OHOS {
     }
 
     /**
- * @brief 判断当前状态是否LINE_TO状态.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsLineTo(unsigned val)
-    {
-        return PATH_CMD_LINE_TO == val;
-    }
-
-    /**
- * @brief 判断当前状态是否是绘制贝塞尔曲线CURVE状态.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsCurve(unsigned val)
-    {
-        return PATH_CMD_CURVE4 == val || PATH_CMD_CURVE3 == val;
-    }
-
-    /**
- * @brief 判断当前状态是否是绘制二次贝塞尔曲线CURVE状态.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsQuadraticBezierCurve(unsigned val)
-    {
-        return PATH_CMD_CURVE3 == val;
-    }
-
-    /**
- * @brief 判断当前状态是否是绘制三次贝塞尔曲线CURVE状态.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsCubicBezierCurve(unsigned val)
-    {
-        return PATH_CMD_CURVE4 == val;
-    }
-
-    /**
  * @brief 判断当前状态是否是绘制曲线结尾状态.
  * @since 1.0
  * @version 1.0
@@ -455,66 +350,6 @@ namespace OHOS {
     }
 
     /**
- * @brief 判断当前状态是否是绘制曲线下一个多边形状态.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsNextPoly(unsigned val)
-    {
-        return IsStop(val) || IsMoveTo(val) || IsEndPoly(val);
-    }
-
-    /**
- * @brief 判断当前状态是否是逆时针.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsAntiClockWise(unsigned val)
-    {
-        return (val & PATH_FLAGS_ANTI_CLOCKWISE) != 0;
-    }
-
-    /**
- * @brief 判断当前状态是否是顺时针.
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsClockWise(unsigned val)
-    {
-        return (val & PATH_FLAGS_CLOCKWISE) != 0;
-    }
-
-    /**
- * @brief 判断当前方向
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsOriented(unsigned val)
-    {
-        return (val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) != 0;
-    }
-
-    /**
- * @brief 判断当前是否封闭
- * @since 1.0
- * @version 1.0
- */
-    inline bool IsClosed(unsigned val)
-    {
-        return (val & PATH_FLAGS_CLOSE) != 0;
-    }
-
-    /**
- * @brief 清除方向标记
- * @since 1.0
- * @version 1.0
- */
-    inline unsigned ClearOrientation(unsigned val)
-    {
-        return val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
-    }
-
-    /**
  * @brief 获取封闭状态
  * @since 1.0
  * @version 1.0
@@ -523,27 +358,6 @@ namespace OHOS {
     {
         return val & PATH_FLAGS_CLOSE;
     }
-
-    /**
- * @brief 设置朝向
- * @since 1.0
- * @version 1.0
- */
-    inline unsigned SetOrientation(unsigned cleanVal, unsigned addVal)
-    {
-        return ClearOrientation(cleanVal) | addVal;
-    }
-
-    /**
- * @brief 获取朝向
- * @since 1.0
- * @version 1.0
- */
-    inline unsigned GetOrientation(unsigned val)
-    {
-        return val & (PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE);
-    }
-
 #ifdef GRAPHIC_GEOMETRY_CUSTOM_ALLOCATOR
 #    include "graphic_geometry_allocator.h"
 #else
@@ -633,14 +447,6 @@ namespace OHOS {
             return *this;
         }
 
-        void Init(T x1_, T y1_, T x2_, T y2_)
-        {
-            x1 = x1_;
-            y1 = y1_;
-            x2 = x2_;
-            y2 = y2_;
-        }
-
         /**
      * @brief 坐标裁剪到指定范围内.
      * @since 1.0
@@ -662,113 +468,6 @@ namespace OHOS {
             }
             return y1 <= y2 && x1 <= x2;
         }
-
-        /**
-     * @brief 坐标是否有效.
-     * @since 1.0
-     * @version 1.0
-     */
-        bool IsValid() const
-        {
-            return y1 <= y2 && x1 <= x2;
-        }
-
-        /**
-     * @brief 坐标的有效范围.
-     * @since 1.0
-     * @version 1.0
-     */
-        bool Overlaps(const SelfType& rect) const
-        {
-            return !(rect.y1 > y2 || rect.y2 < y1 || rect.x1 > x2 || rect.x2 < x1);
-        }
-
-        /**
-     * @brief 判断坐标在指定范围内.
-     * @since 1.0
-     * @version 1.0
-     */
-        bool HitTest(T x, T y) const
-        {
-            return (y >= y1 && y <= y2 && x >= x1 && x <= x2);
-        }
-    };
-
-    /**
- * @brief 获取两矩形是否相交区域.
- *
- * @param rect1,rect2 两个矩形.
- * @return Returns 相交的矩形.
- * @since 1.0
- * @version 1.0
- */
-    template <class Rect>
-    Rect IntersectRectangles(const Rect& rect1, const Rect& rect2)
-    {
-        Rect rect = rect1;
-        if (rect.x2 > rect2.x2) {
-            rect.x2 = rect2.x2;
-        }
-        if (rect.y2 > rect2.y2) {
-            rect.y2 = rect2.y2;
-        }
-        if (rect.x1 < rect2.x1) {
-            rect.x1 = rect2.x1;
-        }
-        if (rect.y1 < rect2.y1) {
-            rect.y1 = rect2.y1;
-        }
-        return rect;
-    }
-
-    /**
- * @brief 获取两矩形的并集区域.
- *
- * @param rect1,rect2 两个矩形.
- * @return Returns 并集区域的矩形.
- * @since 1.0
- * @version 1.0
- */
-    template <class Rect>
-    Rect UniteRectangles(const Rect& rect1, const Rect& rect2)
-    {
-        Rect rect = rect1;
-        if (rect.x2 < rect2.x2) {
-            rect.x2 = rect2.x2;
-        }
-        if (rect.y2 < rect2.y2) {
-            rect.y2 = rect2.y2;
-        }
-        if (rect.x1 > rect2.x1) {
-            rect.x1 = rect2.x1;
-        }
-        if (rect.y1 > rect2.y1) {
-            rect.y1 = rect2.y1;
-        }
-        return rect;
-    }
-
-    template <class T>
-    struct PointBase {
-        using ValueType = T;
-        T x;
-        T y;
-        PointBase()
-        {}
-        PointBase(T x_, T y_) : x(x_), y(y_)
-        {}
-    };
-
-    template <class T>
-    struct VertexBase {
-        using ValueType = T;
-        T x;
-        T y;
-        unsigned cmd;
-        VertexBase()
-        {}
-        VertexBase(T x_, T y_, unsigned cmd_) : x(x_), y(y_), cmd(cmd_)
-        {}
     };
 
     template <class T>
@@ -780,17 +479,6 @@ namespace OHOS {
         {}
         ConstRowInfo(int x1_, int x2_, const T* ptr_) :
             x1(x1_), x2(x2_), ptr(ptr_)
-        {}
-    };
-
-    template <class T>
-    struct RowInfo {
-        int x1;
-        int x2;
-        T* ptr;
-        RowInfo()
-        {}
-        RowInfo(int x1_, int x2_, T* ptr_) : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS

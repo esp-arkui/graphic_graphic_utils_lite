@@ -24,7 +24,7 @@
 #define GRAPHIC_RASTERIZER_SL_CLIP_INCLUDED
 
 #include "gfx_utils/graphics/common/graphic_common_clip_operate.h"
-
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
     * 该PolyMaxCoordEnum枚举类型
@@ -55,7 +55,7 @@ namespace OHOS {
          */
         static int UpScale(double vUpscale)
         {
-            return Iround(vUpscale * POLY_SUBPIXEL_SCALE);
+            return MATH_ROUND32(vUpscale * POLY_SUBPIXEL_SCALE);
         }
 
         /**
@@ -71,7 +71,7 @@ namespace OHOS {
 
         static GRAPHIC_GEOMETRY_INLINE int MultDiv(double deltaA, double deltaB, double dealtaC)
         {
-            return Iround(deltaA * deltaB / dealtaC);
+            return MATH_ROUND32(deltaA * deltaB / dealtaC);
         }
         static int GetXCoordinateValue(int xValue)
         {

@@ -49,7 +49,7 @@ namespace OHOS {
         float len = std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                      std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
 
-        numberSteps = Uround(len * CURVES_NUM_STEP_LEN * approximationScale);
+        numberSteps = MATH_UROUND(len * CURVES_NUM_STEP_LEN * approximationScale);
         const int NUM_STEPS_MAX = 4;
         if (numberSteps < NUM_STEPS_MAX) {
             numberSteps = NUM_STEPS_MAX;
@@ -241,7 +241,7 @@ namespace OHOS {
                       std::sqrt(deltaX3 * deltaX3 + deltaY3 * deltaY3)) *
                      CURVES_NUM_STEP_LEN * approximationScale;
 
-        numberSteps = Uround(len);
+        numberSteps = MATH_UROUND(len);
         const int cuvereNumStep = 4;
         if (numberSteps < cuvereNumStep) {
             numberSteps = cuvereNumStep;

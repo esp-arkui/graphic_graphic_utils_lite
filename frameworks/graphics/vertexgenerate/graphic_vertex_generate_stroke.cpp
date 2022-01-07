@@ -161,7 +161,7 @@ namespace OHOS {
                     if (outVertex_ >= outVertices_.Size()) {
                         status_ = prevStatus_;
                     } else {
-                        const PointD& c = outVertices_[outVertex_++];
+                        const PointF& c = outVertices_[outVertex_++];
                         *x = c.x;
                         *y = c.y;
                         return cmd;
