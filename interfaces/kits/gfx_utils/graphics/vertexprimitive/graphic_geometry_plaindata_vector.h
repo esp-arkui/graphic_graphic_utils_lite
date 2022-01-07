@@ -388,6 +388,5 @@ namespace OHOS {
         }
         ++size_;
     }
-
 } // namespace OHOS
 #endif

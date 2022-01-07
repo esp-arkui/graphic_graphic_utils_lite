@@ -22,7 +22,6 @@
 #include "gfx_utils/graphics/transform/graphic_transform_affine.h"
 
 namespace OHOS {
-
     enum AspectRatioType {
         ASPECT_RATIO_STRETCH,
         ASPECT_RATIO_MEET,

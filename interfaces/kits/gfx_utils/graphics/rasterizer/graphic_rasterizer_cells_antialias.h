@@ -31,7 +31,6 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h"
 
 namespace OHOS {
-
     // 像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
     struct CellBuildAntiAlias {
         int x;

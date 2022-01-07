@@ -150,7 +150,6 @@ namespace OHOS {
             }
             int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul)
                           - startRadius) * size) / deltaRadius;
-
             if (index < 0) {
                 index = 0;
             }

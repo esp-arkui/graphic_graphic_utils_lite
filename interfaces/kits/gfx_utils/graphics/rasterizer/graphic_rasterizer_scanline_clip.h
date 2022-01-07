@@ -304,7 +304,6 @@ namespace OHOS {
     {
         if (m_clipping) {
             unsigned cFlagsLineToPoint = ClippingFlags(x2, y2, m_clip_box);
-
             if ((m_clipping_flags & 0x0A) == (cFlagsLineToPoint & 0x0A) && (m_clipping_flags & 0x0A) != 0) {
                 /*
                 * 表明moveto与lineto重合

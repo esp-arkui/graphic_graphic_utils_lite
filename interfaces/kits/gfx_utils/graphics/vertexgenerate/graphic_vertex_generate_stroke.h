@@ -119,7 +119,6 @@ namespace OHOS {
         unsigned srcVertex_;
         unsigned outVertex_;
     };
-
 } // namespace OHOS
 
 #endif

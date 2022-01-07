@@ -274,7 +274,6 @@ namespace OHOS {
             StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
-
         void NeonLerp_ARGB8888(uint8_t* dstBuffer, uint8_t* srcBuffer, uint8_t cover)
         {
             uint8x8x4_t vDstBuf = vld4_u8(dstBuffer);

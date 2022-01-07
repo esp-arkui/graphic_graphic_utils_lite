@@ -140,7 +140,6 @@ namespace OHOS {
         if (level > CURVERECURSIONLIMIT) {
             return;
         }
-
         // 计算线段的所有中点
         float x12 = (x1 + x2) / FLOATNUM;
         float y12 = (y1 + y2) / FLOATNUM;
@@ -153,7 +152,6 @@ namespace OHOS {
         float deltaY = y3 - y1;
         float distance = std::fabs(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
         float da;
-
         if (distance > CURVECOLLINEARITYEPSILON) {
             if (distance * distance <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                 // 如果曲率未超过距离公差值

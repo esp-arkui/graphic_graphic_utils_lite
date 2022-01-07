@@ -1041,7 +1041,6 @@ namespace OHOS {
          */
         static ColorType Orange();
     };
-
 } // namespace OHOS
 
 #endif
