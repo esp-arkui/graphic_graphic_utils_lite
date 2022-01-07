@@ -343,7 +343,9 @@ namespace OHOS {
         if (newSize > size_) {
             if (newSize > capacity_) {
                 T* data = GeometryArrayAllocator<T>::Allocate(newSize);
-                memcpy_s(data, newSize, data_, size_ * sizeof(T));
+                errno_t err = memcpy_s(data, newSize, data_, size_ * sizeof(T));
+                if (err != EOK) {
+                }
                 GeometryArrayAllocator<T>::Deallocate(data_, capacity_);
                 data_ = data;
             }
@@ -383,7 +385,10 @@ namespace OHOS {
         if (pos >= size_) {
             data_[size_] = val;
         } else {
-            memmove_s(data_ + pos + 1, (size_ - pos) * sizeof(T), data_ + pos, (size_ - pos) * sizeof(T));
+            errno_t err = memmove_s(data_ + pos + 1, (size_ - pos) * sizeof(T),
+                                    data_ + pos, (size_ - pos) * sizeof(T));
+            if (err != EOK) {
+            }
             data_[pos] = val;
         }
         ++size_;

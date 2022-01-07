@@ -196,14 +196,14 @@ namespace OHOS {
                     (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
 
                 if (croodBlocks_) {
-                    memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
-                             croodBlocks_,
-                             maxBlocks_ * sizeof(float*));
-
-                    memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
-                             cmdBlocks_,
-                             maxBlocks_ * sizeof(unsigned char*));
-
+                    errno_t err = memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
+                                           croodBlocks_, maxBlocks_ * sizeof(float*));
+                    if (err != EOK) {
+                    }
+                    err = memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
+                                   cmdBlocks_, maxBlocks_ * sizeof(unsigned char*));
+                    if (err != EOK) {
+                    }
                     GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 }
                 croodBlocks_ = new_coords;
