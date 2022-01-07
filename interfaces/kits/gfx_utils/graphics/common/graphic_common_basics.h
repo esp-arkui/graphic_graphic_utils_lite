@@ -148,7 +148,7 @@ namespace OHOS {
     using RectI = RectBase<int>;
     using RectD = RectBase<float>;
     using PointD = PointBase<float>;
-    using PointI = PointBase<int>;
+    //using PointI = PointBase<int>;
 
     using VertexF = VertexBase<float>;
     using VertexD = VertexBase<float>;

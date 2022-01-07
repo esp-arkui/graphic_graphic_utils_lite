@@ -16,7 +16,7 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_curves.h"
 
 #include "gfx_utils/graphics/common/graphic_common_math.h"
-
+#include "draw/clip_utils.h"
 namespace OHOS {
     const float CURVECOLLINEARITYEPSILON = 1e-30;
     const float CURVEANGLETOLERANCEEPSILON = 0.01f;
@@ -156,7 +156,7 @@ namespace OHOS {
             if (distance * distance <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                 // 如果曲率未超过距离公差值
                 if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                    points_.Add(PointD(x123, y123));
+                    points_.Add(PointF(x123, y123));
                     return;
                 }
 
@@ -166,7 +166,7 @@ namespace OHOS {
                 }
 
                 if (da < angleTolerance_) {
-                    points_.Add(PointD(x123, y123));
+                    points_.Add(PointF(x123, y123));
                     return;
                 }
             }
@@ -190,7 +190,7 @@ namespace OHOS {
                 }
             }
             if (distance < distanceToleranceSquare_) {
-                points_.Add(PointD(x2, y2));
+                points_.Add(PointF(x2, y2));
                 return;
             }
         }
@@ -204,9 +204,9 @@ namespace OHOS {
                                                   float x2, float y2,
                                                   float x3, float y3)
     {
-        points_.Add(PointD(x1, y1));
+        points_.Add(PointF(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, 0);
-        points_.Add(PointD(x3, y3));
+        points_.Add(PointF(x3, y3));
     }
 
     void CubicBezierCurveIncrement::ApproximationScale(float scale)
@@ -420,12 +420,12 @@ namespace OHOS {
                 }
                 if (delta2 > delta3) {
                     if (delta2 < distanceToleranceSquare_) {
-                        points_.Add(PointD(x2, y2));
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
                 } else {
                     if (delta3 < distanceToleranceSquare_) {
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
@@ -435,7 +435,7 @@ namespace OHOS {
                 // p1、p2、p4是共线的
                 if (delta3 * delta3 <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
@@ -446,13 +446,13 @@ namespace OHOS {
                     }
 
                     if (da1 < angleTolerance_) {
-                        points_.Add(PointD(x2, y2));
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x2, y2));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
 
                     if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
@@ -462,7 +462,7 @@ namespace OHOS {
                 // p1、p3、p4是共线的
                 if (delta2 * delta2 <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
@@ -473,13 +473,13 @@ namespace OHOS {
                     }
 
                     if (da1 < angleTolerance_) {
-                        points_.Add(PointD(x2, y2));
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x2, y2));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
 
                     if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x2, y2));
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
                 }
@@ -490,7 +490,7 @@ namespace OHOS {
                         distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                     // 如果曲率未超过距离公差值
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
@@ -505,17 +505,17 @@ namespace OHOS {
                     }
 
                     if (da1 + da2 < angleTolerance_) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
                     if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x2, y2));
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
 
                     if (cuspLimit_ != 0.0 && da2 > cuspLimit_) {
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
@@ -531,8 +531,8 @@ namespace OHOS {
                                               float x3, float y3,
                                               float x4, float y4)
     {
-        points_.Add(PointD(x1, y1));
+        points_.Add(PointF(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, x4, y4, 0);
-        points_.Add(PointD(x4, y4));
+        points_.Add(PointF(x4, y4));
     }
 } // namespace OHOS

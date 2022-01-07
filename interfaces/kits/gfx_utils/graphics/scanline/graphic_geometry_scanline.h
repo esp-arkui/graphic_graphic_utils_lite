@@ -47,7 +47,7 @@ namespace OHOS {
          * 像素覆盖率类型
          */
         using cover_type = uint8_t;
-        using coord_type = int16;
+        using coord_type = int16_t;
         struct SpanBlock {
             coord_type x;
             coord_type spanLength;

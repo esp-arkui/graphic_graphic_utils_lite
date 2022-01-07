@@ -29,7 +29,6 @@ namespace OHOS {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
         enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
@@ -217,7 +216,6 @@ namespace OHOS {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
         enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
@@ -334,8 +332,7 @@ namespace OHOS {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
-        enum PixWidth {
+               enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
 
@@ -414,7 +411,6 @@ namespace OHOS {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
         enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
@@ -499,7 +495,6 @@ namespace OHOS {
     public:
         typedef typename PixelFormatType::ColorType color_type;
         typedef typename PixelFormatType::OrderType order_type;
-        typedef typename PixelFormatType::ValueType value_type;
         enum PixWidth {
             PIX_WIDTH = PixelFormatType::PIX_WIDTH
         };
