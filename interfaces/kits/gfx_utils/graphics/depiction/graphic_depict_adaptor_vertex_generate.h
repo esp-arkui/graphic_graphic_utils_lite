@@ -191,8 +191,8 @@ namespace OHOS {
 
     private:
         DepictAdaptorVertexGenerator(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
-        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&
-            operator=(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
+        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>& operator=
+        (const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
 
         VertexSource* m_source;
         Generator m_generator;

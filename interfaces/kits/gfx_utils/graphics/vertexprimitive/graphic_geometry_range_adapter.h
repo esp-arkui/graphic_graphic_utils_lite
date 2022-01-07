@@ -229,9 +229,8 @@ namespace OHOS {
         if (arr.Size() < INDEX_TWO) {
             return arr.Size();
         }
-
-        unsigned iIndex, jIndex;
-        for (iIndex = 1, jIndex = 1; iIndex < arr.Size(); iIndex++) {
+        unsigned jIndex = 1;
+        for (unsigned iIndex = 1; iIndex < arr.Size(); iIndex++) {
             typename Array::ValueType& element = arr[iIndex];
             if (!equal(element, arr[iIndex - 1])) {
                 arr[jIndex++] = element;

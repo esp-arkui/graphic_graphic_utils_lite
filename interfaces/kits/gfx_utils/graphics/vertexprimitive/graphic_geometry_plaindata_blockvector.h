@@ -380,8 +380,8 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    const GeometryPlainDataBlockVector<T, S>&
-    GeometryPlainDataBlockVector<T, S>::operator=(const GeometryPlainDataBlockVector<T, S>& v)
+    const GeometryPlainDataBlockVector<T, S>& GeometryPlainDataBlockVector<T, S>::operator=
+    (const GeometryPlainDataBlockVector<T, S>& v)
     {
         unsigned i;
         for (i = numBlocks_; i < v.numBlocks_; ++i) {

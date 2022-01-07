@@ -50,7 +50,8 @@ namespace OHOS {
 
     void RoundedRect::Radius(double r)
     {
-        radiusXStart = radiusYStart = radiusXControlOne = radiusYControlOne = radiusXControlTwo = radiusYControlTwo = radiusXEnd = radiusYEnd = r;
+        radiusXStart = radiusYStart = radiusXControlOne = radiusYControlOne = radiusXControlTwo
+                = radiusYControlTwo = radiusXEnd = radiusYEnd = r;
     }
 
     void RoundedRect::Radius(double rx, double ry)
@@ -125,7 +126,8 @@ namespace OHOS {
         unsigned cmd = PATH_CMD_STOP;
         switch (arcCurveStatus) {
             case VERTEX_STATUS:
-                arcCurveObject.Init(arcCurveXStart + radiusXStart, arcCurveYStart + radiusYStart, radiusXStart, radiusYStart, PI, PI + PI * HALFNUM);
+                arcCurveObject.Init(arcCurveXStart + radiusXStart, arcCurveYStart + radiusYStart,
+                                    radiusXStart, radiusYStart, PI, PI + PI * HALFNUM);
                 arcCurveObject.Rewind(0);
                 arcCurveStatus++;
             case VERTEX_STATUS1:
@@ -136,7 +138,8 @@ namespace OHOS {
                     return cmd;
                 }
             case VERTEX_STATUS2:
-                arcCurveObject.Init(arcCurveXEnd - radiusXControlOne, arcCurveYStart + radiusYControlOne, radiusXControlOne, radiusYControlOne, PI + PI * HALFNUM, 0.0);
+                arcCurveObject.Init(arcCurveXEnd - radiusXControlOne, arcCurveYStart + radiusYControlOne,
+                                    radiusXControlOne, radiusYControlOne, PI + PI * HALFNUM, 0.0);
                 arcCurveObject.Rewind(0);
                 arcCurveStatus++;
             case VERTEX_STATUS3:
@@ -147,7 +150,8 @@ namespace OHOS {
                     return PATH_CMD_LINE_TO;
                 }
             case VERTEX_STATUS4:
-                arcCurveObject.Init(arcCurveXEnd - radiusXControlTwo, arcCurveYEnd - radiusYControlTwo, radiusXControlTwo, radiusYControlTwo,
+                arcCurveObject.Init(arcCurveXEnd - radiusXControlTwo, arcCurveYEnd - radiusYControlTwo,
+                                    radiusXControlTwo, radiusYControlTwo,
                                     0.0, PI * HALFNUM);
                 arcCurveObject.Rewind(0);
                 arcCurveStatus++;
@@ -159,7 +163,8 @@ namespace OHOS {
                     return PATH_CMD_LINE_TO;
                 }
             case VERTEX_STATUS6:
-                arcCurveObject.Init(arcCurveXStart + radiusXEnd, arcCurveYEnd - radiusYEnd, radiusXEnd, radiusYEnd, PI * HALFNUM, PI);
+                arcCurveObject.Init(arcCurveXStart + radiusXEnd, arcCurveYEnd - radiusYEnd, radiusXEnd,
+                                    radiusYEnd, PI * HALFNUM, PI);
                 arcCurveObject.Rewind(0);
                 arcCurveStatus++;
             case VERTEX_STATUS7:

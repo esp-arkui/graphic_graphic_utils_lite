@@ -48,7 +48,7 @@ namespace OHOS {
         *y2 = CoordT(0);
 
         vertexSource.Rewind(pathId);
-        unsigned currentCommand;
+        unsigned currentCommand = PATH_CMD_STOP;
         while (!IsStop(currentCommand = vertexSource.Vertex(&x, &y))) {
             if (IsVertex(currentCommand)) {
                 if (first) {

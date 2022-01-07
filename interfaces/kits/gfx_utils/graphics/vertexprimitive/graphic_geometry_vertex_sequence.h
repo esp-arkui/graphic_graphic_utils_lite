@@ -73,7 +73,7 @@ namespace OHOS {
     template <class T, unsigned S>
     void VertexSequence<T, S>::Close(bool closed)
     {
-        while (1 < BaseType::Size()) {
+        while (BaseType::Size() > 1) {
             if ((*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
                 break;
             }
@@ -83,7 +83,7 @@ namespace OHOS {
         }
 
         if (closed) {
-            while (1 < BaseType::Size()) {
+            while (BaseType::Size() > 1) {
                 if ((*this)[BaseType::Size() - 1]((*this)[0])) { // 计算两顶点距离
                     break;
                 }

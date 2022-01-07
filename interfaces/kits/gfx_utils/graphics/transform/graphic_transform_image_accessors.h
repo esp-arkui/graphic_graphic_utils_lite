@@ -578,7 +578,7 @@ namespace OHOS {
         {}
         WrapModeRepeat(unsigned size)
             : size_(size),
-            add_(size * (0x3FFFFFFF / size)),
+            add_(size == 0 ? 0 : (size * (0x3FFFFFFF / size))),
             value_(0)
         {}
 

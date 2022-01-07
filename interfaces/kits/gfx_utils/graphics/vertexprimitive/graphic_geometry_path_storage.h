@@ -204,8 +204,7 @@ namespace OHOS {
                              cmdBlocks_,
                              maxBlocks_ * sizeof(unsigned char*));
 
-                    GeometryArrayAllocator<float*>::Deallocate(croodBlocks_,
-                                                                maxBlocks_ * OHOS::TWO_TIMES);
+                    GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 }
                 croodBlocks_ = new_coords;
                 cmdBlocks_ = new_cmds;

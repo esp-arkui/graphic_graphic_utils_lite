@@ -54,6 +54,9 @@ namespace OHOS {
         if (numberSteps < NUM_STEPS_MAX) {
             numberSteps = NUM_STEPS_MAX;
         }
+        if(numberSteps == 0) {
+            return;
+        }
         float subdivideStep = 1.0f / numberSteps;
         float subdivideStep2 = subdivideStep * subdivideStep;
 
@@ -245,7 +248,9 @@ namespace OHOS {
         if (numberSteps < cuvereNumStep) {
             numberSteps = cuvereNumStep;
         }
-
+        if(numberSteps == 0) {
+            return;
+        }
         float subdivideStep = 1.0 / numberSteps;
         float subdivideStep2 = subdivideStep * subdivideStep;
         float subdivideStep3 = subdivideStep * subdivideStep * subdivideStep;

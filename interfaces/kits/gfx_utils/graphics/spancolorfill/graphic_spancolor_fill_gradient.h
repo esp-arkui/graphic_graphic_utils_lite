@@ -148,7 +148,8 @@ namespace OHOS {
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius) * size) / deltaRadius;
+            int index = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul)
+                          - startRadius) * size) / deltaRadius;
 
             if (index < 0) {
                 index = 0;

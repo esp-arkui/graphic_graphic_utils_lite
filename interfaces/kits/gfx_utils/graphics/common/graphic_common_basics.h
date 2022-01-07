@@ -24,7 +24,7 @@
  */
 
 /**
- * @file graphic_geometry_basics.h
+ * @file graphic_common_basics.h
  *
  * @brief Defines 图形操作基本数据类型与通用函数.
  *
@@ -268,6 +268,7 @@ namespace OHOS {
     const int INDEX_FIVE = 5;
     const int INDEX_SIX = 6;
     const int INDEX_SEVEN = 7;
+    const int INDEX_EIGHT = 8;
 
     GRAPHIC_GEOMETRY_INLINE int Iceil(float val)
     {

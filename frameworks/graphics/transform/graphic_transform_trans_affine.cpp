@@ -18,12 +18,12 @@ namespace OHOS {
     const TransAffine& TransAffine::ParlToParl(const float* src,
                                                const float* dst)
     {
-        data_[0] = src[INDEX_TWO] - src[INDEX_ZERO];
-        data_[3] = src[INDEX_THREE] - src[INDEX_ONE];
-        data_[1] = src[INDEX_FOUR] - src[INDEX_ZERO];
-        data_[4] = src[INDEX_FIVE] - src[INDEX_ONE];
-        data_[2] = src[INDEX_ZERO];
-        data_[5] = src[INDEX_ONE];
+        data_[INDEX_ZERO] = src[INDEX_TWO] - src[INDEX_ZERO];
+        data_[INDEX_THREE] = src[INDEX_THREE] - src[INDEX_ONE];
+        data_[INDEX_ONE] = src[INDEX_FOUR] - src[INDEX_ZERO];
+        data_[INDEX_FOUR] = src[INDEX_FIVE] - src[INDEX_ONE];
+        data_[INDEX_TWO] = src[INDEX_ZERO];
+        data_[INDEX_FIVE] = src[INDEX_ONE];
         Invert();
         Multiply(TransAffine(dst[INDEX_TWO] - dst[INDEX_ZERO], dst[INDEX_THREE] - dst[INDEX_ONE],
                              dst[INDEX_FOUR] - dst[INDEX_ZERO], dst[INDEX_FIVE] - dst[INDEX_ONE],
@@ -49,15 +49,19 @@ namespace OHOS {
 
     const TransAffine& TransAffine::Multiply(const TransAffine& metrix)
     {
-        float t0 = data_[0] * metrix.data_[0] + data_[3] * metrix.data_[1];
-        float t2 = data_[1] * metrix.data_[0] + data_[4] * metrix.data_[1];
-        float t4 = data_[2] * metrix.data_[0] + data_[5] * metrix.data_[1] + metrix.data_[2];
-        data_[3] = data_[0] * metrix.data_[3] + data_[3] * metrix.data_[4];
-        data_[4] = data_[1] * metrix.data_[3] + data_[4] * metrix.data_[4];
-        data_[5] = data_[2] * metrix.data_[3] + data_[5] * metrix.data_[4] + metrix.data_[5];
-        data_[0] = t0;
-        data_[1] = t2;
-        data_[2] = t4;
+        float t0 = data_[INDEX_ZERO] * metrix.data_[INDEX_ZERO] + data_[INDEX_THREE] * metrix.data_[INDEX_ONE];
+        float t2 = data_[INDEX_ONE] * metrix.data_[INDEX_ZERO] + data_[INDEX_FOUR] * metrix.data_[INDEX_ONE];
+        float t4 = data_[INDEX_TWO] * metrix.data_[INDEX_ZERO] + data_[INDEX_FIVE] * metrix.data_[INDEX_ONE]
+                + metrix.data_[INDEX_TWO];
+        data_[INDEX_THREE] = data_[INDEX_ZERO] * metrix.data_[INDEX_THREE]
+                + data_[INDEX_THREE] * metrix.data_[INDEX_FOUR];
+        data_[INDEX_FOUR] = data_[INDEX_ONE] * metrix.data_[INDEX_THREE]
+                + data_[INDEX_FOUR] * metrix.data_[INDEX_FOUR];
+        data_[INDEX_FIVE] = data_[INDEX_TWO] * metrix.data_[INDEX_THREE] + data_[INDEX_FIVE] * metrix.data_[INDEX_FOUR]
+                + metrix.data_[INDEX_FIVE];
+        data_[INDEX_ZERO] = t0;
+        data_[INDEX_ONE] = t2;
+        data_[INDEX_TWO] = t4;
         return *this;
     }
 
@@ -65,45 +69,45 @@ namespace OHOS {
     {
         float d = DeterminantReciprocal();
 
-        float t0 = data_[4] * d;
-        data_[4] = data_[0] * d;
-        data_[3] = -data_[3] * d;
-        data_[1] = -data_[1] * d;
+        float t0 = data_[INDEX_FOUR] * d;
+        data_[INDEX_FOUR] = data_[0] * d;
+        data_[INDEX_THREE] = -data_[INDEX_THREE] * d;
+        data_[INDEX_ONE] = -data_[INDEX_ONE] * d;
 
-        float t4 = -data_[2] * t0 - data_[5] * data_[1];
-        data_[5] = -data_[2] * data_[3] - data_[5] * data_[4];
+        float t4 = -data_[INDEX_TWO] * t0 - data_[INDEX_FIVE] * data_[INDEX_ONE];
+        data_[INDEX_FIVE] = -data_[INDEX_TWO] * data_[INDEX_THREE] - data_[INDEX_FIVE] * data_[INDEX_FOUR];
 
-        data_[0] = t0;
-        data_[2] = t4;
+        data_[INDEX_ZERO] = t0;
+        data_[INDEX_TWO] = t4;
         return *this;
     }
 
     const TransAffine& TransAffine::Reset()
     {
-        data_[1] = 0;
-        data_[2] = 0;
-        data_[3] = 0;
-        data_[5] = 0;
-        data_[6] = 0;
-        data_[7] = 0;
-        data_[0] = 1;
-        data_[4] = 1;
-        data_[8] = 1;
+        data_[INDEX_ONE] = 0;
+        data_[INDEX_TWO] = 0;
+        data_[INDEX_THREE] = 0;
+        data_[INDEX_FIVE] = 0;
+        data_[INDEX_SIX] = 0;
+        data_[INDEX_SEVEN] = 0;
+        data_[INDEX_ZERO] = 1;
+        data_[INDEX_FOUR] = 1;
+        data_[INDEX_EIGHT] = 1;
         return *this;
     }
 
     bool TransAffine::IsIdentity(float epsilon) const
     {
-        return IsEqualEps(data_[0], 1.0f, epsilon) &&
-               IsEqualEps(data_[3], 0.0f, epsilon) &&
-               IsEqualEps(data_[1], 0.0f, epsilon) &&
-               IsEqualEps(data_[4], 1.0f, epsilon) &&
-               IsEqualEps(data_[2], 0.0f, epsilon) &&
-               IsEqualEps(data_[5], 0.0f, epsilon);
+        return IsEqualEps(data_[INDEX_ZERO], 1.0f, epsilon) &&
+               IsEqualEps(data_[INDEX_THREE], 0.0f, epsilon) &&
+               IsEqualEps(data_[INDEX_ONE], 0.0f, epsilon) &&
+               IsEqualEps(data_[INDEX_FOUR], 1.0f, epsilon) &&
+               IsEqualEps(data_[INDEX_TWO], 0.0f, epsilon) &&
+               IsEqualEps(data_[INDEX_FIVE], 0.0f, epsilon);
     }
 
     bool TransAffine::IsValid(float epsilon) const
     {
-        return std::fabs(data_[0]) > epsilon && std::fabs(data_[4]) > epsilon;
+        return std::fabs(data_[INDEX_ZERO]) > epsilon && std::fabs(data_[INDEX_FOUR]) > epsilon;
     }
 } // namespace OHOS

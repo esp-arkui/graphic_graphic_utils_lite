@@ -93,7 +93,9 @@ namespace OHOS {
         void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
             vertexConsumer.RemoveAll();
-
+            if(len == 0) {
+                len += VERTEX_DIST_EPSILON;
+            }
             float dx1 = (vd1.vertexYCoord - vd0.vertexYCoord) / len;
             float dy1 = (vd1.vertexXCoord - vd0.vertexXCoord) / len;
             float dx2 = 0;
@@ -170,6 +172,12 @@ namespace OHOS {
                       float deltaLengthPrev,
                       float deltaLengthLast)
         {
+            if(deltaLengthPrev == 0) {
+                deltaLengthPrev += VERTEX_DIST_EPSILON;
+            }
+            if(deltaLengthLast == 0) {
+                deltaLengthPrev += VERTEX_DIST_EPSILON;
+            }
             float dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;
             float dy1 = strokeWidth * (vertexDistMiddle.vertexXCoord - vertexDistBegin.vertexXCoord) / deltaLengthPrev;
             float dx2 = strokeWidth * (vertexDistLast.vertexYCoord - vertexDistMiddle.vertexYCoord) / deltaLengthLast;
@@ -316,7 +324,8 @@ namespace OHOS {
             float deltaAngle = angleStart - angleEnd;
             int nIndex, divNumber;
 
-            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio)) * TWO_TIMES;
+            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio))
+                    * TWO_TIMES;
 
             AddVertex(vertexConsumer, x + dx1, y + dy1);
             if (strokeWidthSignal > 0) {
