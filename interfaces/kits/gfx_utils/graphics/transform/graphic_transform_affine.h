@@ -37,9 +37,6 @@ namespace OHOS {
          */
         TransAffine()
             :Matrix3<float>()
-//            : scaleX_(1.0), shearY(0.0),
-//              shearX(0.0), scaleY_(1.0),
-//              translateX(0.0), translateY(0.0)
         {}
         /**
          * @brief 自定义矩阵
@@ -48,9 +45,6 @@ namespace OHOS {
          */
         TransAffine(float v0, float v1, float v2, float v3, float v4, float v5)
             : Matrix3<float>(v0,v2,v4,v1,v3,v5,0,0,1)
-              /*scaleX_(v0), shearY(v1),
-              shearX(v2), scaleY_(v3),
-              translateX(v4), translateY(v5)*/
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
