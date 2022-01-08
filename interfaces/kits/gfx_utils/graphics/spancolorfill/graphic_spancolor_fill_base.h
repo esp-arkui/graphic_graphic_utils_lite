@@ -69,6 +69,57 @@ namespace OHOS {
     };
 
 
+
+    template <class SpanSoild,class SpanLineGradient,class SpanRadialGradient,class SpanPattern>
+    class SpansGenerator {
+    public:
+        typedef SpanSoild SoildSpan;
+        typedef SpanLineGradient LineGradientSpan;
+        typedef SpanRadialGradient RadialGradientSpan;
+        typedef SpanPattern PatternSpan;
+
+
+        SpansGenerator(){
+        }
+
+
+        void AttachSoild(SoildSpan& soildSpan){
+            soildSpan_ = soildSpan;
+            TypeFlag = 1;
+        }
+
+        void AttachLineGradient(LineGradientSpan& lineGradientSpan){
+            lineGradientSpan_ = lineGradientSpan;
+            TypeFlag = 2;
+        }
+
+        void AttachRadialGradient(RadialGradientSpan& radialGradientSpan){
+            radialGradientSpan_ = radialGradientSpan;
+            TypeFlag = 3;
+        }
+
+        int GetType(){
+            return TypeFlag;
+        }
+
+
+
+        SoildSpan& GetSoildSpan(){
+            return soildSpan_;
+        }
+
+
+
+
+    private:
+        SoildSpan soildSpan_;
+        LineGradientSpan lineGradientSpan_;
+        RadialGradientSpan radialGradientSpan_;
+        PatternSpan patternSpan_;
+        int TypeFlag = 0;
+    };
+
+
     template <class SpanGenerator,class ColorT>
     class SpanBlendColor {
     public:
