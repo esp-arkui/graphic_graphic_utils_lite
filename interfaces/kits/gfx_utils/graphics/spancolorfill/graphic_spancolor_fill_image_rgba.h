@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_image_rgba.h
-* @brief Defines 扫描线图像过滤器
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_image_rgba.h
+ * @brief Defines 扫描线图像过滤器
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPANCOLOR_FILL_IMAGE_RGBA_INCLUDED
 #define GRAPHIC_SPANCOLOR_FILL_IMAGE_RGBA_INCLUDED
@@ -44,12 +44,12 @@ namespace OHOS {
         IMAGE_SUBPIXEL_MASK = IMAGE_SUBPIXEL_SCALE - 1
     };
     /**
-    * @template class SpanImage
-    * @brief Defines 图像插值器包装类
-    * @template class Source 表示图像源，Interpolator 表示图像观察插值器
-    * @since 1.0
-    * @version 1.0
-    */
+     * @template class SpanImage
+     * @brief Defines 图像插值器包装类
+     * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Source, class Interpolator>
     class SpanFillImage {
     public:
@@ -93,12 +93,12 @@ namespace OHOS {
     };
 
     /**
-    * @template class SpanImage
-    * @brief Defines 扫描线图像过滤器
-    * @template class Source 表示图像源，Interpolator 表示图像观察插值器
-    * @since 1.0
-    * @version 1.0
-    */
+     * @template class SpanImage
+     * @brief Defines 扫描线图像过滤器
+     * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Source, class Interpolator>
     class SpanImageRgba : public SpanFillImage<Source, Interpolator> {
     public:

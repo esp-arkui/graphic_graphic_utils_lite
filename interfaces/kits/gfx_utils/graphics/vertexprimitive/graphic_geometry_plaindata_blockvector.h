@@ -48,88 +48,88 @@ namespace OHOS {
         using ValueType = T;
         GeometryPlainDataBlockVector();
         /**
-        * @brief 构造一个 PodBvector.
-        * @param blockPtrInc 每个块大小
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 构造一个 PodBvector.
+         * @param blockPtrInc 每个块大小
+         * @since 1.0
+         * @version 1.0
+         */
         GeometryPlainDataBlockVector(unsigned blockPtrInc);
         ~GeometryPlainDataBlockVector();
         GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v);
         const GeometryPlainDataBlockVector<T, S>& operator=(const GeometryPlainDataBlockVector<T, S>& v);
         /**
-        * @brief 清空.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 清空.
+         * @since 1.0
+         * @version 1.0
+         */
         void RemoveAll()
         {
             size_ = 0;
         }
         /**
-        * @brief 清空.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 清空.
+         * @since 1.0
+         * @version 1.0
+         */
         void Clear()
         {
             size_ = 0;
         }
         /**
-        * @brief 释放所有元素占用的内存块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 释放所有元素占用的内存块.
+         * @since 1.0
+         * @version 1.0
+         */
         void FreeAll()
         {
             FreeTail(0);
         }
         /**
-        * @brief 修改最后一个元素.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 修改最后一个元素.
+         * @since 1.0
+         * @version 1.0
+         */
         void ModifyLast(const T& val);
         /**
-        * @brief 删除最后一个元素.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 删除最后一个元素.
+         * @since 1.0
+         * @version 1.0
+         */
         void RemoveLast();
 
         void AllocateBlock(unsigned blockNum);
 
         /**
-        * @brief 从末尾释放元素.
-        * @param size 要释放的个数
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 从末尾释放元素.
+         * @param size 要释放的个数
+         * @since 1.0
+         * @version 1.0
+         */
         void FreeTail(unsigned size);
         /**
-        * @brief 增加一个元素.
-        * @param val 增加的元素
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 增加一个元素.
+         * @param val 增加的元素
+         * @since 1.0
+         * @version 1.0
+         */
         void Add(const T& val);
         /**
-        * @brief 增加一个元素.
-        * @param val 增加的元素
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 增加一个元素.
+         * @param val 增加的元素
+         * @since 1.0
+         * @version 1.0
+         */
         void PushBack(const T& val)
         {
             Add(val);
         }
 
         /**
-        * @brief 增加一个数组.
-        * @param ptr 要增加的数组首地址，numElem 元素个数
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 增加一个数组.
+         * @param ptr 要增加的数组首地址，numElem 元素个数
+         * @since 1.0
+         * @version 1.0
+         */
         void AddArray(const T* ptr, unsigned numElem)
         {
             while (numElem--) {
@@ -138,10 +138,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 缩小数组容量.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 缩小数组容量.
+         * @since 1.0
+         * @version 1.0
+         */
         void CutAt(unsigned size)
         {
             if (size < size_) {
@@ -149,10 +149,10 @@ namespace OHOS {
             }
         }
         /**
-        * @brief 增加数据.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 增加数据.
+         * @since 1.0
+         * @version 1.0
+         */
         template <class DataAccessor>
         void AddData(DataAccessor& data)
         {
@@ -162,111 +162,111 @@ namespace OHOS {
             }
         }
         /**
-        * @brief 获取数组容量.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取数组容量.
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned Size() const
         {
             return size_;
         }
         /**
-        * @brief 获取指定索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取指定索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         const T& operator[](unsigned index) const
         {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-        * @brief 获取指定索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取指定索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T& operator[](unsigned index)
         {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-        * @brief 获取指定索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取指定索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T& IndexAt(unsigned index)
         {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-        * @brief 获取指定索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取指定索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T ValueAt(unsigned index) const
         {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-        * @brief 获取当前索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         const T& IndexAt(unsigned index) const
         {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-        * @brief 获取当前索引数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T& Curr(unsigned index)
         {
             return (*this)[index];
         }
         /**
-        * @brief 获取当前索引上的前一个数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引上的前一个数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         const T& Prev(unsigned index) const
         {
             return (*this)[(index + size_ - 1) % size_];
         }
         /**
-        * @brief 获取当前索引上的前一个数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引上的前一个数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T& Prev(unsigned index)
         {
             return (*this)[(index + size_ - 1) % size_];
         }
         /**
-        * @brief 获取当前索引上的数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引上的数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         const T& Curr(unsigned index) const
         {
             return (*this)[index];
         }
 
         /**
-        * @brief 获取当前索引上的下一个数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引上的下一个数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         const T& Next(unsigned index) const
         {
             return (*this)[(index + 1) % size_];
         }
 
         /**
-        * @brief 获取当前索引上的下一个数据块.
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 获取当前索引上的下一个数据块.
+         * @since 1.0
+         * @version 1.0
+         */
         T& Next(unsigned index)
         {
             return (*this)[(index + 1) % size_];
@@ -420,7 +420,7 @@ namespace OHOS {
     template <class T, unsigned S>
     inline T* GeometryPlainDataBlockVector<T, S>::DataPtr()
     {
-        unsigned blockNum = size_ >> BLOCK_SHIFT; // 解释含义
+        unsigned blockNum = size_ >> BLOCK_SHIFT;
         if (blockNum >= numBlocks_) {
             AllocateBlock(blockNum);
         }

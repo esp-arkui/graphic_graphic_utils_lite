@@ -220,32 +220,32 @@ namespace OHOS {
      */
     const float SIN45 = 0.7071068f;
     /**
- * @brief 1/√2 即1 除以 √2
- */
+     * @brief 1/√2 即1 除以 √2
+     */
     const float COS45 = 0.7071068f;
     /**
- * @brief 两倍
- */
+     * @brief 两倍
+     */
     const int TWO_TIMES = 2;
     /**
- * @brief 三倍
- */
+     * @brief 三倍
+     */
     const int THREE_TIMES = 3;
     /**
- * @brief 四倍
- */
+     * @brief 四倍
+     */
     const int FOUR_TIMES = 4;
     /**
      * @brief 六倍
      */
     const int SIX_TIMES = 6;
     /**
- * @brief 一百倍
- */
+     * @brief 一百倍
+     */
     const int HUNDRED_TIMES = 100;
     /**
- * @brief 一次走两步
- */
+     * @brief 一次走两步
+     */
     const int TWO_STEP = 2;
     const float HALFNUM = 0.5f;
     const float FLOATNUM = 2.0f;
@@ -253,12 +253,12 @@ namespace OHOS {
 
     const int CONSTITUTION = 16384;
     /**
- * @brief 正下方
- */
+     * @brief 正下方
+     */
     const int DIRECTLY_BELOW = 10;
     /**
- * 下标
- */
+     * 下标
+     */
     const int INDEX_ZERO = 0;
     const int INDEX_ONE = 1;
     const int INDEX_TWO = 2;
@@ -270,13 +270,13 @@ namespace OHOS {
     const int INDEX_EIGHT = 8;
 
     /**
- * @brief 两个数是否相近.
- *
- * @param val1,val2 两个数,epsilon 误差.
- * @return Returns 两个数是否相近.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 两个数是否相近.
+     *
+     * @param val1,val2 两个数,epsilon 误差.
+     * @return Returns 两个数是否相近.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     bool IsEqualEps(T val1, T val2, T epsilon)
     {
@@ -300,60 +300,60 @@ namespace OHOS {
     }
 
     /**
- * @brief 判断值是否是顶点.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 判断值是否是顶点.
+     * @since 1.0
+     * @version 1.0
+     */
     inline bool IsVertex(unsigned val)
     {
         return val < PATH_CMD_END_POLY && val >= PATH_CMD_MOVE_TO;
     }
 
     /**
- * @brief 判断当前状态是否MOVE_TO.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 判断当前状态是否MOVE_TO.
+     * @since 1.0
+     * @version 1.0
+     */
     inline bool IsMoveTo(unsigned val)
     {
         return PATH_CMD_MOVE_TO == val;
     }
 
     /**
- * @brief 判断当前状态是否Stop状态.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 判断当前状态是否Stop状态.
+     * @since 1.0
+     * @version 1.0
+     */
     inline bool IsStop(unsigned val)
     {
         return PATH_CMD_STOP == val;
     }
 
     /**
- * @brief 判断当前状态是否是绘制曲线结尾状态.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 判断当前状态是否是绘制曲线结尾状态.
+     * @since 1.0
+     * @version 1.0
+     */
     inline bool IsEndPoly(unsigned val)
     {
         return PATH_CMD_END_POLY == (val & PATH_CMD_MASK);
     }
 
     /**
- * @brief 判断当前状态是否是绘制曲线闭合状态.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 判断当前状态是否是绘制曲线闭合状态.
+     * @since 1.0
+     * @version 1.0
+     */
     inline bool IsClose(unsigned val)
     {
         return (val & ~(PATH_FLAGS_ANTI_CLOCKWISE | PATH_FLAGS_CLOCKWISE)) == (PATH_CMD_END_POLY | PATH_FLAGS_CLOSE);
     }
 
     /**
- * @brief 获取封闭状态
- * @since 1.0
- * @version 1.0
- */
+     * @brief 获取封闭状态
+     * @since 1.0
+     * @version 1.0
+     */
     inline unsigned GetCloseFlag(unsigned val)
     {
         return val & PATH_FLAGS_CLOSE;
@@ -364,19 +364,19 @@ namespace OHOS {
     template <class T>
     struct GeometryObjectAllocator {
         /**
-     * @brief 对象内存分配
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 对象内存分配
+         * @since 1.0
+         * @version 1.0
+         */
         static T* Allocate()
         {
             return new T;
         }
         /**
-     * @brief 对象内存释放
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 对象内存释放
+         * @since 1.0
+         * @version 1.0
+         */
         static void Deallocate(T* ptr)
         {
             delete ptr;
@@ -386,10 +386,10 @@ namespace OHOS {
     template <class T>
     struct GeometryArrayAllocator {
         /**
-     * @brief 数组内存分配
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 数组内存分配
+         * @since 1.0
+         * @version 1.0
+         */
         static T* Allocate(unsigned num)
         {
             if (num < 1) {
@@ -398,10 +398,10 @@ namespace OHOS {
             return new T[num];
         }
         /**
-     * @brief 数组内存释放
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 数组内存释放
+         * @since 1.0
+         * @version 1.0
+         */
         static void Deallocate(T* ptr, unsigned)
         {
             delete[] ptr;
@@ -409,10 +409,10 @@ namespace OHOS {
     };
 
     /**
- * @brief 定义矩形类.
- * @since 1.0
- * @version 1.0
- */
+     * @brief 定义矩形类.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     struct RectBase {
         using ValueType = T;
@@ -427,10 +427,10 @@ namespace OHOS {
         RectBase()
         {}
         /**
-     * @brief 规范化矩形.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 规范化矩形.
+         * @since 1.0
+         * @version 1.0
+         */
         const SelfType& Normalize()
         {
             T t;
@@ -448,10 +448,10 @@ namespace OHOS {
         }
 
         /**
-     * @brief 坐标裁剪到指定范围内.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 坐标裁剪到指定范围内.
+         * @since 1.0
+         * @version 1.0
+         */
         bool Clip(const SelfType& rect)
         {
             if (x2 > rect.x2) {

@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_interpolator.h
-* @brief Defines 扫描线插入器
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_interpolator.h
+ * @brief Defines 扫描线插入器
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
@@ -128,7 +128,7 @@ namespace OHOS {
             dda2LineInterpolatorY = DdaTwoLineInterpolator(y1, y2, len);
         }
 
-        /*
+        /**
          * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
          */
         void Resynchronize(float xe, float ye, unsigned len)

@@ -54,11 +54,11 @@ namespace OHOS {
  * VERSION_EXTENDED    | Extended version
  */
 #ifdef _LITEOS
-#    define VERSION_LITE
+#define VERSION_LITE
 #elif defined _WIN32 || defined __APPLE__
-#    define VERSION_LITE
+#define VERSION_LITE
 #else
-#    define VERSION_STANDARD
+#define VERSION_STANDARD
 #endif
 
 #define GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE 1
@@ -73,113 +73,114 @@ namespace OHOS {
 #define GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR 1
 #define GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR 1
 #define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE 1
+#define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT 1
 /* Defines some configurations and their default values on Huawei LiteOS and other system platforms. */
 #ifdef _LITEOS
 /**
  * @brief Font shaping, which is disabled by default on Huawei LiteOS.
  *        Cannot take effect without ENABLE_ICU.
  */
-#    define ENABLE_SHAPING 0
+#define ENABLE_SHAPING 0
 /**
  * @brief Advanced algorithm for line breaks, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_ICU 0
+#define ENABLE_ICU 0
 /**
  * @brief Multi-Font type, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_MULTI_FONT 0
+#define ENABLE_MULTI_FONT 0
 /**
  * @brief Multi-window, which does not take effect on Huawei LiteOS.
  */
-#    define ENABLE_WINDOW 0
+#define ENABLE_WINDOW 0
 /**
  * @brief Display buffer for rendering data refresh, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_FRAME_BUFFER 0
+#define ENABLE_FRAME_BUFFER 0
 /**
  * @brief Vector type font, which is enabled by default on Huawei LiteOS.
  */
-#    define ENABLE_VECTOR_FONT 1
+#define ENABLE_VECTOR_FONT 1
 /**
  * @brief Bitmap type font, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_BITMAP_FONT 0
+#define ENABLE_BITMAP_FONT 0
 /**
  * @brief Static Bitmap type font, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_STATIC_FONT 0
+#define ENABLE_STATIC_FONT 0
 
-#    define ENABLE_JPEG_AND_PNG 0
+#define ENABLE_JPEG_AND_PNG 0
 /**
  * @brief Graphics rendering hardware acceleration, which is enabled by default on Huawei LiteOS.
  */
-#    define ENABLE_HARDWARE_ACCELERATION 1
+#define ENABLE_HARDWARE_ACCELERATION 1
 /**
  * @brief Graphics rendering hardware acceleration for text, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
+#define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
 /**
  * @brief Graphics rendering accelerated by gfx_engines, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_GFX_ENGINES 0
+#define ENABLE_GFX_ENGINES 0
 /**
  * @brief ARM NEON ability, which is disabled by default on Huawei LiteOS.
  */
-#    define ENABLE_ARM_NEON 0
+#define ENABLE_ARM_NEON 0
 #elif defined _WIN32 || defined __APPLE__
 /**
  * @brief Multi-window, which is disabled by default on WIN32.
  */
-#    define ENABLE_WINDOW 0
+#define ENABLE_WINDOW 0
 /**
  * @brief Display buffer for rendering data refresh, which is disabled by default on WIN32.
  */
-#    define ENABLE_FRAME_BUFFER 0
+#define ENABLE_FRAME_BUFFER 0
 
-#    define ENABLE_JPEG_AND_PNG 1
+#define ENABLE_JPEG_AND_PNG 1
 /**
  * @brief ARM NEON ability, which is disabled by default on WIN32.
  */
-#    define ENABLE_ARM_NEON 0
+#define ENABLE_ARM_NEON 0
 /**
  * @brief Graphics rendering hardware acceleration, which is disabled by default on WIN32.
  */
-#    define ENABLE_HARDWARE_ACCELERATION 0
+#define ENABLE_HARDWARE_ACCELERATION 0
 /**
  * @brief Graphics rendering hardware acceleration for text, which is disabled by default on WIN32.
  */
-#    define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
+#define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
 /**
  * @brief Graphics rendering accelerated by gfx_engines, which is disabled by default on WIN32.
  */
-#    define ENABLE_GFX_ENGINES 0
+#define ENABLE_GFX_ENGINES 0
 #else
 /**
  * @brief Multi-window, which is enabled by default on other platforms.
  */
-#    define ENABLE_WINDOW 1
+#define ENABLE_WINDOW 1
 /**
  * @brief Display buffer for rendering data refresh, which is disabled by default on other platforms.
  */
-#    define ENABLE_FRAME_BUFFER 0
+#define ENABLE_FRAME_BUFFER 0
 
-#    define ENABLE_JPEG_AND_PNG 1
+#define ENABLE_JPEG_AND_PNG 1
 /**
  * @brief ARM NEON ability, which is enabled by default on other platforms.
  */
-#    define ENABLE_ARM_NEON 1
+#define ENABLE_ARM_NEON 1
 /**
  * @brief Graphics rendering hardware acceleration, which is disabled by default on other platforms.
  */
-#    define ENABLE_HARDWARE_ACCELERATION 0
+#define ENABLE_HARDWARE_ACCELERATION 0
 /**
  * @brief Graphics rendering hardware acceleration for text, which is disabled by default on other platforms.
  */
-#    define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
+#define ENABLE_HARDWARE_ACCELERATION_FOR_TEXT 0
 /**
  * @brief Graphics rendering accelerated by gfx_engines, which is enabled by default on other platforms.
  */
-#    define ENABLE_GFX_ENGINES 1
+#define ENABLE_GFX_ENGINES 1
 #endif
 
 #define ENABLE_ROTATE_INPUT 1
@@ -198,7 +199,7 @@ namespace OHOS {
  *        __ARM_NEON__ and __ARM_NEON are set by the compiler according to the compilation option -mfpu=neon
  */
 #if (defined(__ARM_NEON__) || defined(__ARM_NEON)) && ENABLE_ARM_NEON == 1
-#    define ARM_NEON_OPT
+#define ARM_NEON_OPT
 #endif
 
 /**
@@ -270,11 +271,11 @@ namespace OHOS {
 #define LAYER_PF_CODE 1
 
 #if LAYER_PF_CODE == 0
-#    define LAYER_PF_ARGB1555
+#define LAYER_PF_ARGB1555
 #elif LAYER_PF_CODE == 1
-#    define LAYER_PF_ARGB8888
+#define LAYER_PF_ARGB8888
 #else
-#    define LAYER_PF_ARGB8888
+#define LAYER_PF_ARGB8888
 #endif
 
 /**
@@ -288,9 +289,9 @@ namespace OHOS {
  * @brief Defines the file name of default vector font.
  */
 #if ENABLE_VECTOR_FONT
-#    define DEFAULT_VECTOR_FONT_FILENAME "SourceHanSansSC-Regular.otf"
+#define DEFAULT_VECTOR_FONT_FILENAME "SourceHanSansSC-Regular.otf"
 #else
-#    define DEFAULT_VECTOR_FONT_FILENAME "SourceHanSansSC-Regular"
+#define DEFAULT_VECTOR_FONT_FILENAME "SourceHanSansSC-Regular"
 #endif
     /* Default font size. The default value is <b>18</b>. */
     static constexpr uint8_t DEFAULT_VECTOR_FONT_SIZE = 18;
@@ -403,8 +404,6 @@ namespace OHOS {
     static constexpr uint8_t PICKERVIEW_ROTATE_THROW_THRESHOLD = 4;
     static constexpr uint8_t LIST_ROTATE_THROW_THRESHOLD = 4;
 
-
-
 #define GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE 1
 #define GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE 1
@@ -417,5 +416,6 @@ namespace OHOS {
 #define GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR 1
 #define GRAPHIC_GEOMETYR_ENABLE_PATTERN_FILLSTROKECOLOR 1
 #define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWIMAGE 1
+#define GRAPHIC_GEOMETYR_ENABLE_HAMONY_DRAWTEXT 1
 } // namespace OHOS
 #endif // GRAPHIC_LITE_GRAPHIC_CONFIG_H

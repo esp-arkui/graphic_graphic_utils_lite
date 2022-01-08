@@ -31,12 +31,12 @@
 
 namespace OHOS {
     /**
-    * @brief 长线达到缩短成断线（长线变短线,dash 中使用）.
-    *
-    * @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 长线达到缩短成断线（长线变短线,dash 中使用）.
+     *
+     * @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSequence>
     void ShortenPath(VertexSequence& vtxSeq, float distence, unsigned closed = 0)
     {

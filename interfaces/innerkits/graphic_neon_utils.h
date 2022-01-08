@@ -18,11 +18,11 @@
 
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
-#    include <arm_neon.h>
+#include <arm_neon.h>
 
-#    include "gfx_utils/color.h"
-#    include "gfx_utils/graphic_math.h"
-#    include "gfx_utils/graphic_types.h"
+#include "gfx_utils/color.h"
+#include "gfx_utils/graphic_math.h"
+#include "gfx_utils/graphic_types.h"
 
 namespace OHOS {
 #    define BASEMSB 128

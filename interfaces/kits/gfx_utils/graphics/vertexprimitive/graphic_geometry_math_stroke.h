@@ -28,8 +28,8 @@
 
 namespace OHOS {
     /**
- * @brief 线条末端线帽的样式。
- */
+     * @brief 线条末端线帽的样式。
+     */
     enum LineCapEnum {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
@@ -40,8 +40,8 @@ namespace OHOS {
     };
 
     /**
- * @brief 两条线相交时，所创建的拐角类型
- */
+     * @brief 两条线相交时，所创建的拐角类型
+     */
     enum LineJoinEnum {
         /** 创建尖角 */
         MITER_JOIN = 0,

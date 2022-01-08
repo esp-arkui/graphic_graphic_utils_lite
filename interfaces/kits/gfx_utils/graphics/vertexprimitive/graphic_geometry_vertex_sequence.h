@@ -153,12 +153,12 @@ namespace OHOS {
         VertexDistCmd()
         {}
         /**
-     * @brief 构造VertexDist.
-     *
-     * @param x_,y_ 顶点坐标, cmd_ 连接命令.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 构造VertexDist.
+         *
+         * @param x_,y_ 顶点坐标, cmd_ 连接命令.
+         * @since 1.0
+         * @version 1.0
+         */
         VertexDistCmd(float x_, float y_, unsigned cmd_)
             : VertexDist(x_, y_), cmd(cmd_)
         {

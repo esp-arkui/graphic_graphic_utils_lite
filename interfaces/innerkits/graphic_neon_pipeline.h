@@ -18,10 +18,10 @@
 
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
-#    include <arm_neon.h>
+#include <arm_neon.h>
 
-#    include "gfx_utils/color.h"
-#    include "graphic_neon_utils.h"
+#include "gfx_utils/color.h"
+#include "graphic_neon_utils.h"
 
 namespace OHOS {
     using LoadBuf = void (*)(uint8_t* buf, uint8x8_t& r, uint8x8_t& g, uint8x8_t& b, uint8x8_t& a);

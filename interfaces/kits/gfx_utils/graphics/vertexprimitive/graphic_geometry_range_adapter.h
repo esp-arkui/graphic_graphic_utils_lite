@@ -34,11 +34,11 @@ namespace OHOS {
     const int QUICK_SORT_THRESHOLD = 9;
 
     /**
-    *
-    * @brief 交换数据.
-    * @since 1.0
-    * @version 1.0
-    */
+     *
+     * @brief 交换数据.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     inline void SwapElements(T& firstValue, T& secondValue)
     {
@@ -91,33 +91,33 @@ namespace OHOS {
     }
 
     /**
-    *
-    * @brief 快速排序算法.
-    * @param arr 要排序的数组,less 排序条件
-    * @since 1.0
-    * @version 1.0
-    */
+     *
+     * @brief 快速排序算法.
+     * @param arr 要排序的数组,less 排序条件
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Array, class Less>
     void QuickSort(Array& arr, Less less);
 
     /**
-    *
-    * @brief 根据指定条件指定条件删除重复的元素.
-    *
-    * @param arr 指定数组,equal 指定条件
-    * @since 1.0
-    * @version 1.0
-    */
+     *
+     * @brief 根据指定条件指定条件删除重复的元素.
+     *
+     * @param arr 指定数组,equal 指定条件
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Array, class Equal>
     unsigned RemoveDuplicates(Array& arr, Equal equal);
 
     /**
-    *
-    * @brief 反转一个数组.
-    *
-    * @since 1.0
-    * @version 1.0
-    */
+     *
+     * @brief 反转一个数组.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Array>
     void InvertContainer(Array& arr)
     {
@@ -129,12 +129,12 @@ namespace OHOS {
     }
 
     /**
-    *
-    * @brief 二分法查找算法.
-    *
-    * @since 1.0
-    * @version 1.0
-    */
+     *
+     * @brief 二分法查找算法.
+     *
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Array, class Value, class Less>
     unsigned BinarySearchPos(const Array& arrData, const Value& val, Less less);
 

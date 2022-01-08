@@ -14,15 +14,15 @@
  */
 
 /**
-* @file graphic_geometry_scanline_u.h
-*
-* @brief 在从 rasterizer（光栅化器） 到 scanline renderer 之间的信息转换时，
-* 用到了 scanline 容器。一个 scanline 由很多的水平的、不相交的 span 组成。
-* 这些 span 按 x 轴排序。这就意味着并没有提供排序这个操作，必须在将 span 添加到
-* scanline 时就把顺序处理好。.
-* @since 1.0
-* @version 1.0
-*/
+ * @file graphic_geometry_scanline_u.h
+ *
+ * @brief 在从 rasterizer（光栅化器） 到 scanline renderer 之间的信息转换时，
+ * 用到了 scanline 容器。一个 scanline 由很多的水平的、不相交的 span 组成。
+ * 这些 span 按 x 轴排序。这就意味着并没有提供排序这个操作，必须在将 span 添加到
+ * scanline 时就把顺序处理好。.
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GEOMETRY_SCANLINE_U_INCLUDED
 #define GRAPHIC_GEOMETRY_SCANLINE_U_INCLUDED
@@ -33,17 +33,17 @@
 
 namespace OHOS {
     /**
-    * @class ScanlineUnPackedContainer
-    * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
-    * 容器可以包含去锯齿信息.unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
-    * 包括那些全部覆盖在多边形内部的像素。
-    * @since 1.0
-    * @version 1.0
-    */
+     * @class ScanlineUnPackedContainer
+     * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
+     * 容器可以包含去锯齿信息.unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
+     * 包括那些全部覆盖在多边形内部的像素。
+     * @since 1.0
+     * @version 1.0
+     */
     class ScanlineUnPackedContainer {
     public:
         typedef ScanlineUnPackedContainer self_type;
-        /*
+        /**
          * 像素覆盖率类型
          */
         using cover_type = uint8_t;
@@ -61,15 +61,15 @@ namespace OHOS {
             curSpanBlock(0)
         {}
         /**
-            * @class ScanlineUnPackedContainer
-            * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
-            * 容器可以包含去锯齿信息.包装的(packed）scanline 与未包装的（unpacked）
-            * scanline 的区别在于，unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
-            * 包括那些全部覆盖在多边形内部的像素。而 packed scanlines 则会把具有相同
-            * coverage value 的像素合并成 solid span。
-            * @since 1.0
-            * @version 1.0
-            */
+         * @class ScanlineUnPackedContainer
+         * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
+         * 容器可以包含去锯齿信息.包装的(packed）scanline 与未包装的（unpacked）
+         * scanline 的区别在于，unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
+         * 包括那些全部覆盖在多边形内部的像素。而 packed scanlines 则会把具有相同
+         * coverage value 的像素合并成 solid span。
+         * @since 1.0
+         * @version 1.0
+         */
         void Reset(int min_x, int max_x)
         {
             const int liftNumber = 2;
@@ -83,7 +83,8 @@ namespace OHOS {
             curSpanBlock = &arraySpans[0];
         }
 
-        /* 根据x的位置 以及cover 颜色覆盖率是扩展call的区域
+        /**
+         * 根据x的位置 以及cover 颜色覆盖率是扩展call的区域
          * 还是添加cell单元 。
          */
         void AddCell(int x, unsigned cover)
@@ -101,9 +102,10 @@ namespace OHOS {
             lastScaneLineXCoord = x;
         }
 
-        /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
-        * 还是添加cells单元数组 。
-        */
+        /**
+         * 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
+         * 还是添加cells单元数组 。
+         */
         void AddCells(int x, unsigned cellLength, const uint8_t* covers)
         {
             x -= minScaneLineXCoord;
@@ -119,10 +121,11 @@ namespace OHOS {
             lastScaneLineXCoord = x + cellLength - 1;
         }
 
-        /* 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
-        * 还是添加span单元数组 。这里注意会把具有相同
-        * coverage value 的像素合并成 solid span。
-        */
+        /**
+         * 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
+         * 还是添加span单元数组 。这里注意会把具有相同
+         * coverage value 的像素合并成 solid span。
+         */
         void AddSpan(int x, unsigned spanLength, unsigned cover)
         {
             x -= minScaneLineXCoord;
@@ -138,9 +141,9 @@ namespace OHOS {
             lastScaneLineXCoord = x + spanLength - 1;
         }
 
-        /*
-        * 结束操作
-        */
+        /**
+         * 结束操作
+         */
         void Finalize(int y)
         {
             scaneLineYCoord = y;

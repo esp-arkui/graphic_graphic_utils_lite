@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_pattern_rgba.h
-* @brief Defines pattern的扫描线
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_pattern_rgba.h
+ * @brief Defines pattern的扫描线
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
 #define GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED

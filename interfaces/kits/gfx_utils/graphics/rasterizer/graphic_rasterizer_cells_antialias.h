@@ -14,11 +14,11 @@
  */
 
 /**
-* @file graphic_rasterizer_cells_antialias.h
-* @brief Defines 光栅细胞（防走样）
-* @since 1.0
-* @version 1.0
-*/
+ * @file graphic_rasterizer_cells_antialias.h
+ * @brief Defines 光栅细胞（防走样）
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_RASTERIZERCELLSANTIALIAS_INCLUDED
 #define GRAPHIC_RASTERIZERCELLSANTIALIAS_INCLUDED
@@ -63,10 +63,10 @@ namespace OHOS {
         };
 
         /**
-        * @brief 构建'细胞单元'的偏移以及mask掩码,细胞池容量等
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 构建'细胞单元'的偏移以及mask掩码,细胞池容量等
+         * @since 1.0
+         * @version 1.0
+         */
         enum CellBlockScaleEnum {
             CELL_BLOCK_SHIFT = 12,
             CELL_BLOCK_SIZE = 1 << CELL_BLOCK_SHIFT,
@@ -268,11 +268,11 @@ namespace OHOS {
     }
 
     /**
-    *  @brief RasterizerCellsAntiAlias 类的构造函数。.
-    * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
-    * @since 1.0
-    * @version 1.0
-    */
+     *  @brief RasterizerCellsAntiAlias 类的构造函数。.
+     * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Cell>
     RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
         m_num_blocks(0),
@@ -357,7 +357,7 @@ namespace OHOS {
     template <class Cell>
     GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::OutLineLegal(int x1, int y1, int x2, int y2)
     {
-        /*
+        /**
          * outline 范围
          */
         if (x1 < m_min_x)
@@ -507,7 +507,7 @@ namespace OHOS {
     void RasterizerCellsAntiAlias<Cell>::LineOperate(int x1, int y1, int x2, int y2)
     {
         long long dx = (long long)x2 - (long long)x1;
-        /*
+        /**
          * 若 dx 超出了限制范围，则采取折中处理的方法计算Line的过程。
          */
         if (dx >= DX_LIMIT || dx <= -DX_LIMIT) {
@@ -516,7 +516,7 @@ namespace OHOS {
             LineOperate(x1, y1, cx, cy);
             LineOperate(cx, cy, x2, y2);
         }
-        /*
+        /**
          * 从以1/256像素为单位的点中取出前24位的坐标
          */
         long long dy = (long long)y2 - (long long)y1;
@@ -524,7 +524,7 @@ namespace OHOS {
         int ex2 = x2 >> POLY_SUBPIXEL_SHIFT;
         int ey1 = y1 >> POLY_SUBPIXEL_SHIFT;
         int ey2 = y2 >> POLY_SUBPIXEL_SHIFT;
-        /*
+        /**
          * 从1/256像素为单位的点中取出后8位的掩码值,即颜色掩码
          */
         int submask_flags_y1 = y1 & POLY_SUBPIXEL_MASK;
@@ -816,11 +816,11 @@ namespace OHOS {
     }
 
     /**
-    * @brief 光栅化过程中对于所有的cells单元进行按照
-    * 从左向右，自上而下的顺序进行排序处理。
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 光栅化过程中对于所有的cells单元进行按照
+     * 从左向右，自上而下的顺序进行排序处理。
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Cell>
     void RasterizerCellsAntiAlias<Cell>::SortAllCells()
     {

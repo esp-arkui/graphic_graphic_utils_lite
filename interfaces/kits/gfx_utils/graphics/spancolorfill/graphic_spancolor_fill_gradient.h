@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_gradient.h
-* @brief Defines 扫描线渐变模式
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_gradient.h
+ * @brief Defines 扫描线渐变模式
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_GRADIENT_INCLUDED
 #define GRAPHIC_SPAN_GRADIENT_INCLUDED

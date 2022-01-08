@@ -200,11 +200,11 @@ namespace OHOS {
                   float y2);
 
         /**
-        * @brief 回到最开始步骤.
-        *
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 回到最开始步骤.
+         *
+         * @since 1.0
+         * @version 1.0
+         */
         void Rewind(unsigned)
         {
             bezierArcModel.Rewind(0);

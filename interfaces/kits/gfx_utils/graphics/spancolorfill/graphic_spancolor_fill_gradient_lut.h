@@ -14,11 +14,11 @@
  */
 
 /**
-* @file gradient_lut.h
-* @brief Defines 渐变模式
-* @since 1.0
-* @version 1.0
-*/
+ * @file gradient_lut.h
+ * @brief Defines 渐变模式
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GRADIENT_LUT_INCLUDED
 #define GRAPHIC_GRADIENT_LUT_INCLUDED
@@ -30,11 +30,11 @@
 namespace OHOS {
     const unsigned COLOR_PROFILE_SIZE = 4;
     /**
-    * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
-    * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
-    * @since 1.0
-    * @version 1.0
-    */
+     * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
+     * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
+     * @since 1.0
+     * @version 1.0
+     */
     template <class ColorInterpolator, unsigned ColorLutSize = MAX_COLOR_SIZE>
     class GradientColorCalibration {
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
@@ -49,10 +49,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 删除所有颜色
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 删除所有颜色
+         * @since 1.0
+         * @version 1.0
+         */
         void RemoveAll()
         {
             colorProfile.RemoveAll();
@@ -71,15 +71,15 @@ namespace OHOS {
         }
 
         /**
-        * @brief 根据渐变颜色构建color_type数组
-        * @数组长度0-255
-        * @数组内容根据渐变颜色分布在数组上
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 根据渐变颜色构建color_type数组
+         * @数组长度0-255
+         * @数组内容根据渐变颜色分布在数组上
+         * @since 1.0
+         * @version 1.0
+         */
         void BuildLut()
         {
-            /*
+            /**
              * 对于渐变颜色数组记性快速排序
              */
             QuickSort(colorProfile, OffsetLess);
@@ -90,13 +90,13 @@ namespace OHOS {
                 unsigned end;
                 color_type color = colorProfile[0].color;
 
-                /*
+                /**
                  * 对于colorProfile[0]赋予初始颜色计算.
                  */
                 for (index = 0; index < start; index++) {
                     colorType[index] = color;
                 }
-                /*
+                /**
                  * 从1到colorProfile.size() 间进行插值颜色计算.
                  */
                 for (index = 1; index < colorProfile.Size(); index++) {
@@ -111,7 +111,7 @@ namespace OHOS {
                     }
                 }
                 color = colorProfile.Last().color;
-                /*
+                /**
                  * 对于colorProfile last 赋予end颜色..
                  */
                 for (; end < colorType.Size(); end++) {
