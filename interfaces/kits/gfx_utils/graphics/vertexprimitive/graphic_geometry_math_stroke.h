@@ -91,7 +91,7 @@ namespace OHOS {
         void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
             vertexConsumer.RemoveAll();
-            if(len == 0) {
+            if(len == 0.f) {
                 len += VERTEX_DIST_EPSILON;
             }
             float dx1 = (vd1.vertexYCoord - vd0.vertexYCoord) / len;
@@ -170,10 +170,10 @@ namespace OHOS {
                       float deltaLengthPrev,
                       float deltaLengthLast)
         {
-            if(deltaLengthPrev == 0) {
+            if(deltaLengthPrev == 0.f) {
                 deltaLengthPrev += VERTEX_DIST_EPSILON;
             }
-            if(deltaLengthLast == 0) {
+            if(deltaLengthLast == 0.f) {
                 deltaLengthPrev += VERTEX_DIST_EPSILON;
             }
             float dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;

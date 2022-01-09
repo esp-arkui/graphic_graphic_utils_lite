@@ -37,7 +37,7 @@ namespace OHOS {
      * @since 1.0
      * @version 1.0
      */
-    GRAPHIC_GEOMETRY_INLINE float CrossProduct(float x1, float y1, float x2, float y2,float x, float y)
+    GRAPHIC_GEOMETRY_INLINE float CrossProduct(float x1, float y1, float x2, float y2, float x, float y)
     {
         return (x - x2) * (y2 - y1) - (y - y2) * (x2 - x1);
     }

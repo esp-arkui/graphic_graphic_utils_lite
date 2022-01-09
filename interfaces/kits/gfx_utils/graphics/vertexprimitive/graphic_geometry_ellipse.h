@@ -147,8 +147,9 @@ namespace OHOS {
 
     inline void Ellipse::CalcNumSteps()
     {
-        float ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / 2;
-        float da = std::acos(ra / (ra + 0.125 / scaleRadio)) * 2;
+        const float raDa = 0.125f;
+        float ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / FLOATNUM;
+        float da = std::acos(ra / (ra + raDa / scaleRadio)) * FLOATNUM;
         vertexNumber = MATH_ROUND32(TWO_TIMES * PI / da);
     }
 

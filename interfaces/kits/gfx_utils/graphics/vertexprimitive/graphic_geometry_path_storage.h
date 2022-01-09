@@ -88,7 +88,8 @@ namespace OHOS {
          */
         void FreeAll()
         {
-            if (totalBlocks_ > 0 && totalBlocks_<= 1024) {
+            const int32_t totalBlocksMax = 1024 ;
+            if (totalBlocks_ > 0 && totalBlocks_<= totalBlocksMax) {
                 float** coordBLK = croodBlocks_ + totalBlocks_ - 1;
                 for (; totalBlocks_ > 0; totalBlocks_--) {
                     GeometryArrayAllocator<float>::Deallocate(
