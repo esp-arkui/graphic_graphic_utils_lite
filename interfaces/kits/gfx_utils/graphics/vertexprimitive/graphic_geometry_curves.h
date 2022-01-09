@@ -630,7 +630,7 @@ namespace OHOS {
      *
      * @see CubicBezierCurve
      * @since 1.0
-     * @version 1.0
+     * @version 1.0.
      */
     class CubicBezierCurve {
     public:
