@@ -138,9 +138,6 @@ namespace OHOS {
     template <class Type>
     struct RectBase;
 
-    template <class Type>
-    struct PointBase;
-
     using RectI = RectBase<int>;
     using RectD = RectBase<float>;
 
