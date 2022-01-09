@@ -51,9 +51,9 @@ namespace OHOS {
     class SpanSoildColor {
     public:
         typedef ColorT color_type;
-        SpanSoildColor(ColorT color){
+        SpanSoildColor(ColorT color)
+        {
             color_ = color;
-
         }
         void Prepare()
         {

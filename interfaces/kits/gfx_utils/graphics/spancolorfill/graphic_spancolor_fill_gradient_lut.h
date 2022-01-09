@@ -82,15 +82,16 @@ namespace OHOS {
             QuickSort(colorProfile, OffsetLess);
         }
 
-        color_type getColor(float proportion){
-            if(proportion >= 1){
-              ColorPoint  end = colorProfile.Last();
-              return end.color;
+        color_type getColor(float proportion)
+        {
+            if(proportion >= 1) {
+                ColorPoint  end = colorProfile.Last();
+                return end.color;
             }
 
-            if(proportion <= 0){
-              ColorPoint  start = colorProfile[0];
-              return start.color;
+            if(proportion <= 0) {
+                ColorPoint  start = colorProfile[0];
+                return start.color;
             }
 
             ColorPoint start;

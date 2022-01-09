@@ -88,8 +88,6 @@ namespace OHOS {
                                                          distance2_,
                                                          colorFunction_->size());
                 *span++ = colorFunction_->getColor(proportion);
-
-
             }
         }
     private:
