@@ -43,7 +43,7 @@ namespace OHOS {
          * @version 1.0
          */
         TransAffine(float v0, float v1, float v2, float v3, float v4, float v5) :
-            Matrix3<float>(v0,v2,v4,v1,v3,v5,0,0,1)
+            Matrix3<float>(v0, v2, v4, v1, v3, v5, 0, 0, 1)
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
