@@ -222,7 +222,7 @@ namespace OHOS {
     template <class Depict>
     template <class Rasterizer>
     void RasterizerScanlineClip<Depict>::LineClipY(
-            Rasterizer& ras,coord_type x1, coord_type y1,coord_type x2,
+            Rasterizer& ras, coord_type x1, coord_type y1, coord_type x2,
             coord_type y2, unsigned clipFlagsOne, unsigned clipFlagsTwo) const
     {
         clipFlagsOne &= DIRECTLY_BELOW;
