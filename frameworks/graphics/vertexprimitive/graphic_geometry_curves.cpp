@@ -459,7 +459,7 @@ namespace OHOS {
                 break;
 
             case COLLINEAR2:
-                // p1、p3、p4是共线的
+                // p1、p3、p4是共线的.
                 if (delta2 * delta2 <= distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
                         points_.Add(PointF(x23, y23));
