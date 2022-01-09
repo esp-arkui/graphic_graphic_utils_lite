@@ -59,6 +59,10 @@ namespace OHOS {
                 unsigned cmd = vertexBlockStorage.Vertex(iIndex, &x, &y);
                 AddVertex(x, y, cmd);
             }
+            this->totalBlocks_= vertexBlockStorage.totalBlocks_;
+            maxBlocks_= vertexBlockStorage.maxBlocks_;
+            croodBlocks_ = vertexBlockStorage.croodBlocks_;
+            cmdBlocks_= vertexBlockStorage.cmdBlocks_;
             return *this;
         }
 
@@ -84,7 +88,7 @@ namespace OHOS {
          */
         void FreeAll()
         {
-            if (totalBlocks_) {
+            if (totalBlocks_ > 0 && totalBlocks_<= 1024) {
                 float** coordBLK = croodBlocks_ + totalBlocks_ - 1;
                 for (; totalBlocks_ > 0; totalBlocks_--) {
                     GeometryArrayAllocator<float>::Deallocate(
