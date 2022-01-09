@@ -146,7 +146,7 @@ namespace OHOS {
     const float VERTEX_DIST_EPSILON = 1e-14;
     const float INTERSECTIONEPSILON = 1.0e-30;
     /**
-     * @brief 圆周率
+     * @brief 圆周率.
      */
     const float PI = 3.1415926f;
     /**
