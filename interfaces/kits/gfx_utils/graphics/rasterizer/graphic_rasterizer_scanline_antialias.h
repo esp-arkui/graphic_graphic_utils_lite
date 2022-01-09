@@ -64,27 +64,6 @@ namespace OHOS {
             AA_MASK2 = AA_SCALE2 - 1
         };
 
-//        RasterizerScanlineAntiAlias(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            init(raster);
-//        }
-
-//        void init(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            m_outline = raster.m_outline;
-//            m_clipper = raster.m_clipper;
-//            m_gamma = raster.m_gamma;
-//            m_filling_rule = raster.m_filling_rule;
-//            m_auto_close = raster.m_auto_close;
-//            m_start_x = raster.m_start_x;
-//            m_start_y = raster.m_start_y;
-//            m_status = raster.m_status;
-//            m_scan_y = raster.m_scan_y;
-
-//        }
-
-//        const RasterizerScanlineAntiAlias<Clip>& operator=(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            init(raster);
-//            return *this;
-//        }
         /**
          * 构建光栅化扫描线抗锯齿构造函数
          * @brief 主要包括细胞单元块的分配额度，裁剪器

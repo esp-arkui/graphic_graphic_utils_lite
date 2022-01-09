@@ -29,7 +29,6 @@ namespace OHOS {
      */
     class TransAffine : public Matrix3<float> {
     public:
-        //float scaleX_, shearY, shearX, scaleY_, translateX, translateY;
         /**
          * @brief 初始化为单位矩阵
          * @since 1.0
