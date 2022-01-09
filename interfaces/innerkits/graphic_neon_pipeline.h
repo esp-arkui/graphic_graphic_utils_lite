@@ -18,10 +18,10 @@
 
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
-#    include <arm_neon.h>
+#include <arm_neon.h>
 
-#    include "gfx_utils/color.h"
-#    include "graphic_neon_utils.h"
+#include "gfx_utils/color.h"
+#include "graphic_neon_utils.h"
 
 namespace OHOS {
     using LoadBuf = void (*)(uint8_t* buf, uint8x8_t& r, uint8x8_t& g, uint8x8_t& b, uint8x8_t& a);
@@ -163,7 +163,7 @@ namespace OHOS {
             StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
-        void NeonPrelerp_ARGB8888(uint8_t* dstBuffer,uint8_t* srcBuffer,uint8_t cover)
+        void NeonPrelerp_ARGB8888(uint8_t* dstBuffer, uint8_t* srcBuffer, uint8_t cover)
         {
             uint8x8x4_t vDstBuf = vld4_u8(dstBuffer);
             uint8x8_t r0 = vDstBuf.val[NEON_R];
@@ -189,7 +189,7 @@ namespace OHOS {
             StoreBuf_ARGB8888(dstBuffer, rs, gs, bs, as);
         }
 
-        void NeonPrelerp_ARGB8888(uint8_t* dstBuffer,uint8_t* srcBuffer,uint8_t* covers)
+        void NeonPrelerp_ARGB8888(uint8_t* dstBuffer, uint8_t* srcBuffer, uint8_t* covers)
         {
             uint8x8x4_t vDstBuf = vld4_u8(dstBuffer);
             uint8x8_t r0 = vDstBuf.val[NEON_R];
@@ -274,8 +274,7 @@ namespace OHOS {
             StoreBuf_ARGB8888(buf, rs, gs, bs, as);
         }
 
-
-        void NeonLerp_ARGB8888(uint8_t* dstBuffer,uint8_t* srcBuffer,uint8_t cover)
+        void NeonLerp_ARGB8888(uint8_t* dstBuffer, uint8_t* srcBuffer, uint8_t cover)
         {
             uint8x8x4_t vDstBuf = vld4_u8(dstBuffer);
             uint8x8_t r0 = vDstBuf.val[NEON_R];
@@ -301,7 +300,7 @@ namespace OHOS {
             StoreBuf_ARGB8888(dstBuffer, rs, gs, bs, as);
         }
 
-        void NeonLerp_ARGB8888(uint8_t* dstBuffer,uint8_t* srcBuffer,uint8_t* covers)
+        void NeonLerp_ARGB8888(uint8_t* dstBuffer, uint8_t* srcBuffer, uint8_t* covers)
         {
             uint8x8x4_t vDstBuf = vld4_u8(dstBuffer);
             uint8x8_t r0 = vDstBuf.val[NEON_R];

@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_gradient.h
-* @brief Defines 扫描线渐变模式
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_gradient.h
+ * @brief Defines 扫描线渐变模式
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_GRADIENT_INCLUDED
 #define GRAPHIC_SPAN_GRADIENT_INCLUDED
@@ -28,7 +28,7 @@
 
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h"
-
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
      * 渐变的扫描线填色模板
@@ -60,8 +60,8 @@ namespace OHOS {
             interpolator_(&inter),
             gradientFunction_(&gradient_function),
             colorFunction_(&color_function),
-            distance1_(Iround(distance1 * GRADIENT_SUBPIXEL_SCALE)),
-            distance2_(Iround(distance2 * GRADIENT_SUBPIXEL_SCALE))
+            distance1_(MATH_ROUND32(distance1 * GRADIENT_SUBPIXEL_SCALE)),
+            distance2_(MATH_ROUND32(distance2 * GRADIENT_SUBPIXEL_SCALE))
         {
         }
 
@@ -123,9 +123,9 @@ namespace OHOS {
          * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
          */
         GradientRadialCalculate(double endRadius, double dx, double dy) :
-            endRadius_(Iround(endRadius * GRADIENT_SUBPIXEL_SCALE)),
-            dx_(Iround(dx * GRADIENT_SUBPIXEL_SCALE)),
-            dy_(Iround(dy * GRADIENT_SUBPIXEL_SCALE))
+            endRadius_(MATH_ROUND32(endRadius * GRADIENT_SUBPIXEL_SCALE)),
+            dx_(MATH_ROUND32(dx * GRADIENT_SUBPIXEL_SCALE)),
+            dy_(MATH_ROUND32(dy * GRADIENT_SUBPIXEL_SCALE))
         {
             UpdateValues();
         }
@@ -144,13 +144,15 @@ namespace OHOS {
             double dx = x - dx_;
             double dy = y - dy_;
             double m_distanceRadius = dx * dy_ - dy * dx_;
-            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
+            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy)
+                    - m_distanceRadius * m_distanceRadius;
             int deltaRadius = endRadius - startRadius; // 半径的差
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            float proportion = ((Iround((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul) - startRadius)) / deltaRadius;
-
+            float proportion = (MATH_ROUND32((dx * dx_ + dy * dy_ +
+                                              std::sqrt(std::fabs(m_RadiusDistance)))
+                                             * m_mul) - startRadius)/deltaRadius;
             if (proportion < 0) {
                 proportion = 0;
             }

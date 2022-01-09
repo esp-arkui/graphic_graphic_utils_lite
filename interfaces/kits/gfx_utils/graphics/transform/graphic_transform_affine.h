@@ -29,7 +29,6 @@ namespace OHOS {
      */
     class TransAffine : public Matrix3<float> {
     public:
-        //float scaleX_, shearY, shearX, scaleY_, translateX, translateY;
         /**
          * @brief 初始化为单位矩阵
          * @since 1.0
@@ -43,8 +42,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        TransAffine(float v0, float v1, float v2, float v3, float v4, float v5)
-            : Matrix3<float>(v0,v2,v4,v1,v3,v5,0,0,1)
+        TransAffine(float v0, float v1, float v2, float v3, float v4, float v5) :
+            Matrix3<float>(v0, v2, v4, v1, v3, v5, 0, 0, 1)
         {}
         /**
          * @brief 用于将矩形转换为平行四边形
@@ -55,7 +54,7 @@ namespace OHOS {
         {
             RectToParl(x1, y1, x2, y2, parl);
         }
-        void SetData(int iIndex,float fValue)
+        void SetData(int iIndex, float fValue)
         {
             data_[iIndex] = fValue;
         }
@@ -194,66 +193,66 @@ namespace OHOS {
     inline void TransAffine::Transform(float* x, float* y) const
     {
         float tmp = *x;
-        *x = tmp * data_[0] + *y * data_[1] + data_[2];
-        *y = tmp * data_[3] + *y * data_[4] + data_[5];
+        *x = tmp * data_[INDEX_ZERO] + *y * data_[INDEX_ONE] + data_[INDEX_TWO];
+        *y = tmp * data_[INDEX_THREE] + *y * data_[INDEX_FOUR] + data_[INDEX_FIVE];
     }
 
     inline void TransAffine::InverseTransform(float* x, float* y) const
     {
         float reciprocal = DeterminantReciprocal();
-        float a = (*x - data_[2]) * reciprocal;
-        float b = (*y - data_[5]) * reciprocal;
-        *x = a * data_[4] - b * data_[1];
-        *y = b * data_[0] - a * data_[3];
+        float a = (*x - data_[INDEX_TWO]) * reciprocal;
+        float b = (*y - data_[INDEX_FIVE]) * reciprocal;
+        *x = a * data_[INDEX_FOUR] - b * data_[INDEX_ONE];
+        *y = b * data_[INDEX_ZERO] - a * data_[INDEX_THREE];
     }
 
     inline const TransAffine& TransAffine::Translate(float deltaX, float deltaY)
     {
-        data_[2] += deltaX;
-        data_[5] += deltaY;
+        data_[INDEX_TWO] += deltaX;
+        data_[INDEX_FIVE] += deltaY;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Rotate(float angle)
     {
-        float scaleXTemp = data_[0] * std::cos(angle) - data_[3] * std::sin(angle);
-        float shearXTemp = data_[1] * std::cos(angle) - data_[4] * std::sin(angle);
-        float translateXTemp = data_[2] * std::cos(angle) - data_[5] * std::sin(angle);
-        data_[3] = data_[0] * std::sin(angle) + data_[3] * std::cos(angle);
-        data_[4] = data_[1] * std::sin(angle) + data_[4] * std::cos(angle);
-        data_[5] = data_[2] * std::sin(angle) + data_[5] * std::cos(angle);
-        data_[0] = scaleXTemp;
-        data_[1] = shearXTemp;
-        data_[2] = translateXTemp;
+        float scaleXTemp = data_[INDEX_ZERO] * std::cos(angle) - data_[INDEX_THREE] * std::sin(angle);
+        float shearXTemp = data_[INDEX_ONE] * std::cos(angle) - data_[INDEX_FOUR] * std::sin(angle);
+        float translateXTemp = data_[INDEX_TWO] * std::cos(angle) - data_[INDEX_FIVE] * std::sin(angle);
+        data_[INDEX_THREE] = data_[INDEX_ZERO] * std::sin(angle) + data_[INDEX_THREE] * std::cos(angle);
+        data_[INDEX_FOUR] = data_[INDEX_ONE] * std::sin(angle) + data_[INDEX_FOUR] * std::cos(angle);
+        data_[INDEX_FIVE] = data_[INDEX_TWO] * std::sin(angle) + data_[INDEX_FIVE] * std::cos(angle);
+        data_[INDEX_ZERO] = scaleXTemp;
+        data_[INDEX_ONE] = shearXTemp;
+        data_[INDEX_TWO] = translateXTemp;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Scale(float scaleX, float scaleY)
     {
-        data_[0] *= scaleX;
-        data_[1] *= scaleX;
-        data_[2] *= scaleX;
-        data_[3] *= scaleY;
-        data_[4] *= scaleY;
-        data_[5] *= scaleY;
+        data_[INDEX_ZERO] *= scaleX;
+        data_[INDEX_ONE] *= scaleX;
+        data_[INDEX_TWO] *= scaleX;
+        data_[INDEX_THREE] *= scaleY;
+        data_[INDEX_FOUR] *= scaleY;
+        data_[INDEX_FIVE] *= scaleY;
         return *this;
     }
 
     inline const TransAffine& TransAffine::Scale(float scale)
     {
-        data_[0] *= scale;
-        data_[1] *= scale;
-        data_[2] *= scale;
-        data_[3] *= scale;
-        data_[4] *= scale;
-        data_[5] *= scale;
+        data_[INDEX_ZERO] *= scale;
+        data_[INDEX_ONE] *= scale;
+        data_[INDEX_TWO] *= scale;
+        data_[INDEX_THREE] *= scale;
+        data_[INDEX_FOUR] *= scale;
+        data_[INDEX_FIVE] *= scale;
         return *this;
     }
 
     inline void TransAffine::ScalingAbs(float* x, float* y) const
     {
-        *x = std::sqrt(data_[0] * data_[0] + data_[1] * data_[1]);
-        *y = std::sqrt(data_[3] * data_[3] + data_[4] * data_[4]);
+        *x = std::sqrt(data_[INDEX_ZERO] * data_[INDEX_ZERO] + data_[INDEX_ONE] * data_[INDEX_ONE]);
+        *y = std::sqrt(data_[INDEX_THREE] * data_[INDEX_THREE] + data_[INDEX_FOUR] * data_[INDEX_FOUR]);
     }
 
     /**

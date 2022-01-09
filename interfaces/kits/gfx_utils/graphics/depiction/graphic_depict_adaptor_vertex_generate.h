@@ -14,13 +14,13 @@
  */
 
 /**
-* @file graphic_geometry_depict_adaptor_vcgen.h
-*
-* @brief Defines 构建几何图元顶点生成过程适配器.
-* 利用坐标转换管道，改变顶点源产生的顶点，包括坐标、命令、产生新顶点等
-* @since 1.0
-* @version 1.0
-*/
+ * @file graphic_geometry_depict_adaptor_vcgen.h
+ *
+ * @brief Defines 构建几何图元顶点生成过程适配器.
+ * 利用坐标转换管道，改变顶点源产生的顶点，包括坐标、命令、产生新顶点等
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GEOMETRY_DEPICT_ADAPTOR_VERTEX_GENERATE_INCLUDED
 #define GRAPHIC_GEOMETRY_DEPICT_ADAPTOR_VERTEX_GENERATE_INCLUDED
@@ -191,8 +191,8 @@ namespace OHOS {
 
     private:
         DepictAdaptorVertexGenerator(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
-        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&
-            operator=(const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
+        const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>& operator=
+        (const DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>&);
 
         VertexSource* m_source;
         Generator m_generator;
@@ -204,11 +204,11 @@ namespace OHOS {
     };
 
     /**
-    * @brief 根据不同而状态移动顶点或者产生新的顶点.
-    * 返回当前的操作状态,做后续处理
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 根据不同而状态移动顶点或者产生新的顶点.
+     * 返回当前的操作状态,做后续处理
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSource, class Generator, class Markers>
     unsigned DepictAdaptorVertexGenerator<VertexSource, Generator, Markers>::Vertex(float* x, float* y)
     {

@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_allocator_converter.h
-* @brief Defines 扫描线分配器和转换器
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_allocator_converter.h
+ * @brief Defines 扫描线分配器和转换器
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef SPAN_ALLOCATOR_CONVERTER_INCLUDED
 #define SPAN_ALLOCATOR_CONVERTER_INCLUDED

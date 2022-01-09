@@ -136,19 +136,19 @@ namespace OHOS {
         {
             return m_cubic_bezier.CuspLimit();
         }
-        /*
-        * 重置某段路径的状态属性
-        * @path_id 是某段路径id，从0计算
-        * @since 1.0
-        * @version 1.0
-        */
+        /**
+         * 重置某段路径的状态属性
+         * @path_id 是某段路径id，从0计算
+         * @since 1.0
+         * @version 1.0
+         */
         void Rewind(unsigned path_id);
 
-        /*
-        * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
-        * @since 1.0
-        * @version 1.0
-        */
+        /**
+         * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned Vertex(float* x, float* y);
 
     private:
@@ -162,12 +162,12 @@ namespace OHOS {
         CubicBezierCurveType m_cubic_bezier;
     };
 
-    /*
-        * 重置某段路径的状态属性
-        * @path_id 是某段路径id，从0计算
-        * @since 1.0
-        * @version 1.0
-        */
+    /**
+     * 重置某段路径的状态属性
+     * @path_id 是某段路径id，从0计算
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
     void DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Rewind(unsigned path_id)
     {
@@ -178,11 +178,11 @@ namespace OHOS {
         m_cubic_bezier.Reset();
     }
 
-    /*
-        * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
-        * @since 1.0
-        * @version 1.0
-        */
+    /**
+     * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+     * @since 1.0
+     * @version 1.0
+     */
     template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
     unsigned DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Vertex(float* x, float* y)
     {

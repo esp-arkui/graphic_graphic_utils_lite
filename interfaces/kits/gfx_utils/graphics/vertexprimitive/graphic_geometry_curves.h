@@ -26,7 +26,7 @@
 #define GRAPHIC_GEOMETRY_CURVES_INCLUDED
 
 #include "graphic_geometry_plaindata_blockvector.h"
-
+#include "draw/clip_utils.h"
 namespace OHOS {
     enum CurveApproximationMethodEnum {
         CURVEINCREMENT,
@@ -170,7 +170,7 @@ namespace OHOS {
             if (count_ >= points_.Size()) {
                 return PATH_CMD_STOP;
             }
-            const PointD& point = points_[count_++];
+            const PointF& point = points_[count_++];
             *x = point.x;
             *y = point.y;
             return (count_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO;
@@ -189,7 +189,7 @@ namespace OHOS {
         float distanceToleranceSquare_;
         float angleTolerance_;
         unsigned count_;
-        GeometryPlainDataBlockVector<PointD> points_;
+        GeometryPlainDataBlockVector<PointF> points_;
     };
 
     struct CubicBezierCurvePoints {
@@ -468,9 +468,9 @@ namespace OHOS {
             return approximationScale_;
         }
 
-        void AngleTolerance(float a)
+        void AngleTolerance(float angleValue)
         {
-            angleTolerance_ = a;
+            angleTolerance_ = angleValue;
         }
         float AngleTolerance() const
         {
@@ -479,12 +479,12 @@ namespace OHOS {
 
         void CuspLimit(float angleValue)
         {
-            cuspLimit_ = (angleValue == 0.0) ? 0.0 : PI - angleValue;
+            cuspLimit_ = (angleValue == 0.0f) ? 0.0f : PI - angleValue;
         }
 
         float CuspLimit() const
         {
-            return (cuspLimit_ == 0.0) ? 0.0 : PI - cuspLimit_;
+            return (cuspLimit_ == 0.0) ? 0.0f : PI - cuspLimit_;
         }
 
         void Rewind(unsigned)
@@ -497,7 +497,7 @@ namespace OHOS {
             if (count_ >= points_.Size()) {
                 return PATH_CMD_STOP;
             }
-            const PointD& p = points_[count_++];
+            const PointF& p = points_[count_++];
             *x = p.x;
             *y = p.y;
             return (count_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO;
@@ -520,7 +520,7 @@ namespace OHOS {
         float angleTolerance_;
         float cuspLimit_;
         unsigned count_;
-        GeometryPlainDataBlockVector<PointD> points_;
+        GeometryPlainDataBlockVector<PointF> points_;
     };
 
     /**
@@ -630,7 +630,7 @@ namespace OHOS {
      *
      * @see CubicBezierCurve
      * @since 1.0
-     * @version 1.0
+     * @version 1.0.
      */
     class CubicBezierCurve {
     public:

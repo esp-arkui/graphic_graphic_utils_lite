@@ -16,7 +16,7 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_curves.h"
 
 #include "gfx_utils/graphics/common/graphic_common_math.h"
-
+#include "draw/clip_utils.h"
 namespace OHOS {
     const float CURVECOLLINEARITYEPSILON = 1e-30;
     const float CURVEANGLETOLERANCEEPSILON = 0.01f;
@@ -49,10 +49,13 @@ namespace OHOS {
         float len = std::sqrt(deltaX1 * deltaX1 + deltaY1 * deltaY1) +
                      std::sqrt(deltaX2 * deltaX2 + deltaY2 * deltaY2);
 
-        numberSteps = Uround(len * CURVES_NUM_STEP_LEN * approximationScale);
+        numberSteps = MATH_UROUND(len * CURVES_NUM_STEP_LEN * approximationScale);
         const int NUM_STEPS_MAX = 4;
         if (numberSteps < NUM_STEPS_MAX) {
             numberSteps = NUM_STEPS_MAX;
+        }
+        if(numberSteps == 0) {
+            return;
         }
         float subdivideStep = 1.0f / numberSteps;
         float subdivideStep2 = subdivideStep * subdivideStep;
@@ -137,7 +140,6 @@ namespace OHOS {
         if (level > CURVERECURSIONLIMIT) {
             return;
         }
-
         // 计算线段的所有中点
         float x12 = (x1 + x2) / FLOATNUM;
         float y12 = (y1 + y2) / FLOATNUM;
@@ -150,12 +152,11 @@ namespace OHOS {
         float deltaY = y3 - y1;
         float distance = std::fabs(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
         float da;
-
         if (distance > CURVECOLLINEARITYEPSILON) {
             if (distance * distance <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
                 // 如果曲率未超过距离公差值
                 if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                    points_.Add(PointD(x123, y123));
+                    points_.Add(PointF(x123, y123));
                     return;
                 }
 
@@ -165,7 +166,7 @@ namespace OHOS {
                 }
 
                 if (da < angleTolerance_) {
-                    points_.Add(PointD(x123, y123));
+                    points_.Add(PointF(x123, y123));
                     return;
                 }
             }
@@ -189,7 +190,7 @@ namespace OHOS {
                 }
             }
             if (distance < distanceToleranceSquare_) {
-                points_.Add(PointD(x2, y2));
+                points_.Add(PointF(x2, y2));
                 return;
             }
         }
@@ -203,9 +204,9 @@ namespace OHOS {
                                                   float x2, float y2,
                                                   float x3, float y3)
     {
-        points_.Add(PointD(x1, y1));
+        points_.Add(PointF(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, 0);
-        points_.Add(PointD(x3, y3));
+        points_.Add(PointF(x3, y3));
     }
 
     void CubicBezierCurveIncrement::ApproximationScale(float scale)
@@ -240,12 +241,14 @@ namespace OHOS {
                       std::sqrt(deltaX3 * deltaX3 + deltaY3 * deltaY3)) *
                      CURVES_NUM_STEP_LEN * approximationScale;
 
-        numberSteps = Uround(len);
+        numberSteps = MATH_UROUND(len);
         const int cuvereNumStep = 4;
         if (numberSteps < cuvereNumStep) {
             numberSteps = cuvereNumStep;
         }
-
+        if(numberSteps == 0) {
+            return;
+        }
         float subdivideStep = 1.0 / numberSteps;
         float subdivideStep2 = subdivideStep * subdivideStep;
         float subdivideStep3 = subdivideStep * subdivideStep * subdivideStep;
@@ -369,31 +372,31 @@ namespace OHOS {
         float y1234 = (y123 + y234) / FLOATNUM;
 
         // 试着用一条直线近似整个三次曲线
-        float deltaX = x4 - x1;
-        float deltaY = y4 - y1;
+        float delta41X = x4 - x1;
+        float delta41Y = y4 - y1;
 
-        float delta2 = std::fabs(((x2 - x4) * deltaY - (y2 - y4) * deltaX));
-        float delta3 = std::fabs(((x3 - x4) * deltaY - (y3 - y4) * deltaX));
+        float delta2 = std::fabs(((x2 - x4) * delta41Y - (y2 - y4) * delta41X));
+        float delta3 = std::fabs(((x3 - x4) * delta41Y - (y3 - y4) * delta41X));
 
-        float da1;
-        float da2;
-        float gradient;
+        float dx21Or31;
+        float dy21Or31;
+        float delta41;
 
         switch ((int(delta2 > CURVECOLLINEARITYEPSILON) << 1) + int(delta3 > CURVECOLLINEARITYEPSILON)) {
             case COLLINEAR:
                 // 全部共线或p1 == p4
-                gradient = deltaX * deltaX + deltaY * deltaY;
-                if (gradient == 0) {
+                delta41 = delta41X * delta41X + delta41Y * delta41Y;
+                if (delta41 == 0) {
                     delta2 = CalcSqDistance(x1, y1, x2, y2);
                     delta3 = CalcSqDistance(x4, y4, x3, y3);
                 } else {
-                    gradient = 1 / gradient;
-                    da1 = x2 - x1;
-                    da2 = y2 - y1;
-                    delta2 = gradient * (da1 * deltaX + da2 * deltaY);
-                    da1 = x3 - x1;
-                    da2 = y3 - y1;
-                    delta3 = gradient * (da1 * deltaX + da2 * deltaY);
+                    delta41 = 1 / delta41;
+                    dx21Or31 = x2 - x1;
+                    dy21Or31 = y2 - y1;
+                    delta2 = delta41 * (dx21Or31 * delta41X + dy21Or31 * delta41Y);
+                    dx21Or31 = x3 - x1;
+                    dy21Or31 = y3 - y1;
+                    delta3 = delta41 * (dx21Or31 * delta41X + dy21Or31 * delta41Y);
                     if (delta2 > 0 && delta2 < 1 && delta3 > 0 && delta3 < 1) {
                         // 简单共线情况，1--2--3--4
                         // 我们可以只留下两个端点
@@ -404,7 +407,7 @@ namespace OHOS {
                     } else if (delta2 >= 1) {
                         delta2 = CalcSqDistance(x2, y2, x4, y4);
                     } else {
-                        delta2 = CalcSqDistance(x2, y2, x1 + delta2 * deltaX, y1 + delta2 * deltaY);
+                        delta2 = CalcSqDistance(x2, y2, x1 + delta2 * delta41X, y1 + delta2 * delta41Y);
                     }
 
                     if (delta3 <= 0) {
@@ -412,17 +415,17 @@ namespace OHOS {
                     } else if (delta3 >= 1) {
                         delta3 = CalcSqDistance(x3, y3, x4, y4);
                     } else {
-                        delta3 = CalcSqDistance(x3, y3, x1 + delta3 * deltaX, y1 + delta3 * deltaY);
+                        delta3 = CalcSqDistance(x3, y3, x1 + delta3 * delta41X, y1 + delta3 * delta41Y);
                     }
                 }
                 if (delta2 > delta3) {
                     if (delta2 < distanceToleranceSquare_) {
-                        points_.Add(PointD(x2, y2));
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
                 } else {
                     if (delta3 < distanceToleranceSquare_) {
-                        points_.Add(PointD(x3, y3));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
@@ -430,53 +433,53 @@ namespace OHOS {
 
             case COLLINEAR1:
                 // p1、p2、p4是共线的
-                if (delta3 * delta3 <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
+                if (delta3 * delta3 <= distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
                     // 角度条件
-                    da1 = std::fabs(std::atan2(y4 - y3, x4 - x3) - std::atan2(y3 - y2, x3 - x2));
-                    if (da1 >= PI) {
-                        da1 = FLOATNUM * PI - da1;
+                    dx21Or31 = std::fabs(std::atan2(y4 - y3, x4 - x3) - std::atan2(y3 - y2, x3 - x2));
+                    if (dx21Or31 >= PI) {
+                        dx21Or31 = FLOATNUM * PI - dx21Or31;
                     }
 
-                    if (da1 < angleTolerance_) {
-                        points_.Add(PointD(x2, y2));
-                        points_.Add(PointD(x3, y3));
+                    if (dx21Or31 < angleTolerance_) {
+                        points_.Add(PointF(x2, y2));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
 
-                    if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x3, y3));
+                    if (cuspLimit_ != 0.0 && dx21Or31 > cuspLimit_) {
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
                 break;
 
             case COLLINEAR2:
-                // p1、p3、p4是共线的
-                if (delta2 * delta2 <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
+                // p1、p3、p4是共线的.
+                if (delta2 * delta2 <= distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
                     // 角度条件
-                    da1 = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
-                    if (da1 >= PI) {
-                        da1 = FLOATNUM * PI - da1;
+                    dx21Or31 = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
+                    if (dx21Or31 >= PI) {
+                        dx21Or31 = FLOATNUM * PI - dx21Or31;
                     }
 
-                    if (da1 < angleTolerance_) {
-                        points_.Add(PointD(x2, y2));
-                        points_.Add(PointD(x3, y3));
+                    if (dx21Or31 < angleTolerance_) {
+                        points_.Add(PointF(x2, y2));
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
 
-                    if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x2, y2));
+                    if (cuspLimit_ != 0.0 && dx21Or31 > cuspLimit_) {
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
                 }
@@ -484,35 +487,35 @@ namespace OHOS {
 
             case COLLINEAR3:
                 if ((delta2 + delta3) * (delta2 + delta3) <=
-                        distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
+                        distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                     // 如果曲率未超过距离公差值
                     if (angleTolerance_ < CURVEANGLETOLERANCEEPSILON) {
-                        points_.Add(PointD(x23, y23));
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
-                    gradient = std::atan2(y3 - y2, x3 - x2);
-                    da1 = std::fabs(gradient - std::atan2(y2 - y1, x2 - x1));
-                    da2 = std::fabs(std::atan2(y4 - y3, x4 - x3) - gradient);
-                    if (da1 >= PI) {
-                        da1 = FLOATNUM * PI - da1;
+                    delta41 = std::atan2(y3 - y2, x3 - x2);
+                    dx21Or31 = std::fabs(delta41 - std::atan2(y2 - y1, x2 - x1));
+                    dy21Or31 = std::fabs(std::atan2(y4 - y3, x4 - x3) - delta41);
+                    if (dx21Or31 >= PI) {
+                        dx21Or31 = FLOATNUM * PI - dx21Or31;
                     }
-                    if (da2 >= PI) {
-                        da2 = FLOATNUM * PI - da2;
+                    if (dy21Or31 >= PI) {
+                        dy21Or31 = FLOATNUM * PI - dy21Or31;
                     }
 
-                    if (da1 + da2 < angleTolerance_) {
-                        points_.Add(PointD(x23, y23));
+                    if (dx21Or31 + dy21Or31 < angleTolerance_) {
+                        points_.Add(PointF(x23, y23));
                         return;
                     }
 
-                    if (cuspLimit_ != 0.0 && da1 > cuspLimit_) {
-                        points_.Add(PointD(x2, y2));
+                    if (cuspLimit_ != 0.0 && dx21Or31 > cuspLimit_) {
+                        points_.Add(PointF(x2, y2));
                         return;
                     }
 
-                    if (cuspLimit_ != 0.0 && da2 > cuspLimit_) {
-                        points_.Add(PointD(x3, y3));
+                    if (cuspLimit_ != 0.0 && dy21Or31 > cuspLimit_) {
+                        points_.Add(PointF(x3, y3));
                         return;
                     }
                 }
@@ -528,8 +531,8 @@ namespace OHOS {
                                               float x3, float y3,
                                               float x4, float y4)
     {
-        points_.Add(PointD(x1, y1));
+        points_.Add(PointF(x1, y1));
         RecursiveBezier(x1, y1, x2, y2, x3, y3, x4, y4, 0);
-        points_.Add(PointD(x4, y4));
+        points_.Add(PointF(x4, y4));
     }
 } // namespace OHOS

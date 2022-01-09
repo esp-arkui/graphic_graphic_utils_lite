@@ -144,9 +144,11 @@ namespace OHOS {
                         }
                         currDashStart_ = 0.0f;
                         *x = vertexDist2_->vertexXCoord -
-                                (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest / vertexDist1_->vertexDistance;
+                                (vertexDist2_->vertexXCoord - vertexDist1_->vertexXCoord) * currRest
+                                / vertexDist1_->vertexDistance;
                         *y = vertexDist2_->vertexYCoord -
-                                (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest / vertexDist1_->vertexDistance;
+                                (vertexDist2_->vertexYCoord - vertexDist1_->vertexYCoord) * currRest
+                                / vertexDist1_->vertexDistance;
                     } else {
                         currDashStart_ += currRest;
                         *x = vertexDist2_->vertexXCoord;
@@ -173,7 +175,7 @@ namespace OHOS {
                         }
                     }
                     return cmd;
-                } break;
+                }
                 case STOP:
                     cmd = PATH_CMD_STOP;
                     break;

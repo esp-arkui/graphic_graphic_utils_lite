@@ -59,6 +59,10 @@ namespace OHOS {
                 unsigned cmd = vertexBlockStorage.Vertex(iIndex, &x, &y);
                 AddVertex(x, y, cmd);
             }
+            this->totalBlocks_= vertexBlockStorage.totalBlocks_;
+            maxBlocks_= vertexBlockStorage.maxBlocks_;
+            croodBlocks_ = vertexBlockStorage.croodBlocks_;
+            cmdBlocks_= vertexBlockStorage.cmdBlocks_;
             return *this;
         }
 
@@ -84,7 +88,8 @@ namespace OHOS {
          */
         void FreeAll()
         {
-            if (totalBlocks_) {
+            const int32_t totalBlocksMax = 1024 ;
+            if (totalBlocks_ > 0 && totalBlocks_<= totalBlocksMax) {
                 float** coordBLK = croodBlocks_ + totalBlocks_ - 1;
                 for (; totalBlocks_ > 0; totalBlocks_--) {
                     GeometryArrayAllocator<float>::Deallocate(
@@ -113,7 +118,7 @@ namespace OHOS {
         void AddVertex(float x, float y, unsigned cmd)
         {
             float* coord_ptr = 0;
-            *StoragePtrs(&coord_ptr) = (int8u)cmd;
+            *StoragePtrs(&coord_ptr) = (uint8_t)cmd;
             coord_ptr[0] = float(x);
             coord_ptr[1] = float(y);
             totalVertices_++;
@@ -196,16 +201,15 @@ namespace OHOS {
                     (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
 
                 if (croodBlocks_) {
-                    memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
-                             croodBlocks_,
-                             maxBlocks_ * sizeof(float*));
-
-                    memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
-                             cmdBlocks_,
-                             maxBlocks_ * sizeof(unsigned char*));
-
-                    GeometryArrayAllocator<float*>::Deallocate(croodBlocks_,
-                                                                maxBlocks_ * OHOS::TWO_TIMES);
+                    errno_t err = memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
+                                           croodBlocks_, maxBlocks_ * sizeof(float*));
+                    if (err != EOK) {
+                    }
+                    err = memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
+                                   cmdBlocks_, maxBlocks_ * sizeof(unsigned char*));
+                    if (err != EOK) {
+                    }
+                    GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 }
                 croodBlocks_ = new_coords;
                 cmdBlocks_ = new_cmds;
@@ -220,7 +224,7 @@ namespace OHOS {
 
             totalBlocks_++;
         }
-        int8u* StoragePtrs(float** xy_ptr)
+        uint8_t* StoragePtrs(float** xy_ptr)
         {
             unsigned nb = totalVertices_ >> BLOCK_SHIFT;
             if (nb >= totalBlocks_) {
@@ -235,7 +239,7 @@ namespace OHOS {
         unsigned totalBlocks_;
         unsigned maxBlocks_;
         float** croodBlocks_; // 输入的点
-        int8u** cmdBlocks_;    // 标记点状态
+        uint8_t** cmdBlocks_;    // 标记点状态
     };
 
     class UICanvasVertices : public HeapBase {

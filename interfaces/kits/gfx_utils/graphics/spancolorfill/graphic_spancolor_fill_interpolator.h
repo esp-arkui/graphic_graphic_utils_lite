@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_interpolator.h
-* @brief Defines 扫描线插入器
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_interpolator.h
+ * @brief Defines 扫描线插入器
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
 #define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
@@ -27,7 +27,7 @@
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
 #include "gfx_utils/graphics/transform/graphic_transform_affine.h"
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_dda_line.h"
-
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
      * 渐变的颜色插入器
@@ -115,29 +115,29 @@ namespace OHOS {
             ty = y;
 
             transType->Transform(&tx, &ty);
-            int x1 = Iround(tx * SUBPIXEL_SCALE);
-            int y1 = Iround(ty * SUBPIXEL_SCALE);
+            int x1 = MATH_ROUND32(tx * SUBPIXEL_SCALE);
+            int y1 = MATH_ROUND32(ty * SUBPIXEL_SCALE);
 
             tx = x + len;
             ty = y;
             transType->Transform(&tx, &ty);
-            int x2 = Iround(tx * SUBPIXEL_SCALE);
-            int y2 = Iround(ty * SUBPIXEL_SCALE);
+            int x2 = MATH_ROUND32(tx * SUBPIXEL_SCALE);
+            int y2 = MATH_ROUND32(ty * SUBPIXEL_SCALE);
 
             dda2LineInterpolatorX = DdaTwoLineInterpolator(x1, x2, len);
             dda2LineInterpolatorY = DdaTwoLineInterpolator(y1, y2, len);
         }
 
-        /*
+        /**
          * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
          */
         void Resynchronize(float xe, float ye, unsigned len)
         {
             transType->transform(&xe, &ye);
             dda2LineInterpolatorX = DdaTwoLineInterpolator(
-                dda2LineInterpolatorX.GetCoordinate(), Iround(xe * SUBPIXEL_SCALE), len);
+                dda2LineInterpolatorX.GetCoordinate(), MATH_ROUND32(xe * SUBPIXEL_SCALE), len);
             dda2LineInterpolatorY = DdaTwoLineInterpolator(
-                dda2LineInterpolatorY.GetCoordinate(), Iround(ye * SUBPIXEL_SCALE), len);
+                dda2LineInterpolatorY.GetCoordinate(), MATH_ROUND32(ye * SUBPIXEL_SCALE), len);
         }
 
         /**

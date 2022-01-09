@@ -28,8 +28,8 @@
 
 namespace OHOS {
     /**
- * @brief 线条末端线帽的样式。
- */
+     * @brief 线条末端线帽的样式。
+     */
     enum LineCapEnum {
         /** 向线条的每个末端添加平直的边缘 */
         BUTT_CAP,
@@ -40,8 +40,8 @@ namespace OHOS {
     };
 
     /**
- * @brief 两条线相交时，所创建的拐角类型
- */
+     * @brief 两条线相交时，所创建的拐角类型
+     */
     enum LineJoinEnum {
         /** 创建尖角 */
         MITER_JOIN = 0,
@@ -61,13 +61,11 @@ namespace OHOS {
             strokeWidthUsingAbs(OHOS::ALPHAHALF),
             strokeWidthPercentDivision(OHOS::ALPHAHALF / BUF_SIZE),
             strokeWidthSignal(1),
-            approxScaleRadio(1.0)
+            approxScaleRadio(1.0),
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
-            ,
-            lineCapEnum(BUTT_CAP)
+            lineCapEnum(BUTT_CAP),
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
-            ,
             miterLimitMeasure(OHOS::DEFAULTMITERLIMIT),
             lineJoinEnum(MITER_JOIN)
 #endif
@@ -93,7 +91,9 @@ namespace OHOS {
         void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
             vertexConsumer.RemoveAll();
-
+            if(len == 0.f) {
+                len += VERTEX_DIST_EPSILON;
+            }
             float dx1 = (vd1.vertexYCoord - vd0.vertexYCoord) / len;
             float dy1 = (vd1.vertexXCoord - vd0.vertexXCoord) / len;
             float dx2 = 0;
@@ -170,6 +170,12 @@ namespace OHOS {
                       float deltaLengthPrev,
                       float deltaLengthLast)
         {
+            if(deltaLengthPrev == 0.f) {
+                deltaLengthPrev += VERTEX_DIST_EPSILON;
+            }
+            if(deltaLengthLast == 0.f) {
+                deltaLengthPrev += VERTEX_DIST_EPSILON;
+            }
             float dx1 = strokeWidth * (vertexDistMiddle.vertexYCoord - vertexDistBegin.vertexYCoord) / deltaLengthPrev;
             float dy1 = strokeWidth * (vertexDistMiddle.vertexXCoord - vertexDistBegin.vertexXCoord) / deltaLengthPrev;
             float dx2 = strokeWidth * (vertexDistLast.vertexYCoord - vertexDistMiddle.vertexYCoord) / deltaLengthLast;
@@ -316,7 +322,8 @@ namespace OHOS {
             float deltaAngle = angleStart - angleEnd;
             int nIndex, divNumber;
 
-            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio)) * TWO_TIMES;
+            deltaAngle = std::acos(strokeWidthUsingAbs / (strokeWidthUsingAbs + limitScale / approxScaleRadio))
+                    * TWO_TIMES;
 
             AddVertex(vertexConsumer, x + dx1, y + dy1);
             if (strokeWidthSignal > 0) {

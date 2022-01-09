@@ -14,11 +14,11 @@
  */
 
 /**
-* @file graphic_geometry_rasterizer_scanline_antialias.h
-* @brief Defines 光栅化以及扫描线过程阶段处理.
-* @since 1.0
-* @version 1.0
-*/
+ * @file graphic_geometry_rasterizer_scanline_antialias.h
+ * @brief Defines 光栅化以及扫描线过程阶段处理.
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GEOMETRY_RASTERIZER_SCANLINE_ANTIALIAS_INCLUDED
 #define GRAPHIC_GEOMETRY_RASTERIZER_SCANLINE_ANTIALIAS_INCLUDED
@@ -29,21 +29,21 @@
 namespace OHOS {
     using RasterizerScanlineClipInt = RasterizerScanlineClip<RasterDepictInt>;
     /**
-    * @template<Clip = RasterizerScanlineClipInt> typename RasterizerScanlineAntiAlias
-    * @brief 多边形光栅化用于高质量的填充多边形的渲染,
-    * 这个类的int坐标包括了24.8的格式，24位用于坐标int部分,
-    * 8位用于子像素的shift偏移部分 ，再用move_to(x, y) / line_to(x, y)
-    * 构建多边形时，构建扫描线光栅化处理.
-    * @since 1.0
-    * @version 1.0
-    */
+     * @template<Clip = RasterizerScanlineClipInt> typename RasterizerScanlineAntiAlias
+     * @brief 多边形光栅化用于高质量的填充多边形的渲染,
+     * 这个类的int坐标包括了24.8的格式，24位用于坐标int部分,
+     * 8位用于子像素的shift偏移部分 ，再用move_to(x, y) / line_to(x, y)
+     * 构建多边形时，构建扫描线光栅化处理.
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Clip = RasterizerScanlineClipInt>
     class RasterizerScanlineAntiAlias {
         /**
-        * @brief 构建扫描线状态枚举
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 构建扫描线状态枚举
+         * @since 1.0
+         * @version 1.0
+         */
         enum RasterizerStatusEnum {
             STATUS_INITIAL,
             STATUS_MOVE_TO,
@@ -64,34 +64,13 @@ namespace OHOS {
             AA_MASK2 = AA_SCALE2 - 1
         };
 
-//        RasterizerScanlineAntiAlias(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            init(raster);
-//        }
-
-//        void init(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            m_outline = raster.m_outline;
-//            m_clipper = raster.m_clipper;
-//            m_gamma = raster.m_gamma;
-//            m_filling_rule = raster.m_filling_rule;
-//            m_auto_close = raster.m_auto_close;
-//            m_start_x = raster.m_start_x;
-//            m_start_y = raster.m_start_y;
-//            m_status = raster.m_status;
-//            m_scan_y = raster.m_scan_y;
-
-//        }
-
-//        const RasterizerScanlineAntiAlias<Clip>& operator=(const RasterizerScanlineAntiAlias<Clip>& raster){
-//            init(raster);
-//            return *this;
-//        }
         /**
-        * 构建光栅化扫描线抗锯齿构造函数
-        * @brief 主要包括细胞单元块的分配额度，裁剪器
-        * 填充规则，自动闭合，起始位置等。
-        * @since 1.0
-        * @version 1.0
-        */
+         * 构建光栅化扫描线抗锯齿构造函数
+         * @brief 主要包括细胞单元块的分配额度，裁剪器
+         * 填充规则，自动闭合，起始位置等。
+         * @since 1.0
+         * @version 1.0
+         */
         RasterizerScanlineAntiAlias(unsigned cell_block_limit = (1 << (AA_SHIFT + 2)))
             : m_outline(cell_block_limit),
             m_clipper(),
@@ -121,36 +100,36 @@ namespace OHOS {
         }
 
         /**
-        * @brief 重新设置构建轮廓线单元细胞数组，
-        * 重新设置扫描线状态值等。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 重新设置构建轮廓线单元细胞数组，
+         * 重新设置扫描线状态值等。
+         * @since 1.0
+         * @version 1.0
+         */
         void Reset();
 
         /**
-        * @brief 重新设置裁剪器的裁剪范围以及裁剪标志。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 重新设置裁剪器的裁剪范围以及裁剪标志。
+         * @since 1.0
+         * @version 1.0
+         */
         void ResetClipping();
         void ClipBox(float x1, float y1, float x2, float y2);
 
         /**
-        * @brief 设置填充规则，FILL_NON_ZERO（是
-        * 假设是用来判断哪些区域属于路径内( 计算结果非0，即为路径内 )。
-        * 在路径包围的区域中，随便找一点，向外发射一条射线，
-        * 和所有围绕它的边相交，
-        * 然后开启一个计数器，从0计数，
-        * 如果这个射线遇到顺时针围绕，那么+1，
-        * 如果遇到逆时针围绕，那么-1，
-        * 如果最终值非0，则这块区域在路径内）,
-        * FILL_EVEN_ODD(* 在路径包围的区域中，随便找一点，向外发射一条射线，
-        * 和所有围绕它的边相交，
-        * 查看相交线的个数，如果为奇数，就填充，如果是偶数，就不填充。)
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 设置填充规则，FILL_NON_ZERO（是
+         * 假设是用来判断哪些区域属于路径内( 计算结果非0，即为路径内 )。
+         * 在路径包围的区域中，随便找一点，向外发射一条射线，
+         * 和所有围绕它的边相交，
+         * 然后开启一个计数器，从0计数，
+         * 如果这个射线遇到顺时针围绕，那么+1，
+         * 如果遇到逆时针围绕，那么-1，
+         * 如果最终值非0，则这块区域在路径内）,
+         * FILL_EVEN_ODD(* 在路径包围的区域中，随便找一点，向外发射一条射线，
+         * 和所有围绕它的边相交，
+         * 查看相交线的个数，如果为奇数，就填充，如果是偶数，就不填充。)
+         * @since 1.0
+         * @version 1.0
+         */
         void FillingRule(FillingRuleEnum filling_rule);
         void AutoClose(bool flag)
         {
@@ -158,22 +137,22 @@ namespace OHOS {
         }
 
         /**
-        * @brief 设置Gamma函数为了计算alpha值，抗锯齿服务的
-        * Gamma函数的索引是覆盖率，每个覆盖率都按照Gamma函数比如
-        * gamma_power：使用每个覆盖率*设置值的平方，作为颜色值，可实现抗锯齿值的整体放大或缩小。
-        * gamma_linear ：设置起止范围，对颜色值进行线性变换，小于起点则为0，大于起点则为1，
-        * 范围内则是(cover - m_start) / (m_end - m_start)。
-        * gamma_threshold：设置阈值，小于阈值为0，大于则为1. 设置阈值后，将无抗锯齿效果。
-        * gamma_multiply：将颜色值乘以设置的倍数。。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 设置Gamma函数为了计算alpha值，抗锯齿服务的
+         * Gamma函数的索引是覆盖率，每个覆盖率都按照Gamma函数比如
+         * gamma_power：使用每个覆盖率*设置值的平方，作为颜色值，可实现抗锯齿值的整体放大或缩小。
+         * gamma_linear ：设置起止范围，对颜色值进行线性变换，小于起点则为0，大于起点则为1，
+         * 范围内则是(cover - m_start) / (m_end - m_start)。
+         * gamma_threshold：设置阈值，小于阈值为0，大于则为1. 设置阈值后，将无抗锯齿效果。
+         * gamma_multiply：将颜色值乘以设置的倍数。。
+         * @since 1.0
+         * @version 1.0
+         */
         template <typename GammaF>
         void GammaFunction(const GammaF& gamma_function)
         {
             int coverIndex;
             for (coverIndex = 0; coverIndex < AA_SCALE; coverIndex++) {
-                m_gamma[coverIndex] = Uround(gamma_function(float(coverIndex) / AA_MASK) * AA_MASK);
+                m_gamma[coverIndex] = MATH_ROUND32(gamma_function(float(coverIndex) / AA_MASK) * AA_MASK);
             }
         }
 
@@ -183,57 +162,57 @@ namespace OHOS {
         }
 
         /**
-        * @brief 按照1/256 像素单元的设置图元的起点位置。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 按照1/256 像素单元的设置图元的起点位置。
+         * @since 1.0
+         * @version 1.0
+         */
         void MoveTo(int x, int y);
         /**
-        * @brief 按照1/256 像素单元的设置图元的移动位置。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 按照1/256 像素单元的设置图元的移动位置。
+         * @since 1.0
+         * @version 1.0
+         */
         void LineTo(int x, int y);
         /**
-        * @brief 按照1像素单元的设置图元的起点位置。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 按照1像素单元的设置图元的起点位置。
+         * @since 1.0
+         * @version 1.0
+         */
         void MoveToByfloat(float x, float y);
         /**
-        * @brief 按照像素单元的设置图元的移动位置。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 按照像素单元的设置图元的移动位置。
+         * @since 1.0
+         * @version 1.0
+         */
         void LineToByfloat(float x, float y);
 
         /**
-        * @brief 闭合多边形处理。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 闭合多边形处理。
+         * @since 1.0
+         * @version 1.0
+         */
         void ClosePolygon();
         void AddVertex(float x, float y, unsigned cmd);
 
         /**
-        * @brief 利用裁剪器按照1/256像素单元裁剪出一条边且构建轮廓线。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 利用裁剪器按照1/256像素单元裁剪出一条边且构建轮廓线。
+         * @since 1.0
+         * @version 1.0
+         */
         void EdgeMake(int x1, int y1, int x2, int y2);
         /**
-        * @brief 利用裁剪器按照1像素单元裁剪出一条边且构建轮廓线。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 利用裁剪器按照1像素单元裁剪出一条边且构建轮廓线。
+         * @since 1.0
+         * @version 1.0
+         */
         void EdgeMakeUsingfloat(float x1, float y1, float x2, float y2);
 
         /**
-        * @brief 从顶点源中获取顶点信息坐标，且按照扫描过程
-        * 设置添加cells单元数组的过程。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 从顶点源中获取顶点信息坐标，且按照扫描过程
+         * 设置添加cells单元数组的过程。
+         * @since 1.0
+         * @version 1.0
+         */
         template <typename VertexSource>
         void AddPath(VertexSource& vs, unsigned path_id = 0)
         {
@@ -251,10 +230,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 轮廓线的范围边界值。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 轮廓线的范围边界值。
+         * @since 1.0
+         * @version 1.0
+         */
         int MinX() const
         {
             return m_outline.MinX();
@@ -273,35 +252,35 @@ namespace OHOS {
         }
 
         /**
-        * @brief 对于轮廓线中的cells单元数组按照从左向右，自上而下排序。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 对于轮廓线中的cells单元数组按照从左向右，自上而下排序。
+         * @since 1.0
+         * @version 1.0
+         */
         void Sort();
         bool RewindScanlines();
 
         /**
-        * @brief 按照某y值高度导航到某条扫描线起始位置。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 按照某y值高度导航到某条扫描线起始位置。
+         * @since 1.0
+         * @version 1.0
+         */
         bool NavigateScanline(int y);
 
         /**
-        * @brief 将area cover转为gamma cover值计算alpha。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 将area cover转为gamma cover值计算alpha。
+         * @since 1.0
+         * @version 1.0
+         */
         unsigned CalculateAlpha(int area) const;
         /**
-        * @brief 从Rasterizer阶段获取到某y值的扫描线
-        * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
-        * 利用2者计算delta area 作为area cover 转换成gamma cover
-        * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
-        * 填充到新的scanline中，拥有后续的render。
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 从Rasterizer阶段获取到某y值的扫描线
+         * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
+         * 利用2者计算delta area 作为area cover 转换成gamma cover
+         * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
+         * 填充到新的scanline中，拥有后续的render。
+         * @since 1.0
+         * @version 1.0
+         */
         template <typename Scanline>
         bool SweepScanline(Scanline& sl);
         bool HitTest(int tx, int ty);
@@ -323,14 +302,14 @@ namespace OHOS {
     };
 
     /**
-    * @brief 从Rasterizer阶段获取到某y值的扫描线
-    * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
-    * 利用2者计算delta area 作为area cover 转换成gamma cover
-    * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
-    * 填充到新的scanline中，拥有后续的render。
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 从Rasterizer阶段获取到某y值的扫描线
+     * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
+     * 利用2者计算delta area 作为area cover 转换成gamma cover
+     * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
+     * 填充到新的scanline中，拥有后续的render。
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Clip>
     template <class Scanline>
     bool RasterizerScanlineAntiAlias<Clip>::SweepScanline(Scanline& sl)
@@ -391,10 +370,10 @@ namespace OHOS {
     }
 
     /**
-    * @brief 将area cover转为gamma cover值计算alpha。
-    * @since 1.0
-    * @version 1.0
-    */
+     * @brief 将area cover转为gamma cover值计算alpha。
+     * @since 1.0
+     * @version 1.0
+     */
     template <class Clip>
     GRAPHIC_GEOMETRY_INLINE unsigned RasterizerScanlineAntiAlias<Clip>::CalculateAlpha(int area) const
     {
@@ -518,8 +497,7 @@ namespace OHOS {
     }
 
     template <class Clip>
-    void RasterizerScanlineAntiAlias<Clip>::EdgeMakeUsingfloat(float x1, float y1,
-                                                                float x2, float y2)
+    void RasterizerScanlineAntiAlias<Clip>::EdgeMakeUsingfloat(float x1, float y1, float x2, float y2)
     {
         if (m_outline.GetSorted())
             Reset();

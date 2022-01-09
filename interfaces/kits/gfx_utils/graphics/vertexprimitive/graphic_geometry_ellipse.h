@@ -25,6 +25,7 @@
 
 #include <cmath>
 
+#include "gfx_utils/graphic_math.h"
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
 
 namespace OHOS {
@@ -146,9 +147,10 @@ namespace OHOS {
 
     inline void Ellipse::CalcNumSteps()
     {
-        float ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / 2;
-        float da = std::acos(ra / (ra + 0.125 / scaleRadio)) * 2;
-        vertexNumber = Uround(TWO_TIMES * PI / da);
+        const float raDa = 0.125f;
+        float ra = (std::fabs(circleRadiusX) + std::fabs(circleRadiusY)) / FLOATNUM;
+        float da = std::acos(ra / (ra + raDa / scaleRadio)) * FLOATNUM;
+        vertexNumber = MATH_ROUND32(TWO_TIMES * PI / da);
     }
 
     inline unsigned Ellipse::Vertex(float* x, float* y)

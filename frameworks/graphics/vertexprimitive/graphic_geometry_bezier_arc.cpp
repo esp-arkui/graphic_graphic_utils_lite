@@ -17,11 +17,11 @@
 
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
-    const int16u BEZIER_ARC_SETUP = 2;
+    const uint16_t BEZIER_ARC_SETUP = 2;
 
-    const int16u BEZIER_ARC_VERTICES_SIZE_STEP = 6;
+    const uint16_t BEZIER_ARC_VERTICES_SIZE_STEP = 6;
 
-    const int16u BEZIER_ARC_POINTS = 4;
+    const uint16_t BEZIER_ARC_POINTS = 4;
     /* 贝塞尔弧角度极限值 */
     const float BEZIER_ARC_ANGLE_EPSILON = 0.01f;
 
@@ -38,6 +38,9 @@ namespace OHOS {
         float y0 = std::sin(sweepAngle / FLOATNUM);
         float x0 = std::cos(sweepAngle / FLOATNUM);
         float tx = (1.0f - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
+        if(y0 == 0) {
+            y0 = y0 + VERTEX_DIST_EPSILON;
+        }
         float ty = y0 - tx * x0 / y0;
         float px[BEZIER_ARC_POINTS];
         float py[BEZIER_ARC_POINTS];
@@ -106,7 +109,8 @@ namespace OHOS {
                 }
             }
 
-            ArcToBezier(centerX, centerY, rx, ry, startAngle, localSweep, arrayVertices + numberVertices - BEZIER_ARC_SETUP);
+            ArcToBezier(centerX, centerY, rx, ry, startAngle, localSweep, arrayVertices
+                        + numberVertices - BEZIER_ARC_SETUP);
 
             startAngle += localSweep;
             numberVertices += BEZIER_ARC_VERTICES_SIZE_STEP;
@@ -155,6 +159,12 @@ namespace OHOS {
         float sign = (largeArcFlag == sweepFlag) ? -1.0f : 1.0f;
         float sq = (prx * pry - prx * py1 - pry * px1) / (prx * py1 + pry * px1);
         float coef = sign * std::sqrt((sq < 0) ? 0 : sq);
+        if(ry == 0) {
+            ry += VERTEX_DIST_EPSILON;
+        }
+        if(rx == 0) {
+            rx += VERTEX_DIST_EPSILON;
+        }
         float cx1 = coef * ((rx * y1) / ry);
         float cy1 = coef * -((ry * x1) / rx);
 
@@ -172,6 +182,9 @@ namespace OHOS {
         p = ux;
         n = std::sqrt(ux * ux + uy * uy);
         sign = (uy < 0) ? -1.0f : 1.0f;
+        if(n == 0) {
+            n += VERTEX_DIST_EPSILON;
+        }
         float v = p / n;
         if (v > 1.0f) {
             v = 1.0f;
@@ -183,6 +196,9 @@ namespace OHOS {
         n = std::sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
         p = ux * vx + uy * vy;
         sign = (ux * vy - uy * vx < 0) ? -1.0f : 1.0f;
+        if(n == 0) {
+            n += VERTEX_DIST_EPSILON;
+        }
         v = p / n;
         if (v < -1.0f) {
             v = -1.0f;

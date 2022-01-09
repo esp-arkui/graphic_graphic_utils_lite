@@ -14,11 +14,11 @@
  */
 
 /**
-* @file gradient_lut.h
-* @brief Defines 渐变模式
-* @since 1.0
-* @version 1.0
-*/
+ * @file gradient_lut.h
+ * @brief Defines 渐变模式
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GRADIENT_LUT_INCLUDED
 #define GRAPHIC_GRADIENT_LUT_INCLUDED
@@ -46,10 +46,10 @@ namespace OHOS {
         }
 
         /**
-        * @brief 删除所有颜色
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 删除所有颜色
+         * @since 1.0
+         * @version 1.0
+         */
         void RemoveAll()
         {
             colorProfile.RemoveAll();
@@ -68,12 +68,12 @@ namespace OHOS {
         }
 
         /**
-        * @brief 根据渐变颜色构建color_type数组
-        * @数组长度0-255
-        * @数组内容根据渐变颜色分布在数组上
-        * @since 1.0
-        * @version 1.0
-        */
+         * @brief 根据渐变颜色构建color_type数组
+         * @数组长度0-255
+         * @数组内容根据渐变颜色分布在数组上
+         * @since 1.0
+         * @version 1.0
+         */
         void BuildLut()
         {
             /*

@@ -73,7 +73,7 @@ namespace OHOS {
     template <class T, unsigned S>
     void VertexSequence<T, S>::Close(bool closed)
     {
-        while (1 < BaseType::Size()) {
+        while (BaseType::Size() > 1) {
             if ((*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
                 break;
             }
@@ -83,7 +83,7 @@ namespace OHOS {
         }
 
         if (closed) {
-            while (1 < BaseType::Size()) {
+            while (BaseType::Size() > 1) {
                 if ((*this)[BaseType::Size() - 1]((*this)[0])) { // 计算两顶点距离
                     break;
                 }
@@ -153,12 +153,12 @@ namespace OHOS {
         VertexDistCmd()
         {}
         /**
-     * @brief 构造VertexDist.
-     *
-     * @param x_,y_ 顶点坐标, cmd_ 连接命令.
-     * @since 1.0
-     * @version 1.0
-     */
+         * @brief 构造VertexDist.
+         *
+         * @param x_,y_ 顶点坐标, cmd_ 连接命令.
+         * @since 1.0
+         * @version 1.0
+         */
         VertexDistCmd(float x_, float y_, unsigned cmd_)
             : VertexDist(x_, y_), cmd(cmd_)
         {
