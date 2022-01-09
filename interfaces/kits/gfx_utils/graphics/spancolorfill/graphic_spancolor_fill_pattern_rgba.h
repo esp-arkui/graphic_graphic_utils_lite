@@ -14,11 +14,11 @@
  */
 
 /**
-* @file span_pattern_rgba.h
-* @brief Defines pattern的扫描线
-* @since 1.0
-* @version 1.0
-*/
+ * @file span_pattern_rgba.h
+ * @brief Defines pattern的扫描线
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
 #define GRAPHIC_SPAN_PATTERN_RGBA_INCLUDED
@@ -31,7 +31,6 @@ namespace OHOS {
         typedef Source PatternSource;
         typedef typename PatternSource::color_type colorType;
         typedef typename PatternSource::order_type orderType;
-        typedef typename colorType::ValueType valueType;
         SpanPatternFillRgba()
         {
         }
@@ -60,8 +59,8 @@ namespace OHOS {
             x += offsetX;
             y += offsetY;
             // 从对应的image_accessors模板中取出对应像素
-            const valueType* color = (const valueType*)patternSource->Span(x, y, len);
-            for (; len; --len, color = (const valueType*)patternSource->NextX(), ++span) {
+            const uint8_t* color = (const uint8_t*)patternSource->Span(x, y, len);
+            for (; len; --len, color = (const uint8_t*)patternSource->NextX(), ++span) {
                 if (color) {
                     // 从source_type取出相应像素。
                     span->redValue = color[orderType::RED];

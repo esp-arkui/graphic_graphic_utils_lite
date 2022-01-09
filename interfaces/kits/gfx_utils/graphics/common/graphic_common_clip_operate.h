@@ -14,23 +14,23 @@
  */
 
 /**
-* @addtogroup GraphicGeometry
-* @{
-*
-* @brief Defines ClippingFlagsE, ClipMovePoint, ClipLineSegment.
-*
-* @since 1.0
-* @version 1.0
-*/
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines ClippingFlagsE, ClipMovePoint, ClipLineSegment.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
 
 /**
-* @file graphic_geometry_clip_liang_barsky.h
-*
-* @brief Defines 裁剪相关方法.
-*
-* @since 1.0
-* @version 1.0
-*/
+ * @file graphic_geometry_clip_liang_barsky.h
+ *
+ * @brief Defines 裁剪相关方法.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
 
 #ifndef GRAPHIC_GEOMETRY_CLIP_LIANG_BARSKY_INCLUDED
 #define GRAPHIC_GEOMETRY_CLIP_LIANG_BARSKY_INCLUDED
@@ -41,23 +41,23 @@ namespace OHOS {
     const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // 完全可见
     const int CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // 完全裁剪
     /**
- *   0110  |  0010  | 0011
- *         |        |
- *  -------+--------+-------- clipBox.y2
- *         |        |
- *   0100  |  0000  | 0001
- *         |        |
- *  -------+--------+-------- clipBox.y1
- *         |        |
- *   1100  |  1000  | 1001
- *         |        |
- * clipBox.x1 clipBox.x2
- * @brief 确定y的位置，纵向裁剪.
- * @param y 纵向位置,clipBox裁剪窗口
- * @return 返回对应的区域编码
- * @since 1.0
- * @version 1.0
- */
+     *   0110  |  0010  | 0011
+     *         |        |
+     *  -------+--------+-------- clipBox.y2
+     *         |        |
+     *   0100  |  0000  | 0001
+     *         |        |
+     *  -------+--------+-------- clipBox.y1
+     *         |        |
+     *   1100  |  1000  | 1001
+     *         |        |
+     * clipBox.x1 clipBox.x2
+     * @brief 确定y的位置，纵向裁剪.
+     * @param y 纵向位置,clipBox裁剪窗口
+     * @return 返回对应的区域编码
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     inline unsigned ClippingFlagsY(T y, const RectBase<T>& clipBox)
     {
@@ -65,12 +65,12 @@ namespace OHOS {
     }
 
     /**
- * @brief 确定x的位置，横向裁剪.
- * @param x 横向位置,clipBox裁剪窗口
- * @return 返回对应的区域编码
- * @since 1.0
- * @version 1.0
- */
+     * @brief 确定x的位置，横向裁剪.
+     * @param x 横向位置,clipBox裁剪窗口
+     * @return 返回对应的区域编码
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     inline unsigned ClippingFlagsX(T x, const RectBase<T>& clipBox)
     {
@@ -78,12 +78,12 @@ namespace OHOS {
     }
 
     /**
- * @brief 根据顶点的位置确定顶点的剪裁.
- * @param x,y 顶点位置,clipBox裁剪窗口
- * @return 返回对应的区域编码
- * @since 1.0
- * @version 1.0
- */
+     * @brief 根据顶点的位置确定顶点的剪裁.
+     * @param x,y 顶点位置,clipBox裁剪窗口
+     * @return 返回对应的区域编码
+     * @since 1.0
+     * @version 1.0
+     */
     template <class T>
     inline unsigned ClippingFlags(T x, T y, const RectBase<T>& clipBox)
     {

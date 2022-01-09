@@ -29,7 +29,7 @@
 
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
 #include "graphic_common_gamma_functions.h"
-
+#include "gfx_utils/graphic_math.h"
 namespace OHOS {
     const int TABLESIZE = 256;
     const int TABLEBOUNDARY = 255;
@@ -157,8 +157,8 @@ namespace OHOS {
             inverseTable_[0] = 0;
             for (int i = 1; i <= TABLEBOUNDARY; ++i) {
                 // 16位RGB范围在[0，65535]内。
-                dirTable_[i] = Uround(RGB16MAX * SrgbToLinear(i / SRGBVALUE));
-                inverseTable_[i] = Uround(RGB16MAX * SrgbToLinear((i - HALF) / SRGBVALUE));
+                dirTable_[i] = MATH_UROUND(RGB16MAX * SrgbToLinear(i / SRGBVALUE));
+                inverseTable_[i] = MATH_UROUND(RGB16MAX * SrgbToLinear((i - HALF) / SRGBVALUE));
             }
         }
     };
@@ -180,8 +180,8 @@ namespace OHOS {
             inverseTable_[0] = 0;
             for (int i = 1; i <= TABLEBOUNDARY; ++i) {
                 // 8位RGB由简单的双向查找表处理。
-                dirTable_[i] = Uround(SRGBVALUE * SrgbToLinear(i / SRGBVALUE));
-                inverseTable_[i] = Uround(SRGBVALUE * LinearToSrgb(i / SRGBVALUE));
+                dirTable_[i] = MATH_UROUND(SRGBVALUE * SrgbToLinear(i / SRGBVALUE));
+                inverseTable_[i] = MATH_UROUND(SRGBVALUE * LinearToSrgb(i / SRGBVALUE));
             }
         }
 

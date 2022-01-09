@@ -41,7 +41,7 @@
 #include "gfx_utils/graphics/common/graphic_common_gamma_lut.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
-
+#include "graphic_math.h"
 #if ENABLE_ARM_MATH
 #    include "arm_math.h"
 #endif
@@ -191,7 +191,7 @@ namespace OHOS {
      * @version 1.0
      */
     struct Rgba {
-        using ValueType = float;
+        using uint8_t = float;
 
         float redValue;
         float greenValue;
@@ -531,15 +531,12 @@ namespace OHOS {
      */
     template <class Colorspace>
     struct Rgba8T {
-        using ValueType = uint8_t;
-        using CalcType = int32u;
-        using LongType = int32;
         using SelfType = Rgba8T;
 
-        ValueType redValue;
-        ValueType greenValue;
-        ValueType blueValue;
-        ValueType alphaValue;
+        uint8_t redValue;
+        uint8_t greenValue;
+        uint8_t blueValue;
+        uint8_t alphaValue;
 
         enum BaseScaleEnum {
             BASESHIFT = 8,
@@ -560,10 +557,10 @@ namespace OHOS {
          * @version 1.0
          */
         Rgba8T(unsigned red, unsigned green, unsigned blue, unsigned alpha = BASEMASK)
-            : redValue(ValueType(red)),
-            greenValue(ValueType(green)),
-            blueValue(ValueType(blue)),
-            alphaValue(ValueType(alpha))
+            : redValue(uint8_t(red)),
+            greenValue(uint8_t(green)),
+            blueValue(uint8_t(blue)),
+            alphaValue(uint8_t(alpha))
         {}
 
         /**
@@ -591,7 +588,7 @@ namespace OHOS {
             : redValue(color.redValue),
             greenValue(color.greenValue),
             blueValue(color.blueValue),
-            alphaValue(ValueType(alpha))
+            alphaValue(uint8_t(alpha))
         {}
 
         /**
@@ -633,10 +630,10 @@ namespace OHOS {
          */
         static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
         {
-            dst.redValue = ValueType(Uround(src.redValue * BASEMASK));
-            dst.greenValue = ValueType(Uround(src.greenValue * BASEMASK));
-            dst.blueValue = ValueType(Uround(src.blueValue * BASEMASK));
-            dst.alphaValue = ValueType(Uround(src.alphaValue * BASEMASK));
+            dst.redValue = uint8_t(MATH_UROUND(src.redValue * BASEMASK));
+            dst.greenValue = uint8_t(MATH_UROUND(src.greenValue * BASEMASK));
+            dst.blueValue = uint8_t(MATH_UROUND(src.blueValue * BASEMASK));
+            dst.alphaValue = uint8_t(MATH_UROUND(src.alphaValue * BASEMASK));
         }
 
         /**
@@ -655,17 +652,17 @@ namespace OHOS {
             dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE float ToFloat(ValueType valueType)
+        static GRAPHIC_GEOMETRY_INLINE float ToFloat(uint8_t uint8_t)
         {
-            return float(valueType) / BASEMASK;
+            return float(uint8_t) / BASEMASK;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType FromFloat(float value)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t FromFloat(float value)
         {
-            return ValueType(Uround(value * BASEMASK));
+            return uint8_t(MATH_UROUND(value * BASEMASK));
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType EmptyValue()
+        static GRAPHIC_GEOMETRY_INLINE uint8_t EmptyValue()
         {
             return 0;
         }
@@ -680,22 +677,22 @@ namespace OHOS {
             return alphaValue == BASEMASK;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType Invert(ValueType valueType)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t Invert(uint8_t uint8_t)
         {
-            return BASEMASK - valueType;
+            return BASEMASK - uint8_t;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType Multiply(ValueType valueA, ValueType valueB)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t Multiply(uint8_t valueA, uint8_t valueB)
         {
 #if ENABLE_ARM_MATH
-            CalcType calcType = __SMUAD(valueA, valueB) + BASEMSB;
+            uint32_t uint32_t = __SMUAD(valueA, valueB) + BASEMSB;
 #else
-            CalcType calcType = valueA * valueB + BASEMSB;
+            uint32_t uint32_t = valueA * valueB + BASEMSB;
 #endif
-            return ValueType(((calcType >> BASESHIFT) + calcType) >> BASESHIFT);
+            return uint8_t(((uint32_t >> BASESHIFT) + uint32_t) >> BASESHIFT);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType DividMultiply(ValueType valueA, ValueType valueB)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t DividMultiply(uint8_t valueA, uint8_t valueB)
         {
             if (valueA * valueB == 0) {
                 return 0;
@@ -703,9 +700,9 @@ namespace OHOS {
                 return BASEMASK;
             } else {
 #if ENABLE_ARM_MATH
-                return ValueType(__UDIV(__SMUAD(valueA, BASEMASK) + (valueB >> 1), valueB));
+                return uint8_t(__UDIV(__SMUAD(valueA, BASEMASK) + (valueB >> 1), valueB));
 #else
-                return ValueType((valueA * BASEMASK + (valueB >> 1)) / valueB);
+                return uint8_t((valueA * BASEMASK + (valueB >> 1)) / valueB);
 #endif
             }
         }
@@ -722,22 +719,22 @@ namespace OHOS {
             return value >> BASESHIFT;
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType MultCover(ValueType valueA, CoverType coverValue)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t MultCover(uint8_t valueA, uint8_t coverValue)
         {
             return Multiply(valueA, coverValue);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE CoverType ScaleCover(CoverType coverValue, ValueType value)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t ScaleCover(uint8_t coverValue, uint8_t value)
         {
             return Multiply(value, coverValue);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType Prelerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t Prelerp(uint8_t valueP, uint8_t valueQ, uint8_t valueA)
         {
             return valueP + valueQ - Multiply(valueP, valueA);
         }
 
-        static GRAPHIC_GEOMETRY_INLINE ValueType Lerp(ValueType valueP, ValueType valueQ, ValueType valueA)
+        static GRAPHIC_GEOMETRY_INLINE uint8_t Lerp(uint8_t valueP, uint8_t valueQ, uint8_t valueA)
         {
 #if ENABLE_ARM_MATH
             int t = __SMUAD((valueQ - valueP), valueA) + BASEMSB - (valueP > valueQ);
@@ -745,7 +742,7 @@ namespace OHOS {
             int t = (valueQ - valueP) * valueA + BASEMSB - (valueP > valueQ);
 
 #endif
-            return ValueType(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
+            return uint8_t(valueP + (((t >> BASESHIFT) + t) >> BASESHIFT));
         }
 
         /**
@@ -763,7 +760,7 @@ namespace OHOS {
             } else if (alpha > 1) {
                 alphaValue = 1;
             } else {
-                alphaValue = (ValueType)Uround(alpha * float(BASEMASK));
+                alphaValue = (uint8_t)MATH_UROUND(alpha * float(BASEMASK));
             }
             return *this;
         }
@@ -784,7 +781,7 @@ namespace OHOS {
         GRAPHIC_GEOMETRY_INLINE SelfType Gradient(const SelfType& color, float k) const
         {
             SelfType ret;
-            CalcType increaseK = Uround(k * BASEMASK);
+            uint32_t increaseK = MATH_UROUND(k * BASEMASK);
             ret.redValue = Lerp(redValue, color.redValue, increaseK);
             ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
             ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);
@@ -1041,7 +1038,6 @@ namespace OHOS {
          */
         static ColorType Orange();
     };
-
 } // namespace OHOS
 
 #endif

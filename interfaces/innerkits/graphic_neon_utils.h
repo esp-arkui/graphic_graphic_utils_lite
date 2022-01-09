@@ -18,11 +18,11 @@
 
 #include "graphic_config.h"
 #ifdef ARM_NEON_OPT
-#    include <arm_neon.h>
+#include <arm_neon.h>
 
-#    include "gfx_utils/color.h"
-#    include "gfx_utils/graphic_math.h"
-#    include "gfx_utils/graphic_types.h"
+#include "gfx_utils/color.h"
+#include "gfx_utils/graphic_math.h"
+#include "gfx_utils/graphic_types.h"
 
 namespace OHOS {
 #    define BASEMSB 128
@@ -36,17 +36,14 @@ namespace OHOS {
 
     static inline uint8x8_t Multipling(uint8x8_t a, uint8x8_t b)
     {
-        uint16x8_t calcType;
-        uint8x8_t result;
-        calcType = vmlal_u8(vdupq_n_u16(BASEMSB), a, b);
-        result = vshrn_n_u16(calcType, NEON_STEP_8);
+        uint16x8_t calcType = vmlal_u8(vdupq_n_u16(BASEMSB), a, b);
+        uint8x8_t result = vshrn_n_u16(calcType, NEON_STEP_8);
         return vshrn_n_u16(vaddq_u16(vmovl_u8(result), calcType), NEON_STEP_8);
     }
 
     static inline uint8x8_t NeonPreLerp(uint8x8_t p, uint8x8_t q, uint8x8_t a)
     {
-        uint16x8_t calcType;
-        calcType = vaddl_u8(p, q);
+        uint16x8_t calcType = vaddl_u8(p, q);
         return vsub_u8(vshrn_n_u16(calcType, NEON_STEP_8), Multipling(p, a));
     }
 

@@ -14,7 +14,7 @@
  */
 
 #include "gfx_utils/color.h"
-
+//#include "gfx_utils/graphics/common/graphic_common_basics.h"
 namespace OHOS {
     ColorType Color::GetMixColor(ColorType c1, ColorType c2, uint8_t mix)
     {
