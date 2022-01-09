@@ -468,9 +468,9 @@ namespace OHOS {
             return approximationScale_;
         }
 
-        void AngleTolerance(float a)
+        void AngleTolerance(float angleValue)
         {
-            angleTolerance_ = a;
+            angleTolerance_ = angleValue;
         }
         float AngleTolerance() const
         {
@@ -479,12 +479,12 @@ namespace OHOS {
 
         void CuspLimit(float angleValue)
         {
-            cuspLimit_ = (angleValue == 0.0) ? 0.0 : PI - angleValue;
+            cuspLimit_ = (angleValue == 0.0f) ? 0.0f : PI - angleValue;
         }
 
         float CuspLimit() const
         {
-            return (cuspLimit_ == 0.0) ? 0.0 : PI - cuspLimit_;
+            return (cuspLimit_ == 0.0) ? 0.0f : PI - cuspLimit_;
         }
 
         void Rewind(unsigned)
