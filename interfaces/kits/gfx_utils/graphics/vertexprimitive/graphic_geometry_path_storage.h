@@ -201,13 +201,11 @@ namespace OHOS {
                     (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
 
                 if (croodBlocks_) {
-                    errno_t err = memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
-                                           croodBlocks_, maxBlocks_ * sizeof(float*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
+                                 croodBlocks_, maxBlocks_ * sizeof(float*)) != EOK) {
                     }
-                    err = memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
-                                   cmdBlocks_, maxBlocks_ * sizeof(unsigned char*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
+                                 cmdBlocks_, maxBlocks_ * sizeof(unsigned char*)) != EOK) {
                     }
                     GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 }
