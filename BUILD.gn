@@ -61,7 +61,7 @@ shared_library("graphic_utils") {
     "frameworks/graphics/vertexgenerate/graphic_vertex_generate_dash.cpp",
     "frameworks/graphics/vertexgenerate/graphic_vertex_generate_stroke.cpp",
   ]
-  include_dirs = [ "frameworks","interfaces/kits" ]
+  include_dirs = [ "frameworks","interfaces/kits","//foundation/graphic/ui/frameworks" ]
   public_configs = [ ":graphic_utils_public_config" ]
   deps = [ "//third_party/bounds_checking_function:libsec_shared" ]
   public_deps =
