@@ -43,32 +43,32 @@ namespace OHOS {
                 //	curretn position，waring the first column of every line row is zero
                 int *LinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
                 //	the first column is 0
-                LinePD[-4] = 0;
-                LinePD[-3] = 0;
-                LinePD[-2] = 0;
-                LinePD[-1] = 0;
+                LinePD[-INDEX_FOUR] = 0;
+                LinePD[-INDEX_THREE] = 0;
+                LinePD[-INDEX_TWO] = 0;
+                LinePD[-INDEX_ONE] = 0;
                 for (int X = 0, SumB = 0, SumG = 0, SumR = 0, SumA = 0; X < Width; X++)
                 {
-                    SumB += LinePS[0];
-                    SumG += LinePS[1];
-                    SumR += LinePS[2];
-                    SumA += LinePS[3];
-                    LinePD[0] = LinePL[0] + SumB;
-                    LinePD[1] = LinePL[1] + SumG;
-                    LinePD[2] = LinePL[2] + SumR;
-                    LinePD[3] = LinePL[3] + SumA;
+                    SumB += LinePS[INDEX_ZERO];
+                    SumG += LinePS[INDEX_ONE];
+                    SumR += LinePS[INDEX_TWO];
+                    SumA += LinePS[INDEX_THREE];
+                    LinePD[INDEX_ZERO] = LinePL[INDEX_ZERO] + SumB;
+                    LinePD[INDEX_ONE] = LinePL[INDEX_ONE] + SumG;
+                    LinePD[INDEX_TWO] = LinePL[INDEX_TWO] + SumR;
+                    LinePD[INDEX_THREE] = LinePL[INDEX_THREE] + SumA;
                     LinePS += Channel;
                     LinePL += Channel;
                     LinePD += Channel;
                 }
             }
         }
-
-        void static BoxBlur(uint8_t *Src, unsigned char *Dest, uint16_t Width, uint16_t Height, uint16_t Stride, uint16_t Radius)
+    public:
+        void static BoxBlur(uint8_t *Src, uint8_t *Dest, uint16_t Width, uint16_t Height, uint16_t Stride, uint16_t Radius)
         {
             int32_t Channel = Stride / Width;
             int32_t *Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
-            if (Channel == 4)
+            if (Channel == FOUR_TIMES)
             {
                 GetRGBAIntegralImage(Src, Integral, Width, Height, Stride);
                 #pragma omp parallel for
@@ -76,42 +76,31 @@ namespace OHOS {
                 {
                     int32_t Y1 = MATH_MAX(Y - Radius, 0);
                     int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
-                    int32_t *LineP1 = Integral + Y1 * (Width + 1) * 4;
-                    int32_t *LineP2 = Integral + Y2 * (Width + 1) * 4;
+                    int32_t *LineP1 = Integral + Y1 * ((Width + 1) << INDEX_TWO);
+                    int32_t *LineP2 = Integral + Y2 * ((Width + 1) << INDEX_TWO);
                     unsigned char *LinePD = Dest + Y * Stride;
                     for (int X = 0; X < Width; X++)
                     {
                         int X1 = MATH_MAX(X - Radius, 0);
                         int X2 = MATH_MIN(X + Radius + 1, Width);
-                        int Index1 = X1 * 4;
-                        int Index2 = X2 * 4;
-                        int SumB = LineP2[Index2 + 0] - LineP1[Index2 + 0] - LineP2[Index1 + 0] + LineP1[Index1 + 0];
-                        int SumG = LineP2[Index2 + 1] - LineP1[Index2 + 1] - LineP2[Index1 + 1] + LineP1[Index1 + 1];
-                        int SumR = LineP2[Index2 + 2] - LineP1[Index2 + 2] - LineP2[Index1 + 2] + LineP1[Index1 + 2];
+                        int Index1 = X1 << INDEX_TWO;
+                        int Index2 = X2 << INDEX_TWO;
+                        int SumB = LineP2[Index2 + INDEX_ZERO] - LineP1[Index2 + INDEX_ZERO] - LineP2[Index1 + INDEX_ZERO] + LineP1[Index1 + INDEX_ZERO];
+                        int SumG = LineP2[Index2 + INDEX_ONE] - LineP1[Index2 + INDEX_ONE] - LineP2[Index1 + INDEX_ONE] + LineP1[Index1 + INDEX_ONE];
+                        int SumR = LineP2[Index2 + INDEX_TWO] - LineP1[Index2 + INDEX_TWO] - LineP2[Index1 + INDEX_TWO] + LineP1[Index1 + INDEX_TWO];
                         //int SumA = LineP2[Index2 + 3] - LineP1[Index2 + 3] - LineP2[Index1 + 3] + LineP1[Index1 + 3];
                         int PixelCount = (X2 - X1) * (Y2 - Y1);
-                        LinePD[0] = (SumB + (PixelCount >> 1)) / PixelCount;
-                        LinePD[1] = (SumG + (PixelCount >> 1)) / PixelCount;
-                        LinePD[2] = (SumR + (PixelCount >> 1)) / PixelCount;
+                        LinePD[INDEX_ZERO] = (SumB + (PixelCount >> INDEX_ONE)) / PixelCount;
+                        LinePD[INDEX_ONE] = (SumG + (PixelCount >> INDEX_ONE)) / PixelCount;
+                        LinePD[INDEX_TWO] = (SumR + (PixelCount >> INDEX_ONE)) / PixelCount;
                         //LinePD[3] = (SumA + (PixelCount >> 1)) / PixelCount;
-                        uint8_t* alpha = Src + Y * Stride + X * 4;
-                        LinePD[3] = alpha[3];
-                        LinePD += 4;
+                        uint8_t* alpha = Src + Y * Stride + (X << INDEX_TWO);
+                        LinePD[INDEX_THREE] = alpha[INDEX_THREE];
+                        LinePD += INDEX_FOUR;
                     }
                 }
             }
             free(Integral);
-        }
-    public:
-        /**
-         * @brief 模糊
-         * @since 1.0
-         * @version 1.0
-         */
-        void BlurImageFilter(uint8_t* pImagePtr, unsigned radius)
-        {
-            //PixfmtTransposer<Img> img2(img);
-            //BoxBlur(pImagePtr,pImagePtr,)
         }
 #endif
     };

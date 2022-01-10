@@ -64,8 +64,8 @@ namespace OHOS {
             : data_(GeometryArrayAllocator<T>::Allocate(size)), size_(size)
         {}
 
-        GeometryPlainDataArray(const SelfType& podArray) :
-            data_(GeometryArrayAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
+        GeometryPlainDataArray(const SelfType& podArray)
+            : data_(GeometryArrayAllocator<T>::Allocate(podArray.size_)), size_(podArray.size_)
         {
             memcpy_s(data_, sizeof(T) * size_, podArray.data_, sizeof(T) * size_);
         }

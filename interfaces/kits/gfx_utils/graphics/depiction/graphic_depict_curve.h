@@ -52,8 +52,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        explicit DepictCurve(VertexSource& source) :
-            m_source(&source), m_last_x(0.0), m_last_y(0.0)
+        explicit DepictCurve(VertexSource& source)
+            : m_source(&source), m_last_x(0.0), m_last_y(0.0)
         {
         }
 

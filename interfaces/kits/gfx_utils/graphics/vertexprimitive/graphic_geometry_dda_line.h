@@ -39,8 +39,8 @@ namespace OHOS {
         DdaTwoLineInterpolator()
         {}
 
-        DdaTwoLineInterpolator(int coordinate1, int coordinate2, int count) :
-            dividCount(count <= 0 ? 1 : count),
+        DdaTwoLineInterpolator(int coordinate1, int coordinate2, int count)
+            : dividCount(count <= 0 ? 1 : count),
             leftSideCoordinate((coordinate2 - coordinate1) / dividCount),
             remainderValue((coordinate2 - coordinate1) % dividCount),
             moduloOperate(remainderValue),
