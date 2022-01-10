@@ -65,6 +65,7 @@ namespace OHOS {
             lineCapEnum(BUTT_CAP),
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
+
             miterLimitMeasure(OHOS::DEFAULTMITERLIMIT),
             lineJoinEnum(MITER_JOIN),
 #endif
