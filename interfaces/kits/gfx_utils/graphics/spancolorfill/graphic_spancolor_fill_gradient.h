@@ -56,8 +56,8 @@ namespace OHOS {
         SpanFillColorGradient(interpolator_type& inter,
                               GradientF& gradient_function,
                               ColorF& color_function,
-                              double distance1, double distance2) :
-            interpolator_(&inter),
+                              double distance1, double distance2)
+            : interpolator_(&inter),
             gradientFunction_(&gradient_function),
             colorFunction_(&color_function),
             distance1_(MATH_ROUND32(distance1 * GRADIENT_SUBPIXEL_SCALE)),
@@ -83,10 +83,10 @@ namespace OHOS {
             for (; len; --len, ++(*interpolator_)) {
                 interpolator_->Coordinates(&x, &y);
                 float proportion = gradientFunction_->Calculate(x >> downscaleShift,
-                                                         y >> downscaleShift,
-                                                         distance1_,
-                                                         distance2_,
-                                                         colorFunction_->size());
+                                                                y >> downscaleShift,
+                                                                distance1_,
+                                                                distance2_,
+                                                                colorFunction_->size());
                 *span++ = colorFunction_->getColor(proportion);
             }
         }
@@ -106,8 +106,8 @@ namespace OHOS {
      */
     class GradientRadialCalculate {
     public:
-        GradientRadialCalculate() :
-            endRadius_(HUNDRED_TIMES * GRADIENT_SUBPIXEL_SCALE),
+        GradientRadialCalculate()
+            : endRadius_(HUNDRED_TIMES * GRADIENT_SUBPIXEL_SCALE),
             dx_(0),
             dy_(0)
         {
@@ -120,8 +120,8 @@ namespace OHOS {
          * @param dx x轴方向上，结束圆圆心到开始圆圆心得距离
          * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
          */
-        GradientRadialCalculate(double endRadius, double dx, double dy) :
-            endRadius_(MATH_ROUND32(endRadius * GRADIENT_SUBPIXEL_SCALE)),
+        GradientRadialCalculate(double endRadius, double dx, double dy)
+            : endRadius_(MATH_ROUND32(endRadius * GRADIENT_SUBPIXEL_SCALE)),
             dx_(MATH_ROUND32(dx * GRADIENT_SUBPIXEL_SCALE)),
             dy_(MATH_ROUND32(dy * GRADIENT_SUBPIXEL_SCALE))
         {

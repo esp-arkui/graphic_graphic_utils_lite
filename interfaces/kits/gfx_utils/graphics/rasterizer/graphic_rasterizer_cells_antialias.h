@@ -160,7 +160,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const CellType* const *ScanlineCells(unsigned yLevel) const
+        const CellType * const *ScanlineCells(unsigned yLevel) const
         {
             return m_sorted_cells.Data() + m_sorted_y[yLevel - m_min_y].start;
         }
@@ -678,9 +678,8 @@ namespace OHOS {
                                                                 CELL_BLOCK_POOL);
 
                 if (m_cells) {
-                    errno_t err = memcpy_s(new_cells, m_max_blocks * sizeof(CellType*),
-                                           m_cells, m_max_blocks * sizeof(CellType*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_cells, m_max_blocks * sizeof(CellType*),
+                                 m_cells, m_max_blocks * sizeof(CellType*)) != EOK) {
                     }
                     GeometryArrayAllocator<CellType*>::Deallocate(m_cells, m_max_blocks);
                 }

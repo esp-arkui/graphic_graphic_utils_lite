@@ -84,12 +84,12 @@ namespace OHOS {
 
         color_type getColor(float proportion)
         {
-            if(proportion >= 1) {
+            if (proportion >= 1) {
                 ColorPoint  end = colorProfile.Last();
                 return end.color;
             }
 
-            if(proportion <= 0) {
+            if (proportion <= 0) {
                 ColorPoint  start = colorProfile[0];
                 return start.color;
             }
@@ -97,7 +97,7 @@ namespace OHOS {
             ColorPoint start;
             ColorPoint end;
             for (int i = 0; i < colorProfile.Size(); i++) {
-                if(colorProfile[i].offset>proportion){
+                if (colorProfile[i].offset > proportion) {
                     end = colorProfile[i];
                     start = colorProfile[i-1];
                     break;
