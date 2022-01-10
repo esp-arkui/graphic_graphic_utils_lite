@@ -82,15 +82,14 @@ namespace OHOS {
             interpolator_->Begin(x + HALFNUM, y + HALFNUM, len);
             for (; len; --len, ++(*interpolator_)) {
                 interpolator_->Coordinates(&x, &y);
-                int index = gradientFunction_->Calculate(x >> downscaleShift,
+                float proportion = gradientFunction_->Calculate(x >> downscaleShift,
                                                          y >> downscaleShift,
                                                          distance1_,
                                                          distance2_,
                                                          colorFunction_->size());
-                *span++ = (*colorFunction_)[index];
+                *span++ = colorFunction_->getColor(proportion);
             }
         }
-
     private:
         interpolator_type* interpolator_;
         GradientF* gradientFunction_;
@@ -138,25 +137,27 @@ namespace OHOS {
          * @param size colorFunction_的size
          * @return
          */
-        int Calculate(int x, int y, int startRadius, int endRadius, int size) const
+        float Calculate(float x, float y, float startRadius, float endRadius, int size) const
         {
             double dx = x - dx_;
             double dy = y - dy_;
             double m_distanceRadius = dx * dy_ - dy * dx_;
-            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy) - m_distanceRadius * m_distanceRadius;
+            double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy)
+                    - m_distanceRadius * m_distanceRadius;
             int deltaRadius = endRadius - startRadius; // 半径的差
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
-            int index = ((MATH_ROUND32((dx * dx_ + dy * dy_ + std::sqrt(std::fabs(m_RadiusDistance))) * m_mul)
-                          - startRadius) * size) / deltaRadius;
-            if (index < 0) {
-                index = 0;
+            float proportion = (MATH_ROUND32((dx * dx_ + dy * dy_ +
+                                              std::sqrt(std::fabs(m_RadiusDistance)))
+                                             * m_mul) - startRadius)/deltaRadius;
+            if (proportion < 0) {
+                proportion = 0;
             }
-            if (index >= size) {
-                index = size - 1;
+            if (proportion >= 1) {
+                proportion = 1;
             }
-            return index;
+            return proportion;
         }
 
     private:
@@ -214,19 +215,19 @@ namespace OHOS {
          * @param size color_function的size
          * @return
          */
-        static int Calculate(int x, int, int, int distance, int size)
+        static float Calculate(float x, int, int, float distance, int size)
         {
             if (distance < 1) {
                 distance = 1;
             }
-            int index = (x * size) / distance;
-            if (index < 0) {
-                index = 0;
+            float proportion = x / distance;
+            if (proportion < 0) {
+                proportion = 0;
             }
-            if (index >= size) {
-                index = size - 1;
+            if (proportion >= 1) {
+                proportion = 1;
             }
-            return index;
+            return proportion;
         }
 #endif
     };
