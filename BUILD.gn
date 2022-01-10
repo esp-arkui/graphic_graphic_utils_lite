@@ -57,7 +57,6 @@ shared_library("graphic_utils") {
     "frameworks/graphics/vertexprimitive/graphic_geometry_arc.cpp",
     "frameworks/graphics/vertexprimitive/graphic_geometry_bezier_arc.cpp",
     "frameworks/graphics/vertexprimitive/graphic_geometry_curves.cpp",
-    "frameworks/graphics/vertexprimitive/graphic_geometry_rounded_rect.cpp",
     "frameworks/graphics/transform/graphic_transform_trans_affine.cpp",
     "frameworks/graphics/vertexgenerate/graphic_vertex_generate_dash.cpp",
     "frameworks/graphics/vertexgenerate/graphic_vertex_generate_stroke.cpp",
