@@ -474,8 +474,8 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_)
+            : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS

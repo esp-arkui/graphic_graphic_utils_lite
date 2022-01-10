@@ -61,14 +61,14 @@ namespace OHOS {
             strokeWidthUsingAbs(OHOS::ALPHAHALF),
             strokeWidthPercentDivision(OHOS::ALPHAHALF / BUF_SIZE),
             strokeWidthSignal(1),
-            approxScaleRadio(1.0),
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
             lineCapEnum(BUTT_CAP),
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
             miterLimitMeasure(OHOS::DEFAULTMITERLIMIT),
-            lineJoinEnum(MITER_JOIN)
+            lineJoinEnum(MITER_JOIN),
 #endif
+          approxScaleRadio(1.0)
         {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
