@@ -226,8 +226,8 @@ namespace OHOS {
 
     class ScanlineHitRegionMeasure {
     public:
-        ScanlineHitRegionMeasure(int x) :
-            mXCoordinate(x), mHitMeasureFlags(false)
+        ScanlineHitRegionMeasure(int x)
+            : mXCoordinate(x), mHitMeasureFlags(false)
         {}
 
         void AddCellInContainer(int x, int)
@@ -274,8 +274,8 @@ namespace OHOS {
      * @version 1.0
      */
     template <class Cell>
-    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
-        m_num_blocks(0),
+    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit)
+        : m_num_blocks(0),
         m_max_blocks(0),
         m_curr_block(0),
         m_num_cells(0),

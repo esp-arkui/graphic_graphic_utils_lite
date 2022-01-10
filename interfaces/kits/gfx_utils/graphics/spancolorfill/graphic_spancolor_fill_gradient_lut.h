@@ -96,7 +96,7 @@ namespace OHOS {
 
             ColorPoint start;
             ColorPoint end;
-            for(int i=0;i<colorProfile.Size();i++){
+            for (int i = 0; i < colorProfile.Size(); i++) {
                 if(colorProfile[i].offset>proportion){
                     end = colorProfile[i];
                     start = colorProfile[i-1];
