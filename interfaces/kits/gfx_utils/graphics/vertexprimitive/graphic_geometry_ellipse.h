@@ -63,10 +63,10 @@ namespace OHOS {
          * @version 1.0
          */
         Ellipse(float x, float y, float rx, float ry,
-                unsigned numSteps = 0, bool clockwise = false) :
-            circleCenterX(x),
-            circleCenterY(y), circleRadiusX(rx), circleRadiusY(ry), scaleRadio(1.0),
-            vertexNumber(numSteps), circleInnerStep(0), isClockwise(clockwise)
+                unsigned numSteps = 0, bool clockwise = false)
+            : circleCenterX(x), circleCenterY(y),
+              circleRadiusX(rx), circleRadiusY(ry),
+              scaleRadio(1.0), vertexNumber(numSteps), circleInnerStep(0), isClockwise(clockwise)
         {
             if (vertexNumber == 0) {
                 CalcNumSteps();
