@@ -30,21 +30,18 @@
 namespace OHOS {
     const unsigned COLOR_PROFILE_SIZE = 4;
     /**
-     * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
-     * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
-     * @since 1.0
-     * @version 1.0
-     */
-    template <class ColorInterpolator, unsigned ColorLutSize = MAX_COLOR_SIZE>
+    * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
+    * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
+    * @since 1.0
+    * @version 1.0
+    */
+    template <class ColorInterpolator>
     class GradientColorCalibration {
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
     public:
         typedef ColorInterpolator interpolator_type;
         typedef typename interpolator_type::color_type color_type;
-        enum {
-            colorLutSize_ = ColorLutSize
-        };
-        GradientColorCalibration() : colorType(colorLutSize_)
+        GradientColorCalibration()
         {
         }
 
@@ -79,54 +76,48 @@ namespace OHOS {
          */
         void BuildLut()
         {
-            /**
-             * 对于渐变颜色数组记性快速排序
+            /*
+             * 对于渐变颜色数组快速排序
              */
             QuickSort(colorProfile, OffsetLess);
-            colorProfile.CutAt(RemoveDuplicates(colorProfile, OffsetEqual));
-            if (colorProfile.Size() > 1) {
-                unsigned index;
-                unsigned start = MATH_UROUND(colorProfile[0].offset * colorLutSize_);
-                unsigned end;
-                color_type color = colorProfile[0].color;
+        }
 
-                /**
-                 * 对于colorProfile[0]赋予初始颜色计算.
-                 */
-                for (index = 0; index < start; index++) {
-                    colorType[index] = color;
-                }
-                /**
-                 * 从1到colorProfile.size() 间进行插值颜色计算.
-                 */
-                for (index = 1; index < colorProfile.Size(); index++) {
-                    end = MATH_UROUND(colorProfile[index].offset * colorLutSize_);
-                    interpolator_type ci(colorProfile[index - 1].color,
-                                         colorProfile[index].color,
-                                         end - start + 1);
-                    while (start < end) {
-                        colorType[start] = ci.GetColor();
-                        ++ci;
-                        ++start;
-                    }
-                }
-                color = colorProfile.Last().color;
-                /**
-                 * 对于colorProfile last 赋予end颜色..
-                 */
-                for (; end < colorType.Size(); end++) {
-                    color = colorProfile.Last().color;
-                    colorType[end] = color;
+        color_type getColor(float proportion)
+        {
+            if(proportion >= 1) {
+                ColorPoint  end = colorProfile.Last();
+                return end.color;
+            }
+
+            if(proportion <= 0) {
+                ColorPoint  start = colorProfile[0];
+                return start.color;
+            }
+
+            ColorPoint start;
+            ColorPoint end;
+            for(int i=0;i<colorProfile.Size();i++){
+                if(colorProfile[i].offset>proportion){
+                    end = colorProfile[i];
+                    start = colorProfile[i-1];
+                    break;
                 }
             }
+            float growth = (proportion-start.offset)/(end.offset-start.offset);
+            color_type color;
+            color.redValue = start.color.redValue + (end.color.redValue-start.color.redValue)*growth;
+            color.greenValue = start.color.greenValue + (end.color.greenValue-start.color.greenValue)*growth;
+            color.blueValue = start.color.blueValue + (end.color.blueValue-start.color.blueValue)*growth;
+            color.alphaValue = start.color.alphaValue + (end.color.alphaValue-start.color.alphaValue)*growth;
+            return color;
         }
 
         /**
-         * @brief size 返回color_lut_type的size
+         * @brief size 返回colorProfile的size
          */
-        static unsigned size()
+        unsigned size()
         {
-            return colorLutSize_;
+            return colorProfile.Size();
         }
 
         /**
@@ -134,9 +125,8 @@ namespace OHOS {
          */
         const color_type& operator[](unsigned i) const
         {
-            return colorType[i];
+            return colorProfile[i];
         }
-
     private:
         struct ColorPoint {
             double offset;
@@ -180,12 +170,8 @@ namespace OHOS {
         {
             return colorPoint1.offset == colorPoint2.offset;
         }
-
         using colorProfileType = OHOS::GeometryPlainDataBlockVector<ColorPoint, COLOR_PROFILE_SIZE>;
         colorProfileType colorProfile;
-
-        using colorLutType = OHOS::GeometryPlainDataArray<color_type>;
-        colorLutType colorType;
 #endif
     };
 } // namespace OHOS
