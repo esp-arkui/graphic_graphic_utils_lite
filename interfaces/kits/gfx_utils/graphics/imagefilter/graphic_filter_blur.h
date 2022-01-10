@@ -24,81 +24,73 @@
 #include "render/graphic_render_pixfmt_transposer.h"
 
 namespace OHOS {
+    template <class ColorType>
     class FastBoxBlur {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     private:
-        void static GetRGBAIntegralImage(uint8_t *Src, int *Integral, uint16_t Width, uint16_t Height, uint16_t Stride)
+        GeometryPlainDataVector<ColorType> imageBufferVector;
+        template <class Img>
+        void static GetRGBAIntegralImage(Img& img, int *Integral)
         {
-            int Channel = Stride / Width;
-            if(Channel < FOUR_TIMES) {
-                return;
-            }
-            memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
-
-            for (int Y = 0; Y < Height; Y++)
+            const int Channel = 4;
+            memset(Integral, 0, (img.Width() + 1) * Channel * sizeof(int));
+            for (int Y = 0; Y < img.Height(); Y++)
             {
-                unsigned char *LinePS = Src + Y * Stride;
-                //	last position
-                int *LinePL = Integral + Y * (Width + 1) * Channel + Channel;
-                //	curretn position，waring the first column of every line row is zero
-                int *LinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
-                //	the first column is 0
-                LinePD[-INDEX_FOUR] = 0;
-                LinePD[-INDEX_THREE] = 0;
-                LinePD[-INDEX_TWO] = 0;
-                LinePD[-INDEX_ONE] = 0;
-                for (int X = 0, SumB = 0, SumG = 0, SumR = 0, SumA = 0; X < Width; X++)
+                int *LinePL = Integral + Y * (img.Height() + 1) * Channel + Channel;
+                int *LinePD = Integral + (Y + 1) * (img.Width() + 1) * Channel + Channel;
+                LinePD[-4] = 0;
+                LinePD[-3] = 0;
+                LinePD[-2] = 0;
+                LinePD[-1] = 0;
+
+                for (int X = 0, SumB = 0, SumG = 0, SumR = 0 ,SumA =0; X < img.Width(); X++)
                 {
-                    SumB += LinePS[INDEX_ZERO];
-                    SumG += LinePS[INDEX_ONE];
-                    SumR += LinePS[INDEX_TWO];
-                    SumA += LinePS[INDEX_THREE];
-                    LinePD[INDEX_ZERO] = LinePL[INDEX_ZERO] + SumB;
-                    LinePD[INDEX_ONE] = LinePL[INDEX_ONE] + SumG;
-                    LinePD[INDEX_TWO] = LinePL[INDEX_TWO] + SumR;
-                    LinePD[INDEX_THREE] = LinePL[INDEX_THREE] + SumA;
-                    LinePS += Channel;
+                    SumB += img.Pixel(X, Y).blueValue;
+                    SumG += img.Pixel(X, Y).greenValue;
+                    SumR += img.Pixel(X, Y).redValue;
+                    SumA += img.Pixel(X, Y).alphaValue;
+                    LinePD[0] = LinePL[0] + SumB;
+                    LinePD[1] = LinePL[1] + SumG;
+                    LinePD[2] = LinePL[2] + SumR;
+                    LinePD[3] = LinePL[3] + SumA;
                     LinePL += Channel;
                     LinePD += Channel;
                 }
             }
         }
     public:
-        void static BoxBlur(uint8_t *Src, uint8_t *Dest, uint16_t Width, uint16_t Height, uint16_t Stride, uint16_t Radius)
+        template <class Img>
+        void BoxBlur(Img& img, uint16_t Radius)
         {
-            int32_t Channel = Stride / Width;
-            int32_t *Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
-            if (Channel == FOUR_TIMES)
+            int Channel = 4;
+            int *Integral = (int *)malloc((img.Width() + 1) * (img.Height() + 1) * Channel * sizeof(int));
+            GetRGBAIntegralImage(img, Integral);
+            for (int Y = 0; Y < img.Height(); Y++)
             {
-                GetRGBAIntegralImage(Src, Integral, Width, Height, Stride);
-                #pragma omp parallel for
-                for (int32_t Y = 0; Y < Height; Y++)
+                int Y1 = MATH_MAX(Y - Radius, 0);
+                int Y2 = MATH_MIN(Y + Radius + 1, img.Height());
+                int *LineP1 = Integral + Y1 * (img.Width() + 1) * Channel;
+                int *LineP2 = Integral + Y2 * (img.Width() + 1) * Channel;
+                imageBufferVector.Allocate(img.Width(), 128);
+                for (int X = 0; X < img.Width(); X++)
                 {
-                    int32_t Y1 = MATH_MAX(Y - Radius, 0);
-                    int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
-                    int32_t *LineP1 = Integral + Y1 * ((Width + 1) << INDEX_TWO);
-                    int32_t *LineP2 = Integral + Y2 * ((Width + 1) << INDEX_TWO);
-                    unsigned char *LinePD = Dest + Y * Stride;
-                    for (int X = 0; X < Width; X++)
-                    {
-                        int X1 = MATH_MAX(X - Radius, 0);
-                        int X2 = MATH_MIN(X + Radius + 1, Width);
-                        int Index1 = X1 << INDEX_TWO;
-                        int Index2 = X2 << INDEX_TWO;
-                        int SumB = LineP2[Index2 + INDEX_ZERO] - LineP1[Index2 + INDEX_ZERO] - LineP2[Index1 + INDEX_ZERO] + LineP1[Index1 + INDEX_ZERO];
-                        int SumG = LineP2[Index2 + INDEX_ONE] - LineP1[Index2 + INDEX_ONE] - LineP2[Index1 + INDEX_ONE] + LineP1[Index1 + INDEX_ONE];
-                        int SumR = LineP2[Index2 + INDEX_TWO] - LineP1[Index2 + INDEX_TWO] - LineP2[Index1 + INDEX_TWO] + LineP1[Index1 + INDEX_TWO];
-                        //int SumA = LineP2[Index2 + 3] - LineP1[Index2 + 3] - LineP2[Index1 + 3] + LineP1[Index1 + 3];
-                        int PixelCount = (X2 - X1) * (Y2 - Y1);
-                        LinePD[INDEX_ZERO] = (SumB + (PixelCount >> INDEX_ONE)) / PixelCount;
-                        LinePD[INDEX_ONE] = (SumG + (PixelCount >> INDEX_ONE)) / PixelCount;
-                        LinePD[INDEX_TWO] = (SumR + (PixelCount >> INDEX_ONE)) / PixelCount;
-                        //LinePD[3] = (SumA + (PixelCount >> 1)) / PixelCount;
-                        uint8_t* alpha = Src + Y * Stride + (X << INDEX_TWO);
-                        LinePD[INDEX_THREE] = alpha[INDEX_THREE];
-                        LinePD += INDEX_FOUR;
-                    }
+                    int X1 = MATH_MAX(X - Radius, 0);
+                    int X2 = MATH_MIN(X + Radius + 1, img.Width());
+                    int Index1 = X1 * Channel;
+                    int Index2 = X2 * Channel;
+                    int SumB = LineP2[Index2 + 0] - LineP1[Index2 + 0] - LineP2[Index1 + 0] + LineP1[Index1 + 0];
+                    int SumG = LineP2[Index2 + 1] - LineP1[Index2 + 1] - LineP2[Index1 + 1] + LineP1[Index1 + 1];
+                    int SumR = LineP2[Index2 + 2] - LineP1[Index2 + 2] - LineP2[Index1 + 2] + LineP1[Index1 + 2];
+                    int SumA = LineP2[Index2 + 3] - LineP1[Index2 + 3] - LineP2[Index1 + 3] + LineP1[Index1 + 3];
+                    int PixelCount = (X2 - X1) * (Y2 - Y1);
+                    ColorType color;
+                    color.blueValue = (SumB + (PixelCount >> 1)) / PixelCount;
+                    color.greenValue = (SumG + (PixelCount >> 1)) / PixelCount;
+                    color.redValue = (SumR + (PixelCount >> 1)) / PixelCount;
+                    color.alphaValue = img.Pixel(X, Y).alphaValue;
+                    imageBufferVector[X] = color;
                 }
+                img.CopyColorHspan(0, Y, img.Width(), &imageBufferVector[0]);
             }
             free(Integral);
         }
