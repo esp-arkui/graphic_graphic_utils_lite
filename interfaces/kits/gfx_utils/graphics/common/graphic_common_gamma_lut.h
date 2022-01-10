@@ -16,7 +16,7 @@
 /**
  * @file graphic_common_gamma_lut.h
  *
- * @brief gamma校正查找表、Srgb查找表、Srgb转化类
+ * @brief Gamma correction lookup table, sRGB lookup table, sRGB conversion class
  *
  * @since 1.0
  * @version 1.0
@@ -47,7 +47,7 @@ namespace OHOS {
     const double RGB16MAX = 65535.0;
     const int ALPHAMAX = 255;
     /**
-     * @brief Srgb查找类
+     * @brief SRGB lookup class
      *
      * @see SrgbLutBase
      * @since 1.0
@@ -57,8 +57,8 @@ namespace OHOS {
     class SrgbLutBase {
     public:
         /**
-         * @brief 根据下标查找dirTable_中的颜色值
-         * @param index为下标值
+         * @brief Find the color value in dirtable_ according to the subscript
+         * @param Index is the subscript value
          * @return LinearType
          * @since 1.0
          * @version 1.0
@@ -69,15 +69,15 @@ namespace OHOS {
         }
 
         /**
-         * @brief 根据lineValue值查找颜色值
-         * @param lineValue为线性颜色值
-         * @return 返回uint8_t类型的颜色值
+         * @brief Find color values based on linevalue values
+         * @param Linevalue is a linear color value
+         * @return Returns a color value of type uint8_t
          * @since 1.0
          * @version 1.0
          */
         uint8_t GetInverseTableValue(LinearType lineValue) const
         {
-            // 折半查找
+            // Half search
             uint8_t value = 0;
             if (lineValue > inverseTable_[TABLESIZE_HALF]) {
                 value = TABLESIZE_HALF;
@@ -118,7 +118,7 @@ namespace OHOS {
     class SrgbLut;
 
     /**
-     * @brief Srgb查找类、float类型
+     * @brief SRGB lookup class, float type
      *
      * @see SrgbLut
      * @since 1.0
@@ -129,11 +129,11 @@ namespace OHOS {
     public:
         SrgbLut()
         {
-            // 生成查找表
+            // Generate lookup table
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
             for (unsigned i = 1; i <= TABLEBOUNDARY; ++i) {
-                // 浮点RGB范围在[0,1]内。
+                // Floating point RGB range is within [0,1].
                 dirTable_[i] = float(SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = float(SrgbToLinear((i - HALF) / SRGBVALUE));
             }
@@ -141,7 +141,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief Srgb查找类、uint16_t类型
+     * @brief SRGB lookup class, uint16_t type
      *
      * @see SrgbLut
      * @since 1.0
@@ -152,11 +152,11 @@ namespace OHOS {
     public:
         SrgbLut()
         {
-            // 生成查找表
+            // Generate lookup table
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
             for (int i = 1; i <= TABLEBOUNDARY; ++i) {
-                // 16位RGB范围在[0，65535]内。
+                // The 16 bit RGB range is within [065535].
                 dirTable_[i] = MATH_UROUND(RGB16MAX * SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = MATH_UROUND(RGB16MAX * SrgbToLinear((i - HALF) / SRGBVALUE));
             }
@@ -164,7 +164,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief Srgb查找类、uint8_t类型
+     * @brief SRGB lookup class, uint8_t type
      *
      * @see SrgbLut
      * @since 1.0
@@ -175,18 +175,18 @@ namespace OHOS {
     public:
         SrgbLut()
         {
-            // 生成查找表
+            // Generate lookup table
             dirTable_[0] = 0;
             inverseTable_[0] = 0;
             for (int i = 1; i <= TABLEBOUNDARY; ++i) {
-                // 8位RGB由简单的双向查找表处理。
+                // 8-bit RGB is processed by a simple bidirectional lookup table.
                 dirTable_[i] = MATH_UROUND(SRGBVALUE * SrgbToLinear(i / SRGBVALUE));
                 inverseTable_[i] = MATH_UROUND(SRGBVALUE * LinearToSrgb(i / SRGBVALUE));
             }
         }
 
         /**
-         * @brief 根据下标查找inverseTable_中的颜色值
+         * @brief Find the color value in inverseTable_ according to the subscript
          * @param index为下标值
          * @return 返回uint8_t类型的颜色值
          * @since 1.0
