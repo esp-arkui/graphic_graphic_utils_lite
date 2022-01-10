@@ -50,11 +50,9 @@ namespace OHOS {
      */
     class GammaPower {
     public:
-        GammaPower() :
-            gamma_(1.0)
+        GammaPower() : gamma_(1.0)
         {}
-        GammaPower(double gamma) :
-            gamma_(gamma)
+        GammaPower(double gamma) : gamma_(gamma)
         {}
 
         void Gamma(double gamma)

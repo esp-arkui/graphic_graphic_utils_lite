@@ -177,9 +177,7 @@ namespace OHOS {
                      float angle,
                      bool largeArcFlag, // 大弧线标志
                      bool sweepFlag,    // 扫掠角标志
-                     float x2, float y2) :
-            bezierArcModel(),
-            isRadiusJoinPath(false)
+                     float x2, float y2) : bezierArcModel(), isRadiusJoinPath(false)
         {
             Init(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2);
         }

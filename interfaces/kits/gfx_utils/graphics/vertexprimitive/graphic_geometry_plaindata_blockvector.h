@@ -350,8 +350,8 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector() :
-        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector()
+        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
     {
     }
 
