@@ -38,7 +38,7 @@ namespace OHOS {
         float y0 = std::sin(sweepAngle / FLOATNUM);
         float x0 = std::cos(sweepAngle / FLOATNUM);
         float tx = (1.0f - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
-        if(y0 == 0) {
+        if (y0 == 0) {
             y0 = y0 + VERTEX_DIST_EPSILON;
         }
         float ty = y0 - tx * x0 / y0;
@@ -159,10 +159,10 @@ namespace OHOS {
         float sign = (largeArcFlag == sweepFlag) ? -1.0f : 1.0f;
         float sq = (prx * pry - prx * py1 - pry * px1) / (prx * py1 + pry * px1);
         float coef = sign * std::sqrt((sq < 0) ? 0 : sq);
-        if(ry == 0) {
+        if (ry == 0) {
             ry += VERTEX_DIST_EPSILON;
         }
-        if(rx == 0) {
+        if (rx == 0) {
             rx += VERTEX_DIST_EPSILON;
         }
         float cx1 = coef * ((rx * y1) / ry);
@@ -182,7 +182,7 @@ namespace OHOS {
         p = ux;
         n = std::sqrt(ux * ux + uy * uy);
         sign = (uy < 0) ? -1.0f : 1.0f;
-        if(n == 0) {
+        if (n == 0) {
             n += VERTEX_DIST_EPSILON;
         }
         float v = p / n;
@@ -196,7 +196,7 @@ namespace OHOS {
         n = std::sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
         p = ux * vx + uy * vy;
         sign = (ux * vy - uy * vx < 0) ? -1.0f : 1.0f;
-        if(n == 0) {
+        if (n == 0) {
             n += VERTEX_DIST_EPSILON;
         }
         v = p / n;
