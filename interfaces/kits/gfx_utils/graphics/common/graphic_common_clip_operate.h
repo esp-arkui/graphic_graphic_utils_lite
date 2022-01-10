@@ -26,7 +26,7 @@
 /**
  * @file graphic_geometry_clip_liang_barsky.h
  *
- * @brief Defines 裁剪相关方法.
+ * @brief Defines Cutting related methods
  *
  * @since 1.0
  * @version 1.0
@@ -38,8 +38,8 @@
 #include "gfx_utils/graphics/common/graphic_common_basics.h"
 
 namespace OHOS {
-    const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // 完全可见
-    const int CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // 完全裁剪
+    const int CLIP_LINE_SEGMENT_FULL_VISIB = 0; // Fully visible
+    const int CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // Full clipping
     /**
      *   0110  |  0010  | 0011
      *         |        |
@@ -52,9 +52,9 @@ namespace OHOS {
      *   1100  |  1000  | 1001
      *         |        |
      * clipBox.x1 clipBox.x2
-     * @brief 确定y的位置，纵向裁剪.
-     * @param y 纵向位置,clipBox裁剪窗口
-     * @return 返回对应的区域编码
+     * @brief Determine the position of Y and cut it longitudinally
+     * @param Y vertical position, Clipbox clipping window
+     * @return Return the corresponding area code
      * @since 1.0
      * @version 1.0
      */
@@ -65,9 +65,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 确定x的位置，横向裁剪.
-     * @param x 横向位置,clipBox裁剪窗口
-     * @return 返回对应的区域编码
+     * @brief Determine the position of X and cut horizontally
+     * @param X horizontal position, Clipbox clipping window
+     * @return Return the corresponding area code
      * @since 1.0
      * @version 1.0
      */
@@ -78,9 +78,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 根据顶点的位置确定顶点的剪裁.
-     * @param x,y 顶点位置,clipBox裁剪窗口
-     * @return 返回对应的区域编码
+     * @brief The clipping of vertices is determined according to the position of vertices
+     * @param x. y vertex position, Clipbox clipping window
+     * @return Return the corresponding area code
      * @since 1.0
      * @version 1.0
      */

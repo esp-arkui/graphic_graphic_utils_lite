@@ -17,7 +17,7 @@
  * @addtogroup GraphicGeometry
  * @{
  *
- * @brief Defines 图形操作
+ * @brief Defines Graphic operation
  *
  * @since 1.0
  * @version 1.0
@@ -26,7 +26,7 @@
 /**
  * @file graphic_common_basics.h
  *
- * @brief Defines 图形操作基本数据类型与通用函数.
+ * @brief Defines Basic data types and general functions of graphic operations
  *
  * @since 1.0
  * @version 1.0
@@ -42,7 +42,7 @@ namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
 
     /**
-     * @brief 填充规则.
+     * @brief Fill rule
      * @since 1.0
      * @version 1.0
      */
@@ -52,7 +52,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 子像素的偏移以及掩码标志.
+     * @brief Sub - pixel offset and mask flag
      * @since 1.0
      * @version 1.0
      */
@@ -68,7 +68,7 @@ namespace OHOS {
         GRADIENT_SUBPIXEL_MASK = GRADIENT_SUBPIXEL_SCALE - 1
     };
     /**
-     * @brief 覆盖率的弹性处理.
+     * @brief Elastic treatment of coverage
      * @since 1.0
      * @version 1.0
      */
@@ -84,25 +84,25 @@ namespace OHOS {
         PATH_CMD_STOP = 0,
         PATH_CMD_MOVE_TO = 1,
         PATH_CMD_LINE_TO = 2,
-        PATH_CMD_CURVE3 = 3,      // 二次曲线命令
-        PATH_CMD_CURVE4 = 4,      // 三次曲线命令
-        PATH_CMD_CURVEN = 5,      // 曲线命令
-        PATH_CMD_CARROM = 6,      // 二次曲线命令
-        PATH_CMD_UBSPLINE = 7,    // 曲线命令
-        PATH_CMD_END_POLY = 0x0F, // 多边形闭合
+        PATH_CMD_CURVE3 = 3,      // Conic command
+        PATH_CMD_CURVE4 = 4,      // Cubic curve command
+        PATH_CMD_CURVEN = 5,      // Curve command
+        PATH_CMD_CARROM = 6,      // Conic command
+        PATH_CMD_UBSPLINE = 7,    // Curve command
+        PATH_CMD_END_POLY = 0x0F, // Polygon closure
         PATH_CMD_MASK = 0x0F
     };
 
     enum PathFlagsEnum {
         PATH_FLAGS_NONE = 0,
-        PATH_FLAGS_CLOCKWISE = 0x10,      // 顺时针
-        PATH_FLAGS_ANTI_CLOCKWISE = 0x20, // 逆时针
+        PATH_FLAGS_CLOCKWISE = 0x10,      // Clockwise
+        PATH_FLAGS_ANTI_CLOCKWISE = 0x20, // anti-clockwise
         PATH_FLAGS_CLOSE = 0x40,
         PATH_FLAGS_MASK = 0xF0
     };
 
     /**
-     * @brief 共线的四种情况.
+     * @brief Four cases of collinearity
      * @since 1.0
      * @version 1.0
      */
@@ -122,17 +122,57 @@ namespace OHOS {
     };
 
     enum GlobalCompositeOperation {
-        SOURCE_OVER,      // 默认。在目标图像上显示源图像。
-        SOURCE_ATOP,      // 在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
-        SOURCE_IN,        // 在目标图像中显示源图像。只有目标图像之内的源图像部分会显示，目标图像是透明的。
-        SOURCE_OUT,       // 在目标图像之外显示源图像。只有目标图像之外的源图像部分会显示，目标图像是透明的。
-        DESTINATION_OVER, // 在源图像上显示目标图像。
-        DESTINATION_ATOP, // 在源图像顶部显示目标图像。目标图像位于源图像之外的部分是不可见的。
-        DESTINATION_IN,   // 在源图像中显示目标图像。只有源图像之内的目标图像部分会被显示，源图像是透明的。
-        DESTINATION_OUT,  // 在源图像之外显示目标图像。只有源图像之外的目标图像部分会被显示，源图像是透明的。
-        LIGHTER,          // 显示源图像 + 目标图像。
-        COPY,             // 显示源图像。忽略目标图像。
-        XOR               // 使用异或操作对源图像与目标图像进行组合。
+        /**
+         * Default. Displays the source image on the target image.
+         */
+        SOURCE_OVER,
+        /**
+         * Displays the source image at the top of the target image.
+         * The part of the source image outside the target image is invisible.
+         */
+        SOURCE_ATOP,
+        /**
+         * Displays the source image in the target image.
+         * Only the source image part within the target image will be displayed, and the target image is transparent.
+         */
+        SOURCE_IN,
+        /**
+         * Displays the source image outside the target image.
+         * Only the source image part other than the target image will be displayed,and the target image is transparent
+         */
+        SOURCE_OUT,
+        /**
+         * Displays the target image on the source image.
+         */
+        DESTINATION_OVER,
+        /**
+         * Displays the target image at the top of the source image.
+         * The part of the target image outside the source image is invisible.
+         */
+        DESTINATION_ATOP,
+        /**
+         * Displays the target image in the source image.
+         * Only the target image part within the source image will be displayed, and the source image is transparent.
+         */
+        DESTINATION_IN,
+        /**
+         * Displays the target image outside the source image.
+         * Only the part of the target image other than the source image will be displayed,
+         * and the source image is transparent.
+         */
+        DESTINATION_OUT,
+        /**
+         * Display source image + target image.
+         */
+        LIGHTER,
+        /**
+         * Displays the source image. Ignore the target image.
+         */
+        COPY,
+        /**
+         * Use the XOR operation to combine the source image with the target image.
+         */
+        XOR
     };
 
     template <class Type>
@@ -146,17 +186,17 @@ namespace OHOS {
     const float VERTEX_DIST_EPSILON = 1e-14;
     const float INTERSECTIONEPSILON = 1.0e-30;
     /**
-     * @brief 圆周率.
+     * @brief PI
      */
     const float PI = 3.1415926f;
     /**
-     * @brief 半圆弧角度
+     * @brief Semicircle arc angle
      */
     const float RAD_BASE = 180.0f;
     const float ROUND_BASE = 0.5f;
 
     /**
-     * @brief 平角的度数
+     * @brief Degree of flat angle
      */
     const float BOXER = 180.0f;
 
@@ -165,83 +205,83 @@ namespace OHOS {
      */
     const float BUF_SIZE = 1024.0f;
     /**
-     * @brief 颜色的最大值
+     * @brief Maximum color
      */
     const unsigned MAX_COLOR_NUM = 255;
     /**
-     * @brief 颜色的最大值数组长度
+     * @brief Maximum array length of colors
      */
     const unsigned MAX_COLOR_SIZE = 256;
 
     /**
-     * @brief 颜色的最大值的一半
+     * @brief Half the maximum value of the color
      */
     const unsigned HALF_COLOR_NUM = 128;
     /**
-     * @brief 颜色的最大值的八分之一
+     * @brief One eighth of the maximum value of the color
      */
     const unsigned EIGHTH_COLOR_NUM = 32;
     /**
-     * @brief 颜色的最大值的三十二分之一
+     * @brief One thirty second of the maximum value of the color
      */
     const unsigned THIRTY_TWO_COLOR_NUM = 8;
 
     /**
-     * @brief 默认最大斜接
+     * @brief Default maximum miter
      */
     const unsigned DEFAULTMITERLIMIT = 10;
     /**
-     * @brief 一个字节的长度
+     * @brief Length of one byte
      */
     const int BYTE_LENGTH = 8;
     const int CELLS_SIZE = 16;
     /**
-     * @brief dash数组最大长度
+     * @brief Maximum length of dash array
      */
     const int MAX_DASHES = 32;
     /**
-     * @brief 默认的块偏移量
+     * @brief Default block offset
      */
     const int BLOCK_SHIFT_SIZE = 6;
     /**
-     * @brief 绘制椭圆所需的顶点数
+     * @brief The number of vertices required to draw the ellipse
      */
     const int ELLIPSE_VERTEX_NUM = 4;
     /**
-     * 一般步幅是宽度的四倍
+     * The general stride is four times the width
      */
     const int STRIDE_FACTOR = 4;
     const int PXSIZE2STRIDE_FACTOR = 3;
     /**
-     * @brief 1/√2 即1 除以 √2
+     * @brief 1 / √ 2 is 1 divided by √ 2
      */
     const float SIN45 = 0.7071068f;
     /**
-     * @brief 1/√2 即1 除以 √2
+     * @brief 1 / √ 2 is 1 divided by √ 2
      */
     const float COS45 = 0.7071068f;
     /**
-     * @brief 两倍
+     * @brief twice as much
      */
     const int TWO_TIMES = 2;
     /**
-     * @brief 三倍
+     * @brief triple
      */
     const int THREE_TIMES = 3;
     /**
-     * @brief 四倍
+     * @brief fourfold
      */
     const int FOUR_TIMES = 4;
     /**
-     * @brief 六倍
+     * @brief Sixfold
      */
     const int SIX_TIMES = 6;
     /**
-     * @brief 一百倍
+     * @brief hundredfold
      */
     const int HUNDRED_TIMES = 100;
     /**
-     * @brief 一次走两步
+     * @brief Take two steps at a time
      */
     const int TWO_STEP = 2;
     const float HALFNUM = 0.5f;
@@ -250,11 +290,11 @@ namespace OHOS {
 
     const int CONSTITUTION = 16384;
     /**
-     * @brief 正下方
+     * @brief Directly below
      */
     const int DIRECTLY_BELOW = 10;
     /**
-     * 下标
+     * subscript
      */
     const int INDEX_ZERO = 0;
     const int INDEX_ONE = 1;
@@ -267,10 +307,10 @@ namespace OHOS {
     const int INDEX_EIGHT = 8;
 
     /**
-     * @brief 两个数是否相近.
+     * @brief Whether the two numbers are similar
      *
-     * @param val1,val2 两个数,epsilon 误差.
-     * @return Returns 两个数是否相近.
+     * @param val1,val2 Two numbers, epsilon error
+     * @return Returns Whether the two numbers are similar
      * @since 1.0
      * @version 1.0
      */
@@ -297,7 +337,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 判断值是否是顶点.
+     * @brief Determines whether the value is a vertex
      * @since 1.0
      * @version 1.0
      */
@@ -307,7 +347,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 判断当前状态是否MOVE_TO.
+     * @brief Judge whether the current status is MOVE_TO.
      * @since 1.0
      * @version 1.0
      */
@@ -317,7 +357,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 判断当前状态是否Stop状态.
+     * @brief Judge whether the current status is stop status
      * @since 1.0
      * @version 1.0
      */
@@ -327,7 +367,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 判断当前状态是否是绘制曲线结尾状态.
+     * @brief Judge whether the current state is the state of drawing the end of the curve
      * @since 1.0
      * @version 1.0
      */
@@ -337,7 +377,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 判断当前状态是否是绘制曲线闭合状态.
+     * @brief Judge whether the current state is the closed state of drawing curve
      * @since 1.0
      * @version 1.0
      */
@@ -347,7 +387,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 获取封闭状态
+     * @brief Get closed state
      * @since 1.0
      * @version 1.0
      */
@@ -361,7 +401,7 @@ namespace OHOS {
     template <class T>
     struct GeometryObjectAllocator {
         /**
-         * @brief 对象内存分配
+         * @brief Object memory allocation
          * @since 1.0
          * @version 1.0
          */
@@ -370,7 +410,7 @@ namespace OHOS {
             return new T;
         }
         /**
-         * @brief 对象内存释放
+         * @brief Object memory release
          * @since 1.0
          * @version 1.0
          */
@@ -383,7 +423,7 @@ namespace OHOS {
     template <class T>
     struct GeometryArrayAllocator {
         /**
-         * @brief 数组内存分配
+         * @brief Array memory allocation
          * @since 1.0
          * @version 1.0
          */
@@ -395,7 +435,7 @@ namespace OHOS {
             return new T[num];
         }
         /**
-         * @brief 数组内存释放
+         * @brief Array memory free
          * @since 1.0
          * @version 1.0
          */
@@ -406,7 +446,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 定义矩形类.
+     * @brief Defines a rectangular class
      * @since 1.0
      * @version 1.0
      */
@@ -424,7 +464,7 @@ namespace OHOS {
         RectBase()
         {}
         /**
-         * @brief 规范化矩形.
+         * @brief Normalize rectangles
          * @since 1.0
          * @version 1.0
          */
@@ -445,7 +485,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 坐标裁剪到指定范围内.
+         * @brief The coordinates are clipped to the specified range
          * @since 1.0
          * @version 1.0
          */
