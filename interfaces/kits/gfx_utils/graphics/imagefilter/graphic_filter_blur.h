@@ -24,6 +24,187 @@
 #include "render/graphic_render_pixfmt_transposer.h"
 
 namespace OHOS {
+class FastBoxBlur{
+public:
+
+    void static GetGrayIntegralImage(unsigned char *Src, int *Integral, int Width, int Height, int Stride)
+    {
+        //	你所看到的每一句代码都是作者辛勤劳作和多年经验的积累，希望你能尊重作者的成果
+        //	你的每一个  评论  和  打赏  都是作者撰写更多博文和分享经验的鼓励。
+        //	本代码对应博文见：http://www.cnblogs.com/Imageshop/p/6219990.html
+
+        memset(Integral, 0, (Width + 1) * sizeof(int));					//	第一行都为0
+        for (int Y = 0; Y < Height; Y++)
+        {
+            unsigned char *LinePS = Src + Y * Stride;
+            int *LinePL = Integral + Y * (Width + 1) + 1;				//	上一行位置
+            int *LinePD = Integral + (Y + 1) * (Width + 1) + 1;			//	当前位置，注意每行的第一列的值都为0
+            LinePD[-1] = 0;												//	第一列的值为0
+            for (int X = 0, Sum = 0; X < Width; X++)
+            {
+                Sum += LinePS[X];										//	行方向累加
+                LinePD[X] = LinePL[X] + Sum;							//	更新积分图
+            }
+        }
+    }
+
+    void static GetRGBIntegralImage(unsigned char *Src, int *Integral, int Width, int Height, int Stride)
+    {
+        //	你所看到的每一句代码都是作者辛勤劳作和多年经验的积累，希望你能尊重作者的成果
+        //	你的每一个  评论  和  打赏  都是作者撰写更多博文和分享经验的鼓励。
+        //	本代码对应博文见：http://www.cnblogs.com/Imageshop/p/6219990.html
+
+//        const int Channel = 3;
+//        memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
+//        for (int Y = 0; Y < Height; Y++)
+//        {
+//            unsigned char *LinePS = Src + Y * Stride;
+//            int *LinePL = Integral + Y * (Width + 1) * Channel + Channel;
+//            int *LinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
+//            LinePD[-3] = 0; LinePD[-2] = 0; LinePD[-1] = 0;
+//            for (int X = 0, SumB = 0, SumG = 0, SumR = 0; X < Width; X++)
+//            {
+//                SumB += LinePS[0];
+//                SumG += LinePS[1];
+//                SumR += LinePS[2];
+//                LinePD[0] = LinePL[0] + SumB;
+//                LinePD[1] = LinePL[1] + SumG;
+//                LinePD[2] = LinePL[2] + SumR;
+//                LinePS += Channel;
+//                LinePL += Channel;
+//                LinePD += Channel;
+//            }
+//        }
+        int Channel = Stride / Width;
+        memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
+        for (int Y = 0; Y < Height; Y++)
+        {
+            unsigned char *LinePS = Src + Y * Stride;
+            int *LinePL = Integral + Y * (Width + 1) * Channel + Channel;
+            int *LinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
+            LinePD[-3] = 0; LinePD[-2] = 0; LinePD[-1] = 0;
+            for (int X = 0, SumB = 0, SumG = 0, SumR = 0, SumA = 0; X < Width; X++)
+            {
+                SumB += LinePS[0];
+                SumG += LinePS[1];
+                SumR += LinePS[2];
+                SumA += LinePS[3];
+                LinePD[0] = LinePL[0] + SumB;
+                LinePD[1] = LinePL[1] + SumG;
+                LinePD[2] = LinePL[2] + SumR;
+                LinePD[3] = LinePL[3] + SumA;
+                LinePS += Channel;
+                LinePL += Channel;
+                LinePD += Channel;
+            }
+        }
+    }
+
+
+
+    void static BoxBlur(unsigned char *Src, unsigned char *Dest, int16_t Width, int16_t Height, int16_t Stride, int16_t Radius)
+    {
+        //	你所看到的每一句代码都是作者辛勤劳作和多年经验的积累，希望你能尊重作者的成果
+        //	你的每一个  评论  和  打赏  都是作者撰写更多博文和分享经验的鼓励。
+        //	本代码对应博文见：http://www.cnblogs.com/Imageshop/p/6219990.html
+
+        int32_t Channel = Stride / Width;
+        int32_t *Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
+        if (Channel == 1)
+        {
+            GetGrayIntegralImage(Src, Integral, Width, Height, Stride);
+            #pragma omp parallel for
+            for (int Y = 0; Y < Height; Y++)
+            {
+                int Y1 = MATH_MAX(Y - Radius, 0);
+                int Y2 = MATH_MIN(Y + Radius + 1, Height);
+                //	int Y1 = Y - Radius;
+                //	int Y2 = Y + Radius + 1;
+                //	if (Y1 < 0) Y1 = 0;
+                //	if (Y2 > Height) Y2 = Height;
+                int32_t *LineP1 = Integral + Y1 * (Width + 1);
+                int32_t *LineP2 = Integral + Y2 * (Width + 1);
+                unsigned char *LinePD = Dest + Y * Stride;
+                for (int X = 0; X < Width; X++)
+                {
+                    int X1 = MATH_MAX(X - Radius, 0);
+                    int X2 = MATH_MIN(X + Radius + 1, Width);
+                    //	int X1 = X - Radius;
+                    //	if (X1 < 0) X1 = 0;
+                    //	int X2 = X + Radius + 1;
+                    //	if (X2 > Width) X2 = Width;
+                    int32_t Sum = LineP2[X2] - LineP1[X2] - LineP2[X1] + LineP1[X1];
+                    int32_t PixelCount = (X2 - X1) * (Y2 - Y1);					//	有效的像素数
+                    LinePD[X] = (Sum + (PixelCount >> 1)) / PixelCount;		//	四舍五入
+                }
+            }
+        }
+        else if (Channel == 3)
+        {
+            GetRGBIntegralImage(Src, Integral, Width, Height, Stride);
+            #pragma omp parallel for
+            for (int32_t Y = 0; Y < Height; Y++)
+            {
+                int32_t Y1 = MATH_MAX(Y - Radius, 0);
+                int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
+                int32_t *LineP1 = Integral + Y1 * (Width + 1) * 3;
+                int32_t *LineP2 = Integral + Y2 * (Width + 1) * 3;
+                unsigned char *LinePD = Dest + Y * Stride;
+                for (int32_t X = 0; X < Width; X++)
+                {
+                    int32_t X1 = MATH_MAX(X - Radius, 0);
+                    int32_t X2 = MATH_MIN(X + Radius + 1, Width);
+                    int32_t Index1 = X1 * 3;
+                    int32_t Index2 = X2 * 3;
+                    int32_t SumB = LineP2[Index2 + 0] - LineP1[Index2 + 0] - LineP2[Index1 + 0] + LineP1[Index1 + 0];
+                    int32_t SumG = LineP2[Index2 + 1] - LineP1[Index2 + 1] - LineP2[Index1 + 1] + LineP1[Index1 + 1];
+                    int32_t SumR = LineP2[Index2 + 2] - LineP1[Index2 + 2] - LineP2[Index1 + 2] + LineP1[Index1 + 2];
+                    int32_t PixelCount = (X2 - X1) * (Y2 - Y1);
+                    LinePD[0] = (SumB + (PixelCount >> 1)) / PixelCount;
+                    LinePD[1] = (SumG + (PixelCount >> 1)) / PixelCount;
+                    LinePD[2] = (SumR + (PixelCount >> 1)) / PixelCount;
+                    LinePD += 3;
+                }
+            }
+        }
+        else if (Channel == 4)
+        {
+            GetRGBIntegralImage(Src, Integral, Width, Height, Stride);
+            #pragma omp parallel for
+            for (int32_t Y = 0; Y < Height; Y++)
+            {
+                int32_t Y1 = MATH_MAX(Y - Radius, 0);
+                int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
+                int32_t *LineP1 = Integral + Y1 * (Width + 1) * 4;
+                int32_t *LineP2 = Integral + Y2 * (Width + 1) * 4;
+                unsigned char *LinePD = Dest + Y * Stride;
+                for (int X = 0; X < Width; X++)
+                {
+                    int X1 = MATH_MAX(X - Radius, 0);
+                    int X2 = MATH_MIN(X + Radius + 1, Width);
+                    int Index1 = X1 * 4;
+                    int Index2 = X2 * 4;
+                    int SumB = LineP2[Index2 + 0] - LineP1[Index2 + 0] - LineP2[Index1 + 0] + LineP1[Index1 + 0];
+                    int SumG = LineP2[Index2 + 1] - LineP1[Index2 + 1] - LineP2[Index1 + 1] + LineP1[Index1 + 1];
+                    int SumR = LineP2[Index2 + 2] - LineP1[Index2 + 2] - LineP2[Index1 + 2] + LineP1[Index1 + 2];
+                    int SumA = LineP2[Index2 + 3] - LineP1[Index2 + 3] - LineP2[Index1 + 3] + LineP1[Index1 + 3];
+                    int PixelCount = (X2 - X1) * (Y2 - Y1);
+                    LinePD[0] = (SumB + (PixelCount >> 1)) / PixelCount;
+                    LinePD[1] = (SumG + (PixelCount >> 1)) / PixelCount;
+                    LinePD[2] = (SumR + (PixelCount >> 1)) / PixelCount;
+                    //LinePD[3] = (SumA + (PixelCount >> 1)) / PixelCount;
+                    uint8_t* alpha = Src + Y * Stride + X * 4;
+                    LinePD[3] = alpha[3];
+                    LinePD += 4;
+                }
+            }
+        }
+        free(Integral);
+    }
+};
+
+
+
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     template <class T>
     struct StackBlurTables {
