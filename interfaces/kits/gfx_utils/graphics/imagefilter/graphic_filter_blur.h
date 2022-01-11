@@ -75,21 +75,23 @@ namespace OHOS {
         }
 
         template <class Img>
-        void BoxBlur(Img& img, uint16_t Radius,int32_t Stride)
+        void BoxBlur(Img& img, uint16_t Radius, int32_t Channel, int32_t Stride)
         {
             if (Radius < 1) {
                 return;
             }
             int32_t Width = img.Width();
             int32_t Height = img.Height();
+            bool isGetRGBAIntegral = false;
             // Stride = img.Stride();
-            int32_t Channel = FOUR_TIMES;
             if(Integral == nullptr || ((imageWidth*imageHeight) != (Width*Height))) {
                 Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
+                isGetRGBAIntegral=true;
             }
-            if (Channel == FOUR_TIMES)
-            {
-                GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0),Width,Height,Stride);
+            if (Channel == FOUR_TIMES) {
+                if(isGetRGBAIntegral) {
+                    GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0),Width,Height,Stride);
+                }
                 //imageBufferVector.Allocate(Width, OHOS::HALF_COLOR_NUM);
                 #pragma omp parallel for
                 for (int32_t Y = 0; Y < Height; Y++)
