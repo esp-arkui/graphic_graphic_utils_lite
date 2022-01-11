@@ -22,7 +22,7 @@ namespace OHOS {
     /**
      * @file graphic_geometry_arc.h
      *
-     * @brief Defines 弧线类.
+     * @brief Defines Arc class.
      *
      * @since 1.0
      * @version 1.0
@@ -35,9 +35,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief 构造弧线.
-         * @param centerX,centerY 弧线圆心, rx 椭圆弧横轴半径 ry 椭圆弧纵轴半径,
-         * angle1,angle2起始角度,isClockwise 弧线是否顺时针方向
+         * @brief Constructor arc.
+         * @param centerX,centerY Arc Center.
+         * @param rx Ellipse Arc Transverse Axis Radius.
+         * @param ry Ellipse Arc Vertical Axis Radius.
+         * @param angle1,angle2 Starting angle.
+         * @param isClockwise Is the arc clockwise.
          * @since 1.0
          * @version 1.0
          */
@@ -46,7 +49,7 @@ namespace OHOS {
             float angle1, float angle2,
             bool isClockwise = true);
         /**
-         * @brief 设置为初始步骤.
+         * @brief Set as Initial Step.
          *
          * @since 1.0
          * @version 1.0
@@ -54,8 +57,8 @@ namespace OHOS {
         void Rewind(unsigned);
 
         /**
-         * @brief 为正确调整近似级别
-         * @param scale为视口坐标和逻辑坐标之间的比率
+         * @brief Adjust approximation level correctly.
+         * @param scale Is the ratio between viewport coordinates and logical coordinates.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -63,8 +66,8 @@ namespace OHOS {
         void ApproximationScale(float scale);
 
         /**
-         * @brief 获取近似级别
-         * @param scale为视口坐标和逻辑坐标之间的比率
+         * @brief Get Approximation Level.
+         * @param scale Is the ratio between viewport coordinates and logical coordinates.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -75,15 +78,15 @@ namespace OHOS {
         }
 
         /**
-         * @brief 在采样阶段调用
-         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @brief Called during the sampling phase.
+         * @param x Pointer to the value of point coordinate X，y A pointer to the value of the point coordinate y
          * @return 无
          * @since 1.0
          * @version 1.0
          */
         unsigned Vertex(float* y, float* x);
         /**
-         * @brief 初始化一个弧线.
+         * @brief Initialize an arc.
          *
          * @since 1.0
          * @version 1.0
@@ -93,24 +96,24 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 规范化弧线.
+         * @brief Normalized arcs.
          *
          * @since 1.0
          * @version 1.0
          */
         void Normalize(float angle1, float angle2, bool isClockwise);
-        bool mInitialized;      // 是否被Init
-        unsigned mPathCommand;  // 连接命令
-        float mCenterX;        // 中心X坐标
-        float mCenterY;        // 中心Y坐标
-        float mRadiusX;        // X短半轴
-        float mRadiusY;        // Y长半轴
-        float mCurrentAngle;   // 当前角度
-        float mBeginAngle;     // 起始角度
-        float mEndAngle;       // 结束角度
-        float mExpansionRatio; // 伸缩比
-        float mDeltaAngle;     // 弧度变化率
-        bool mIsClockwise;      // 方向
+        bool mInitialized;      // Is it Init
+        unsigned mPathCommand;  // Connection Command
+        float mCenterX;        // Center X-coordinate
+        float mCenterY;        // Center Y-coordinate
+        float mRadiusX;        // X Short semiaxis
+        float mRadiusY;        // Y Long axis
+        float mCurrentAngle;   // Current Angle
+        float mBeginAngle;     // Starting angle
+        float mEndAngle;       // End angle
+        float mExpansionRatio; // Scaling ratio
+        float mDeltaAngle;     // Rate of radian change
+        bool mIsClockwise;      // direction
 #endif
     };
 } // namespace OHOS

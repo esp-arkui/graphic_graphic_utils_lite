@@ -40,7 +40,6 @@
 #include "graphic_config.h"
 namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
-
     /**
      * @brief Fill rule
      * @since 1.0
