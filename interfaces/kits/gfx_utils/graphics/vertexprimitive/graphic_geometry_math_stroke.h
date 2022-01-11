@@ -368,7 +368,7 @@ namespace OHOS {
 #endif
 
         /**
-         * @brief width 设置区域宽
+         * @brief width Set area width
          */
         void width(float width)
         {
@@ -384,7 +384,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 添加近似值
+         * @brief Add approximation
          */
         void SetApproximationScale(float approximationScale)
         {
@@ -392,7 +392,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief width 返回宽度
+         * @brief width Return width
          */
         float width() const
         {
@@ -400,7 +400,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回设定的近似值
+         * @brief Returns the set approximate value
          */
         float GetApproximationScale() const
         {
