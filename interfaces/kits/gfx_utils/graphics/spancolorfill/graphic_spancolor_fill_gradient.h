@@ -15,7 +15,7 @@
 
 /**
  * @file span_gradient.h
- * @brief Defines 扫描线渐变模式
+ * @brief Defines Scanline gradient mode
  * @since 1.0
  * @version 1.0
  */
@@ -31,10 +31,11 @@
 #include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
-     * 渐变的扫描线填色模板
-     * @template ColorT 颜色来源类型，Interpolator span 插值器
-     * @GradientFgradient_function 对应模式计算当前点所处位置的函数
-     * @ColorF 颜色数组
+     * Gradient scanline fill template
+     * @template ColorT Color source type, Interpolator span interpolator
+     * @GradientFgradient_function The function of
+     * the corresponding mode to calculate the position of the current point
+     * @ColorF Color array
      */
     template <class ColorT, class Interpolator, class GradientF, class ColorF>
     class SpanFillColorGradient {
@@ -46,12 +47,16 @@ namespace OHOS {
         {
         }
         /**
-         * @brief SpanGradient 扫描线渐变的构造函数
-         * @param inter 插值器
-         * @param gradient_function 对应模式计算当前点所处位置的函数
-         * @param color_function 渐变梯度数组
-         * @param distance1  根据模式确定参数内容：放射渐变时为 开始圆半径
-         * @param distance2 根据模式确定参数内容：放射渐变时为 结束圆半径，线性渐变时为起止点的距离
+         * @brief SpanGradient Constructor for scanline gradient
+         * @param inter Interpolator
+         * @param gradient_function
+         * The function of the corresponding mode to calculate the position of the current point
+         * @param color_function Gradient array
+         * @param distance1 The parameter content is determined according to the mode:
+         * it is the starting circle radius when radiating the gradient
+         * @param distance2 Determine the parameter content according to the mode:
+         * the radius of the end circle in the case of radial gradient and
+         * the distance of the starting and ending points in the case of linear gradient
          */
         SpanFillColorGradient(interpolator_type& inter,
                               GradientF& gradient_function,
@@ -70,11 +75,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief Generate 从colorFunction_取出rgba赋予span中的rgba
-         * @param span 需要填色的扫描线首地址
-         * @param x 坐标-x
-         * @param y 坐标-y
-         * @param len 扫描线长度
+         * @brief Generate From colorfunction_ Remove the rgba from the span
+         * @param span First address of scan line to be filled
+         * @param x coordinate-x
+         * @param y coordinate-y
+         * @param len Scan line length
          */
         void Generate(color_type* span, int x, int y, unsigned len)
         {
@@ -100,7 +105,7 @@ namespace OHOS {
 
     /**
      * gradient_function
-     * @brief 计算放射渐变时当前(x,y)的color_function 数组下标
+     * @brief The subscript of the current (x, y) color_function array when calculating the radial gradient
      * @since 1.0
      * @version 1.0
      */
@@ -115,10 +120,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief GradientRadialCalculate 构造函数入参
-         * @param endRadius 结束圆半径
-         * @param dx x轴方向上，结束圆圆心到开始圆圆心得距离
-         * @param dy y轴方向上，结束圆圆心到开始圆圆心得距离
+         * @brief GradientRadialCalculate Constructor arguments
+         * @param endRadius End circle radius
+         * @param dx In the x-axis direction, the distance from the end circle center to the start circle center
+         * @param dy In the y-axis direction, the distance from the end circle center to the start circle center
          */
         GradientRadialCalculate(double endRadius, double dx, double dy) :
             endRadius_(MATH_ROUND32(endRadius * GRADIENT_SUBPIXEL_SCALE)),
@@ -129,11 +134,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief calculate 计算放射渐变时当前(x,y)的color_function 数组下标
-         * @param x 坐标x
-         * @param y 坐标y
-         * @param startRadius 开始圆半径
-         * @param endRadius 结束圆半径
+         * @brief calculate The subscript of the current (x, y) color_function array when calculating the radial gradient
+         * @param x coordinate x
+         * @param y coordinate y
+         * @param startRadius Start circle radius
+         * @param endRadius End circle radius
          * @param size colorFunction_的size
          * @return
          */
@@ -144,7 +149,7 @@ namespace OHOS {
             double m_distanceRadius = dx * dy_ - dy * dx_;
             double m_RadiusDistance = endRadiusSquare_ * (dx * dx + dy * dy)
                     - m_distanceRadius * m_distanceRadius;
-            int deltaRadius = endRadius - startRadius; // 半径的差
+            int deltaRadius = endRadius - startRadius; // Difference of radius
             if (deltaRadius < 1) {
                 deltaRadius = 1;
             }
@@ -162,7 +167,7 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 更新m_mul
+         * @brief update m_mul
          */
         void UpdateValues()
         {
@@ -193,25 +198,25 @@ namespace OHOS {
         }
 
         int endRadius_;
-        /** x轴方向上，结束圆圆心到开始圆圆心得距离 */
+        /** In the x-axis direction, the distance from the end circle center to the start circle center */
         int dx_;
-        /** y轴方向上，结束圆圆心到开始圆圆心得距离 */
+        /** In the y-axis direction, the distance from the end circle center to the start circle center */
         int dy_;
         double endRadiusSquare_;
         double m_mul;
     };
 
     /**
-     * @brief 计算线性渐变时当前(x,y)的color_function 数组下标
+     * @brief The subscript of the current (x, y) color_function array when calculating a linear gradient
      * @since 1.0
      * @version 1.0
      */
     class GradientLinearCalculate {
     public:
         /**
-         * @brief calculate 计算线性渐变时当前(x,y)的color_function 数组下标
-         * @param x 坐标x
-         * @param distance 线性渐变起止点的距离
+         * @brief The subscript of the current (x, y) color_function array when calculating a linear gradient
+         * @param x coordinate x
+         * @param distance Distance between start and end of linear gradient
          * @param size color_function的size
          * @return
          */

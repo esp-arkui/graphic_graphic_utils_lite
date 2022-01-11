@@ -15,7 +15,7 @@
 
 /**
  * @file span_interpolator.h
- * @brief Defines 扫描线插入器
+ * @brief Defines Scan line interpolator
  * @since 1.0
  * @version 1.0
  */
@@ -30,7 +30,7 @@
 #include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
-     * 渐变的颜色插入器
+     * Gradient color interpolator
      */
     template <class ColorT>
     struct ColorInterpolator {
@@ -47,7 +47,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重写++
+         * @brief overwrite ++
          */
         void operator++()
         {
@@ -55,7 +55,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回colorStart渐变到colorEnd过程中处于count的颜色
+         * @brief Returns the color at count during the transition from colorstart to colorend
          * @return
          */
         color_type GetColor() const
@@ -72,7 +72,7 @@ namespace OHOS {
     };
 
     /**
-     * 线性的扫描线插入器
+     * Linear scan line inserter
      */
     template <class Transformer = TransAffine, unsigned SUBPIXELSHIFT = 8>
     class SpanInterpolatorLinear {
@@ -104,7 +104,7 @@ namespace OHOS {
         }
 
         /*
-         * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
+         * Update and set dda2lineinterpolatorx and dda2lineinterpolatory properties again
          */
         void Begin(float x, float y, unsigned len)
         {
@@ -129,7 +129,7 @@ namespace OHOS {
         }
 
         /**
-         * 重新更新设置dda2LineInterpolatorX与dda2LineInterpolatorY属性
+         * Update and set dda2lineinterpolatorx and dda2lineinterpolatory properties again
          */
         void Resynchronize(float xe, float ye, unsigned len)
         {
@@ -141,7 +141,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重载++运算符
+         * @brief Overloading + + operators
          */
         void operator++()
         {

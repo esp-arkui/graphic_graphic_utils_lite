@@ -19,7 +19,7 @@
 
 namespace OHOS {
     /**
-     * @brief 带拷贝的图像存取器
+     * @brief Image accessor with copy
      *
      * @since 1.0
      * @version 1.0
@@ -39,8 +39,8 @@ namespace OHOS {
             : pixFormat_(&pixFormat)
         {}
         /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
+         * @brief Associated pixel set
+         * @param pixFormat The associated pixel set is required
          * @since 1.0
          * @version 1.0
          */
@@ -50,11 +50,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取像素地址
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @param len 线段长度
-         * @return 坐标像素地址
+         * @brief Get pixel address
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @param len segment length
+         * @return Coordinate pixel address
          * @since 1.0
          * @version 1.0
          */
@@ -70,8 +70,8 @@ namespace OHOS {
             return Pixel();
         }
         /**
-         * @brief 像素地址增加一个像素宽度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -84,8 +84,8 @@ namespace OHOS {
             return Pixel();
         }
         /**
-         * @brief 像素地址增加一个像素高度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -103,8 +103,8 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
-         * @return 坐标为(xPixel_,yPixel_)的像素地址
+         * @brief The obtained coordinates are (xPixel_, yPixel_) Pixel address of
+         * @return Coordinates are (xPixel_, yPixel_) Pixel address of
          * @since 1.0
          * @version 1.0
          */
@@ -207,7 +207,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 图像存取器
+     * @brief Image accessor
      * @since 1.0
      * @version 1.0
      */
@@ -226,8 +226,8 @@ namespace OHOS {
             : pixFormat_(&pixFormat)
         {}
         /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
+         * @brief Associated pixel set
+         * @param pixFormat The associated pixel set is required
          * @since 1.0
          * @version 1.0
          */
@@ -236,11 +236,11 @@ namespace OHOS {
             pixFormat_ = &pixFormat;
         }
         /**
-         * @brief 获取像素地址
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @param len 线段长度
-         * @return 坐标像素地址
+         * @brief Get pixel address
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @param len segment length
+         * @return Coordinate pixel address
          * @since 1.0
          * @version 1.0
          */
@@ -256,8 +256,8 @@ namespace OHOS {
             return Pixel();
         }
         /**
-         * @brief 像素地址增加一个像素宽度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -270,8 +270,8 @@ namespace OHOS {
             return Pixel();
         }
         /**
-         * @brief 像素地址增加一个像素高度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -289,8 +289,8 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 获取坐标为(xPixel_,yPixel_)的像素地址
-         * @return 坐标为(xPixel_,yPixel_)的像素地址
+         * @brief The obtained coordinates are (xPixel_, yPixel_) Pixel address of
+         * @return Coordinates are (xPixel_, yPixel_) Pixel address of
          * @since 1.0
          * @version 1.0
          */
@@ -322,7 +322,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 带换行功能的图像存取器
+     * @brief Image accessor with line feed function
      *
      * @since 1.0
      * @version 1.0
@@ -345,8 +345,8 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
+         * @brief Associated pixel set
+         * @param pixFormat The associated pixel set is required
          * @since 1.0
          * @version 1.0
          */
@@ -355,10 +355,10 @@ namespace OHOS {
             pixFormat_ = &pixFormat;
         }
         /**
-         * @brief 获取像素地址带换行
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @return 坐标像素地址
+         * @brief Get pixel address with line feed
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @return Coordinate pixel address
          * @since 1.0
          * @version 1.0
          */
@@ -369,8 +369,8 @@ namespace OHOS {
             return rowPtr_ + wrapX_(x) * PIX_WIDTH;
         }
         /**
-         * @brief 像素地址增加一个像素宽度附带换行功能
-         * @return 坐标为改变后的像素地址
+         * @brief Add one pixel width to the pixel address, with line feed function
+         * @return Add one pixel width to the pixel address, with line feed function
          * @since 1.0
          * @version 1.0
          */
@@ -381,8 +381,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 像素地址增加一个像素高度附带换行功能
-         * @return 坐标为改变后的像素地址
+         * @brief Add one pixel width to the pixel address, with line feed function
+         * @return Add one pixel width to the pixel address, with line feed function
          * @since 1.0
          * @version 1.0
          */
@@ -401,7 +401,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 图像在x轴重复的图像存取器
+     * @brief An image accessor in which images are repeated on the x-axis
      *
      * @since 1.0
      * @version 1.0
@@ -422,8 +422,8 @@ namespace OHOS {
             wrapX_(pixFormat.Width())
         {}
         /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
+         * @brief Associated pixel set
+         * @param pixFormat The associated pixel set is required
          * @since 1.0
          * @version 1.0
          */
@@ -432,11 +432,11 @@ namespace OHOS {
             pixFormat_ = &pixFormat;
         }
         /**
-         * @brief 获取像素地址
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @param len 线段长度
-         * @return 坐标像素地址
+         * @brief Get pixel address
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @param len segment length
+         * @return Coordinate pixel address
          * @since 1.0
          * @version 1.0
          */
@@ -452,8 +452,8 @@ namespace OHOS {
             return rowPtr_ + wrapX_(x) * PIX_WIDTH;
         }
         /**
-         * @brief 像素地址增加一个像素宽度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -466,8 +466,8 @@ namespace OHOS {
             return rowPtr_ + x * PIX_WIDTH;
         }
         /**
-         * @brief 像素地址增加一个像素高度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -485,7 +485,7 @@ namespace OHOS {
         WrapX wrapX_;
     };
     /**
-     * @brief 图像在y轴重复的图像存取器
+     * @brief Image accessor for image repetition on y-axis
      *
      * @since 1.0
      * @version 1.0
@@ -506,8 +506,8 @@ namespace OHOS {
             wrapY_(pixFormat.Height())
         {}
         /**
-         * @brief 关联像素集
-         * @param pixFormat 需要关联的像素集
+         * @brief Associated pixel set
+         * @param pixFormat The associated pixel set is required
          * @since 1.0
          * @version 1.0
          */
@@ -516,10 +516,10 @@ namespace OHOS {
             pixFormat_ = &pixFormat;
         }
         /**
-         * @brief 获取像素地址
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @return 坐标像素地址
+         * @brief Get pixel address
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @return Coordinate pixel address
          * @since 1.0
          * @version 1.0
          */
@@ -534,8 +534,8 @@ namespace OHOS {
             return rowPtr_ + x * PIX_WIDTH;
         }
         /**
-         * @brief 像素地址增加一个像素宽度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */
@@ -549,8 +549,8 @@ namespace OHOS {
             return rowPtr_ + x * PIX_WIDTH;
         }
         /**
-         * @brief 像素地址增加一个像素高度
-         * @return 坐标为改变后的像素地址
+         * @brief Pixel address increases by one pixel width
+         * @return Coordinates are changed pixel addresses
          * @since 1.0
          * @version 1.0
          */

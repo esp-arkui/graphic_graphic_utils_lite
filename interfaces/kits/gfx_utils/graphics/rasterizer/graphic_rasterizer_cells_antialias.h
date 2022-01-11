@@ -15,7 +15,7 @@
 
 /**
  * @file graphic_rasterizer_cells_antialias.h
- * @brief Defines 光栅细胞（防走样）
+ * @brief Defines Grating cell (anti aliasing)
  * @since 1.0
  * @version 1.0
  */
@@ -31,7 +31,8 @@
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h"
 
 namespace OHOS {
-    // 像素单元格,没有定义构造函数,这是为了避免分配单元格数组时的额外开销.
+    // There is no constructor defined for pixel cells,
+    // which is to avoid the additional overhead of allocating cell arrays
     struct CellBuildAntiAlias {
         int x;
         int y;
@@ -63,7 +64,7 @@ namespace OHOS {
         };
 
         /**
-         * @brief 构建'细胞单元'的偏移以及mask掩码,细胞池容量等
+         * @brief Build the offset of 'cell unit', mask mask, cell pool capacity, etc
          * @since 1.0
          * @version 1.0
          */
@@ -85,15 +86,15 @@ namespace OHOS {
         ~RasterizerCellsAntiAlias();
 
         /**
-         * @brief RasterizerCellsAntiAlias 类的构造函数。.
-         * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
+         * @brief RasterizerCellsAntiAlias Class constructor
+         * initialization m_num_blocks,m_max_blocks,m_curr_block etc
          * @since 1.0
          * @version 1.0
          */
         RasterizerCellsAntiAlias(unsigned cell_block_limit = 1024);
 
         /**
-         * 重新初始化设置 m_num_blocks,m_max_blocks,m_curr_block等属性。
+         * Reinitialize settings m_num_blocks,m_max_blocks,m_curr_block etc。
          * @since 1.0
          * @version 1.0
          */
@@ -101,15 +102,15 @@ namespace OHOS {
         void Style(const CellType& style_cell);
 
         /**
-         * @brief 根据传入的2个坐标点（均带有子像素），
-         * 构建光栅化单元细胞点的过程，先从y向再从x向。
+         * @brief According to the incoming 2 coordinate points (both with sub pixels),
+         * The process of constructing rasterized cell points is from y to X.
          * @since 1.0
          * @version 1.0
          */
         void LineOperate(int x1, int y1, int x2, int y2);
 
         /**
-         * @brief 光栅化过程构建图元的坐标范围。
+         * @brief The rasterization process builds the coordinate range of the entity.
          * @since 1.0
          * @version 1.0
          */
@@ -131,8 +132,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 光栅化过程中对于所有的cells单元进行按照
-         * 从左向右，自上而下的顺序进行排序处理。
+         * @brief In the rasterization process, all cells are rasterized according to
+         * Sort from left to right and from top to bottom.
          * @since 1.0
          * @version 1.0
          */
@@ -144,8 +145,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 光栅化过程中根据y的坐标高度值计算得到
-         * cells的总数。
+         * @brief In the process of rasterization, it is calculated according to the coordinate height of Y
+         * Total number of cells.
          * @since 1.0
          * @version 1.0
          */
@@ -155,8 +156,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 光栅化过程中根据y的坐标高度值计算得到
-         * 排序后的cells数组的首地址。
+         * @brief In the process of rasterization, it is calculated according to the coordinate height of Y
+         * The first address of the sorted cells array.
          * @since 1.0
          * @version 1.0
          */
@@ -175,7 +176,7 @@ namespace OHOS {
         const SelfType& operator=(const SelfType&);
 
         /**
-         * @brief 光栅化过程中设置当前的cell单元。
+         * @brief Set the current cell during rasterization.
          * @since 1.0
          * @version 1.0
          */
@@ -184,22 +185,23 @@ namespace OHOS {
         void OutLineLegal(int x1, int y1, int x2, int y2);
 
         /**
-         * @brief 光栅化过程中添加当前的cell单元。
+         * @brief Add the current cell during rasterization.
          * @since 1.0
          * @version 1.0
          */
         void AddCurrentCell();
 
         /**
-         * @brief 光栅化过程中根据ey的坐标高度值,横向从x1到x2,
-         * 纵向从子像素掩码y1到子像素掩码y2的cell单元的填充过程。
+         * @brief n the rasterization process, the horizontal direction is
+         * from x1 to x2 according to the coordinate height value of ey,
+         * The filling process of cell cells longitudinally from sub-pixel mask y1 to sub-pixel mask y2.
          * @since 1.0
          * @version 1.0
          */
         void RenderHorizonline(int ey, int x1, int submask_flags_y1, int x2, int submask_flags_y2);
 
         /**
-         * @brief 光栅化过程中为cells分配数组空间。
+         * @brief Allocate array space for cells during rasterization.
          * @since 1.0
          * @version 1.0
          */
@@ -268,8 +270,8 @@ namespace OHOS {
     }
 
     /**
-     *  @brief RasterizerCellsAntiAlias 类的构造函数。.
-     * 初始化 m_num_blocks,m_max_blocks,m_curr_block等属性。
+     * @brief RasterizerCellsAntiAlias Class constructor
+     * initialization m_num_blocks,m_max_blocks,m_curr_block Other attributes
      * @since 1.0
      * @version 1.0
      */
@@ -295,7 +297,7 @@ namespace OHOS {
     }
 
     /**
-     * 重新初始化设置 m_num_blocks,m_max_blocks,m_curr_block等属性。
+     * Reinitialize settings m_num_blocks,m_max_blocks,m_curr_block and other attributes.
      * @since 1.0
      * @version 1.0
      */
@@ -314,7 +316,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中添加当前的cell单元。
+     * @brief Add the current cell during rasterization.
      * @since 1.0
      * @version 1.0
      */
@@ -323,9 +325,9 @@ namespace OHOS {
     {
         bool areaCoverFlags = m_curr_cell.area | m_curr_cell.cover;
         if (areaCoverFlags) {
-            // 达到CELL_BLOCK_MASK的数后，重新开辟分配内存
+            // Reach CELL_BLOCK_MASK After the number of mask, re allocate memory
             if ((m_num_cells & CELL_BLOCK_MASK) == 0) {
-                // 超过内存块限制大小，默认1024limit
+                // Exceeds the memory block size limit. The default is 1024 limit
                 if (m_num_blocks >= m_cell_block_limit) {
                     return;
                 }
@@ -337,7 +339,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中设置当前的cell单元。
+     * @brief Set the current cell during rasterization.
      * @since 1.0
      * @version 1.0
      */
@@ -358,7 +360,7 @@ namespace OHOS {
     GRAPHIC_GEOMETRY_INLINE void RasterizerCellsAntiAlias<Cell>::OutLineLegal(int x1, int y1, int x2, int y2)
     {
         /**
-         * outline 范围
+         * outline range
          */
         if (x1 < m_min_x)
             m_min_x = x1;
@@ -379,8 +381,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中根据ey的坐标高度值,横向以1/256像素为单位的x1到x2,
-     * 纵向从子像素掩码y1到子像素掩码y2的cell单元的填充过程。
+     * @brief In the rasterization process, according to the coordinate height value of ey,
+     * x1 to x2 in 1 / 256 pixel horizontally,
+     * The filling process of cell cells longitudinally from sub-pixel mask y1 to sub-pixel mask y2.
      * @since 1.0
      * @version 1.0
      */
@@ -389,12 +392,13 @@ namespace OHOS {
         int ey, int x1, int poly_subpixel_mask_y1, int x2, int poly_subpixel_mask_y2)
     {
         /**
-         * 从以1/256像素为单位的点中取出后8位的掩码值,即颜色掩码
+         * Take out the mask value of the last 8 bits, namely the color mask,
+         * from the points in units of 1 / 256 pixels
          */
         int submask_flags_x1 = x1 & POLY_SUBPIXEL_MASK;
         int submask_flags_x2 = x2 & POLY_SUBPIXEL_MASK;
         /**
-         * 从以1/256像素为单位的点中取出前24位的坐标
+         * The coordinates of the first 24 bits are extracted from the points in units of 1 / 256 pixels
          */
         int pixel_x1 = x1 >> POLY_SUBPIXEL_SHIFT;
         int pixel_x2 = x2 >> POLY_SUBPIXEL_SHIFT;
@@ -403,7 +407,7 @@ namespace OHOS {
         long long dx;
         int increase, lift_dx_mask, mod_dx_mask, rem_dx_mask;
         /**
-         * 2个点的颜色mask掩码相同，直接添加设置返回。
+         * The color mask of the two points is the same. Add the settings directly and return.
          */
         if (poly_subpixel_mask_y2 == poly_subpixel_mask_y1) {
             SetCurrentCell(pixel_x2, ey);
@@ -411,7 +415,7 @@ namespace OHOS {
         }
 
         /**
-         * 2个点的像素坐标相同，直接算作一个cell。
+         * The pixel coordinates of the two points are the same and are directly calculated as a cell.
          */
         if (pixel_x1 == pixel_x2) {
             delta = poly_subpixel_mask_y2 - poly_subpixel_mask_y1;
@@ -420,13 +424,13 @@ namespace OHOS {
             return;
         }
         /**
-         * hline 过程开始，渲染组织相同邻接的cells区域
+         * hline At the beginning of the process, the cells area adjacent to the same organization is rendered
          */
         first = POLY_SUBPIXEL_SCALE;
         increase = 1;
 
         /**
-         * 从 submask_flags_x1 到 POLY_SUBPIXEL_SCALE 转换 算 deltax* deltay
+         * Convert from submask_flags_x1 to POLY_SUBPIXEL_SCALE to calculate deltax * deltay
          */
         deltay_mask = (POLY_SUBPIXEL_SCALE - submask_flags_x1) * (poly_subpixel_mask_y2 - poly_subpixel_mask_y1);
         dx = (long long)x2 - (long long)x1;
@@ -487,7 +491,7 @@ namespace OHOS {
         }
         delta = poly_subpixel_mask_y2 - poly_subpixel_mask_y1;
         m_curr_cell.cover += delta;
-        // 再从 first 到  POLY_SUBPIXEL_SCALE 过程
+        // From first to POLY_SUBPIXEL_SCALE procedure
         m_curr_cell.area += (submask_flags_x2 + POLY_SUBPIXEL_SCALE - first) * delta;
     }
 
@@ -498,8 +502,8 @@ namespace OHOS {
     }
 
     /**
-     * @brief 根据传入的2个坐标点（均带有子像素），
-     * 构建光栅化单元细胞点的过程，先从y向再从x向。
+     * @brief According to the incoming 2 coordinate points (both with sub pixels),
+     * The process of constructing rasterized cell points is from y to X.
      * @since 1.0
      * @version 1.0
      */
@@ -508,7 +512,7 @@ namespace OHOS {
     {
         long long dx = (long long)x2 - (long long)x1;
         /**
-         * 若 dx 超出了限制范围，则采取折中处理的方法计算Line的过程。
+         * If dx exceeds the limit, a compromise is adopted to calculate the line.
          */
         if (dx >= DX_LIMIT || dx <= -DX_LIMIT) {
             int cx = (int)(((long long)x1 + (long long)x2) >> 1);
@@ -517,7 +521,7 @@ namespace OHOS {
             LineOperate(cx, cy, x2, y2);
         }
         /**
-         * 从以1/256像素为单位的点中取出前24位的坐标
+         * The coordinates of the first 24 bits are extracted from the points in units of 1 / 256 pixels
          */
         long long dy = (long long)y2 - (long long)y1;
         int ex1 = x1 >> POLY_SUBPIXEL_SHIFT;
@@ -525,7 +529,8 @@ namespace OHOS {
         int ey1 = y1 >> POLY_SUBPIXEL_SHIFT;
         int ey2 = y2 >> POLY_SUBPIXEL_SHIFT;
         /**
-         * 从1/256像素为单位的点中取出后8位的掩码值,即颜色掩码
+         * Take out the mask value of the last 8 bits from
+         * the points with 1 / 256 pixel as the unit, that is, the color mask
          */
         int submask_flags_y1 = y1 & POLY_SUBPIXEL_MASK;
         int submask_flags_y2 = y2 & POLY_SUBPIXEL_MASK;
@@ -538,28 +543,28 @@ namespace OHOS {
         SetCurrentCell(ex1, ey1);
 
         /**
-         * 2个点的Y值相同，则直接水平渲染组织处理，
-         * 水平坐标间距是从以1/256像素为单位的x1->x2,
-         * 颜色掩码间距是从submask_flags_y1 到 submask_flags_y2
+         * If the Y values of the two points are the same, they will be directly rendered horizontally,
+         * The horizontal coordinate spacing is from X1 - > x2 in 1 / 256 pixels,
+         * Color mask spacing is from submask_flags_y1 to submask_flags_y2
          */
         if (ey1 == ey2) {
             RenderHorizonline(ey1, x1, submask_flags_y1, x2, submask_flags_y2);
             return;
         }
         /**
-         * 垂直线的处理,要计算start->end cells ,然后计算这个线
-         * 上面的通用属性 area->cover,针对于每个y值来说，
-         * 只存在一个cell，因此不再调用 RenderHorizonline()
+         * For the processing of vertical lines, start - > end cells are calculated, and then the line is calculated
+         * The above general attribute area - > cover is for each y value,
+         * There is only one cell, so it is no longer called RenderHorizonline()
          */
         increase = 1;
         //  Vertical line
         if (dx == 0) {
             /**
-             * 从以1/256像素为单位的点中取出前24位的坐标
+             * The coordinates of the first 24 bits are extracted from the points in units of 1 / 256 pixels
              */
             int ex = x1 >> POLY_SUBPIXEL_SHIFT;
             /**
-             * 取出小数点数，且占用2个空间
+             * Take out the number of decimal points and occupy 2 spaces
              */
             int two_fx = (x1 - (ex << POLY_SUBPIXEL_SHIFT)) << 1;
             int area;
@@ -572,9 +577,9 @@ namespace OHOS {
 
             x_from = x1;
             /**
-             * 从 submask_flags_y1 到  first 过程
+             * From submask_flags_y1 to first process
              * RenderHorizonline(pixel_y1, x_from, submask_flags_y1, x_from, first);
-             * 颜色mask是从 submask_flags_y1->first
+             * The color mask is from submask_flags_y1->first
              */
             delta = first - submask_flags_y1;
             m_curr_cell.cover += delta;
@@ -583,19 +588,19 @@ namespace OHOS {
             ey1 += increase;
             SetCurrentCell(ex, ey1);
             /**
-             * 颜色mask是从 (poly_subpixel_scale - first) -> first 的过程
+             * The color mask is from (poly_subpixel_scale - first) -> first
              */
             delta = first + first - POLY_SUBPIXEL_SCALE;
             area = two_fx * delta;
             while (ey1 != ey2) {
-                // 从 poly_subpixel_scale - first 到  first
+                // from poly_subpixel_scale - first to  first
                 m_curr_cell.cover = delta;
                 m_curr_cell.area = area;
                 ey1 += increase;
                 SetCurrentCell(ex, ey1);
             }
             /**
-             * 颜色mask是从poly_subpixel_scale - first 到  submask_flags_y2 的过程
+             * The color mask is from poly_subpixel_scale - first to  submask_flags_y2
              *
              * RenderHorizonline(pixel_y1, x_from, poly_subpixel_scale - first, x_from, submask_flags_y2);
              */
@@ -605,9 +610,9 @@ namespace OHOS {
             return;
         }
         // ok, we have to render several hlines
-        // dx* mask 差值
+        // dx* mask Difference
         /**
-         * 颜色mask是从submask_flags_y1 到  POLY_SUBPIXEL_SCALE 的过程
+         * The color mask is from the 颜色mask是从submask_flags_y1 to POLY_SUBPIXEL_SCALE Process of scale
          */
         deltax_mask = (POLY_SUBPIXEL_SCALE - submask_flags_y1) * dx;
         first = POLY_SUBPIXEL_SCALE;
@@ -664,7 +669,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中为cells分配数组空间。
+     * @brief Allocate array space for cells during rasterization.
      * @since 1.0
      * @version 1.0
      */
@@ -695,7 +700,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中cells单元的交换。
+     * @brief The exchange of cells in the rasterization process.
      * @since 1.0
      * @version 1.0
      */
@@ -708,7 +713,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中对于所有的cells单元进行快速排序处理。
+     * @brief In the rasterization process, all cells are sorted quickly.
      * @since 1.0
      * @version 1.0
      */
@@ -735,7 +740,7 @@ namespace OHOS {
 
             if (len > QSORT_THRESHOLD) {
                 /**
-                 * 先交换 base + len / 2 as the pivot
+                 * First exchange base + len / 2 as the pivot
                  */
                 pivot = base + len / TWO_TIMES;
                 SwapCells(base, pivot);
@@ -744,7 +749,7 @@ namespace OHOS {
                 jIndex = limit - 1;
 
                 /**
-                 * 排序保证   *i的值 <= *base 的值 <= *j 的值
+                 * Sorting guarantees the value of * i < = * the value of base < = * the value of j
                  */
                 if ((*jIndex)->x < (*iIndex)->x) {
                     SwapCells(iIndex, jIndex);
@@ -775,7 +780,7 @@ namespace OHOS {
 
                 SwapCells(base, jIndex);
                 /**
-                 * push 压入了最大的子数组sub-array
+                 * push Pressed in the largest sub array sub array
                  */
                 if (jIndex - base > limit - iIndex) {
                     top[0] = base;
@@ -789,7 +794,7 @@ namespace OHOS {
                 top += TWO_STEP;
             } else {
                 /**
-                 * 当 sub-array 子数组变小时使用执行插入排序
+                 * When the sub-array becomes smaller, insert sort is performed using
                  */
                 jIndex = base;
                 iIndex = jIndex + 1;
@@ -816,8 +821,8 @@ namespace OHOS {
     }
 
     /**
-     * @brief 光栅化过程中对于所有的cells单元进行按照
-     * 从左向右，自上而下的顺序进行排序处理。
+     * @brief In the rasterization process, all cells are rasterized according to
+     * Sort from left to right and from top to bottom.
      * @since 1.0
      * @version 1.0
      */

@@ -23,14 +23,14 @@ namespace OHOS {
     const float affineEpsilon = 1e-14;
 
     /**
-     * @brief 图源映射变换
+     * @brief Map source transformation
      * @since 1.0
      * @version 1.0
      */
     class TransAffine : public Matrix3<float> {
     public:
         /**
-         * @brief 初始化为单位矩阵
+         * @brief Initialize to identity matrix
          * @since 1.0
          * @version 1.0
          */
@@ -38,7 +38,7 @@ namespace OHOS {
             :Matrix3<float>()
         {}
         /**
-         * @brief 自定义矩阵
+         * @brief Custom matrix
          * @since 1.0
          * @version 1.0
          */
@@ -46,7 +46,7 @@ namespace OHOS {
             Matrix3<float>(v0, v2, v4, v1, v3, v5, 0, 0, 1)
         {}
         /**
-         * @brief 用于将矩形转换为平行四边形
+         * @brief Converts a rectangle to a parallelogram
          * @since 1.0
          * @version 1.0
          */
@@ -59,20 +59,20 @@ namespace OHOS {
             data_[iIndex] = fValue;
         }
         /**
-         * @brief 将原平行四边形转换为目标平行四边形
-         * @param src 原平行四边形
-         * @param dst 目标平行四边形
+         * @brief Convert the original parallelogram to the target parallelogram
+         * @param src Original parallelogram
+         * @param dst Target parallelogram
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& ParlToParl(const float* src, const float* dst);
         /**
-         * @brief 将原矩形转换为目标平行四边形
-         * @param x1 矩形左上角x轴坐标
-         * @param y1 矩形左上角y轴坐标
-         * @param x2 矩形右下角x轴坐标
-         * @param y2 矩形右下角y轴坐标
-         * @param parl 目标平行四边形
+         * @brief Convert the original parallelogram to the target parallelogram
+         * @param x1 x-axis coordinate of the upper left corner of the rectangle
+         * @param y1 y-axis coordinate of the upper left corner of the rectangle
+         * @param x2 x-axis coordinates of the lower right corner of the rectangle
+         * @param y2 y-axis coordinates of the lower right corner of the rectangle
+         * @param parl Target parallelogram
          * @since 1.0
          * @version 1.0
          */
@@ -81,53 +81,53 @@ namespace OHOS {
                                       const float* parl);
 
         /**
-         * @brief 重置矩阵
+         * @brief reset TransAffine
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Reset();
 
         /**
-         * @brief 图元偏移
-         * @param deltaX x轴偏移量
-         * @param deltaY y轴偏移量
+         * @brief Element offset
+         * @param deltaX x-axis offset
+         * @param deltaY y-axis offset
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Translate(float x, float y);
         /**
-         * @brief 图元旋转
-         * @param angle 旋转角度
+         * @brief Element rotation
+         * @param angle Rotate angle
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Rotate(float angle);
         /**
-         * @brief 图元放大
-         * @param scale 整体放大系数
+         * @brief Element Scale
+         * @param scale Overall amplification factor
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Scale(float scale);
         /**
-         * @brief 图元放大
-         * @param x x轴放大系数
-         * @param y y轴放大系数
+         * @brief Element Scale
+         * @param x x-axis magnification factor
+         * @param y y-axis magnification factor
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Scale(float x, float y);
 
         /**
-         * @brief 转换矩阵相乘
-         * @param metrix 矩阵
+         * @brief Transformation matrix multiplication
+         * @param metrix
          * @since 1.0
          * @version 1.0
          */
         const TransAffine& Multiply(const TransAffine& metrix);
 
         /**
-         * @brief 矩阵翻转
+         * @brief Matrix flip
          * @since 1.0
          * @version 1.0
          */
@@ -139,25 +139,25 @@ namespace OHOS {
         }
 
         /**
-         * @brief 对x,y进行转换
-         * @param x x轴坐标
-         * @param y y轴坐标
+         * @brief Convert x, y
+         * @param x x-coordinate
+         * @param y y-coordinate
          * @since 1.0
          * @version 1.0
          */
         void Transform(float* x, float* y) const;
 
         /**
-         * @brief 逆变换
-         * @param x x轴坐标
-         * @param y y轴坐标
+         * @brief inverse transformation
+         * @param x x-coordinate
+         * @param y y-coordinate
          * @since 1.0
          * @version 1.0
          */
         void InverseTransform(float* x, float* y) const;
 
         /**
-         * @brief 计算行列式的倒数
+         * @brief Computes the reciprocal of a determinant
          * @since 1.0
          * @version 1.0
          */
@@ -167,23 +167,23 @@ namespace OHOS {
         }
 
         /**
-         * @brief 检查矩阵是否退化
+         * @brief Check the matrix for degradation
          * @since 1.0
          * @version 1.0
          */
         bool IsValid(float epsilon = affineEpsilon) const;
 
         /**
-         * @brief 检查它是否是单位矩阵
+         * @brief Check whether it is an identity matrix
          * @since 1.0
          * @version 1.0
          */
         bool IsIdentity(float epsilon = affineEpsilon) const;
 
         /**
-         * @brief 缩放
-         * @param x x轴坐标
-         * @param y y轴坐标
+         * @brief zoom
+         * @param x x-coordinate
+         * @param y y-coordinate
          * @since 1.0
          * @version 1.0
          */
@@ -256,7 +256,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 旋转矩阵
+     * @brief Rotation matrix
      * @since 1.0
      * @version 1.0
      */
@@ -268,7 +268,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 缩放矩阵
+     * @brief Scaling matrix
      * @since 1.0
      * @version 1.0
      */
@@ -281,7 +281,7 @@ namespace OHOS {
         {}
     };
     /**
-     * @brief 位移矩阵
+     * @brief TransAffine Translation
      * @since 1.0
      * @version 1.0
      */

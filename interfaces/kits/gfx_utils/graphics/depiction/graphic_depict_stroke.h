@@ -22,7 +22,8 @@
 namespace OHOS {
     /**
      * @template<class VertexSource,class Markers> struct DepictStroke
-     * @brief 该结构体主要是进行轮廓轮廓线条包括点划线变换的模板结构体.
+     * @brief The structure is mainly a template structure for contour line transformation,
+     * including dotted line transformation
      * @since 1.0
      * @version 1.0
      */
@@ -34,8 +35,9 @@ namespace OHOS {
             base_type;
 
         /**
-         * @brief DepictStroke类的构造函数。.
-         * 构造参数为VertexSource 属性决定扩展或收缩轮廓线条的处理。
+         * @brief DepictStroke Class constructor
+         * The construction parameter is the VertexSource property,
+         * which determines the processing of expanding or shrinking contour lines.
          * @since 1.0
          * @version 1.0
          */
@@ -45,11 +47,11 @@ namespace OHOS {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
-         * ineCap 属性设置线条末端线帽的样式。
-         * butt	默认。向线条的每个末端添加平直的边缘。
-         * round	向线条的每个末端添加圆形线帽。
-         * square	向线条的每个末端添加正方形线帽。
-         * "round" 和 "square" 会使线条略微变长
+         * ineCap Property sets the style of the line end cap.
+         * butt Default. Add a straight edge to each end of the line.
+         * round Add a circular cap to each end of the line.
+         * square Add a square cap to each end of the line.
+         * "round" And "square" make the line slightly longer
          */
         void LineCap(LineCapEnum lineCap)
         {
@@ -57,11 +59,11 @@ namespace OHOS {
         }
 
         /**
-         * ineCap 属性返回线条末端线帽的样式。
-         * butt	默认。向线条的每个末端添加平直的边缘。
-         * round	向线条的每个末端添加圆形线帽。
-         * square	向线条的每个末端添加正方形线帽。
-         * "round" 和 "square" 会使线条略微变长
+         * ineCap Property returns the style of the line end cap.
+         * butt Default. Add a straight edge to each end of the line.
+         * round Add a circular cap to each end of the line.
+         * square Add a square cap to each end of the line.
+         * "round" and "square" make the line slightly longer
          */
         LineCapEnum LineCap() const
         {
@@ -70,9 +72,9 @@ namespace OHOS {
 #endif
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
-         * lineJoin 属性设置所创建边角的类型，当两条线交汇时,
-         * 主要包括bevel	创建斜角。round	创建圆角。
-         * miter	默认。创建尖角。
+         * lineJoin Property sets the type of corner created. When two lines meet,
+         * Mainly including bevel Create a bevel. round Create a fillet.
+         * miter Default. Create sharp corners.
          */
         void LineJoin(LineJoinEnum lineJoin)
         {
@@ -80,9 +82,9 @@ namespace OHOS {
         }
 
         /**
-         * lineJoin 属性返回所创建边角的类型，当两条线交汇时,
-         * 主要包括bevel	创建斜角。round	创建圆角。
-         * miter	默认。创建尖角。
+         * lineJoin Property returns the type of corner created. When two lines meet,
+         * Mainly including bevel Create a bevel. round Create a fillet.
+         * miter Default. Create sharp corners.
          */
         LineJoinEnum LineJoin() const
         {
@@ -90,22 +92,22 @@ namespace OHOS {
         }
 
         /**
-         * miterLimit 属性设置最大斜接长度。
-         * 斜接长度指的是在两条线交汇处内角和外角之间的距离
-         * 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
-         * 边角的角度越小，斜接长度就会越大。
-         * 为了避免斜接长度过长，我们可以使用 miterLimit 属性。
+         * miterLimit Property to set the maximum miter length.
+         * Miter length refers to the distance between the inner and outer corners at the intersection of two lines
+         * Miterlimit is valid only when the linejoin attribute is "miter".
+         * Miterlimit is valid only when the linejoin attribute is "miter".
+         * To avoid the miter length being too long, we can use the miterlimit attribute.
          */
         void MiterLimit(double miterLimit)
         {
             base_type::GetGenerator().MiterLimit(miterLimit);
         }
         /**
-         * miterLimit 属性返回最大斜接长度。
-         * 斜接长度指的是在两条线交汇处内角和外角之间的距离
-         * 只有当 lineJoin 属性为 "miter" 时，miterLimit 才有效。
-         * 边角的角度越小，斜接长度就会越大。
-         * 为了避免斜接长度过长，我们可以使用 miterLimit 属性。
+         * miterLimit Property returns the maximum miter length.
+         * Miter length refers to the distance between the inner and outer corners at the intersection of two lines
+         * Miterlimit is valid only when the linejoin attribute is "miter".
+         * The smaller the angle of the corner, the greater the miter length.
+         * To avoid the miter length being too long, we can use the miterlimit attribute.
          */
         double MiterLimit() const
         {
@@ -113,18 +115,19 @@ namespace OHOS {
         }
 #endif
 
-        /* 轮廓线主要设置几何线条的线宽 */
+        /** Contour line mainly sets the lineweight of geometric lines */
         void Width(double width)
         {
             base_type::GetGenerator().Width(width);
         }
 
         /**
-         * @brief 最终决定估算的精度。.
-         * 在实际应用中，我们需要从点的世界坐标转换到屏幕坐标，因此总会存在一定的缩放因子。
-         * 曲线通常是在世界坐标系中处理的，而进行估算时又要转换为像素值。
-         * 一般看起来会是这样的：m_curved.approximation_scale(m_transform.scale());
-         * 这里，m_transform 是一个仿型映射的矩阵，里面包含了所有的转换，包括视点和缩放。
+         * @brief Finally determine the accuracy of the estimation.
+         * In practical application, we need to convert the world coordinates of points to screen coordinates,
+         * so there will always be a certain scaling factor.
+         * Curves are usually processed in the world coordinate system and converted to pixel values when estimating.
+         * It usually looks like this: m_curved.approximation_scale(m_transform.scale());
+         * Here, m_transformis a matrix of affine mapping, which contains all transformations, including viewpoint and scaling.
          * @since 1.0
          * @version 1.0
          */
@@ -132,18 +135,19 @@ namespace OHOS {
         {
             base_type::GetGenerator().ApproximationScale(aScale);
         }
-        /* 轮廓线主要返回几何线条的线宽 */
+        // Contour lines mainly return the lineweight of geometric lines
         double Width() const
         {
             return base_type::GetGenerator().Width();
         }
 
         /**
-         * @brief 返回最终决定估算的精度。.
-         * 在实际应用中，我们需要从点的世界坐标转换到屏幕坐标，因此总会存在一定的缩放因子。
-         * 曲线通常是在世界坐标系中处理的，而进行估算时又要转换为像素值。
-         * 一般看起来会是这样的：m_curved.approximation_scale(m_transform.scale());
-         * 这里，m_transform 是一个仿型映射的矩阵，里面包含了所有的转换，包括视点和缩放。
+         * @brief Returns the precision of the final decision estimate
+         * In practical application, we need to convert the world coordinates of points to screen coordinates,
+         * so there will always be a certain scaling factor.
+         * Curves are usually processed in the world coordinate system and converted to pixel values when estimating.
+         * It usually looks like this: m_curved.approximation_scale(m_transform.scale());
+         * Here, m_transformis a matrix of affine mapping, which contains all transformations, including viewpoint and scaling.
          * @since 1.0
          * @version 1.0
          */

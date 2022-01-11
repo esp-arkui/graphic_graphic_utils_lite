@@ -16,10 +16,10 @@
 /**
  * @file graphic_geometry_scanline_u.h
  *
- * @brief 在从 rasterizer（光栅化器） 到 scanline renderer 之间的信息转换时，
- * 用到了 scanline 容器。一个 scanline 由很多的水平的、不相交的 span 组成。
- * 这些 span 按 x 轴排序。这就意味着并没有提供排序这个操作，必须在将 span 添加到
- * scanline 时就把顺序处理好。.
+ * @brief When converting information from rasterizer to scanline renderer,
+ * The scanline container is used. A scanline consists of many horizontal, disjoint spans.
+ * These spans are sorted by the x-axis
+ * This means that sorting is not provided and must be handled when span is added to scanline
  * @since 1.0
  * @version 1.0
  */
@@ -34,9 +34,10 @@
 namespace OHOS {
     /**
      * @class ScanlineUnPackedContainer
-     * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
-     * 容器可以包含去锯齿信息.unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
-     * 包括那些全部覆盖在多边形内部的像素。
+     * @brief 16 bit unpacked scan line container class - packed scan line container,
+     * Containers can contain de aliasing information Unpacked scanline always
+     * saves overlay values for all pixels（coverage value）,
+     * Include those pixels that all cover the interior of the polygon
      * @since 1.0
      * @version 1.0
      */
@@ -44,7 +45,7 @@ namespace OHOS {
     public:
         typedef ScanlineUnPackedContainer self_type;
         /**
-         * 像素覆盖率类型
+         * Pixel coverage type
          */
         using cover_type = uint8_t;
         using coord_type = int16_t;
@@ -62,11 +63,12 @@ namespace OHOS {
         {}
         /**
          * @class ScanlineUnPackedContainer
-         * @brief 16位的Unpacked scanline container class - 包装过的 scanline 容器,
-         * 容器可以包含去锯齿信息.包装的(packed）scanline 与未包装的（unpacked）
-         * scanline 的区别在于，unpacked scanline 总是会为所有像素保存覆盖值（coverage value），
-         * 包括那些全部覆盖在多边形内部的像素。而 packed scanlines 则会把具有相同
-         * coverage value 的像素合并成 solid span。
+         * @brief 16 bit unpacked scan line container class - packed scan line container,
+         * Containers can contain de aliasing information Packed scanline and unpacked scanline
+         * The difference between scanline and unpacked scanline is that
+         * unpacked scanline always saves coverage values for all pixels,
+         * Include those pixels that are all covered inside the polygon.
+         * Packed scanlines will merge pixels with the same coverage value into solid span
          * @since 1.0
          * @version 1.0
          */
@@ -84,8 +86,8 @@ namespace OHOS {
         }
 
         /**
-         * 根据x的位置 以及cover 颜色覆盖率是扩展call的区域
-         * 还是添加cell单元 。
+         * According to the position of X and the cover color, the coverage is the area of the extended call
+         * or add a cell
          */
         void AddCell(int x, unsigned cover)
         {
@@ -103,8 +105,9 @@ namespace OHOS {
         }
 
         /**
-         * 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
-         * 还是添加cells单元数组 。
+         * According to the position of X, the span length of len and
+         * the cover color coverage are the areas where the call is extended
+         * or add a cell
          */
         void AddCells(int x, unsigned cellLength, const uint8_t* covers)
         {
@@ -122,9 +125,10 @@ namespace OHOS {
         }
 
         /**
-         * 根据x的位置 len的span length 以及cover 颜色覆盖率是扩展call的区域
-         * 还是添加span单元数组 。这里注意会把具有相同
-         * coverage value 的像素合并成 solid span。
+         * According to the position of X, the span length of len and
+         * the cover color coverage are the areas where the call is extended
+         * Or add a span cell array.
+         * Note here that pixels with the same coverage value will be merged into solid span.
          */
         void AddSpan(int x, unsigned spanLength, unsigned cover)
         {
@@ -142,7 +146,7 @@ namespace OHOS {
         }
 
         /**
-         * 结束操作
+         * End operation
          */
         void Finalize(int y)
         {

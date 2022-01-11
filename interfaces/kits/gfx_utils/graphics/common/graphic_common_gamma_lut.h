@@ -187,20 +187,20 @@ namespace OHOS {
 
         /**
          * @brief Find the color value in inverseTable_ according to the subscript
-         * @param index为下标值
-         * @return 返回uint8_t类型的颜色值
+         * @param Index is the subscript value
+         * @return Returns a color value of type uint8_t
          * @since 1.0
          * @version 1.0
          */
         uint8_t GetInverseTableValue(uint8_t index) const
         {
-            // 在这种情况下，逆变换是一个简单的查找。
+            // In this case, the inverse transform is a simple search.
             return inverseTable_[index];
         }
     };
 
     /**
-     * @brief Srgb转化类，添加说明
+     * @brief SRGB transformation class
      *
      * @see StandardRgbConvBase
      * @since 1.0
@@ -210,9 +210,9 @@ namespace OHOS {
     class StandardRgbConvBase {
     public:
         /**
-         * @brief 由Srgb值转为Rgb值
-         * @param srgb为Srgb类型
-         * @return 返回Rgb类型的颜色值
+         * @brief From sRGB value to RGB value
+         * @param srgb is sRGB type
+         * @return Returns a color value of type RGB
          * @since 1.0
          * @version 1.0
          */
@@ -222,8 +222,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 由Rgb值转为Srgb值
-         * @param rgb为Rgb类型
+         * @brief From RGB value to sRGB value
+         * @param rgb is of type RGB
          * @return 返回Srgb类型的颜色值
          * @since 1.0
          * @version 1.0
@@ -244,7 +244,7 @@ namespace OHOS {
     class StandardRgbConv;
 
     /**
-     * @brief StandardRgbConv转化类、float类型
+     * @brief Standardrgbconv conversion class, float type
      *
      * @see StandardRgbConv
      * @since 1.0
@@ -254,9 +254,9 @@ namespace OHOS {
     class StandardRgbConv<float> : public StandardRgbConvBase<float> {
     public:
         /**
-         * @brief 由Alpha值转为Srgb值
-         * @param alphaValue为Alpha值
-         * @return 返回Srgb类型的颜色值
+         * @brief From alpha value to sRGB value
+         * @param alphaValue is the alpha value
+         * @return Returns a color value of type sRGB
          * @since 1.0
          * @version 1.0
          */
@@ -272,9 +272,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 由Srgb值转为Alpha值
-         * @param srgbValue为Srgb值
-         * @return 返回Alpha值
+         * @brief From sRGB value to alpha value
+         * @param Srgbvalue is sRGB value
+         * @return Returns the alpha value
          * @since 1.0
          * @version 1.0
          */
@@ -286,7 +286,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief StandardRgbConv转化类、uint16_t类型
+     * @brief StandardRgbConv conversion class, uint16_t type
      *
      * @see StandardRgbConv
      * @since 1.0
@@ -296,9 +296,9 @@ namespace OHOS {
     class StandardRgbConv<uint16_t> : public StandardRgbConvBase<uint16_t> {
     public:
         /**
-         * @brief 由Alpha值转为Srgb值
-         * @param alphaValue为Alpha值
-         * @return 返回Srgb类型的颜色值
+         * @brief From alpha value to sRGB value
+         * @param alphaValue is the alpha value
+         * @return Returns a color value of type sRGB
          * @since 1.0
          * @version 1.0
          */
@@ -308,9 +308,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 由Srgb值转为Alpha值
-         * @param srgbValue为Srgb值
-         * @return 返回Alpha值
+         * @brief From sRGB value to alpha value
+         * @param Srgbvalue is sRGB value
+         * @return Returns the alpha value
          * @since 1.0
          * @version 1.0
          */
@@ -321,7 +321,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief StandardRgbConv转化类、uint8_t类型
+     * @brief StandardRgbConv Conversion class, uint8_t type
      *
      * @see StandardRgbConv
      * @since 1.0
@@ -331,9 +331,9 @@ namespace OHOS {
     class StandardRgbConv<uint8_t> : public StandardRgbConvBase<uint8_t> {
     public:
         /**
-         * @brief 由Srgb值转为Alpha值
-         * @param srgbValue为Srgb值
-         * @return 返回Alpha值
+         * @brief From sRGB value to alpha value
+         * @param srgbValueis sRGB value
+         * @return Returns the alpha value
          * @since 1.0
          * @version 1.0
          */
@@ -343,9 +343,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 由Alpha值转为Srgb值
-         * @param alphaValue为Alpha值
-         * @return 返回Srgb类型的颜色值
+         * @brief From alpha value to sRGB value
+         * @param alphaValue is the alpha value
+         * @return Returns a color value of type sRGB
          * @since 1.0
          * @version 1.0
          */

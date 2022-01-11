@@ -15,7 +15,7 @@
 
 /**
  * @file span_image_rgba.h
- * @brief Defines 扫描线图像过滤器
+ * @brief Defines Scan line image filter
  * @since 1.0
  * @version 1.0
  */
@@ -45,8 +45,9 @@ namespace OHOS {
     };
     /**
      * @template class SpanImage
-     * @brief Defines 图像插值器包装类
-     * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+     * @brief Defines Image interpolator wrapper class
+     * @template Class source represents the image source and
+     * interpolator represents the image observation interpolator
      * @since 1.0
      * @version 1.0
      */
@@ -60,7 +61,7 @@ namespace OHOS {
         {
         }
         /**
-         * @brief 构造函数传参
+         * @brief Constructor parameters
          */
         SpanFillImage(source_type& src,
                       interpolator_type& interpolator)
@@ -70,14 +71,14 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回 image_accessor
+         * @brief return image_accessor
          */
         source_type& GetSource()
         {
             return *src_;
         }
         /**
-         * @brief 返回插值器
+         * @brief Return interpolator
          */
         interpolator_type& GetInterpolator()
         {
@@ -94,8 +95,9 @@ namespace OHOS {
 
     /**
      * @template class SpanImage
-     * @brief Defines 扫描线图像过滤器
-     * @template class Source 表示图像源，Interpolator 表示图像观察插值器
+     * @brief Defines Scan line image filter
+     * @template Class source represents the image source and interpolator represents
+     * the image observation interpolator
      * @since 1.0
      * @version 1.0
      */
@@ -116,11 +118,11 @@ namespace OHOS {
         {
         }
         /**
-         * @brief Generate 生成相应image
-         * @param span 需要填色的扫描线首地址
-         * @param x 坐标-x
-         * @param y 坐标-y
-         * @param len 扫描线长度
+         * @brief Generate Generate corresponding image
+         * @param span First address of scan line to be filled
+         * @param x coordinate-x
+         * @param y coordinate-y
+         * @param len span length
          */
         void Generate(color_type* span, int x, int y, unsigned len)
         {
@@ -130,7 +132,7 @@ namespace OHOS {
             do {
                 int x_hr, y_hr;
                 /**
-                 * 获取插值器新增加的新的坐标点
+                 * Get the new coordinate points added by the interpolator
                  */
                 spanImage::GetInterpolator().Coordinates(&x_hr, &y_hr);
                 x_hr -= IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
@@ -139,19 +141,19 @@ namespace OHOS {
                 int spanY = y_hr >> IMAGE_SUBPIXEL_SHIFT;
                 unsigned weight;
                 /**
-                 * 设置图像色彩值 r g b a 像素值的
+                 * Setting the pixel value of the image color value r g b a
                  */
                 luminance[INDEX_ZERO] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 luminance[INDEX_ONE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 luminance[INDEX_TWO] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 luminance[INDEX_THREE] = IMAGE_SUBPIXEL_SCALE * IMAGE_SUBPIXEL_SCALE / PIXEL_TIMES;
                 /**
-                 * 获取图像像素点坐标
+                 * Obtain image pixel coordinates
                  */
                 x_hr &= IMAGE_SUBPIXEL_MASK;
                 y_hr &= IMAGE_SUBPIXEL_MASK;
                 /**
-                 * 获取需要插值的颜色指针
+                 * Gets the color pointer that needs interpolation
                  */
                 colorsPtr = (const uint8_t*)spanImage::GetSource().Span(spanX, spanY, PIXEL_TIMES);
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * (IMAGE_SUBPIXEL_SCALE - y_hr);
@@ -159,21 +161,21 @@ namespace OHOS {
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-                // 获取下一个x对应颜色
+                // Get the color corresponding to the next x
                 colorsPtr = (const uint8_t*)spanImage::GetSource().NextX();
                 weight = x_hr * (IMAGE_SUBPIXEL_SCALE - y_hr);
                 luminance[INDEX_ZERO] += weight * *colorsPtr++;
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-                // 获取下一个y对应颜色
+                // Get the color corresponding to the next y
                 colorsPtr = (const uint8_t*)spanImage::GetSource().Nexty();
                 weight = (IMAGE_SUBPIXEL_SCALE - x_hr) * y_hr;
                 luminance[INDEX_ZERO] += weight * *colorsPtr++;
                 luminance[INDEX_ONE] += weight * *colorsPtr++;
                 luminance[INDEX_TWO] += weight * *colorsPtr++;
                 luminance[INDEX_THREE] += weight * *colorsPtr;
-                // 获取下一个x对应颜色
+                // Get the color corresponding to the next x
                 colorsPtr = (const uint8_t*)spanImage::GetSource().NextX();
                 weight = x_hr * y_hr;
                 luminance[INDEX_ZERO] += weight * *colorsPtr++;

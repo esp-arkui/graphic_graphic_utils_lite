@@ -15,7 +15,7 @@
 
 /**
  * @file span_allocator_converter.h
- * @brief Defines 扫描线分配器和转换器
+ * @brief Defines Scan line distributor and converter
  * @since 1.0
  * @version 1.0
  */
@@ -31,9 +31,9 @@ namespace OHOS {
     public:
         typedef ColorT color_type;
         /**
-         * @brief Resize 重新分配计算m_span长度
-         * @param span_len 扫描线长度
-         * @return spans的首地址
+         * @brief Resize Redistribution calculation m_Span length
+         * @param span_len Scan line length
+         * @return First address of spans
          */
         GRAPHIC_GEOMETRY_INLINE color_type* Resize(unsigned span_len)
         {

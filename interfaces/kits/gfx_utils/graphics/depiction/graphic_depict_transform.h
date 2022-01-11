@@ -16,8 +16,8 @@
 /**
  * @file graphic_geometry_depict_transform.h
  *
- * @brief Defines 构建顶点矩阵变换管道
- * 变换矩阵。通过顶点坐标与矩阵的运行，我们可以得到新的坐标
+ * @brief Defines Building vertex matrix transformation pipeline
+ * ransformation matrix. Through the operation of vertex coordinates and matrix, we can get new coordinates
  * @since 1.0
  * @version 1.0
  */
@@ -30,8 +30,8 @@
 namespace OHOS {
     /**
      * @template<VertexSource,Transformer> class DepictTransform
-     * @brief 该DepictTransform类通过六个变量组成一个2*3的矩阵，
-     * 与坐标计算后得到一个新的坐标。
+     * @brief The depicttransform class forms a 2 * 3 matrix through six variables,
+     * A new coordinate is obtained after calculation with the coordinate.
      * @since 1.0
      * @version 1.0
      */
@@ -39,8 +39,9 @@ namespace OHOS {
     class DepictTransform {
     public:
         /**
-         * @brief DepictTransform类的构造函数。.
-         * 构造参数为VertexSource 以及Transformer属性决定曲线的顶点源。
+         * @brief DepictTransform Class constructor
+         * The construction parameters are VertexSource and Transformer attributes,
+         * which determine the vertex source of the curve.
          * @since 1.0
          * @version 1.0
          */

@@ -104,7 +104,7 @@ namespace OHOS {
         }
     public:
         /**
-         * @brief 模糊
+         * @brief Blur
          * @since 1.0
          * @version 1.0
          */
