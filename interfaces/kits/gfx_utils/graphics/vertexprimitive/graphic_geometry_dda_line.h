@@ -29,7 +29,7 @@
 
 namespace OHOS {
     /**
-     * @brief DDA2算法
+     * @brief Dda2 algorithm
      * @see Dda2LineInterpolator
      * @since 1.0
      * @version 1.0

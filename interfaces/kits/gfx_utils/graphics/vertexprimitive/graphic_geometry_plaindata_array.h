@@ -35,7 +35,7 @@ namespace OHOS {
     /**
      * @file GeometryPlainDataArray.h
      *
-     * @brief Defines GeometryPlainDataArray数组,容量可变.
+     * @brief Defines GeometryPlainDataArray,Variable capacity.
      *
      * @since 1.0
      * @version 1.0
@@ -55,8 +55,8 @@ namespace OHOS {
         {}
         /**
          *
-         * @brief 构造Defines PodArray数组.
-         * @param size 初始容量
+         * @brief Construct definitions podarray array.
+         * @param size Initial capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -77,7 +77,7 @@ namespace OHOS {
             return *this;
         }
         /**
-         * @brief 获取指定索引的元素.
+         * @brief Gets the element of the specified index.
          *
          * @since 1.0
          * @version 1.0
@@ -87,7 +87,7 @@ namespace OHOS {
             return data_[index];
         }
         /**
-         * @brief 获取指定索引的元素.
+         * @brief Gets the element of the specified index.
          *
          * @since 1.0
          * @version 1.0
@@ -97,7 +97,7 @@ namespace OHOS {
             return data_[index];
         }
         /**
-         * @brief 获取指定索引的元素.
+         * @brief Gets the element of the specified index.
          *
          * @since 1.0
          * @version 1.0
@@ -107,7 +107,7 @@ namespace OHOS {
             return data_[index];
         }
         /**
-         * @brief 获取指定索引的元素.
+         * @brief Gets the element of the specified index.
          *
          * @since 1.0
          * @version 1.0
@@ -117,7 +117,7 @@ namespace OHOS {
             return data_[index];
         }
         /**
-         * @brief 获取指定索引的元素.
+         * @brief Gets the element of the specified index.
          *
          * @since 1.0
          * @version 1.0
@@ -127,7 +127,7 @@ namespace OHOS {
             return data_[index];
         }
         /**
-         * @brief 获取元素首地址.
+         * @brief Get element header address.
          *
          * @since 1.0
          * @version 1.0
@@ -137,7 +137,7 @@ namespace OHOS {
             return data_;
         }
         /**
-         * @brief 获取元素首地址.
+         * @brief Get element header address.
          *
          * @since 1.0
          * @version 1.0
@@ -149,8 +149,8 @@ namespace OHOS {
 
         /**
          *
-         * @brief 修改Defines PodArray数组容量.
-         * @param size 容量
+         * @brief Modify the capacity of the definitions podarray array.
+         * @param size capacity
          * @since 1.0
          * @version 1.0
          */
@@ -162,7 +162,7 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 获取元素个数.
+         * @brief Get the number of elements.
          *
          * @since 1.0
          * @version 1.0

@@ -15,7 +15,7 @@
 
 /**
  * @file graphic_geometry_rasterizer_scanline_antialias.h
- * @brief Defines 光栅化以及扫描线过程阶段处理.
+ * @brief Defines Rasterization and scanline process stage processing
  * @since 1.0
  * @version 1.0
  */
@@ -30,17 +30,18 @@ namespace OHOS {
     using RasterizerScanlineClipInt = RasterizerScanlineClip<RasterDepictInt>;
     /**
      * @template<Clip = RasterizerScanlineClipInt> typename RasterizerScanlineAntiAlias
-     * @brief 多边形光栅化用于高质量的填充多边形的渲染,
-     * 这个类的int坐标包括了24.8的格式，24位用于坐标int部分,
-     * 8位用于子像素的shift偏移部分 ，再用move_to(x, y) / line_to(x, y)
-     * 构建多边形时，构建扫描线光栅化处理.
+     * @brief Polygon rasterization is used for high-quality rendering of filled polygons,
+     * The int coordinates of this class include the format of 24.8,
+     * and 24 bits are used for the int part of the coordinates,
+     * 8 bits are used for the shift offset part of the sub-pixel, and then move_ to(x, y) / line_ to(x, y)
+     * When constructing polygons, the scanline is rasterized
      * @since 1.0
      * @version 1.0
      */
     template <class Clip = RasterizerScanlineClipInt>
     class RasterizerScanlineAntiAlias {
         /**
-         * @brief 构建扫描线状态枚举
+         * @brief Build scanline status enumeration
          * @since 1.0
          * @version 1.0
          */
@@ -65,9 +66,9 @@ namespace OHOS {
         };
 
         /**
-         * 构建光栅化扫描线抗锯齿构造函数
-         * @brief 主要包括细胞单元块的分配额度，裁剪器
-         * 填充规则，自动闭合，起始位置等。
+         * Construction of rasterized scanline antialiasing constructor
+         * @brief It mainly includes the allocation quota of cell block and cutter
+         * Filling rules, automatic closing, starting position, etc.
          * @since 1.0
          * @version 1.0
          */
@@ -100,15 +101,15 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重新设置构建轮廓线单元细胞数组，
-         * 重新设置扫描线状态值等。
+         * @brief Reset the cell array for building contour lines,
+         * Reset the scan line status value, etc.
          * @since 1.0
          * @version 1.0
          */
         void Reset();
 
         /**
-         * @brief 重新设置裁剪器的裁剪范围以及裁剪标志。
+         * @brief Reset the clipping range and clipping flag of the clipper.
          * @since 1.0
          * @version 1.0
          */
@@ -116,17 +117,19 @@ namespace OHOS {
         void ClipBox(float x1, float y1, float x2, float y2);
 
         /**
-         * @brief 设置填充规则，FILL_NON_ZERO（是
-         * 假设是用来判断哪些区域属于路径内( 计算结果非0，即为路径内 )。
-         * 在路径包围的区域中，随便找一点，向外发射一条射线，
-         * 和所有围绕它的边相交，
-         * 然后开启一个计数器，从0计数，
-         * 如果这个射线遇到顺时针围绕，那么+1，
-         * 如果遇到逆时针围绕，那么-1，
-         * 如果最终值非0，则这块区域在路径内）,
-         * FILL_EVEN_ODD(* 在路径包围的区域中，随便找一点，向外发射一条射线，
-         * 和所有围绕它的边相交，
-         * 查看相交线的个数，如果为奇数，就填充，如果是偶数，就不填充。)
+         * @brief Set fill rule, 设置填充规则，FILL_NON_ZERO
+         * The assumption is used to determine which areas belong to the path
+         * (if the calculation result is not 0, it is within the path).
+         * In the area surrounded by the path, find any point and emit a ray outward,
+         * Intersecting all the edges around it,
+         * Then turn on a counter and count from 0,
+         * If this ray encounters a clockwise circle, then + 1,
+         * If you encounter a counterclockwise surround, - 1,
+         * If the final value is not 0, this area is within the path),
+         * FILL_EVEN_ODD (* find a random point in the area surrounded by the path and emit a ray,
+         * Intersecting all the edges around it,
+         * Check the number of intersecting lines. If it is odd, it will be filled. If it is even,
+         * it will not be filled.)
          * @since 1.0
          * @version 1.0
          */
@@ -137,13 +140,18 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置Gamma函数为了计算alpha值，抗锯齿服务的
-         * Gamma函数的索引是覆盖率，每个覆盖率都按照Gamma函数比如
-         * gamma_power：使用每个覆盖率*设置值的平方，作为颜色值，可实现抗锯齿值的整体放大或缩小。
-         * gamma_linear ：设置起止范围，对颜色值进行线性变换，小于起点则为0，大于起点则为1，
-         * 范围内则是(cover - m_start) / (m_end - m_start)。
-         * gamma_threshold：设置阈值，小于阈值为0，大于则为1. 设置阈值后，将无抗锯齿效果。
-         * gamma_multiply：将颜色值乘以设置的倍数。。
+         * @brief Set the gamma function to calculate the alpha value of the antialiasing service
+         * The index of the gamma function is coverage, and each coverage is based on the gamma function, such as
+         * gamma_power：Using the square of each coverage * setting value as the color value,
+         * you can zoom in or out of the anti aliasing value as a whole.
+         * gamma_linear ：Set the start and end range, and linearly transform the color value.
+         * If it is less than the starting point, it will be 0,
+         * and if it is greater than the starting point, it will be 1,
+         * Within the scope (cover - m_start) / (m_end - m_start)。
+         * gamma_threshold：Set the threshold value. If it is less than the threshold value, it will be 0.
+         * If it is greater than the threshold value,
+         * it will be 1 When the threshold is set, there is no antialiasing effect.
+         * gamma_multiply：Multiplies the color value by the set multiple
          * @since 1.0
          * @version 1.0
          */
@@ -162,32 +170,32 @@ namespace OHOS {
         }
 
         /**
-         * @brief 按照1/256 像素单元的设置图元的起点位置。
+         * @brief Set the starting position of the element according to the of 1 / 256 pixel unit.
          * @since 1.0
          * @version 1.0
          */
         void MoveTo(int x, int y);
         /**
-         * @brief 按照1/256 像素单元的设置图元的移动位置。
+         * @brief The moving position of the element is set according to the 1 / 256 pixel unit.
          * @since 1.0
          * @version 1.0
          */
         void LineTo(int x, int y);
         /**
-         * @brief 按照1像素单元的设置图元的起点位置。
+         * @brief Set the starting position of the element according to the of 1 pixel unit.
          * @since 1.0
          * @version 1.0
          */
         void MoveToByfloat(float x, float y);
         /**
-         * @brief 按照像素单元的设置图元的移动位置。
+         * @brief Set the moving position of the element according to the pixel unit.
          * @since 1.0
          * @version 1.0
          */
         void LineToByfloat(float x, float y);
 
         /**
-         * @brief 闭合多边形处理。
+         * @brief Closed polygon processing.
          * @since 1.0
          * @version 1.0
          */
@@ -195,21 +203,21 @@ namespace OHOS {
         void AddVertex(float x, float y, unsigned cmd);
 
         /**
-         * @brief 利用裁剪器按照1/256像素单元裁剪出一条边且构建轮廓线。
+         * @brief Use the clipper to cut an edge according to 1 / 256 pixel unit and construct a contour line.
          * @since 1.0
          * @version 1.0
          */
         void EdgeMake(int x1, int y1, int x2, int y2);
         /**
-         * @brief 利用裁剪器按照1像素单元裁剪出一条边且构建轮廓线。
+         * @brief Use the clipper to cut an edge according to 1 pixel unit and construct a contour line.
          * @since 1.0
          * @version 1.0
          */
         void EdgeMakeUsingfloat(float x1, float y1, float x2, float y2);
 
         /**
-         * @brief 从顶点源中获取顶点信息坐标，且按照扫描过程
-         * 设置添加cells单元数组的过程。
+         * @brief Obtain the vertex information coordinates from the vertex source and follow the scanning process
+         * Sets the procedure for adding an array of cells.
          * @since 1.0
          * @version 1.0
          */
@@ -230,7 +238,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 轮廓线的范围边界值。
+         * @brief The range boundary value of the contour line.
          * @since 1.0
          * @version 1.0
          */
@@ -252,7 +260,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 对于轮廓线中的cells单元数组按照从左向右，自上而下排序。
+         * @brief The cells in the contour line are sorted from left to right and from top to bottom.
          * @since 1.0
          * @version 1.0
          */
@@ -260,24 +268,25 @@ namespace OHOS {
         bool RewindScanlines();
 
         /**
-         * @brief 按照某y值高度导航到某条扫描线起始位置。
+         * @brief Navigate to the starting position of a scan line according to the height of a y value.
          * @since 1.0
          * @version 1.0
          */
         bool NavigateScanline(int y);
 
         /**
-         * @brief 将area cover转为gamma cover值计算alpha。
+         * @brief Convert area cover to gamma cover value to calculate alpha.
          * @since 1.0
          * @version 1.0
          */
         unsigned CalculateAlpha(int area) const;
         /**
-         * @brief 从Rasterizer阶段获取到某y值的扫描线
-         * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
-         * 利用2者计算delta area 作为area cover 转换成gamma cover
-         * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
-         * 填充到新的scanline中，拥有后续的render。
+         * @brief Scan line that gets a y value from rasterizer stage
+         * And iterate the cell array of the current scan line to obtain area->cover，
+         * Use both to calculate delta area as area cover and convert it into gamma cover
+         * The color information is obtained successfully,
+         * and then the alpha information of color is calculated by gamma function
+         * Fill in the new scanline and have subsequent render.
          * @since 1.0
          * @version 1.0
          */
@@ -302,11 +311,12 @@ namespace OHOS {
     };
 
     /**
-     * @brief 从Rasterizer阶段获取到某y值的扫描线
-     * 且迭代当前扫描线的cells单元数组，从中获得area->cover，
-     * 利用2者计算delta area 作为area cover 转换成gamma cover
-     * 成功得到颜色信息，然后利用gamma函数推算出颜色的alpha信息
-     * 填充到新的scanline中，拥有后续的render。
+     * @brief Scan line that gets a y value from rasterizer stage
+     * And iterate the cell array of the current scan line to obtain area->cover，
+     * Use both to calculate delta area as area cover and convert it into gamma cover
+     * the color information is obtained successfully,
+     * and then the alpha information of color is calculated by gamma function
+     * Fill in the new scanline and have subsequent render.
      * @since 1.0
      * @version 1.0
      */
@@ -341,8 +351,8 @@ namespace OHOS {
                 }
 
                 if (area) {
-                    // 由 area 到  (cover << (POLY_SUBPIXEL_SHIFT + 1)) 的跨度间隔
-                    // cover 可以理解为是 area 为 1的delta mask
+                    // Span interval from area to  (cover << (POLY_SUBPIXEL_SHIFT + 1))
+                    // Cover can be understood as a delta mask with an area of 1
                     alpha = CalculateAlpha((cover << (POLY_SUBPIXEL_SHIFT + 1)) - area);
                     if (alpha) {
                         sl.AddCell(x, alpha);
@@ -351,7 +361,7 @@ namespace OHOS {
                 }
 
                 if (num_cells && cur_cell->x > x) {
-                    // 此时 area为0 ，也就是说是 0 到 cover << (POLY_SUBPIXEL_SHIFT + 1)
+                    // At this time, area is 0, that is, 0 to cover << (POLY_SUBPIXEL_SHIFT + 1)
                     alpha = CalculateAlpha(cover << (POLY_SUBPIXEL_SHIFT + 1));
                     if (alpha) {
                         sl.AddSpan(x, cur_cell->x - x, alpha);
@@ -370,7 +380,7 @@ namespace OHOS {
     }
 
     /**
-     * @brief 将area cover转为gamma cover值计算alpha。
+     * @brief Convert area cover to gamma cover value to calculate alpha.
      * @since 1.0
      * @version 1.0
      */

@@ -15,7 +15,7 @@
 
 /**
  * @file graphic_rasterizer_scanline_clip.h
- * @brief Defines 光栅栏剪裁
+ * @brief Defines Light fence clipping
  * @since 1.0
  * @version 1.0
  */
@@ -27,8 +27,8 @@
 #include "gfx_utils/graphic_math.h"
 namespace OHOS {
     /**
-     * 该PolyMaxCoordEnum枚举类型
-     * 定义了多边形最大坐标的值.
+     * The PolyMaxCoordEnum enumeration type
+     * Defines the value of the maximum coordinate of the polygon
      * @since 1.0
      * @version 1.0
      */
@@ -38,9 +38,9 @@ namespace OHOS {
 
     /**
      * @struct RasterDepictInt
-     * @brief 该RasterDepictInt结构体在对于目标范围内的
-     * 坐标进行裁剪的时候，对于类似坐标间距的3个值或者
-     * 上采样以及下采样等操作做处理。
+     * @brief The RasterDepictInt structure is within the target range
+     * When clipping coordinates, for 3 values similar to coordinate spacing, or
+     * Upper sampling and lower sampling are processed.
      * @since 1.0
      * @version 1.0
      */
@@ -48,8 +48,8 @@ namespace OHOS {
         typedef int coord_type;
 
         /**
-         * @brief 该函数主要是对于输入的坐标值
-         * 做上采样的处理。
+         * @brief This function is mainly for the input coordinate values
+         * Do sampling processing.
          * @since 1.0
          * @version 1.0
          */
@@ -59,8 +59,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 该函数主要是对于输入的坐标值
-         * 做下采样的处理。
+         * @brief This function is mainly for the input coordinate values
+         * Do the next sampling.
          * @since 1.0
          * @version 1.0
          */
@@ -85,8 +85,8 @@ namespace OHOS {
 
     /**
      * @template<Depict> class RasterizerScanlineClip
-     * @brief Defines 光栅化阶段，交换扫描线处理时，对于
-     * 坐标的裁剪和加工的处理过程.
+     * @brief Defines In the rasterization stage, when exchanging scan line processing, for
+     * Coordinate cutting and processing
      * @since 1.0
      * @version 1.0
      */
@@ -97,8 +97,8 @@ namespace OHOS {
         using coord_type = typename Depict::coord_type;
         using rect_type = RectBase<coord_type>;
         /**
-         * @brief RasterizerScanlineClip 类的构造函数。.
-         * 初始化裁剪范围，裁剪标志等。
+         * @brief RasterizerScanlineClip Class constructor
+         * Initialize clipping range, clipping flag, etc.
          * @since 1.0
          * @version 1.0
          */
@@ -116,7 +116,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置裁剪范围。
+         * @brief Sets the clipping range.
          * @since 1.0
          * @version 1.0
          */
@@ -128,8 +128,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 在RASTERIZER 过程中，增加设置起始点，并且设置
-         * m_clipping_flags的标志。
+         * @brief In the RASTERIZER process, the starting point of setting is added,
+         * And set the flag of m_clipping_flags
          * @since 1.0
          * @version 1.0
          */
@@ -142,8 +142,8 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 在RASTERIZER 过程中，增加设置采样点，并且设置
-         * 采样点设置相关的cover与area的属性等。
+         * @brief In the RASTERIZER process, add the set sampling point
+         * And set the sampling point, set the related cover and area attributes, etc
          *         |        |
          *   0110  |  0010  | 0011
          *         |        |
@@ -164,9 +164,9 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
-         * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
-         * 相关的属性设置等。
+         * @brief In the RASTERIZER process,Judge the mark according to the last clipping range
+         * And the cutting range judgment flag this time,
+         * add the actual sampling points and set relevant attributes
          * @since 1.0
          * @version 1.0
          */
@@ -213,9 +213,9 @@ namespace OHOS {
     };
 
     /**
-     * @brief 在RASTERIZER 过程中,根据上次的裁剪范围判断标志
-     * 以及本次的裁剪范围判断标志，进行实际的采样点的添加以及
-     * 相关的属性设置等。
+     * @brief In the RASTERIZER process,Judge the mark according to the last clipping range
+     * And the cutting range judgment flag this time,
+     * add the actual sampling points and set relevant attributes
      * @since 1.0
      * @version 1.0
      */
@@ -230,7 +230,7 @@ namespace OHOS {
         clipFlagsTwo &= DIRECTLY_BELOW;
         if ((clipFlagsOne | clipFlagsTwo) == 0) {
             /**
-             * 表明坐标x1,y1,x2,y2 全部在范围内,line 操作之
+             * It indicates that the coordinates x1, y1, x2 and y2 are all within the range, and the line operates
              */
             ras.LineOperate(RasterDepictInt::GetXCoordinateValue(x1),
                             RasterDepictInt::GetYCoordinateValue(y1),
@@ -239,7 +239,7 @@ namespace OHOS {
         } else {
             if (clipFlagsOne == clipFlagsTwo) {
                 /**
-                 * 表明坐标x1,y1,x2,y2 全部在范围外,不操作
+                 * It indicates that the coordinates x1, y1, x2 and y2 are all outside the range and do not operate
                  */
                 return;
             }
@@ -248,7 +248,7 @@ namespace OHOS {
             coord_type tx2 = x2;
             coord_type ty2 = y2;
             /**
-             * 表明坐标y1 < clip.y1
+             * Indicates that the coordinate y1 < clip.y1
              */
             if (clipFlagsOne & 0x08) {
                 tx1 = x1 + Depict::MultDiv(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
@@ -256,21 +256,21 @@ namespace OHOS {
             }
 
             /**
-             * 表明坐标y1 > clip.y2
+             * Indicates that the coordinate y1 > clip.y2
              */
             if (clipFlagsOne & 0x02) {
                 tx1 = x1 + Depict::MultDiv(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
                 ty1 = m_clip_box.y2;
             }
             /**
-             * 表明坐标y1 > clip.y2
+             * Indicates that the coordinate y1 > clip.y2
              */
             if (clipFlagsTwo & 0x08) {
                 tx2 = x1 + Depict::MultDiv(m_clip_box.y1 - y1, x2 - x1, y2 - y1);
                 ty2 = m_clip_box.y1;
             }
             /**
-             * 表明坐标y2 > clip.y2
+             * Indicates that the coordinate y2 > clip.y2
              */
             if (clipFlagsTwo & 0x02) {
                 tx2 = x1 + Depict::MultDiv(m_clip_box.y2 - y1, x2 - x1, y2 - y1);
@@ -282,8 +282,8 @@ namespace OHOS {
     }
 
     /**
-     * @brief 在RASTERIZER 过程中，增加设置采样点，并且设置
-     * 采样点设置相关的cover与area的属性等。
+     * @brief In the RASTERIZER process, add the set sampling point,
+     * And set the sampling point, set the related cover and area attributes, etc.
      *         |        |
      *   0110  |  0010  | 0011
      *         |        |
@@ -307,7 +307,7 @@ namespace OHOS {
             unsigned cFlagsLineToPoint = ClippingFlags(x2, y2, m_clip_box);
             if ((m_clipping_flags & 0x0A) == (cFlagsLineToPoint & 0x0A) && (m_clipping_flags & 0x0A) != 0) {
                 /**
-                 * 表明moveto与lineto重合
+                 * Indicates that moveto coincides with lineto
                  */
                 m_x1 = x2;
                 m_y1 = y2;
@@ -323,13 +323,13 @@ namespace OHOS {
 
             switch (((clipFlagsMoveToPoint & 0x05) << 1) | (cFlagsLineToPoint & 0x05)) {
                 /**
-                 * 表明 x1, y1, x2, y2 全在clip区域内
+                 * It indicates that x1, y1, x2,and y2 are all in the clip area
                  */
                 case 0x00:
                     LineClipY(rasterLine, x1, y1, x2, y2, clipFlagsMoveToPoint, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x2 > clip.x2
+                 * indicate x2 > clip.x2
                  */
                 case 0x01:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
@@ -340,7 +340,7 @@ namespace OHOS {
                               m_clip_box.x2, y2, yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x1 > clip.x2
+                 * indicate x1 > clip.x2
                  */
                 case 0x02:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
@@ -351,14 +351,14 @@ namespace OHOS {
                               yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x1 > clip.x2 && x2 > clip.x2
+                 * indicate x1 > clip.x2 && x2 > clip.x2
                  */
                 case 0x03:
                     LineClipY(rasterLine, m_clip_box.x2, y1, m_clip_box.x2, y2,
                               clipFlagsMoveToPoint, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x2 < clip.x1
+                 * indicate x2 < clip.x1
                  */
                 case 0x04:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
@@ -369,7 +369,7 @@ namespace OHOS {
                               yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x1 > clip.x2 && x2 < clip.x1
+                 * indicate x1 > clip.x2 && x2 < clip.x1
                  */
                 case 0x06:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x2 - x1, y2 - y1, x2 - x1);
@@ -385,7 +385,7 @@ namespace OHOS {
                     break;
 
                 /**
-                 * 表明 x1 < clip.x1
+                 * indicate x1 < clip.x1
                  */
                 case 0x08:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
@@ -396,7 +396,7 @@ namespace OHOS {
                               yClipFlagsOne, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x1 < clip.x1 && x2 > clip.x2
+                 * indicate x1 < clip.x1 && x2 > clip.x2
                  */
                 case 0x09:
                     yPilotOne = y1 + Depict::MultDiv(m_clip_box.x1 - x1, y2 - y1, x2 - x1);
@@ -411,7 +411,7 @@ namespace OHOS {
                               yClipFlagsTwo, cFlagsLineToPoint);
                     break;
                 /**
-                 * 表明 x1 < clip.x1 && x2 < clip.x1
+                 * indicate x1 < clip.x1 && x2 < clip.x1
                  */
                 case 0x0c:
                     LineClipY(rasterLine, m_clip_box.x1, y1, m_clip_box.x1, y2,

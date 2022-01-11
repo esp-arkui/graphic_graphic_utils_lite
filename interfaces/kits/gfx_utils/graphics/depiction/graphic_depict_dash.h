@@ -16,8 +16,9 @@
 /**
  * @file graphic_geometry_depict_dash.h
  *
- * @brief Defines 构建点划线变换管道
- * 对于点划线的描画通常都是通过输入dash数组和大小确定曲线的基本面貌
+ * @brief Defines Build dash transform pipe
+ * For the drawing of dotted lines, the basic appearance of
+ * the curve is usually determined by inputting dash array and size
  * @since 1.0
  * @version 1.0
  */
@@ -32,8 +33,8 @@
 namespace OHOS {
     /**
      * @template<VertexSource,Markers> struct DepictDash
-     * @brief 该DepictDash结构体通过dash类对于VertexSource
-     * 进行点划线的具体处理。
+     * @brief The dependdash structure is used for vertexsource through the dash class
+     * Carry out specific treatment of dotted line.
      * @since 1.0
      * @version 1.0
      */

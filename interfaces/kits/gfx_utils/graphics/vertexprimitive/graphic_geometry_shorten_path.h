@@ -31,9 +31,9 @@
 
 namespace OHOS {
     /**
-     * @brief 长线达到缩短成断线（长线变短线,dash 中使用）.
+     * @brief Long line is shortened to broken line (long line becomes short line, used in dash).
      *
-     * @param vtxSeq 数据源,distence 距离,closed 是否是关闭路径.
+     * @param vtxSeq data source,distence distance,closed is the path closed.
      * @since 1.0
      * @version 1.0
      */
@@ -63,8 +63,8 @@ namespace OHOS {
                 float y = prev.vertexYCoord + (last.vertexYCoord - prev.vertexYCoord) * vtxSeqDistance;
                 last.vertexXCoord = x;
                 last.vertexYCoord = y;
-                if (!prev(last)) {       // 计算两个顶点距离是否很近
-                    vtxSeq.RemoveLast(); // 删除距离不近的点
+                if (!prev(last)) {       // Calculate whether the two vertices are close
+                    vtxSeq.RemoveLast(); // Delete points not close
                 }
                 vtxSeq.Close(closed != 0);
             } else {

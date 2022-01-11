@@ -182,10 +182,10 @@ namespace OHOS {
     };
 
     /**
-     * @brief Rgba
+     * @brief Rgba.
      *
-     * 颜色排列顺序：红、绿、蓝、透明度
-     * 注意这个里面的颜色支持浮点处理的
+     * Color order: red, green, blue, transparency.
+     * Note that the colors in this support floating-point processing.
      * @see Rgba
      * @since 1.0
      * @version 1.0
@@ -202,10 +202,9 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Rgba构造函数
+         * @brief Rgba Constructor.
          *
-         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
-         * @return 无
+         * @param Red value, green value, blue value, alpha transparency.
          * @since 1.0
          * @version 1.0
          */
@@ -214,9 +213,9 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Rgba构造函数
+         * @brief Rgba Constructor.
          *
-         * @param color是Rgba对象、alpha透明度
+         * @param Color is the RGBA object, alpha, and transparency.
          * @return 无
          * @since 1.0
          * @version 1.0.
@@ -229,10 +228,9 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 清除，颜色透明度置0
+         * @brief Clear, color transparency set to 0.
          *
-         * @param 无
-         * @return 返回Rgba对象的引用
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -246,10 +244,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 全透明
+         * @brief Fully transparent.
          *
-         * @param 无
-         * @return 返回Rgba对象的引用
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -260,10 +257,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置透明度
+         * @brief Set transparency.
          *
-         * @param alpha 透明度
-         * @return 返回Rgba对象的引用
+         * @param Alpha transparency.
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -280,10 +277,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取透明度
+         * @brief Get transparency.
          *
-         * @param 无
-         * @return 返回透明度
+         * @return Return transparency.
          * @since 1.0
          * @version 1.0
          */
@@ -293,10 +289,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 倍减
+         * @brief Double subtraction.
          *
-         * @param 无
-         * @return 返回Rgba对象的引用
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -316,10 +311,10 @@ namespace OHOS {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
-         * @brief 渐变
+         * @brief Gradual change.
          *
-         * @param rgba为Rgba对象，k为变化系数
-         * @return 返回Rgba对象
+         * @param RGBA is the RGBA object and K is the coefficient of variation.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -334,10 +329,10 @@ namespace OHOS {
         }
 #endif
         /**
-         * @brief 重载操作符+=函数
+         * @brief Overloaded operator += function.
          *
-         * @param rgba为Rgba对象的引用
-         * @return 返回Rgba对象的引用
+         * @param RGBA is a reference to the RGBA object.
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -351,10 +346,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重载操作符*=函数
+         * @brief Overloaded operator *= function.
          *
-         * @param multiplyValue为相乘的系数
-         * @return 返回Rgba对象的引用
+         * @param Multiplyvalue is the coefficient of multiplication.
+         * @return Returns a reference to the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -373,10 +368,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 波长是否是紫色波段
+         * @brief Is the wavelength purple.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -389,10 +384,10 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 波长是否是蓝色波段
+         * @brief Is the wavelength blue.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -405,10 +400,10 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 波长是否是青色波段
+         * @brief Is the wavelength cyan.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -421,10 +416,10 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 波长是否是绿色波段
+         * @brief Is the wavelength green.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -437,10 +432,10 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 波长是否是橙色波段
+         * @brief Is the wavelength orange.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -453,10 +448,10 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 波长是否是红色波段
+         * @brief Is the wavelength red.
          *
-         * @param waveLength 波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -469,19 +464,19 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 根据波长初始化颜色
+         * @brief Initialize color based on wavelength.
          *
-         * @param waveLength波长
-         * @return 返回Rgba对象
+         * @param waveLength wavelength.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
         static Rgba InitColorByWaveLength(float waveLength);
         /**
-         * @brief 根据波长以及gamma值计算颜色值
+         * @brief The color value is calculated from the wavelength and gamma value.
          *
-         * @param waveLength波长，gamma伽马值
-         * @return 返回Rgba对象
+         * @param waveLength waveLength，gamma Gamma value.
+         * @return Returns the RGBA object.
          * @since 1.0
          * @version 1.0
          */
@@ -508,7 +503,7 @@ namespace OHOS {
     {
         Rgba rgba(0.0, 0.0, 0.0);
         rgba += rgba.InitColorByWaveLength(waveLength);
-        // 计算比系数
+        // Calculation ratio coefficient
         float ratio = 1.0;
         if (waveLength > RED_MIN) {
             ratio = FIXED_VALUE + COEFFICIENT * (RED_MAX - waveLength) / (RED_MAX - RED_MIN);
@@ -521,9 +516,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief Rgba8T颜色序列转化
+     * @brief Rgba8T color sequence conversion.
      *
-     * 颜色排列顺序：红、绿、蓝、透明度
+     * Color order: red, green, blue, transparency.
      *
      * @see Rgba8T
      * @since 1.0
@@ -549,9 +544,9 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Rgba8T构造函数
+         * @brief Rgba8T Constructor
          *
-         * @param red红色值、green绿色值、blue蓝色值、alpha透明度
+         * @param Red value, green value, blue value, alpha transparency
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -564,9 +559,9 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Rgba8T构造函数
+         * @brief Rgba8T Constructor
          *
-         * @param color为Rgba对象的引用
+         * @param Color is a reference to the RGBA object
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -577,9 +572,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief Rgba8T构造函数
+         * @brief Rgba8T Constructor
          *
-         * @param color为Rgba8T对象的引用，alpha为透明度
+         * @param Color is the reference of the rgba8t object, and alpha is the transparency
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -592,10 +587,10 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Rgba8T构造函数
+         * @brief Rgba8T Constructor
          *
-         * @param color为Rgba8T<T>对象的引用
-         * @return 无
+         * @param Color is a reference to the rgba8t < T > object
+         * @return Rgba8T
          * @since 1.0
          * @version 1.0
          */
@@ -606,10 +601,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重载Rgba函数
+         * @brief Overloaded RGBA function
          *
-         * @param 无
-         * @return 返回Rgba对象
+         * @return Returns the RGBA object
          * @since 1.0
          * @version 1.0
          */
@@ -621,9 +615,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 将Rgba中的颜色值赋值到Rgba8T<Linear>中
+         * @brief Assign the color value in RGBA to rgba8t <linear>
          *
-         * @param dst为Rgba8T<Linear>对象的引用，src为Rgba对象的常引用
+         * @param DST is the reference of rgba8t <linear> object, and Src is the
+         *  constant reference of RGBA object
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -637,9 +632,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 将Rgba8T<Srgb>中的颜色值赋值到Rgba中
+         * @brief Assign the color value in rgba8t <sRGB> to RGBA
          *
-         * @param dst为Rgba对象的引用，src为Rgba8T<Srgb>对象的常引用
+         * @param DST is the reference of the RGBA object, and Src is the constant
+         *  reference of the rgba8t <sRGB> object
          * @return 无
          * @since 1.0
          * @version 1.0.
@@ -746,10 +742,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 设置透明度
+         * @brief Set transparency
          *
-         * @param alpha为透明度
-         * @return 返回Rgba8T对象的引用
+         * @param Alpha is transparency
+         * @return Returns a reference to the rgba8t object
          * @since 1.0
          * @version 1.0
          */
@@ -771,10 +767,10 @@ namespace OHOS {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
         /**
-         * @brief 渐变，根据变化系数计算出新的Rgba8T对象
+         * @brief Gradient, calculate the new rgba8t object according to the change coefficient
          *
-         * @param color为Rgba8T对象的引用，k为变化系数
-         * @return 返回Rgba8T对象
+         * @param Color is the reference of the rgba8t object, and K is the coefficient of variation
+         * @return Returns the rgba8t object
          * @since 1.0
          * @version 1.0
          */

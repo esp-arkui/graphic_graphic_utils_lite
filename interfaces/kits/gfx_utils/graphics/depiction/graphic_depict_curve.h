@@ -16,8 +16,9 @@
 /**
  * @file graphic_geometry_depict_curve.h
  *
- * @brief Defines 构建曲线变换管道
- * 对于曲线的描画通常都是使用一系列的短小的线段来近似的，这是描画曲线的唯一高效的方法
+ * @brief Defines Building curve transformation pipes
+ * The curve drawing is usually approximated by a series of short line segments,
+ * which is the only efficient method to draw the curve
  * @since 1.0
  * @version 1.0
  */
@@ -31,9 +32,10 @@
 namespace OHOS {
     /**
      * @template<VertexSource,QuadraticBezierCurve,CubicBezierCurve> class DepictCurve
-     * @brief 该DepictCurve类通过PATH_CMD_CURVE3 and PATH_CMD_CURVE4
-     * 命令计算生成curve曲线点并且将生成的点利用转换管道保存到
-     * move_to/line_to vertex sequence 中
+     * @brief By PATH_CMD_CURVE3 and PATH_CMD_CURVE4
+     * The command calculates the generated curve points and
+     * saves the generated points to the curve using the conversion pipe
+     * move_to/line_to vertex sequence
      * @since 1.0
      * @version 1.0
      */
@@ -47,8 +49,8 @@ namespace OHOS {
         typedef DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve> self_type;
 
         /**
-         * @brief DepictCurve类的构造函数。.
-         * 构造参数为VertexSource 属性决定曲线的顶点源。
+         * @brief DepictCurve Class constructor
+         * The construction parameter is the vertexsource attribute, which determines the vertex source of the curve.
          * @since 1.0
          * @version 1.0
          */
@@ -63,10 +65,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 近似估算曲线的方法。.
-         * 定义估算二次或者三次（贝塞尔）曲线的方法有2种。
-         * 一种是curve_inc,即通过curve曲线递增的方法估算
-         * 二种是curve_div 即通过将curve曲线 等分为N个div段
+         * @brief Method for approximate estimation of curve
+         * There are two methods for defining and estimating quadratic or cubic (Bessel) curves.
+         * One is curve_ Inc, which is estimated by increasing the curve
+         * The second is curve_ Div is by equally dividing the curve into n div segments
          * @since 1.0
          * @version 1.0
          */
@@ -82,11 +84,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief 最终决定估算的精度。.
-         * 在实际应用中，我们需要从点的世界坐标转换到屏幕坐标，因此总会存在一定的缩放因子。
-         * 曲线通常是在世界坐标系中处理的，而进行估算时又要转换为像素值。
-         * 一般看起来会是这样的：m_curved.approximation_scale(m_transform.scale());
-         * 这里，m_transform 是一个仿型映射的矩阵，里面包含了所有的转换，包括视点和缩放。
+         * @brief Finally determine the accuracy of the estimate
+         * In practical application, we need to convert the world coordinates of points to screen coordinates,
+         * so there will always be a certain scaling factor.
+         * Curves are usually processed in the world coordinate system and converted to pixel values when estimating.
+         * It usually looks like this: m_curved.approximation_scale(m_transform.scale());
+         * Here, m_transform is a matrix of affine mapping, which contains all transformations, including viewpoint and scaling.
          * @since 1.0
          * @version 1.0
          */
@@ -102,8 +105,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 以弧度来设置角度估算值。这个值越少，在曲线的转弯处的估算就越精确。
-         * 不过，如果设置为0，那么表示完全 不考虑角度条件。
+         * @brief Sets the angle estimate in radians. The less this value,
+         * the more accurate the estimation at the turn of the curve.
+         * However, if set to 0, it means that the angle condition is not considered at all.
          * @since 1.0
          * @version 1.0
          */
@@ -119,10 +123,11 @@ namespace OHOS {
         }
 
         /**
-         * @brief 一个以弧度来设置的角度。如果是0，
-         * 那么只有真正的尖端(cusp)才会有 bevel cut。如果大于0，
-         * 那么它会限制曲线的弯曲度，值越大，曲线锐利的转弯处被切得就越少。
-         * 一般，这个值不应该大于10-15度。。
+         * @brief An angle set in radians. If 0,
+         * Then only the real cusp will have a bevel cut. If greater than 0,
+         * Then it will limit the curvature of the curve. The higher the value,
+         * the less sharp corners of the curve will be cut.
+         * Generally, this value should not be greater than 10-15 degrees.
          * @since 1.0
          * @version 1.0
          */
@@ -137,15 +142,15 @@ namespace OHOS {
             return m_cubic_bezier.CuspLimit();
         }
         /**
-         * 重置某段路径的状态属性
-         * @path_id 是某段路径id，从0计算
+         * Reset the status attribute of a path segment
+         * @path_id Is a path ID, calculated from 0
          * @since 1.0
          * @version 1.0
          */
         void Rewind(unsigned path_id);
 
         /**
-         * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+         * According to PATH_CMD command returns the vertex coordinates generated in each stage
          * @since 1.0
          * @version 1.0
          */
@@ -163,8 +168,8 @@ namespace OHOS {
     };
 
     /**
-     * 重置某段路径的状态属性
-     * @path_id 是某段路径id，从0计算
+     * Reset the status attribute of a path segment
+     * @path_id is a path ID, calculated from 0
      * @since 1.0
      * @version 1.0
      */
@@ -179,7 +184,7 @@ namespace OHOS {
     }
 
     /**
-     * 根据PATH_CMD 命令，返回各个阶段产生的顶点坐标
+     * According to PATH_CMD command returns the vertex coordinates generated in each stage
      * @since 1.0
      * @version 1.0
      */

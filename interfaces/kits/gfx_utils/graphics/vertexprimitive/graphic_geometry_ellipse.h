@@ -15,7 +15,7 @@
 
 /**
  * @file graphic_geometry_ellipse.h
- * @brief 椭圆类
+ * @brief Elliptic class
  * @since 1.0
  * @version 1.0
  */
@@ -31,8 +31,9 @@
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_ELLIPSE_CIRCLE_VERTEX_SOURCE
     /**
-     * @brief 椭圆类
-     * 椭圆类，必须给定椭圆的长短半轴的半径，才能够绘制椭圆
+     * @brief Elliptic class
+     * Elliptic class,the radius of the major and minor axes of
+     * the ellipse must be given before the ellipse can be drawn.
      * @see Ellipse
      * @since 1.0
      * @version 1.0
@@ -40,7 +41,7 @@ namespace OHOS {
     class Ellipse {
     public:
         /**
-         * @brief Ellipse构造函数
+         * @brief Ellipse constructor
          * @param 无
          * @return 无
          * @since 1.0
@@ -53,11 +54,12 @@ namespace OHOS {
         {}
 
         /**
-         * @brief Ellipse构造函数
-         * @param x为圆心的X坐标,y为圆心的Y坐标
-         * @param rx为圆形的X半径,ry为圆形的X半径
-         * @param numSteps为顶点数量
-         * @param clockwise指的是顺时针，还是逆时针渲染
+         * @brief Ellipse constructor
+         * @param x is the X coordinate of the center of the circle
+         * @param y Is the Y coordinate of the center of the circle
+         * @param rx is the X radius of the circle,ry is the Y radius of the circle.
+         * @param numSteps Is the number of vertices.
+         * @param clockwise Does it mean clockwise or counterclockwise rendering.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -74,11 +76,13 @@ namespace OHOS {
         }
 
         /**
-         * @brief 初始化函数
-         * @param x为圆心的X坐标,y为圆心的Y坐标
-         * @param rx为圆形的X半径,ry为圆形的X半径
-         * @param numSteps为顶点数量
-         * @param clockwise指的是顺时针，还是逆时针渲染
+         * @brief Initialization function
+         * @param X is the X coordinate of the center of the circle.
+         * @param Y is the Y coordinate of the center of the circle
+         * @param rx is the X radius of the circle.
+         * @param ry is the Y radius of the circle.
+         * @param numSteps is the number of vertices.
+         * @param clockwise Does it mean clockwise or counterclockwise rendering.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -87,8 +91,8 @@ namespace OHOS {
                   unsigned numSteps = 0, bool clockwise = false);
 
         /**
-         * @brief 为正确调整近似级别，应该调用方法ApproximationScale()
-         * @param scale为视口坐标和逻辑坐标之间的比率
+         * @brief To adjust the approximation level correctly, the method approximationscale() should be called.
+         * @param scale is the ratio between viewport coordinates and logical coordinates.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -96,8 +100,9 @@ namespace OHOS {
         void ApproximationScale(float scale);
 
         /**
-         * @brief 在采样阶段调用
-         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @brief Called during the sampling phase.
+         * @param X is the pointer to the value of point coordinate X.
+         * @param Y is the pointer to the value of point coordinate y.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -106,7 +111,7 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 计算顶点数量
+         * @brief Calculate the number of vertices.
          * @param 无
          * @return 无
          * @since 1.0
@@ -114,14 +119,14 @@ namespace OHOS {
          */
         void CalcNumSteps();
 
-        float circleCenterX;     // 圆心的X坐标
-        float circleCenterY;     // 圆心的Y坐标
-        float circleRadiusX;     // 圆形的X半径
-        float circleRadiusY;     // 圆形的Y半径
-        float scaleRadio;        // 缩放比例
-        unsigned vertexNumber;    // 顶点数量
-        unsigned circleInnerStep; // 构建的是一个圆内接多边形
-        bool isClockwise;         // 顺时针，还是逆时针渲染
+        float circleCenterX;     // X coordinate of circle center.
+        float circleCenterY;     // Y coordinate of circle center.
+        float circleRadiusX;     // X radius of circle.
+        float circleRadiusY;     // Y radius of circle.
+        float scaleRadio;        // Scale.
+        unsigned vertexNumber;    // Number of vertices.
+        unsigned circleInnerStep; // A circle inscribed polygon is constructed.
+        bool isClockwise;         // Clockwise or counterclockwise rendering.
     };
 
     inline void Ellipse::Init(float x, float y, float rx, float ry,

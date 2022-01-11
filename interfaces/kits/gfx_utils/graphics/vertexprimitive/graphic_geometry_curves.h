@@ -344,8 +344,8 @@ namespace OHOS {
                               curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
     /**
-     * @brief bspline曲线转换为3次贝塞尔曲线
-     * @param bspline曲线4个点，首尾和中间2个控制点
+     * @brief bspline Convert Curve to Cubic Bezier Curve
+     * @param bspline Curve 4 points, start, end and middle 2 control points
      * @since 1.0
      * @version 1.0
      */
@@ -365,8 +365,8 @@ namespace OHOS {
             (y2 + OHOS::FOUR_TIMES * y3 + y4) / OHOS::SIX_TIMES);
     }
     /**
-     * @brief bspline曲线转换为贝塞尔曲线
-     * @param bspline曲线4个点，首尾和中间2个控制点
+     * @brief bspline Convert Curve to Bezier Curve
+     * @param bspline Curve 4 points, start, end and middle 2 control points
      * @since 1.0
      * @version 1.0
      */
@@ -376,8 +376,8 @@ namespace OHOS {
                                 curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
     /**
-     * @brief Hermite曲线转换为3次数贝塞尔曲线
-     * @param Hermite曲线2个点，首尾点
+     * @brief Hermite Convert Curve to 3-order Bezier Curve
+     * @param Hermite Curve 2 points, start and end
      * @since 1.0
      * @version 1.0
      */
@@ -395,8 +395,8 @@ namespace OHOS {
             x2, y2);
     }
     /**
-     * @brief Hermite曲线转换为3次数贝塞尔曲线
-     * @param Hermite曲线2个点，首尾点
+     * @brief Hermite Convert Curve to 3-order Bezier Curve
+     * @param Hermite Curve 2 points, start and end
      * @since 1.0
      * @version 1.0
      */
@@ -524,11 +524,11 @@ namespace OHOS {
     };
 
     /**
-     * @brief 二次贝塞尔曲线
+     * @brief quadratic Bezier curve.
      *
-     * 根据起点、拐点、终点三个点，绘制出一条曲线
+     * Draw a curve from the start, inflection and end points.
      *
-     * @see QuadraticBezierCurve
+     * @see QuadraticBezierCurve.
      * @since 1.0
      * @version 1.0
      */
@@ -624,9 +624,9 @@ namespace OHOS {
     };
 
     /**
-     * @brief 三次贝塞尔曲线
+     * @brief Cubic Bezier curve
      *
-     * 根据起点、控制点、终点绘制出一条曲线
+     * Draw a curve according to the start point, control point and end point.
      *
      * @see CubicBezierCurve
      * @since 1.0

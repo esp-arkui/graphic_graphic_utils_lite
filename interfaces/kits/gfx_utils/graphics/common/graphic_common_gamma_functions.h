@@ -16,7 +16,7 @@
 /**
  * @file graphic_common_gamma_functions.h
  *
- * @brief gamma校正方法
+ * @brief Gamma correction method
  *
  * @since 1.0
  * @version 1.0
@@ -42,7 +42,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 求 base 的 gamma 次方的值
+     * @brief Find the value of the gamma power of base
      *
      * @see GammaPower
      * @since 1.0
@@ -74,7 +74,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief gamma数乘
+     * @brief Gamma number multiplication
      *
      * @see GammaMultiply
      * @since 1.0
@@ -110,9 +110,9 @@ namespace OHOS {
     };
 
     /**
-     * @brief 由Linear类型转为Srgb类型
-     * @param linearValue为Linear类型
-     * @return 返回Srgb类型的颜色值
+     * @brief From linear type to sRGB type
+     * @param Linearvalue is of linear type
+     * @return Returns a color value of type sRGB
      * @since 1.0
      * @version 1.0
      */
@@ -124,9 +124,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 由Srgb类型转为Linear类型
-     * @param srgbValue为Srgb类型
-     * @return 返回Linear类型的颜色值
+     * @brief From sRGB type to linear type
+     * @param Srgbvalue is sRGB type
+     * @return Returns a color value of type linear
      * @since 1.0
      * @version 1.0
      */

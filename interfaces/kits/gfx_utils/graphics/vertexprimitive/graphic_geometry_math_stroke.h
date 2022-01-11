@@ -28,27 +28,27 @@
 
 namespace OHOS {
     /**
-     * @brief 线条末端线帽的样式。
+     * @brief The style of the line end cap.
      */
     enum LineCapEnum {
-        /** 向线条的每个末端添加平直的边缘 */
+        /** Add straight edges to each end of the line */
         BUTT_CAP,
-        /** 向线条的每个末端添加正方形线帽 */
+        /** Add a square cap to each end of the line */
         SQUARE_CAP,
-        /** 向线条的每个末端添加圆形线帽 */
+        /** Add a circular cap to each end of the line */
         ROUND_CAP
     };
 
     /**
-     * @brief 两条线相交时，所创建的拐角类型
+     * @brief The type of corner created when two lines intersect
      */
     enum LineJoinEnum {
-        /** 创建尖角 */
+        /** Create sharp corners */
         MITER_JOIN = 0,
         MITER_JOIN_REVERT = 1,
-        /** 创建圆角 */
+        /** Create Fillets */
         ROUND_JOIN = 2,
-        /** 创建斜角 */
+        /** Create bevel */
         BEVEL_JOIN = 3,
         MITER_JOIN_ROUND = 4
     };
@@ -74,7 +74,7 @@ namespace OHOS {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE
         /**
-         * @brief SetLineCap 定义线条的结束端点样式
+         * @brief SetLineCap Defines the end style of the line
          */
         void SetLineCap(LineCapEnum lineCapE)
         {
@@ -86,8 +86,8 @@ namespace OHOS {
             return lineCapEnum;
         }
         /**
-         * @brief 计算端点样式
-         * 注意在拐角的两端要做90度的旋转处理
+         * @brief Calculate end style.
+         * Pay attention to 90 degree rotation at both ends of the corner.
          */
         void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
         {
@@ -144,8 +144,8 @@ namespace OHOS {
 
 #if GRAPHIC_GEOMETYR_ENABLE_LINEJOIN_STYLES_VERTEX_SOURCE
         /**
-         * @brief SetLineJoin 定义两条线相交时，所创建的拐角类型
-         * 注意在拐角的两端要做90度的旋转处理
+         * @brief SetLineJoin Defines the type of corner created when two lines intersect.
+         * Pay attention to 90 degree rotation at both ends of the corner.
          */
         void SetLineJoin(LineJoinEnum lineJoinE)
         {
@@ -153,7 +153,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief SetMiterLimit 设置最大斜接长度
+         * @brief SetMiterLimit Sets the maximum miter length.
          */
         void SetMiterLimit(float miterLimit)
         {
@@ -161,8 +161,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 计算相交和拐角
-         * 注意在拐角的两端要做90度的旋转处理
+         * @brief Calculate intersections and corners.
+         * Pay attention to 90 degree rotation at both ends of the corner.
          */
         void CalcJoin(VertexConsumer& vertexConsumer,
                       const VertexDist& vertexDistBegin,
@@ -245,7 +245,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 计算斜接长度
+         * @brief Calculate miter length
          */
         void CalcMiter(VertexConsumer& vertexConsumer,
                        const VertexDist& vd0,
@@ -359,7 +359,7 @@ namespace OHOS {
             return lineJoinEnum;
         }
         /**
-         * @brief GetMiterLimit 返回最大斜接长度
+         * @brief GetMiterLimit Returns the maximum miter length
          */
         float GetMiterLimit() const
         {
@@ -368,7 +368,7 @@ namespace OHOS {
 #endif
 
         /**
-         * @brief width 设置区域宽
+         * @brief width Set area width
          */
         void width(float width)
         {
@@ -384,7 +384,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 添加近似值
+         * @brief Add approximation
          */
         void SetApproximationScale(float approximationScale)
         {
@@ -392,7 +392,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief width 返回宽度
+         * @brief width Return width
          */
         float width() const
         {
@@ -400,7 +400,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回设定的近似值
+         * @brief Returns the set approximate value
          */
         float GetApproximationScale() const
         {

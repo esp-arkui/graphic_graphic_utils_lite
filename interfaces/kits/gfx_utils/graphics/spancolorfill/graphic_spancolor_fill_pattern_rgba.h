@@ -15,7 +15,7 @@
 
 /**
  * @file span_pattern_rgba.h
- * @brief Defines pattern的扫描线
+ * @brief Defines Scan line of pattern
  * @since 1.0
  * @version 1.0
  */
@@ -41,38 +41,38 @@ namespace OHOS {
         {
         }
         /**
-         * @brief Prepare 预备用给render_scanlines_aa中的
+         * @brief Prepare Ready for render_scanlines_aa in
          */
         void Prepare()
         {
         }
         /**
-         * @brief Generate 从m_src取出rgba赋予span中的rgba
-         * @param span 需要填色的扫描线首地址
-         * @param x 坐标-x
-         * @param y 坐标-y
-         * @param len 扫描线长度
+         * @brief Generate From m_src takes out rgba and assigns it to rgba in span
+         * @param span First address of scan line to be filled
+         * @param x coordinate-x
+         * @param y coordinate-y
+         * @param len Scan line length
          */
         void Generate(colorType* span, int x, int y, unsigned len)
         {
-            // z坐标加上x，y的偏移量
+            // z coordinate plus x, y offset
             x += offsetX;
             y += offsetY;
-            // 从对应的image_accessors模板中取出对应像素
+            // Extract the corresponding pixel from the corresponding image_accessors template
             const uint8_t* color = (const uint8_t*)patternSource->Span(x, y, len);
             for (; len; --len, color = (const uint8_t*)patternSource->NextX(), ++span) {
                 if (color) {
-                    // 从source_type取出相应像素。
+                    // From source_type takes out the corresponding pixel.
                     span->redValue = color[orderType::RED];
                     span->greenValue = color[orderType::GREEN];
                     span->blueValue = color[orderType::BLUE];
                     span->alphaValue = color[orderType::ALPHA];
                 } else {
-                    // 默认的颜色黑色不透明
+                    // The default color is black and opaque
                     span->redValue = 0;
                     span->greenValue = 0;
                     span->blueValue = 0;
-                    span->alphaValue = 255; // 0-透明255-不透明
+                    span->alphaValue = 255; // 0-transparent255-Opaque
                 }
             }
         }

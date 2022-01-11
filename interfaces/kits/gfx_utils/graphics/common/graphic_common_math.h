@@ -16,7 +16,7 @@
 /**
  * @file graphic_geometry_math.h
  *
- * @brief 数学常用库函数
+ * @brief Common library functions in Mathematics
  *
  * @since 1.0
  * @version 1.0
@@ -31,9 +31,10 @@
 
 namespace OHOS {
     /**
-     * @brief 计算向量叉积
-     * @param x1,x2,x为向量点的x坐标，y1,y2,y为向量点的y坐标
-     * @return 返回值大于0，为逆时针方向；返回值小于0，为顺时针方向；返回值等于0，为共线
+     * @brief Calculate vector cross product
+     * @param X1, X2, X are the X coordinates of the vector point, Y1, Y2, y are the Y coordinates of the vector point
+     * @return If the return value is greater than 0, it is counterclockwise; If the return value is less than 0,
+     * it is clockwise; If the return value is equal to 0, it is collinear
      * @since 1.0
      * @version 1.0
      */
@@ -43,9 +44,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 计算两点距离
-     * @param x1,x2为点的x坐标，y1,y2为点的y坐标
-     * @return 返回值为两点的距离
+     * @brief Calculate the distance between two points
+     * @param X1 and X2 are the X coordinates of the point, Y1 and Y2 are the Y coordinates of the point
+     * @return The return value is the distance between two points
      * @since 1.0
      * @version 1.0
      */
@@ -57,9 +58,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 计算两点平方
-     * @param x1,x2为点的x坐标，y1,y2为点的y坐标
-     * @return 返回值为两点平方值
+     * @brief Calculate the square of two points
+     * @param X1 and X2 are the X coordinates of the point, Y1 and Y2 are the Y coordinates of the point
+     * @return The return value is the square of two points
      * @since 1.0
      * @version 1.0
      */
@@ -71,10 +72,11 @@ namespace OHOS {
     }
 
     /**
-     * @brief 计算两条线段是否相交，并求出交点
-     * @param aX,bX,cX,dX为点的x坐标，aY,bY,cY,dY为点的y坐标
-     * @param x为相交点的x坐标指针，y为相交点的y坐标指针
-     * @return 返回值true为相交，false为不相交
+     * @brief Calculate whether the two line segments intersect and find the intersection
+     * @param aX,bX,cX,dX are the X coordinates of the point, and ay, by, cy and dy are the Y coordinates of the point
+     * @param X is the X coordinate pointer of the intersection point,
+     * and Y is the Y coordinate pointer of the intersection point
+     * @return The return value true is intersecting and false is disjoint
      * @since 1.0
      * @version 1.0
      */
@@ -94,9 +96,9 @@ namespace OHOS {
     }
 
     /**
-     * @brief 计算多边形面积
-     * @param Storage为多边形顶点序列
-     * @return 返回值为多边形面积
+     * @brief Calculate polygon area
+     * @param Storage is a sequence of polygon vertices
+     * @return The return value is polygon area
      * @since 1.0
      * @version 1.0
      */

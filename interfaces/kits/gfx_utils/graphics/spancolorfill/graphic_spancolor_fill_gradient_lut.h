@@ -15,7 +15,7 @@
 
 /**
  * @file gradient_lut.h
- * @brief Defines 渐变模式
+ * @brief Defines Gradient mode
  * @since 1.0
  * @version 1.0
  */
@@ -30,8 +30,9 @@
 namespace OHOS {
     const unsigned COLOR_PROFILE_SIZE = 4;
     /**
-    * @根据remove_all,add_color,build_lut构建颜色的渐变过程，起止和中间的渐变颜色
-    * @模板参数是ColorInterpolator 颜色插值器，ColorLutSize 颜色单元大小
+    * @brief According to remove_all,add_color,and build_lut,
+    * build the color gradient process, start, end and middle gradient colors
+    * @param The template parameters are colorinterpolator color interpolator and colorlutsize color cell size
     * @since 1.0
     * @version 1.0
     */
@@ -46,7 +47,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 删除所有颜色
+         * @brief Remove all colors
          * @since 1.0
          * @version 1.0
          */
@@ -56,9 +57,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 在渐变过程中添加需要渐变的颜色和位置
+         * @brief Add the color and position you want to gradient during the gradient process
          * @param offset (0-1)
-         * @param color 添加的颜色
+         * @param color Added color
          * @since 1.0
          * @version 1.0
          */
@@ -68,16 +69,16 @@ namespace OHOS {
         }
 
         /**
-         * @brief 根据渐变颜色构建color_type数组
-         * @数组长度0-255
-         * @数组内容根据渐变颜色分布在数组上
+         * @brief Building a color_typ array from gradient colors
+         * Array length 0-255
+         * The contents of the array are distributed on the array according to the gradient color
          * @since 1.0
          * @version 1.0
          */
         void BuildLut()
         {
-            /*
-             * 对于渐变颜色数组快速排序
+            /**
+             * Quick sort for gradient color arrays
              */
             QuickSort(colorProfile, OffsetLess);
         }
@@ -113,7 +114,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief size 返回colorProfile的size
+         * @brief size Returns the size of the colorprofile
          */
         unsigned size()
         {
@@ -121,7 +122,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 重写[]运算符
+         * @brief Override [] operator
          */
         const color_type& operator[](unsigned i) const
         {
@@ -135,9 +136,9 @@ namespace OHOS {
             ColorPoint()
             {}
             /**
-             * @brief 入参
+             * @brief Input parameter
              * @param offset_ (0-1)
-             * @param color_ 添加的颜色
+             * @param color_ Added color
              */
             ColorPoint(double offset_, const color_type& color_)
                 : offset(offset_), color(color_)
@@ -150,10 +151,10 @@ namespace OHOS {
         };
 
         /**
-         * @brief OffsetLess 返回比较a的offset比b的offset小的比较结果
-         * @param colorPoint1 struct ColorPoint结构体
-         * @param colorPoint2 struct ColorPoint结构体
-         * @return true:colorPoint1在colorPoint2的前面 false colorPoint1在colorPoint2的后面
+         * @brief OffsetLess Returns the comparison result that the offset of a is smaller than that of B
+         * @param colorPoint1 struct ColorPoint struct
+         * @param colorPoint2 struct ColorPoint struct
+         * @return true: colorpoint1 precedes colorpoint2 false colorpoint1 follows colorpoint2
          */
         static bool OffsetLess(const ColorPoint& colorPoint1, const ColorPoint& colorPoint2)
         {
@@ -161,10 +162,12 @@ namespace OHOS {
         }
 
         /**
-         * @brief OffsetEqual 返回比较a的offset比b的offset相等的比较结果
-         * @param colorPoint1 struct ColorPoint结构体
-         * @param colorPoint2 struct ColorPoint结构体
-         * @return 返回 true：colorPoint1,colorPoint2的offset相等, false：a,b的offset不相等
+         * @brief OffsetEqual Returns a comparison result in
+         * which the offset of comparison a is equal to that of comparison b
+         * @param colorPoint1 struct ColorPoint struct
+         * @param colorPoint2 struct ColorPoint struct
+         * @return Return true: the offsets of colorpoint1 and colorpoint2 are equal,
+         * and false: the offsets of a and B are not equal
          */
         static bool OffsetEqual(const ColorPoint& colorPoint1, const ColorPoint& colorPoint2)
         {

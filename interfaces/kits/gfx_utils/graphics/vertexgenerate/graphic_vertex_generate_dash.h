@@ -20,7 +20,7 @@
 
 namespace OHOS {
     /**
-     * @brief dash线段生成器
+     * @brief dash Segment generator
      * @since 1.0
      * @version 1.0
      */
@@ -38,29 +38,29 @@ namespace OHOS {
 
         VertexGenerateDash();
         /**
-         * @brief 去除所有破折号
+         * @brief Remove all dashes
          * @since 1.0
          * @version 1.0
          */
         void RemoveAllDashes();
         /**
-         * @brief 添加破折号
-         * @param dashLen 线段长度
-         * @param gapLen 缺口长度
+         * @brief Add dash
+         * @param dashLen segment length
+         * @param gapLen Notch length
          * @since 1.0
          * @version 1.0
          */
         void AddDash(float dashLen, float gapLen);
         /**
-         * @brief 设定dashStart_
-         * @param 设定值
+         * @brief Set dashstart_
+         * @param Set value
          * @since 1.0
          * @version 1.0
          */
         void DashStart(float ds);
         /**
-         * @brief 设定shorten_
-         * @param 设定值
+         * @brief Set shortcut_
+         * @param Set value
          * @since 1.0
          * @version 1.0
          */
@@ -69,7 +69,7 @@ namespace OHOS {
             shorten_ = s;
         }
         /**
-         * @brief 获取storten_
+         * @brief Get storten_
          * @return shorten_
          * @since 1.0
          * @version 1.0
@@ -79,16 +79,16 @@ namespace OHOS {
             return shorten_;
         }
         /**
-         * @brief 去除所有顶点
+         * @brief Remove all vertices
          * @since 1.0
          * @version 1.0
          */
         void RemoveAll();
         /**
-         * @brief 添加顶点
-         * @param x x轴坐标
-         * @param y y轴坐标
-         * @param cmd 指令类型
+         * @brief add vertex
+         * @param x x-coordinate
+         * @param y y-coordinate
+         * @param cmd Instruction type
          * @since 1.0
          * @version 1.0
          */
