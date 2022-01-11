@@ -25,14 +25,14 @@
 #include "gfx_utils/graphic_types.h"
 
 namespace OHOS {
-#    define BASEMSB 128
-#    define NEON_STEP_4 4
-#    define NEON_STEP_8 8
-#    define NEON_STEP_32 32
-#    define NEON_A 3
-#    define NEON_R 2
-#    define NEON_G 1
-#    define NEON_B 0
+    #define BASEMSB 128
+    #define NEON_STEP_4 4
+    #define NEON_STEP_8 8
+    #define NEON_STEP_32 32
+    #define NEON_A 3
+    #define NEON_R 2
+    #define NEON_G 1
+    #define NEON_B 0
 
     static inline uint8x8_t Multipling(uint8x8_t a, uint8x8_t b)
     {

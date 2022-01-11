@@ -17,12 +17,14 @@
 
 #include <cmath>
 #include <cstring>
-
+#include "securec.h"
 #include "gfx_utils/graphics/vertexprimitive/graphic_geometry_array.h"
 #include "render/graphic_render_base.h"
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_pixfmt_transposer.h"
-
+#ifdef ARM_NEON_OPT
+#include <arm_neon.h>
+#endif
 namespace OHOS {
     class FastBoxBlur {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
@@ -31,11 +33,65 @@ namespace OHOS {
         {
             int Channel = FOUR_TIMES;
             if(Integral != nullptr && ((imageWidth*imageHeight) != (Width*Height))) {
-               memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
+               int integralSize=(Width + 1) * Channel * sizeof(int32_t);
+               memset_s(Integral, integralSize, 0, integralSize);
             }
-            for (int Y = 0; Y < Height; Y++)
-            {
-                unsigned char *LinePS = Src + Y * Stride;
+#ifdef ARM_NEON_OPT
+            for (int Y = 0; Y < Height; Y++) {
+                int32x4x4_t LinePS  = vld4q_s32 (Src+ Y * Stride);
+                int32x4x4_t LinePL = vld4q_s32(Integral + Y * (Width + 1) * Channel + Channel);
+                int32x4x4_t LinePD = vld4q_s32(Integral + (Y + 1) * (Width + 1) * Channel + Channel);
+
+                LinePD.val[-INDEX_FOUR]=0;
+                LinePD.val[-INDEX_THREE] = 0;
+                LinePD.val[-INDEX_TWO] = 0;
+                LinePD.val[-INDEX_ONE] = 0;
+                int32x4_t SumB, SumG, SumR, SumA;
+                int X = 0;
+                for (; X < Width; X += 4) {
+                    SumB = vaddq_s32(LinePS.val[INDEX_ZERO],SumB);
+                    SumG = vaddq_s32(LinePS.val[INDEX_ONE],SumG);
+                    SumR = vaddq_s32(LinePS.val[INDEX_TWO],SumR);
+                    SumA = vaddq_s32(LinePS.val[INDEX_THREE],SumA);
+
+                    LinePD.val[INDEX_ZERO] = vaddq_s32(LinePL.val[INDEX_ZERO], SumB);
+                    LinePD.val[INDEX_ONE] = vaddq_s32(LinePL.val[INDEX_ONE], SumG);
+                    LinePD.val[INDEX_TWO] = vaddq_s32(LinePL.val[INDEX_TWO], SumR);
+                    LinePD.val[INDEX_THREE] = vaddq_s32(LinePL.val[INDEX_THREE], SumA);
+
+                    vst4q_s32(Integral + Y * (Width + 1) * Channel + Channel, LinePL);
+                    vst4q_s32(Integral + (Y + 1) * (Width + 1) * Channel + Channel, LinePD);
+
+                    LinePS = vaddq_s32(LinePS,vdupq_n_s32(Channel));
+                    LinePL = vaddq_s32(LinePL,vdupq_n_s32(Channel));
+                    LinePD = vaddq_s32(LinePD,vdupq_n_s32(Channel));
+                }
+                int *NormalLinePS = Src + Y * Stride;
+                int *NormalLinePL = Integral + Y * (Width + 1) * Channel + Channel;
+                int *NormalLinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
+                int32_t NormalSumB = 0, NormalSumG = 0, NormalSumR = 0, NormalSumA = 0;
+                vst1q_s32(&NormalSumB,SumB);
+                vst1q_s32(&NormalSumG,SumG);
+                vst1q_s32(&NormalSumR,SumR);
+                vst1q_s32(&NormalSumA,SumA);
+
+                for (;X < Width; X++) {
+                    NormalSumB += NormalLinePS[INDEX_ZERO];
+                    NormalSumG += NormalLinePS[INDEX_ONE];
+                    NormalSumR += NormalLinePS[INDEX_TWO];
+                    NormalSumA += NormalLinePS[INDEX_THREE];
+                    NormalLinePD[INDEX_ZERO] = NormalLinePL[INDEX_ZERO] + SumB;
+                    NormalLinePD[INDEX_ONE] = NormalLinePL[INDEX_ONE] + SumG;
+                    NormalLinePD[INDEX_TWO] = NormalLinePL[INDEX_TWO] + SumR;
+                    NormalLinePD[INDEX_THREE] = NormalLinePL[INDEX_THREE] + SumA;
+                    NormalLinePS += Channel;
+                    NormalLinePL += Channel;
+                    NormalLinePD += Channel;
+                }
+            }
+#else
+            for (int Y = 0; Y < Height; Y++) {
+                uint8_t *LinePS = Src + Y * Stride;
                 //	last position
                 int *LinePL = Integral + Y * (Width + 1) * Channel + Channel;
                 //	curretn position，waring the first column of every line row is zero
@@ -45,8 +101,7 @@ namespace OHOS {
                 LinePD[-INDEX_THREE] = 0;
                 LinePD[-INDEX_TWO] = 0;
                 LinePD[-INDEX_ONE] = 0;
-                for (int X = 0, SumB = 0, SumG = 0, SumR = 0, SumA = 0; X < Width; X++)
-                {
+                for (int X = 0, SumB = 0, SumG = 0, SumR = 0, SumA = 0; X < Width; X++) {
                     SumB += LinePS[INDEX_ZERO];
                     SumG += LinePS[INDEX_ONE];
                     SumR += LinePS[INDEX_TWO];
@@ -60,6 +115,7 @@ namespace OHOS {
                     LinePD += Channel;
                 }
             }
+#endif
         }
     public:
         FastBoxBlur()
@@ -83,7 +139,6 @@ namespace OHOS {
             int32_t Width = img.Width();
             int32_t Height = img.Height();
             bool isGetRGBAIntegral = false;
-            // Stride = img.Stride();
             if(Integral == nullptr || ((imageWidth * imageHeight) != (Width * Height))) {
                 if(Integral != nullptr) {
                     free(Integral);
@@ -113,12 +168,10 @@ namespace OHOS {
                         int SumB = LineP2[Index2 + INDEX_ZERO] - LineP1[Index2 + INDEX_ZERO] - LineP2[Index1 + INDEX_ZERO] + LineP1[Index1 + INDEX_ZERO];
                         int SumG = LineP2[Index2 + INDEX_ONE] - LineP1[Index2 + INDEX_ONE] - LineP2[Index1 + INDEX_ONE] + LineP1[Index1 + INDEX_ONE];
                         int SumR = LineP2[Index2 + INDEX_TWO] - LineP1[Index2 + INDEX_TWO] - LineP2[Index1 + INDEX_TWO] + LineP1[Index1 + INDEX_TWO];
-                        //int SumA = LineP2[Index2 + 3] - LineP1[Index2 + 3] - LineP2[Index1 + 3] + LineP1[Index1 + 3];
                         int PixelCount = (X2 - X1) * (Y2 - Y1);
                         LinePD[INDEX_ZERO] = (SumB + (PixelCount >> INDEX_ONE)) / PixelCount;
                         LinePD[INDEX_ONE] = (SumG + (PixelCount >> INDEX_ONE)) / PixelCount;
                         LinePD[INDEX_TWO] = (SumR + (PixelCount >> INDEX_ONE)) / PixelCount;
-                        //LinePD[3] = (SumA + (PixelCount >> 1)) / PixelCount;
                         uint8_t* alpha = (uint8_t *)img.PixValuePtr(0,0) + Y * Stride + (X << INDEX_TWO);
                         LinePD[INDEX_THREE] = alpha[INDEX_THREE];
                         LinePD += INDEX_FOUR;
