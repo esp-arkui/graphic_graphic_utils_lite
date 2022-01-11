@@ -24,7 +24,7 @@
 
 namespace OHOS {
     /**
-     * @brief 顶点源数据块
+     * @brief Vertex source data block
      * @since 1.0
      * @version 1.0
      */
@@ -72,7 +72,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 去除所有顶点
+         * @brief Remove all vertices.
          *
          * @since 1.0
          * @version 1.0
@@ -82,7 +82,7 @@ namespace OHOS {
             totalVertices_ = 0;
         }
         /**
-         * @brief 释放空间
+         * @brief Free up space
          * @since 1.0
          * @version 1.0
          */
@@ -107,11 +107,11 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 添加顶点
+         * @brief add vertex.
          *
-         * @param x 顶点x轴坐标
-         * @param y 顶点y轴坐标
-         * @param cmd 指令类型
+         * @param x Vertex X-axis coordinates.
+         * @param y Vertex Y-axis coordinates.
+         * @param cmd Instruction type.
          * @since 1.0
          * @version 1.0
          */
@@ -124,8 +124,8 @@ namespace OHOS {
             totalVertices_++;
         }
         /**
-         * @brief 返回最后一条指令
-         * @return 返回最后一条指令类型
+         * @brief Returns the last instruction.
+         * @return Returns the last instruction type.
          * @since 1.0
          * @version 1.0
          */
@@ -137,10 +137,10 @@ namespace OHOS {
             return PATH_CMD_STOP;
         }
         /**
-         * @brief 返回最后一个顶点的坐标
-         * @param x 用于获取最后一个顶点x轴坐标
-         * @param y 用于获取最后一个顶点y轴坐标
-         * @return 返回该顶点对应的指令类型
+         * @brief Returns the coordinates of the last vertex.
+         * @param x Used to obtain the x-axis coordinates of the last vertex.
+         * @param y Used to obtain the y-axis coordinates of the last vertex.
+         * @return Returns the instruction type corresponding to the vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -152,8 +152,8 @@ namespace OHOS {
             return PATH_CMD_STOP;
         }
         /**
-         * @brief 返回顶点数量
-         * @return 返回顶点数量
+         * @brief Returns the number of vertices.
+         * @return Returns the number of vertices.
          * @since 1.0
          * @version 1.0
          */
@@ -162,11 +162,11 @@ namespace OHOS {
             return totalVertices_;
         }
         /**
-         * @brief 获取特定的顶点的坐标
-         * @param idx 顶点下标
-         * @param x 用于获取顶点x轴坐标
-         * @param y 用于获取顶点y轴坐标
-         * @return 返回该顶点对应的指令类型
+         * @brief Gets the coordinates of a particular vertex.
+         * @param idx Vertex subscript.
+         * @param x Used to obtain the x-axis coordinates of vertices.
+         * @param y Used to obtain the y-axis coordinates of vertices.
+         * @return Returns the instruction type corresponding to the vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -179,9 +179,9 @@ namespace OHOS {
             return cmdBlocks_[nb][idx & BLOCK_MASK];
         }
         /**
-         * @brief 获取特定的顶点对应的指令类型
-         * @param index 顶点下标
-         * @return 返回该顶点对应的指令类型
+         * @brief ets the instruction type corresponding to a specific vertex.
+         * @param index Vertex subscript.
+         * @return Returns the instruction type corresponding to the vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -201,13 +201,11 @@ namespace OHOS {
                     (unsigned char**)(new_coords + maxBlocks_ + BLOCK_POOL);
 
                 if (croodBlocks_) {
-                    errno_t err = memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
-                                           croodBlocks_, maxBlocks_ * sizeof(float*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_coords, maxBlocks_ * sizeof(float*),
+                                 croodBlocks_, maxBlocks_ * sizeof(float*)) != EOK) {
                     }
-                    err = memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
-                                   cmdBlocks_, maxBlocks_ * sizeof(unsigned char*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_cmds, maxBlocks_ * sizeof(float*),
+                                 cmdBlocks_, maxBlocks_ * sizeof(unsigned char*)) != EOK) {
                     }
                     GeometryArrayAllocator<float*>::Deallocate(croodBlocks_, maxBlocks_ * OHOS::TWO_TIMES);
                 }
@@ -238,8 +236,8 @@ namespace OHOS {
         unsigned totalVertices_;
         unsigned totalBlocks_;
         unsigned maxBlocks_;
-        float** croodBlocks_; // 输入的点
-        uint8_t** cmdBlocks_;    // 标记点状态
+        float** croodBlocks_; // Input points
+        uint8_t** cmdBlocks_; // Mark point status
     };
 
     class UICanvasVertices : public HeapBase {
@@ -248,7 +246,7 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 去除所有顶点
+         * @brief Remove all vertices
          *
          * @since 1.0
          * @version 1.0
@@ -259,7 +257,7 @@ namespace OHOS {
             iterator_ = 0;
         }
         /**
-         * @brief 释放空间
+         * @brief Free up space
          * @since 1.0
          * @version 1.0
          */
@@ -270,9 +268,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 移动一个点到设定的坐标
-         * @param x 顶点x轴坐标
-         * @param y 顶点y轴坐标
+         * @brief Move a point to the set coordinates
+         * @param x Vertex X-axis coordinates
+         * @param y Vertex Y-axis coordinates
          * @since 1.0
          * @version 1.0
          */
@@ -281,9 +279,9 @@ namespace OHOS {
             vertices_.AddVertex(x, y, PATH_CMD_MOVE_TO);
         }
         /**
-         * @brief 连线连到输入的坐标
-         * @param x 顶点x轴坐标
-         * @param y 顶点y轴坐标
+         * @brief Connect the line to the entered coordinates
+         * @param x Vertex X-axis coordinates
+         * @param y Vertex Y-axis coordinates
          * @since 1.0
          * @version 1.0
          */
@@ -293,14 +291,14 @@ namespace OHOS {
         }
 
         /**
-         * @brief 画弧线
-         * @param rx 长短半轴
-         * @param ry 长短半轴
-         * @param angle 角度
-         * @param largeArcFlag 优劣弧
-         * @param sweepFlag 顺逆时针
-         * @param x 终点x轴坐标
-         * @param y 终点y轴坐标
+         * @brief Draw an arc
+         * @param rx Long and short axle
+         * @param ry Long and short axle
+         * @param angle angle
+         * @param largeArcFlag Superior inferior arc
+         * @param sweepFlag Clockwise and counterclockwise
+         * @param x End X coordinate
+         * @param y End Y-axis coordinates
          * @since 1.0
          * @version 1.0
          */
@@ -347,7 +345,7 @@ namespace OHOS {
             }
         }
         /**
-         * @brief ClosePolygon 闭合多边形路径
+         * @brief ClosePolygon Closed polygon path
          * @param flags
          */
         void ClosePolygon(unsigned flags = PATH_FLAGS_NONE)
@@ -356,8 +354,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回顶点数量
-         * @return 返回顶点数量
+         * @brief Returns the number of vertices.
+         * @return Returns the number of vertices.
          * @since 1.0
          * @version 1.0
          */
@@ -367,10 +365,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回最后一个顶点的坐标
-         * @param x 用于获取最后一个顶点x轴坐标
-         * @param y 用于获取最后一个顶点y轴坐标
-         * @return 返回该顶点对应的指令类型
+         * @brief Returns the coordinates of the last vertex.
+         * @param x Used to obtain the x-axis coordinates of the last vertex.
+         * @param y Used to obtain the y-axis coordinates of the last vertex.
+         * @return Returns the instruction type corresponding to the vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -379,19 +377,19 @@ namespace OHOS {
             return vertices_.LastVertex(x, y);
         }
         /**
-         * @brief 获取特定的顶点的坐标
-         * @param idx 顶点下标
-         * @param x 用于获取顶点x轴坐标
-         * @param y 用于获取顶点y轴坐标
-         * @return 返回该顶点对应的指令类型
+         * @brief Gets the coordinates of a particular vertex.
+         * @param idx Vertex subscript.
+         * @param x Used to obtain the x-axis coordinates of vertices.
+         * @param y Used to obtain the y-axis coordinates of vertices.
+         * @return Returns the instruction type corresponding to the vertex.
          * @since 1.0
          * @version 1.0
          */
         unsigned Vertex(unsigned idx, float* x, float* y) const;
 
         /**
-         * @brief 迭代器回退到某一个顶点
-         * @param pathId 回退的顶点序号
+         * @brief Iterator fallback to a vertex。
+         * @param pathId The vertex sequence number of the fallback.
          * @since 1.0
          * @version 1.0
          */
@@ -401,10 +399,10 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取下一个顶点的坐标
-         * @param x 用于获取顶点x轴坐标
-         * @param y 用于获取顶点y轴坐标
-         * @return 返回下一个顶点对应的指令类型
+         * @brief Gets the coordinates of the next vertex.
+         * @param x Used to obtain the x-axis coordinates of vertices.
+         * @param y Used to obtain the y-axis coordinates of vertices.
+         * @return Returns the instruction type corresponding to the next vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -417,9 +415,9 @@ namespace OHOS {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
         /**
-         * @brief 连接路径
-         * @param vs 要连接的顶点源
-         * @param pathId 连接位置
+         * @brief Connection path.
+         * @param vs Vertex source to connect.
+         * @param pathId Connection location.
          * @since 1.0
          * @version 1.0
          */
@@ -434,9 +432,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 将顶点源加入到已有的源
-         * @param vs 要加入的顶点源
-         * @param pathId 加入的位置
+         * @brief Add vertex source to existing source.
+         * @param vs Vertex source to join.
+         * @param pathId Join location.
          * @since 1.0
          * @version 1.0
          */

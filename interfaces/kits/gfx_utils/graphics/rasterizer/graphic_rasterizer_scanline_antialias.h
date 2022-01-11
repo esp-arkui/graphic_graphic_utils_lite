@@ -330,7 +330,7 @@ namespace OHOS {
             }
             sl.ResetSpans();
             unsigned num_cells = m_outline.ScanlineNumCells(m_scan_y);
-            const CellBuildAntiAlias* const *cells = m_outline.ScanlineCells(m_scan_y);
+            const CellBuildAntiAlias * const *cells = m_outline.ScanlineCells(m_scan_y);
             int cover = 0;
 
             while (num_cells) {

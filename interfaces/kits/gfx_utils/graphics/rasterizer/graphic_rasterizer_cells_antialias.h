@@ -161,7 +161,7 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        const CellType* const *ScanlineCells(unsigned yLevel) const
+        const CellType * const *ScanlineCells(unsigned yLevel) const
         {
             return m_sorted_cells.Data() + m_sorted_y[yLevel - m_min_y].start;
         }
@@ -228,8 +228,8 @@ namespace OHOS {
 
     class ScanlineHitRegionMeasure {
     public:
-        ScanlineHitRegionMeasure(int x) :
-            mXCoordinate(x), mHitMeasureFlags(false)
+        ScanlineHitRegionMeasure(int x)
+            : mXCoordinate(x), mHitMeasureFlags(false)
         {}
 
         void AddCellInContainer(int x, int)
@@ -276,8 +276,8 @@ namespace OHOS {
      * @version 1.0
      */
     template <class Cell>
-    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit) :
-        m_num_blocks(0),
+    RasterizerCellsAntiAlias<Cell>::RasterizerCellsAntiAlias(unsigned cell_block_limit)
+        : m_num_blocks(0),
         m_max_blocks(0),
         m_curr_block(0),
         m_num_cells(0),
@@ -683,9 +683,8 @@ namespace OHOS {
                                                                 CELL_BLOCK_POOL);
 
                 if (m_cells) {
-                    errno_t err = memcpy_s(new_cells, m_max_blocks * sizeof(CellType*),
-                                           m_cells, m_max_blocks * sizeof(CellType*));
-                    if (err != EOK) {
+                    if (memcpy_s(new_cells, m_max_blocks * sizeof(CellType*),
+                                 m_cells, m_max_blocks * sizeof(CellType*)) != EOK) {
                     }
                     GeometryArrayAllocator<CellType*>::Deallocate(m_cells, m_max_blocks);
                 }

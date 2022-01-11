@@ -33,7 +33,7 @@ namespace OHOS {
     /**
      * @file graphic_geometry_vertex_sequence.h
      *
-     * @brief Defines 定义VertexSequence类.
+     * @brief Defines Define the vertexsequence class.
      *
      * @since 1.0
      * @version 1.0
@@ -43,27 +43,27 @@ namespace OHOS {
     public:
         using BaseType = GeometryPlainDataBlockVector<T, S>;
         /**
-         * @brief 封闭顶点源.
+         * @brief Closed vertex source.
          *
-         * @param remove_flag 是否封闭.
+         * @param remove_flag Is it closed.
          * @since 1.0
          * @version 1.0
          */
         void Close(bool remove_flag);
 
         /**
-         * @brief 增加一个点.
+         * @brief Add a point.
          *
-         * @param val 顶点.
+         * @param val vertex.
          * @since 1.0
          * @version 1.0
          */
         void Add(const T& val);
 
         /**
-         * @brief 修改最后一个顶点.
+         * @brief Modify the last vertex.
          *
-         * @param t 顶点.
+         * @param t vertex.
          * @since 1.0
          * @version 1.0
          */
@@ -118,9 +118,9 @@ namespace OHOS {
         VertexDist()
         {}
         /**
-         * @brief 构造VertexDist.
+         * @brief Construct vertexdist.
          *
-         * @param x_,y_ 顶点坐标.
+         * @param x_,y_ Vertex coordinates.
          * @since 1.0
          * @version 1.0
          */
@@ -129,10 +129,10 @@ namespace OHOS {
         {
         }
         /**
-         * @brief 计算两个点的距离是否很相近.
+         * @brief Calculate whether the distance between the two points is very close.
          *
-         * @param 顶点.
-         * @return 两点距离很近返回false.
+         * @param vertex.
+         * @return If the two points are close, false is returned.
          * @since 1.0
          * @version 1.0
          */
@@ -153,9 +153,9 @@ namespace OHOS {
         VertexDistCmd()
         {}
         /**
-         * @brief 构造VertexDist.
+         * @brief Construct vertexdist.
          *
-         * @param x_,y_ 顶点坐标, cmd_ 连接命令.
+         * @param x_,y_ Vertex coordinates, cmd_ Connection command.
          * @since 1.0
          * @version 1.0
          */

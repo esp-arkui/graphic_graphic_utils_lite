@@ -41,8 +41,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        DepictStroke(VertexSource& vs) :
-            DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
+        DepictStroke(VertexSource& vs)
+            : DepictAdaptorVertexGenerator<VertexSource, VertexGenerateStroke, Markers>(vs)
         {
         }
 #if GRAPHIC_GEOMETYR_ENABLE_LINECAP_STYLES_VERTEX_SOURCE

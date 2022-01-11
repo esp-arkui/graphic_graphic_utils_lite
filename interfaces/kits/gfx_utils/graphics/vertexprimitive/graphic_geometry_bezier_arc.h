@@ -30,9 +30,9 @@
 #include "gfx_utils/heap_base.h"
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_BEZIER_ARC_VERTEX_SOURCE
-    const int BEZIER_ARC_VERTEX_NUM = 26; // 贝塞尔弧顶点坐标数
+    const int BEZIER_ARC_VERTEX_NUM = 26; // Number of Bezier Arc Vertex Coordinates.
     /**
-     * @brief 弧形转换为贝塞尔曲线.
+     * @brief Arcs are converted to Bezier curves.
      *
      * @since 1.0
      * @version 1.0
@@ -44,7 +44,7 @@ namespace OHOS {
     /**
      * @file graphic_geometry_bezier_arc.h
      *
-     * @brief Defines 贝塞尔弧结构类.
+     * @brief Defines Bezier arc structure class.
      *
      * @since 1.0
      * @version 1.0
@@ -56,8 +56,10 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 使用弧线初始化贝塞尔曲线.
-         * @Param centerX centerY 圆弧圆心，rx ry 圆弧横纵半径，startAngle sweepAngle 圆弧起止角度
+         * @brief Bezier curves are initialized with arcs.
+         * @Param centerX centerY Arc Center.
+         * @Param rx ry Arc Transverse and Longitudinal Radius.
+         * @Param startAngle sweepAngle Arc start and end angle.
          * @since 1.0
          * @version 1.0
          */
@@ -70,7 +72,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 使用弧线初始化贝塞尔曲线.
+         * @brief Initializing Bezier Curves with Arcs.
          * @since 1.0
          * @version 1.0
          */
@@ -80,7 +82,7 @@ namespace OHOS {
                   float sweepAngle);
 
         /**
-         * @brief 回到最开始步骤.
+         * @brief Back to the beginning.
          *
          * @since 1.0
          * @version 1.0
@@ -91,8 +93,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 在采样阶段调用
-         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @brief Called during the sampling phase.
+         * @param x is the pointer to the value of the point coordinate X.
+         * @param y is the pointer to the value of the point coordinate Y.
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -113,8 +116,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取顶点源个数.
-         * @return 顶点个数
+         * @brief Get the number of vertex sources.
+         * @return Number of vertices.
          * @since 1.0
          * @version 1.0
          */
@@ -124,8 +127,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取顶点源.
-         * @return 顶点源数据
+         * @brief Get vertex source.
+         * @return Vertex Source Data.
          * @since 1.0
          * @version 1.0
          */
@@ -135,8 +138,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取顶点源.
-         * @return 顶点源数据
+         * @brief Get vertex source.
+         * @return Vertex Source Data.
          * @since 1.0
          * @version 1.0
          */
@@ -153,7 +156,7 @@ namespace OHOS {
     };
 
     /**
-     * @brief 计算SVG样式的贝塞尔弧.
+     * @brief Compute SVG-style Bezier arcs.
      *
      * @since 1.0
      * @version 1.0
@@ -164,10 +167,14 @@ namespace OHOS {
         {}
 
         /**
-         * @brief 计算从（x1，y1）到（x2，y2）的椭圆弧.
-         * 椭圆的方向由两个半径（rx，ry）定义
-         * @param x1,y1 起点坐标,x1,y1 终点坐标, rx,ry 长短轴半径,angle 角度,
-         * largeArcFlag 大弧线标志,sweepFlag 扫掠角标志
+         * @brief Calculates elliptical arcs from (x1, y1) to (x2, y2).
+         * The direction of the ellipse is defined by two radii (rx, ry).
+         * @param x1,y1 Starting point coordinates.
+         * @param x2,y2 End point coordinates.
+         * @param rx,ry Radius of major and minor axes
+         * @param angle angle,
+         * @param largeArcFlag Large Arc Mark
+         * @param sweepFlag Sweep angle sign
          * @since 1.0
          * @version 1.0
          */
@@ -175,11 +182,9 @@ namespace OHOS {
                      float y1,
                      float rx, float ry,
                      float angle,
-                     bool largeArcFlag, // 大弧线标志
-                     bool sweepFlag,    // 扫掠角标志
-                     float x2, float y2) :
-            bezierArcModel(),
-            isRadiusJoinPath(false)
+                     bool largeArcFlag, // Large Arc Mark
+                     bool sweepFlag,    // Sweep angle sign
+                     float x2, float y2) : bezierArcModel(), isRadiusJoinPath(false)
         {
             Init(x1, y1, rx, ry, angle, largeArcFlag, sweepFlag, x2, y2);
         }
@@ -200,7 +205,7 @@ namespace OHOS {
                   float y2);
 
         /**
-         * @brief 回到最开始步骤.
+         * @brief Go back to the first step.
          *
          * @since 1.0
          * @version 1.0
@@ -211,8 +216,9 @@ namespace OHOS {
         }
 
         /**
-         * @brief 在采样阶段调用
-         * @param x为点坐标x的值的指针，y为点坐标y的值的指针
+         * @brief Called during the sampling phase.
+         * @param X is the pointer to the value of the point coordinate X
+         * @param Y is the pointer to the value of the point coordinate Y
          * @return 无
          * @since 1.0
          * @version 1.0
@@ -223,8 +229,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回贝塞尔弧的顶点数据。
-         * @return 返回顶点源
+         * @brief Returns the vertex data of a Bezier arc.
+         * @return Return vertex source.
          * @since 1.0
          * @version 1.0
          */
@@ -234,8 +240,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回贝塞尔弧的顶点数据.
-         * @return 返回贝塞尔弧的顶点数据.
+         * @brief Returns the vertex data of a Bezier arc.
+         * @return Returns the vertex data of a Bezier arc.
          * @since 1.0
          * @version 1.0
          */
@@ -245,7 +251,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 返回两倍的值顶点数。也就是说，对于1个顶点，它返回2。
+         * @brief Returns twice the number of value vertices,that is, for a vertex, it returns 2.
          * @since 1.0
          * @version 1.0
          */

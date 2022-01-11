@@ -40,7 +40,6 @@
 #include "graphic_config.h"
 namespace OHOS {
 #define GRAPHIC_GEOMETRY_INLINE inline
-
     /**
      * @brief Fill rule
      * @since 1.0
@@ -514,8 +513,8 @@ namespace OHOS {
         const T* ptr;
         ConstRowInfo()
         {}
-        ConstRowInfo(int x1_, int x2_, const T* ptr_) :
-            x1(x1_), x2(x2_), ptr(ptr_)
+        ConstRowInfo(int x1_, int x2_, const T* ptr_)
+            : x1(x1_), x2(x2_), ptr(ptr_)
         {}
     };
 } // namespace OHOS

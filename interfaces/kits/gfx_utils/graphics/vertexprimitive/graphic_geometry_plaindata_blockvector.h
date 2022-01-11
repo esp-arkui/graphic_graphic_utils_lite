@@ -48,8 +48,8 @@ namespace OHOS {
         using ValueType = T;
         GeometryPlainDataBlockVector();
         /**
-         * @brief 构造一个 PodBvector.
-         * @param blockPtrInc 每个块大小
+         * @brief Construct a podvector.
+         * @param blockPtrInc Size of each block
          * @since 1.0
          * @version 1.0
          */
@@ -58,7 +58,7 @@ namespace OHOS {
         GeometryPlainDataBlockVector(const GeometryPlainDataBlockVector<T, S>& v);
         const GeometryPlainDataBlockVector<T, S>& operator=(const GeometryPlainDataBlockVector<T, S>& v);
         /**
-         * @brief 清空.
+         * @brief clean.
          * @since 1.0
          * @version 1.0
          */
@@ -67,7 +67,7 @@ namespace OHOS {
             size_ = 0;
         }
         /**
-         * @brief 清空.
+         * @brief clean.
          * @since 1.0
          * @version 1.0
          */
@@ -76,7 +76,7 @@ namespace OHOS {
             size_ = 0;
         }
         /**
-         * @brief 释放所有元素占用的内存块.
+         * @brief Freeing memory blocks occupied by all elements.
          * @since 1.0
          * @version 1.0
          */
@@ -85,13 +85,13 @@ namespace OHOS {
             FreeTail(0);
         }
         /**
-         * @brief 修改最后一个元素.
+         * @brief Modify last element.
          * @since 1.0
          * @version 1.0
          */
         void ModifyLast(const T& val);
         /**
-         * @brief 删除最后一个元素.
+         * @brief Delete last element.
          * @since 1.0
          * @version 1.0
          */
@@ -100,22 +100,22 @@ namespace OHOS {
         void AllocateBlock(unsigned blockNum);
 
         /**
-         * @brief 从末尾释放元素.
-         * @param size 要释放的个数
+         * @brief Release element from end.
+         * @param size Number of to release
          * @since 1.0
          * @version 1.0
          */
         void FreeTail(unsigned size);
         /**
-         * @brief 增加一个元素.
-         * @param val 增加的元素
+         * @brief Add an element.
+         * @param val Added elements.
          * @since 1.0
          * @version 1.0
          */
         void Add(const T& val);
         /**
-         * @brief 增加一个元素.
-         * @param val 增加的元素
+         * @brief Add an element.
+         * @param val val Added elements.
          * @since 1.0
          * @version 1.0
          */
@@ -125,8 +125,8 @@ namespace OHOS {
         }
 
         /**
-         * @brief 增加一个数组.
-         * @param ptr 要增加的数组首地址，numElem 元素个数
+         * @brief Add an array.
+         * @param ptr The first address of the array to be added,numElem Number of elements
          * @since 1.0
          * @version 1.0
          */
@@ -138,7 +138,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 缩小数组容量.
+         * @brief Reduce array capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -149,7 +149,7 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 增加数据.
+         * @brief Add data.
          * @since 1.0
          * @version 1.0
          */
@@ -162,7 +162,7 @@ namespace OHOS {
             }
         }
         /**
-         * @brief 获取数组容量.
+         * @brief Get array capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -171,7 +171,7 @@ namespace OHOS {
             return size_;
         }
         /**
-         * @brief 获取指定索引数据块.
+         * @brief Gets the specified index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -180,7 +180,7 @@ namespace OHOS {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-         * @brief 获取指定索引数据块.
+         * @brief Gets the specified index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -189,7 +189,7 @@ namespace OHOS {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-         * @brief 获取指定索引数据块.
+         * @brief Gets the specified index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -198,7 +198,7 @@ namespace OHOS {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-         * @brief 获取指定索引数据块.
+         * @brief Gets the specified index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -207,7 +207,7 @@ namespace OHOS {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-         * @brief 获取当前索引数据块.
+         * @brief Gets the current index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -216,7 +216,7 @@ namespace OHOS {
             return blocks_[index >> BLOCK_SHIFT][index & BLOCK_MASK];
         }
         /**
-         * @brief 获取当前索引数据块.
+         * @brief Gets the current index data block.
          * @since 1.0
          * @version 1.0
          */
@@ -225,7 +225,7 @@ namespace OHOS {
             return (*this)[index];
         }
         /**
-         * @brief 获取当前索引上的前一个数据块.
+         * @brief Gets the previous data block on the current index.
          * @since 1.0
          * @version 1.0
          */
@@ -234,7 +234,7 @@ namespace OHOS {
             return (*this)[(index + size_ - 1) % size_];
         }
         /**
-         * @brief 获取当前索引上的前一个数据块.
+         * @brief Gets the previous data block on the current index.
          * @since 1.0
          * @version 1.0
          */
@@ -243,7 +243,7 @@ namespace OHOS {
             return (*this)[(index + size_ - 1) % size_];
         }
         /**
-         * @brief 获取当前索引上的数据块.
+         * @brief Gets the data block on the current index.
          * @since 1.0
          * @version 1.0
          */
@@ -253,7 +253,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取当前索引上的下一个数据块.
+         * @brief Gets the next data block on the current index.
          * @since 1.0
          * @version 1.0
          */
@@ -263,7 +263,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取当前索引上的下一个数据块.
+         * @brief Gets the next data block on the current index.
          * @since 1.0
          * @version 1.0
          */
@@ -272,7 +272,7 @@ namespace OHOS {
             return (*this)[(index + 1) % size_];
         }
         /**
-         * @brief 获取末尾数据.
+         * @brief Get end data.
          * @since 1.0
          * @version 1.0
          */
@@ -282,7 +282,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取末尾数据.
+         * @brief Get end data.
          * @since 1.0
          * @version 1.0
          */
@@ -292,7 +292,7 @@ namespace OHOS {
         }
 
         /**
-         * @brief 获取指定的块地址.
+         * @brief Gets the specified block address.
          *
          * @since 1.0
          * @version 1.0
@@ -304,7 +304,7 @@ namespace OHOS {
 
     private:
         /**
-         * @brief 申请指定大小的内存块.
+         * @brief Request a memory block of the specified size.
          *
          * @since 1.0
          * @version 1.0
@@ -312,11 +312,11 @@ namespace OHOS {
         void Allocatelock(unsigned nb);
         T* DataPtr();
 
-        unsigned size_;        // 元素个数
-        unsigned numBlocks_;   // 块数量
-        unsigned maxBlocks_;   // 最大块数
-        T** blocks_;           // 所有块的首地址
-        unsigned blockPtrInc_; // 每个块的大小
+        unsigned size_;        // Number of elements
+        unsigned numBlocks_;   // Number of blocks
+        unsigned maxBlocks_;   // Maximum number of blocks
+        T** blocks_;           // First address of all blocks
+        unsigned blockPtrInc_; // Size of each block
     };
 
     template <class T, unsigned S>
@@ -350,8 +350,8 @@ namespace OHOS {
     }
 
     template <class T, unsigned S>
-    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector() :
-        size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
+    GeometryPlainDataBlockVector<T, S>::GeometryPlainDataBlockVector()
+        : size_(0), numBlocks_(0), maxBlocks_(0), blocks_(0), blockPtrInc_(BLOCK_SIZE)
     {
     }
 

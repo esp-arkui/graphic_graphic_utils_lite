@@ -35,7 +35,7 @@ namespace OHOS {
 
     /**
      *
-     * @brief 交换数据.
+     * @brief Exchange data.
      * @since 1.0
      * @version 1.0
      */
@@ -92,8 +92,8 @@ namespace OHOS {
 
     /**
      *
-     * @brief 快速排序算法.
-     * @param arr 要排序的数组,less 排序条件
+     * @brief Quick sort algorithm.
+     * @param arr Array to sort, less sort condition
      * @since 1.0
      * @version 1.0
      */
@@ -102,9 +102,9 @@ namespace OHOS {
 
     /**
      *
-     * @brief 根据指定条件指定条件删除重复的元素.
+     * @brief Deletes duplicate elements according to the specified criteria.
      *
-     * @param arr 指定数组,equal 指定条件
+     * @param arr Specify the array, equal specify the condition.
      * @since 1.0
      * @version 1.0
      */
@@ -113,7 +113,7 @@ namespace OHOS {
 
     /**
      *
-     * @brief 反转一个数组.
+     * @brief Invert an array.
      *
      * @since 1.0
      * @version 1.0
@@ -130,7 +130,7 @@ namespace OHOS {
 
     /**
      *
-     * @brief 二分法查找算法.
+     * @brief Dichotomy search algorithm.
      *
      * @since 1.0
      * @version 1.0

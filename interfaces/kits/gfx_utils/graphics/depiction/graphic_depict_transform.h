@@ -45,8 +45,8 @@ namespace OHOS {
          * @since 1.0
          * @version 1.0
          */
-        DepictTransform(VertexSource& source, Transformer& tr) :
-            m_source(&source), m_trans(&tr)
+        DepictTransform(VertexSource& source, Transformer& tr)
+            : m_source(&source), m_trans(&tr)
         {}
 
         void Attach(VertexSource& source)

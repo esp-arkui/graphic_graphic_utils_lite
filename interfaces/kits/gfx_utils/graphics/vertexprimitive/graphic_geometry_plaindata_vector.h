@@ -37,7 +37,7 @@ namespace OHOS {
     /**
      * @file GeometryPlainDataVector.h
      *
-     * @brief Defines PodVector，提供了序列化与反序列化的方法.
+     * @brief Defines Podvector, which provides methods of serialization and deserialization.
      *
      * @since 1.0
      * @version 1.0
@@ -47,14 +47,13 @@ namespace OHOS {
     public:
         using ValueType = T;
 
-        GeometryPlainDataVector() :
-            size_(0), capacity_(0), data_(0)
+        GeometryPlainDataVector() : size_(0), capacity_(0), data_(0)
         {}
 
         /**
          *
-         * @brief 构造一个PodVector.
-         * @param cap 容量,extraTail
+         * @brief Construct a podvector.
+         * @param Cap capacity, extratail
          * @since 1.0
          * @version 1.0
          */
@@ -71,7 +70,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 设置容量.
+         * @brief Set the capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -79,7 +78,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 获取当前容量.
+         * @brief Get current capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -89,16 +88,16 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 申请内存.
-         * @param size 容量,extraTail 扩展容量
+         * @brief Request memory.
+         * @param Size capacity, extratail expansion capacity.
          * @since 1.0
          * @version 1.0
          */
         void Allocate(unsigned size, unsigned extraTail = 0);
         /**
          *
-         * @brief 数组扩容.
-         * @param 指定新容量
+         * @brief Array expansion.
+         * @param Specify new capacity.
          * @since 1.0
          * @version 1.0
          */
@@ -106,7 +105,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 把数据全设置为0.
+         * @brief Set all data to 0.
          *
          * @since 1.0
          * @version 1.0
@@ -117,7 +116,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 末尾增加元素.
+         * @brief Add element at the end.
          *
          * @since 1.0
          * @version 1.0
@@ -128,7 +127,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 末尾增加元素.
+         * @brief Add element at the end.
          *
          * @since 1.0
          * @version 1.0
@@ -139,7 +138,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 指定位置插入元素.
+         * @brief Insert element at specified location.
          *
          * @since 1.0
          * @version 1.0
@@ -148,7 +147,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 增加容量.
+         * @brief Increase capacity.
          *
          * @since 1.0
          * @version 1.0
@@ -159,7 +158,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取容量.
+         * @brief Get capacity.
          *
          * @since 1.0
          * @version 1.0
@@ -171,7 +170,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 获取数据字节数.
+         * @brief Get data bytes.
          *
          * @since 1.0
          * @version 1.0
@@ -183,7 +182,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 把ptr指向的数据序列化到数组.
+         * @brief Serialize the data pointed to by PTR into an array.
          *
          * @since 1.0
          * @version 1.0
@@ -192,7 +191,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 把数组反序列化到data.
+         * @brief Deserialize array to data.
          *
          * @since 1.0
          * @version 1.0
@@ -200,7 +199,7 @@ namespace OHOS {
         void Deserialize(const uint8_t* data, unsigned byteSize);
         /**
          *
-         * @brief 获取指定索引元素.
+         * @brief Gets the specified index element.
          *
          * @since 1.0
          * @version 1.0
@@ -211,7 +210,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取指定索引元素.
+         * @brief Gets the specified index element.
          *
          * @since 1.0
          * @version 1.0
@@ -222,7 +221,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取指定索引元素.
+         * @brief Gets the specified index element.
          *
          * @since 1.0
          * @version 1.0
@@ -233,7 +232,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取指定索引元素.
+         * @brief Gets the specified index element.
          *
          * @since 1.0
          * @version 1.0
@@ -244,7 +243,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取指定索引元素.
+         * @brief Gets the specified index element.
          *
          * @since 1.0
          * @version 1.0
@@ -255,7 +254,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 获取数组指针.
+         * @brief Get array pointer.
          *
          * @since 1.0
          * @version 1.0
@@ -267,7 +266,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 获取数组指针.
+         * @brief Get array pointer.
          *
          * @since 1.0
          * @version 1.0
@@ -279,7 +278,7 @@ namespace OHOS {
 
         /**
          *
-         * @brief 重置容量.
+         * @brief Reset capacity.
          *
          * @since 1.0
          * @version 1.0
@@ -292,7 +291,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 删除所有元素.
+         * @brief Delete all elements.
          *
          * @since 1.0
          * @version 1.0
@@ -303,7 +302,7 @@ namespace OHOS {
         }
         /**
          *
-         * @brief 删除所有元素.
+         * @brief Delete all elements.
          *
          * @since 1.0
          * @version 1.0
@@ -343,8 +342,7 @@ namespace OHOS {
         if (newSize > size_) {
             if (newSize > capacity_) {
                 T* data = GeometryArrayAllocator<T>::Allocate(newSize);
-                errno_t err = memcpy_s(data, newSize, data_, size_ * sizeof(T));
-                if (err != EOK) {
+                if (memcpy_s(data, newSize, data_, size_ * sizeof(T)) != EOK) {
                 }
                 GeometryArrayAllocator<T>::Deallocate(data_, capacity_);
                 data_ = data;
@@ -366,7 +364,8 @@ namespace OHOS {
         : size_(v.size_), capacity_(v.capacity_),
           data_(v.capacity_ ? GeometryArrayAllocator<T>::Allocate(v.capacity_) : 0)
     {
-        memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_);
+        if (memcpy_s(data_, sizeof(T) * v.size_, v.data_, sizeof(T) * v.size_) != EOK) {
+        }
     }
 
     template <class T>
@@ -374,7 +373,8 @@ namespace OHOS {
     {
         Allocate(val.size_);
         if (val.size_) {
-            memcpy_s(data_, sizeof(T) * val.size_, val.data_, sizeof(T) * val.size_);
+            if (memcpy_s(data_, sizeof(T) * val.size_, val.data_, sizeof(T) * val.size_) != EOK) {
+            }
         }
         return *this;
     }

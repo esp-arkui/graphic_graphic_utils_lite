@@ -19,8 +19,8 @@
 
 namespace OHOS {
 #if GRAPHIC_GEOMETYR_ENABLE_DASH_GENERATE_VERTEX_SOURCE
-    VertexGenerateDash::VertexGenerateDash() :
-        totalDashLen_(0.0),
+    VertexGenerateDash::VertexGenerateDash()
+        : totalDashLen_(0.0),
         numDashes_(0),
         dashStart_(0.0),
         shorten_(0.0),
