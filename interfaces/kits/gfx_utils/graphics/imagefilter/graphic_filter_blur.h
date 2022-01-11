@@ -22,6 +22,7 @@
 #include "render/graphic_render_base.h"
 #include "render/graphic_render_pixfmt_base.h"
 #include "render/graphic_render_pixfmt_transposer.h"
+#include "graphic_config.h"
 #ifdef ARM_NEON_OPT
 #include <arm_neon.h>
 #endif
@@ -38,7 +39,8 @@ namespace OHOS {
             }
 #ifdef ARM_NEON_OPT
             for (int Y = 0; Y < Height; Y++) {
-                int32x4x4_t LinePS  = vld4q_s32 (Src+ Y * Stride);
+                int32_t *LinePS_ = Src + Y * Stride;
+                int32x4x4_t LinePS = vld4q_s32(LinePS_);
                 int32x4x4_t LinePL = vld4q_s32(Integral + Y * (Width + 1) * Channel + Channel);
                 int32x4x4_t LinePD = vld4q_s32(Integral + (Y + 1) * (Width + 1) * Channel + Channel);
 
@@ -47,8 +49,9 @@ namespace OHOS {
                 LinePD.val[-INDEX_TWO] = 0;
                 LinePD.val[-INDEX_ONE] = 0;
                 int32x4_t SumB, SumG, SumR, SumA;
-                int X = 0;
-                for (; X < Width; X += 4) {
+
+                int16_t tmpWidth = Width;
+                while (tmpWidth >= 4) {
                     SumB = vaddq_s32(LinePS.val[INDEX_ZERO],SumB);
                     SumG = vaddq_s32(LinePS.val[INDEX_ONE],SumG);
                     SumR = vaddq_s32(LinePS.val[INDEX_TWO],SumR);
@@ -65,28 +68,30 @@ namespace OHOS {
                     LinePS = vaddq_s32(LinePS,vdupq_n_s32(Channel));
                     LinePL = vaddq_s32(LinePL,vdupq_n_s32(Channel));
                     LinePD = vaddq_s32(LinePD,vdupq_n_s32(Channel));
+                    tmpWidth -= 4;
                 }
-                int *NormalLinePS = Src + Y * Stride;
-                int *NormalLinePL = Integral + Y * (Width + 1) * Channel + Channel;
-                int *NormalLinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
-                int32_t NormalSumB = 0, NormalSumG = 0, NormalSumR = 0, NormalSumA = 0;
-                vst1q_s32(&NormalSumB,SumB);
-                vst1q_s32(&NormalSumG,SumG);
-                vst1q_s32(&NormalSumR,SumR);
-                vst1q_s32(&NormalSumA,SumA);
-
-                for (;X < Width; X++) {
-                    NormalSumB += NormalLinePS[INDEX_ZERO];
-                    NormalSumG += NormalLinePS[INDEX_ONE];
-                    NormalSumR += NormalLinePS[INDEX_TWO];
-                    NormalSumA += NormalLinePS[INDEX_THREE];
-                    NormalLinePD[INDEX_ZERO] = NormalLinePL[INDEX_ZERO] + SumB;
-                    NormalLinePD[INDEX_ONE] = NormalLinePL[INDEX_ONE] + SumG;
-                    NormalLinePD[INDEX_TWO] = NormalLinePL[INDEX_TWO] + SumR;
-                    NormalLinePD[INDEX_THREE] = NormalLinePL[INDEX_THREE] + SumA;
-                    NormalLinePS += Channel;
-                    NormalLinePL += Channel;
-                    NormalLinePD += Channel;
+                if(tmpWidth > 0 && tmpWidth < 4) {
+                    int *NormalLinePS = Src + Y * Stride;
+                    int *NormalLinePL = Integral + Y * (Width + 1) * Channel + Channel;
+                    int *NormalLinePD = Integral + (Y + 1) * (Width + 1) * Channel + Channel;
+                    int32_t NormalSumB = 0, NormalSumG = 0, NormalSumR = 0, NormalSumA = 0;
+                    vst1q_s32(&NormalSumB,SumB);
+                    vst1q_s32(&NormalSumG,SumG);
+                    vst1q_s32(&NormalSumR,SumR);
+                    vst1q_s32(&NormalSumA,SumA);
+                    for (int16_t i = 0; i < tmpWidth; ++i) {
+                        NormalSumB += NormalLinePS[INDEX_ZERO];
+                        NormalSumG += NormalLinePS[INDEX_ONE];
+                        NormalSumR += NormalLinePS[INDEX_TWO];
+                        NormalSumA += NormalLinePS[INDEX_THREE];
+                        NormalLinePD[INDEX_ZERO] = NormalLinePL[INDEX_ZERO] + SumB;
+                        NormalLinePD[INDEX_ONE] = NormalLinePL[INDEX_ONE] + SumG;
+                        NormalLinePD[INDEX_TWO] = NormalLinePL[INDEX_TWO] + SumR;
+                        NormalLinePD[INDEX_THREE] = NormalLinePL[INDEX_THREE] + SumA;
+                        NormalLinePS += Channel;
+                        NormalLinePL += Channel;
+                        NormalLinePD += Channel;
+                    }
                 }
             }
 #else
@@ -151,16 +156,14 @@ namespace OHOS {
                     GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0), Width, Height, Stride);
                 }
                 #pragma omp parallel for
-                for (int32_t Y = 0; Y < Height; Y++)
-                {
+                for (int32_t Y = 0; Y < Height; Y++) {
                     int32_t Y1 = MATH_MAX(Y - Radius, 0);
                     int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
                     int32_t *LineP1 = Integral + Y1 * ((Width + 1) << INDEX_TWO);
                     int32_t *LineP2 = Integral + Y2 * ((Width + 1) << INDEX_TWO);
                     uint8_t *LinePD = (uint8_t *)img.PixValuePtr(0,0) + Y * Stride;
 
-                    for (int X = 0; X < Width; X++)
-                    {
+                    for (int X = 0; X < Width; X++) {
                         int X1 = MATH_MAX(X - Radius, 0);
                         int X2 = MATH_MIN(X + Radius + 1, Width);
                         int Index1 = X1 << INDEX_TWO;
