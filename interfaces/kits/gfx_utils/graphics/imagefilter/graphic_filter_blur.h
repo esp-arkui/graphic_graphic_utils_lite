@@ -85,6 +85,9 @@ namespace OHOS {
             bool isGetRGBAIntegral = false;
             // Stride = img.Stride();
             if(Integral == nullptr || ((imageWidth * imageHeight) != (Width * Height))) {
+                if(Integral != nullptr) {
+                    free(Integral);
+                }
                 Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
                 isGetRGBAIntegral=true;
             }
