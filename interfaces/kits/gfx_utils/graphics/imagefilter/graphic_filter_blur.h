@@ -27,14 +27,12 @@ namespace OHOS {
     class FastBoxBlur {
 #if GRAPHIC_GEOMETYR_ENABLE_BLUR_EFFECT_VERTEX_SOURCE
     private:
-        void static GetRGBAIntegralImage(uint8_t *Src, int *Integral, uint16_t Width, uint16_t Height, uint16_t Stride)
+        void GetRGBAIntegralImage(uint8_t *Src, uint16_t Width, uint16_t Height, uint16_t Stride)
         {
-            int Channel = Stride / Width;
-            if(Channel < FOUR_TIMES) {
-                return;
+            int Channel = FOUR_TIMES;
+            if(Integral != nullptr && ((imageWidth*imageHeight) != (Width*Height))) {
+               memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
             }
-            memset(Integral, 0, (Width + 1) * Channel * sizeof(int));
-
             for (int Y = 0; Y < Height; Y++)
             {
                 unsigned char *LinePS = Src + Y * Stride;
@@ -64,13 +62,35 @@ namespace OHOS {
             }
         }
     public:
-        void static BoxBlur(uint8_t *Src, uint8_t *Dest, uint16_t Width, uint16_t Height, uint16_t Stride, uint16_t Radius)
+        FastBoxBlur()
         {
-            int32_t Channel = Stride / Width;
-            int32_t *Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
+            Integral = nullptr;
+            imageWidth = imageHeight = 0;
+        }
+        ~FastBoxBlur()
+        {
+            if(Integral != nullptr) {
+                free(Integral);
+            }
+        }
+
+        template <class Img>
+        void BoxBlur(Img& img, uint16_t Radius,int32_t Stride)
+        {
+            if (Radius < 1) {
+                return;
+            }
+            int32_t Width = img.Width();
+            int32_t Height = img.Height();
+            // Stride = img.Stride();
+            int32_t Channel = FOUR_TIMES;
+            if(Integral == nullptr || ((imageWidth*imageHeight) != (Width*Height))) {
+                Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
+            }
             if (Channel == FOUR_TIMES)
             {
-                GetRGBAIntegralImage(Src, Integral, Width, Height, Stride);
+                GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0),Width,Height,Stride);
+                //imageBufferVector.Allocate(Width, OHOS::HALF_COLOR_NUM);
                 #pragma omp parallel for
                 for (int32_t Y = 0; Y < Height; Y++)
                 {
@@ -78,7 +98,8 @@ namespace OHOS {
                     int32_t Y2 = MATH_MIN(Y + Radius + 1, Height);
                     int32_t *LineP1 = Integral + Y1 * ((Width + 1) << INDEX_TWO);
                     int32_t *LineP2 = Integral + Y2 * ((Width + 1) << INDEX_TWO);
-                    unsigned char *LinePD = Dest + Y * Stride;
+                    uint8_t *LinePD = (uint8_t *)img.PixValuePtr(0,0) + Y * Stride;
+
                     for (int X = 0; X < Width; X++)
                     {
                         int X1 = MATH_MAX(X - Radius, 0);
@@ -94,14 +115,18 @@ namespace OHOS {
                         LinePD[INDEX_ONE] = (SumG + (PixelCount >> INDEX_ONE)) / PixelCount;
                         LinePD[INDEX_TWO] = (SumR + (PixelCount >> INDEX_ONE)) / PixelCount;
                         //LinePD[3] = (SumA + (PixelCount >> 1)) / PixelCount;
-                        uint8_t* alpha = Src + Y * Stride + (X << INDEX_TWO);
+                        uint8_t* alpha = (uint8_t *)img.PixValuePtr(0,0) + Y * Stride + (X << INDEX_TWO);
                         LinePD[INDEX_THREE] = alpha[INDEX_THREE];
                         LinePD += INDEX_FOUR;
                     }
                 }
             }
-            free(Integral);
         }
+    private:
+        int32_t *Integral;
+        int32_t imageWidth;
+        int32_t imageHeight;
+        //GeometryPlainDataVector<uint8_t> imageBufferVector;
 #endif
     };
 } // namespace OHOS
