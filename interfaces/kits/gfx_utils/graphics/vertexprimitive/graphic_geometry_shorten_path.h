@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @addtogroup GraphicGeometry
+ * @{
+ *
+ * @brief Defines function ShortenPath.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
+#define GRAPHIC_GEOMETRY_SHORTEN_PATH_INCLUDED
+
+#include "gfx_utils/graphics/common/graphic_common_basics.h"
+#include "gfx_utils/graphics/vertexprimitive/graphic_geometry_vertex_sequence.h"
+
+namespace OHOS {
+    /**
+     * @brief Long line is shortened to broken line (long line becomes short line, used in dash).
+     *
+     * @param vtxSeq data source,distence distance,closed is the path closed.
+     * @since 1.0
+     * @version 1.0
+     */
+    template <class VertexSequence>
+    void ShortenPath(VertexSequence& vtxSeq, float distence, unsigned closed = 0)
+    {
+        using VertexType = typename VertexSequence::ValueType;
+
+        if (vtxSeq.Size() > 1 && distence > 0.0) {
+            float vtxSeqDistance;
+            int nSize = int(vtxSeq.Size() - TWO_STEP);
+            while (nSize) {
+                vtxSeqDistance = vtxSeq[nSize].vertexDistance;
+                if (distence < vtxSeqDistance) {
+                    break;
+                }
+                vtxSeq.RemoveLast();
+                distence = distence - vtxSeqDistance;
+                --nSize;
+            }
+            if (vtxSeq.Size() > 1) {
+                nSize = vtxSeq.Size() - 1;
+                VertexType& prev = vtxSeq[nSize - 1];
+                VertexType& last = vtxSeq[nSize];
+                vtxSeqDistance = (prev.vertexDistance - distence) / prev.vertexDistance;
+                float x = prev.vertexXCoord + (last.vertexXCoord - prev.vertexXCoord) * vtxSeqDistance;
+                float y = prev.vertexYCoord + (last.vertexYCoord - prev.vertexYCoord) * vtxSeqDistance;
+                last.vertexXCoord = x;
+                last.vertexYCoord = y;
+                if (!prev(last)) {       // Calculate whether the two vertices are close
+                    vtxSeq.RemoveLast(); // Delete points not close
+                }
+                vtxSeq.Close(closed != 0);
+            } else {
+                vtxSeq.RemoveAll();
+            }
+        }
+    }
+} // namespace OHOS
+
+#endif
