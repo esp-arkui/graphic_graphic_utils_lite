@@ -84,15 +84,14 @@ namespace OHOS {
             int32_t Height = img.Height();
             bool isGetRGBAIntegral = false;
             // Stride = img.Stride();
-            if(Integral == nullptr || ((imageWidth*imageHeight) != (Width*Height))) {
+            if(Integral == nullptr || ((imageWidth * imageHeight) != (Width * Height))) {
                 Integral = (int32_t *)malloc((Width + 1) * (Height + 1) * Channel * sizeof(int32_t));
                 isGetRGBAIntegral=true;
             }
             if (Channel == FOUR_TIMES) {
                 if(isGetRGBAIntegral) {
-                    GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0),Width,Height,Stride);
+                    GetRGBAIntegralImage((uint8_t *)img.PixValuePtr(0,0), Width, Height, Stride);
                 }
-                //imageBufferVector.Allocate(Width, OHOS::HALF_COLOR_NUM);
                 #pragma omp parallel for
                 for (int32_t Y = 0; Y < Height; Y++)
                 {
