@@ -1,0 +1,164 @@
+/*
+ * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * @file span_interpolator.h
+ * @brief Defines Scan line interpolator
+ * @since 1.0
+ * @version 1.0
+ */
+
+#ifndef GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
+#define GRAPHIC_SPAN_INTERPOLATOR_LINEAR_INCLUDED
+
+#include "gfx_utils/color.h"
+#include "gfx_utils/graphics/common/graphic_common_basics.h"
+#include "gfx_utils/graphics/transform/graphic_transform_affine.h"
+#include "gfx_utils/graphics/vertexprimitive/graphic_geometry_dda_line.h"
+#include "gfx_utils/graphic_math.h"
+namespace OHOS {
+    /**
+     * Gradient color interpolator
+     */
+    template <class ColorT>
+    struct ColorInterpolator {
+#if GRAPHIC_GEOMETYR_ENABLE_GRADIENT_FILLSTROKECOLOR
+    public:
+        typedef ColorT color_type;
+
+        ColorInterpolator(const color_type& color1,
+                          const color_type& color2,
+                          unsigned distance)
+            : colorStart(color1),
+            colorEnd(color2), len(distance), place(0)
+        {
+        }
+
+        /**
+         * @brief overwrite ++
+         */
+        void operator++()
+        {
+            ++place;
+        }
+
+        /**
+         * @brief Returns the color at count during the transition from colorstart to colorend
+         * @return
+         */
+        color_type GetColor() const
+        {
+            return colorStart.Gradient(colorEnd, float(place) / len);
+        }
+
+    private:
+        color_type colorStart;
+        color_type colorEnd;
+        unsigned len;
+        unsigned place;
+#endif
+    };
+
+    /**
+     * Linear scan line inserter
+     */
+    template <class Transformer = TransAffine, unsigned SUBPIXELSHIFT = 8>
+    class SpanInterpolatorLinear {
+    public:
+        typedef Transformer trans_type;
+
+        enum SubpixelScale {
+            SUBPIXEL_SHIFT = SUBPIXELSHIFT,
+            SUBPIXEL_SCALE = 1 << SUBPIXEL_SHIFT
+        };
+        SpanInterpolatorLinear()
+        {
+        }
+        SpanInterpolatorLinear(trans_type& trans) : transType(&trans)
+        {
+        }
+        SpanInterpolatorLinear(trans_type& trans,
+                               float x, float y, unsigned len) : transType(&trans)
+        {
+            Begin(x, y, len);
+        }
+        const trans_type& GetTransformer() const
+        {
+            return *transType;
+        }
+        void SetTransformer(trans_type& trans)
+        {
+            transType = &trans;
+        }
+
+        /*
+         * Update and set dda2lineinterpolatorx and dda2lineinterpolatory properties again
+         */
+        void Begin(float x, float y, unsigned len)
+        {
+            float tx;
+            float ty;
+
+            tx = x;
+            ty = y;
+
+            transType->Transform(&tx, &ty);
+            int x1 = MATH_ROUND32(tx * SUBPIXEL_SCALE);
+            int y1 = MATH_ROUND32(ty * SUBPIXEL_SCALE);
+
+            tx = x + len;
+            ty = y;
+            transType->Transform(&tx, &ty);
+            int x2 = MATH_ROUND32(tx * SUBPIXEL_SCALE);
+            int y2 = MATH_ROUND32(ty * SUBPIXEL_SCALE);
+
+            dda2LineInterpolatorX = DdaTwoLineInterpolator(x1, x2, len);
+            dda2LineInterpolatorY = DdaTwoLineInterpolator(y1, y2, len);
+        }
+
+        /**
+         * Update and set dda2lineinterpolatorx and dda2lineinterpolatory properties again
+         */
+        void Resynchronize(float xe, float ye, unsigned len)
+        {
+            transType->transform(&xe, &ye);
+            dda2LineInterpolatorX = DdaTwoLineInterpolator(
+                dda2LineInterpolatorX.GetCoordinate(), MATH_ROUND32(xe * SUBPIXEL_SCALE), len);
+            dda2LineInterpolatorY = DdaTwoLineInterpolator(
+                dda2LineInterpolatorY.GetCoordinate(), MATH_ROUND32(ye * SUBPIXEL_SCALE), len);
+        }
+
+        /**
+         * @brief Overloading + + operators
+         */
+        void operator++()
+        {
+            ++dda2LineInterpolatorX;
+            ++dda2LineInterpolatorY;
+        }
+
+        void Coordinates(int* x, int* y) const
+        {
+            *x = dda2LineInterpolatorX.GetCoordinate();
+            *y = dda2LineInterpolatorY.GetCoordinate();
+        }
+
+    private:
+        trans_type* transType;
+        DdaTwoLineInterpolator dda2LineInterpolatorX;
+        DdaTwoLineInterpolator dda2LineInterpolatorY;
+    };
+} // namespace OHOS
+#endif
