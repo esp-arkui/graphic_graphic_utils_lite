@@ -54,6 +54,12 @@ shared_library("graphic_utils") {
     "frameworks/style.cpp",
     "frameworks/transform.cpp",
     "frameworks/version.cpp",
+    "frameworks/diagram/vertexprimitive/graphic_geometry_arc.cpp",
+    "frameworks/diagram/vertexprimitive/graphic_geometry_bezier_arc.cpp",
+    "frameworks/diagram/vertexprimitive/graphic_geometry_curves.cpp",
+    "frameworks/diagram/transform/graphic_transform_trans_affine.cpp",
+    "frameworks/diagram/vertexgenerate/graphic_vertex_generate_dash.cpp",
+    "frameworks/diagram/vertexgenerate/graphic_vertex_generate_stroke.cpp",
   ]
   include_dirs = [ "frameworks" ]
   public_configs = [ ":graphic_utils_public_config" ]
@@ -68,8 +74,58 @@ shared_library("graphic_utils") {
 config("graphic_utils_public_config") {
   include_dirs = [
     "interfaces/innerkits",
-    "interfaces/kits",
+    "interfaces/kits","//foundation/graphic/ui/frameworks"
   ]
+  if (ohos_kernel_type == "liteos_a") {
+    defines = [ 
+      "GRAPHIC_ENABLE_LINECAP_FLAG=1",
+      "GRAPHIC_ENABLE_LINEJOIN_FLAG=1",
+      "GRAPHIC_ENABLE_ELLIPSE_FLAG=1",
+      "GRAPHIC_ENABLE_BEZIER_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ROUNDEDRECT_FLAG=1",
+      "GRAPHIC_ENABLE_DASH_GENERATE_FLAG=1",
+      "GRAPHIC_ENABLE_BLUR_EFFECT_FLAG=1",
+      "GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG=1",
+      "GRAPHIC_ENABLE_GRADIENT_FILL_FLAG=1",
+      "GRAPHIC_ENABLE_PATTERN_FILL_FLAG=1",
+      "GRAPHIC_ENABLE_DRAW_IMAGE_FLAG=1",
+      "GRAPHIC_ENABLE_DRAW_TEXT_FLAG=1",
+    ]
+  }
+  else if (ohos_kernel_type == "liteos_m") {
+    defines = [ 
+      "GRAPHIC_ENABLE_LINECAP_FLAG=1",
+      "GRAPHIC_ENABLE_LINEJOIN_FLAG=1",
+      "GRAPHIC_ENABLE_ELLIPSE_FLAG=1",
+      "GRAPHIC_ENABLE_BEZIER_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ROUNDEDRECT_FLAG=1",
+      "GRAPHIC_ENABLE_DASH_GENERATE_FLAG=1",
+      "GRAPHIC_ENABLE_BLUR_EFFECT_FLAG=0",
+      "GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG=0",
+      "GRAPHIC_ENABLE_GRADIENT_FILL_FLAG=0",
+      "GRAPHIC_ENABLE_PATTERN_FILL_FLAG=0",
+      "GRAPHIC_ENABLE_DRAW_IMAGE_FLAG=0",
+      "GRAPHIC_ENABLE_DRAW_TEXT_FLAG=1",
+    ]
+  } else {
+    defines = [
+      "GRAPHIC_ENABLE_LINECAP_FLAG=1",
+      "GRAPHIC_ENABLE_LINEJOIN_FLAG=1",
+      "GRAPHIC_ENABLE_ELLIPSE_FLAG=1",
+      "GRAPHIC_ENABLE_BEZIER_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ARC_FLAG=1",
+      "GRAPHIC_ENABLE_ROUNDEDRECT_FLAG=1",
+      "GRAPHIC_ENABLE_DASH_GENERATE_FLAG=1",
+      "GRAPHIC_ENABLE_BLUR_EFFECT_FLAG=1",
+      "GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG=1",
+      "GRAPHIC_ENABLE_GRADIENT_FILL_FLAG=1",
+      "GRAPHIC_ENABLE_PATTERN_FILL_FLAG=1",
+      "GRAPHIC_ENABLE_DRAW_IMAGE_FLAG=1",
+      "GRAPHIC_ENABLE_DRAW_TEXT_FLAG=1",
+    ]
+  }
 }
 
 shared_library("graphic_hals") {

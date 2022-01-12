@@ -13,30 +13,17 @@
  * limitations under the License.
  */
 
-#ifndef GRAPHIC_LITE_FILE_H
-#define GRAPHIC_LITE_FILE_H
+/**
+ * @addtogroup GraphicGeometry
+ * @brief Defines arr.
+ * @since 1.0
+ * @version 1.0
+ */
 
-#ifdef _WIN32
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <io.h>
-#else
-#include "stdint.h"
-#include "fcntl.h"
-#include "unistd.h"
-#include "sys/types.h"
-#include "sys/mount.h"
-#include "sys/stat.h"
-#ifdef __APPLE__
-#include "sys/param.h"
-#else
-#include "sys/statfs.h"
+#ifndef GRAPHIC_GEOMETRY_ARRAY_INCLUDED
+#define GRAPHIC_GEOMETRY_ARRAY_INCLUDED
+#include "graphic_geometry_plaindata_array.h"
+#include "graphic_geometry_plaindata_blockvector.h"
+#include "graphic_geometry_plaindata_vector.h"
+#include "graphic_geometry_range_adapter.h"
 #endif
-#include "dirent.h"
-#include "stdio.h"
-#include "errno.h"
-#endif
-
-#define DEFAULT_FILE_PERMISSION 0666 // default file permission when creat file
-#endif // GRAPHIC_LITE_FILE_H
