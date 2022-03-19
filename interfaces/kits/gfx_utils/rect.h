@@ -502,6 +502,21 @@ public:
         }
     }
 
+    void Normalize()
+    {
+        T t;
+        if (left_ > right_) {
+            t = left_;
+            left_ = right_;
+            right_ = t;
+        }
+        if (top_ > bottom_) {
+            t = top_;
+            top_ = bottom_;
+            bottom_ = t;
+        }
+    }
+
 protected:
     T left_;
     T top_;

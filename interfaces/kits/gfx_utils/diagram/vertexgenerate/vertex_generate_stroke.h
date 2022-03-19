@@ -45,14 +45,36 @@ class VertexGenerateStroke {
     };
 
 public:
-    using VertexStorage = GeometryVertexSequence<VertexDist, BLOCK_SHIFT_SIZE>;
-    using CoordStorage = GeometryPlainDataBlockVector<PointF, BLOCK_SHIFT_SIZE>;
-
     VertexGenerateStroke();
 
 #if GRAPHIC_ENABLE_LINECAP_FLAG
+    void LineCap(LineCap lc)
+    {
+        stroker_.SetLineCap(lc);
+    }
+    enum LineCap LineCap() const
+    {
+        return stroker_.GetLineCap();
+    }
 #endif
 #if GRAPHIC_ENABLE_LINEJOIN_FLAG
+    void LineJoin(LineJoin lj)
+    {
+        stroker_.SetLineJoin(lj);
+    }
+
+    void MiterLimit(float ml)
+    {
+        stroker_.SetMiterLimit(ml);
+    }
+    enum LineJoin LineJoin() const
+    {
+        return stroker_.GetLineJoin();
+    }
+    float MiterLimit() const
+    {
+        return stroker_.GetMiterLimit();
+    }
 #endif
     void SetWidth(float width)
     {
@@ -94,9 +116,9 @@ public:
 private:
     VertexGenerateStroke(const VertexGenerateStroke&);
     const VertexGenerateStroke& operator=(const VertexGenerateStroke&);
-    GeometryMathStroke<CoordStorage> stroker_;
-    VertexStorage srcVertices_;
-    CoordStorage outVertices_;
+    GeometryMathStroke stroker_;
+    GeometryVertexSequence srcVertices_;
+    Graphic::Vector<PointF> outVertices_;
     float strokeShorten_;
     uint32_t closed_;
     Status status_;
@@ -110,7 +132,7 @@ private:
     void VertexLineJoinStart();
     void VertexLineJoinEnd();
     void VertexCloseFirst(uint32_t& cmd);
-    bool VertexOutVertices(float* x, float* y);
+    bool IsVertexOutVertices(float* x, float* y);
 };
 } // namespace OHOS
 

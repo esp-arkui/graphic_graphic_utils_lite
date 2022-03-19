@@ -133,11 +133,59 @@ enum ClippingFlags {
     CLIPPING_FLAGS_Y_CLIPPED = CLIPPING_FLAGS_Y1_CLIPPED | CLIPPING_FLAGS_Y2_CLIPPED
 };
 
-template <class Type>
-struct RectBase;
-
-using RectI = RectBase<int32_t>;
-using RectD = RectBase<float>;
+enum GlobalCompositeOperation {
+    /**
+     * Default. Displays the source image on the target image.
+     */
+    SOURCE_OVER,
+    /**
+     * Displays the source image at the top of the target image.
+     * The part of the source image outside the target image is invisible.
+     */
+    SOURCE_ATOP,
+    /**
+     * Displays the source image in the target image.
+     * Only the source image part within the target image will be displayed, and the target image is transparent.
+     */
+    SOURCE_IN,
+    /**
+     * Displays the source image outside the target image.
+     * Only the source image part other than the target image will be displayed,and the target image is transparent
+     */
+    SOURCE_OUT,
+    /**
+     * Displays the target image on the source image.
+     */
+    DESTINATION_OVER,
+    /**
+     * Displays the target image at the top of the source image.
+     * The part of the target image outside the source image is invisible.
+     */
+    DESTINATION_ATOP,
+    /**
+     * Displays the target image in the source image.
+     * Only the target image part within the source image will be displayed, and the source image is transparent.
+     */
+    DESTINATION_IN,
+    /**
+     * Displays the target image outside the source image.
+     * Only the part of the target image other than the source image will be displayed,
+     * and the source image is transparent.
+     */
+    DESTINATION_OUT,
+    /**
+     * Display source image + target image.
+     */
+    LIGHTER,
+    /**
+     * Displays the source image. Ignore the target image.
+     */
+    COPY,
+    /**
+     * Use the XOR operation to combine the source image with the target image.
+     */
+    XOR
+};
 
 const float COEFFICIENT = 0.7f;
 const float ALPHA_HALF = 0.5f;
@@ -341,9 +389,7 @@ inline uint32_t GetCloseFlag(uint32_t val)
 {
     return val & PATH_FLAGS_CLOSE;
 }
-#ifdef GRAPHIC_GEOMETRY_CUSTOM_ALLOCATOR
-#include "graphic_geometry_allocator.h"
-#else
+
 template <class T>
 struct GeometryArrayAllocator {
     /**
@@ -369,73 +415,12 @@ struct GeometryArrayAllocator {
     }
 };
 
-/**
- * @brief Defines a rectangular class
- * @since 1.0
- * @version 1.0
- */
-template <class T>
-struct RectBase {
-    using ValueType = T;
-    using SelfType = RectBase<T>;
-    T x1;
-    T y1;
-    T x2;
-    T y2;
-
-    RectBase(T x1_, T y1_, T x2_, T y2_) : x1(x1_), y1(y1_), x2(x2_), y2(y2_) {}
-    RectBase() {}
-    /**
-     * @brief Normalize rectangles
-     * @since 1.0
-     * @version 1.0
-     */
-    const SelfType& Normalize()
-    {
-        T t;
-        if (x1 > x2) {
-            t = x1;
-            x1 = x2;
-            x2 = t;
-        }
-        if (y1 > y2) {
-            t = y1;
-            y1 = y2;
-            y2 = t;
-        }
-        return *this;
-    }
-
-    /**
-     * @brief The coordinates are clipped to the specified range
-     * @since 1.0
-     * @version 1.0
-     */
-    bool Clip(const SelfType& rect)
-    {
-        if (x2 > rect.x2) {
-            x2 = rect.x2;
-        }
-        if (y2 > rect.y2) {
-            y2 = rect.y2;
-        }
-        if (x1 < rect.x1) {
-            x1 = rect.x1;
-        }
-        if (y1 < rect.y1) {
-            y1 = rect.y1;
-        }
-        return y1 <= y2 && x1 <= x2;
-    }
-};
-
-template <class T>
-struct ConstRowInfo {
+struct RowData {
     int32_t x1;
     int32_t x2;
-    const T* ptr;
-    ConstRowInfo() {}
-    ConstRowInfo(int32_t x1_, int32_t x2_, const T* ptr_)
+    const uint8_t* ptr;
+    RowData() {}
+    RowData(int32_t x1_, int32_t x2_, const uint8_t* ptr_)
         : x1(x1_), x2(x2_), ptr(ptr_) {}
 };
 /* Indicates a point in float */
@@ -446,5 +431,4 @@ struct PointF {
     PointF(float x_, float y_) : x(x_), y(y_) {}
 };
 } // namespace OHOS
-#endif
 #endif

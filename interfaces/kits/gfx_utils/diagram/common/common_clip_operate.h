@@ -36,6 +36,8 @@
 
 #include "gfx_utils/diagram/common/common_basics.h"
 
+#include <gfx_utils/rect.h>
+
 namespace OHOS {
 const int32_t CLIP_LINE_SEGMENT_FULL_VISIB = 0; // Fully visible
 const int32_t CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // Full clipping
@@ -58,9 +60,9 @@ const int32_t CLIP_LINE_SEGMENT_FULL_CLIP = 4;  // Full clipping
  * @version 1.0
  */
 template <class T>
-inline uint32_t ClippingFlagsY(T y, const RectBase<T>& clipBox)
+inline uint32_t ClippingFlagsY(T y, const CommonRect<T>& clipBox)
 {
-    return ((y < clipBox.y1) << 0x03) | ((y > clipBox.y2) << 0x01);
+    return ((y < clipBox.GetTop()) << 0x03) | ((y > clipBox.GetBottom()) << 0x01);
 }
 
 /**
@@ -71,9 +73,9 @@ inline uint32_t ClippingFlagsY(T y, const RectBase<T>& clipBox)
  * @version 1.0
  */
 template <class T>
-inline uint32_t ClippingFlagsX(T x, const RectBase<T>& clipBox)
+inline uint32_t ClippingFlagsX(T x, const CommonRect<T>& clipBox)
 {
-    return ((x < clipBox.x1) << 0x02) | (x > clipBox.x2);
+    return ((x < clipBox.GetLeft()) << 0x02) | (x > clipBox.GetRight());
 }
 
 /**
@@ -84,9 +86,10 @@ inline uint32_t ClippingFlagsX(T x, const RectBase<T>& clipBox)
  * @version 1.0
  */
 template <class T>
-inline uint32_t ClippingFlags(T x, T y, const RectBase<T>& clipBox)
+inline uint32_t ClippingFlags(T x, T y, const CommonRect<T>& clipBox)
 {
-    return ((x < clipBox.x1) << 0x02) | ((y < clipBox.y1) << 0x03) | (x > clipBox.x2) | ((y > clipBox.y2) << 0x01);
+    return ((x < clipBox.GetLeft()) << 0x02) | ((y < clipBox.GetTop()) << 0x03) |
+     (x > clipBox.GetRight()) | ((y > clipBox.GetBottom()) << 0x01);
 }
 } // namespace OHOS
 #endif

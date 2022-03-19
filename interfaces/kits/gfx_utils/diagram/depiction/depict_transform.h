@@ -29,23 +29,23 @@
 #include "gfx_utils/trans_affine.h"
 namespace OHOS {
 /**
- * @template<VertexSource,Transformer> class DepictTransform
+ * @template<VertexSource,TransAffine> class DepictTransform
  * @brief The depicttransform class forms a 2 * 3 matrix through six variables,
  * A new coordinate is obtained after calculation with the coordinate.
  * @since 1.0
  * @version 1.0
  */
-template <class VertexSource, class Transformer = TransAffine>
+template <class VertexSource>
 class DepictTransform {
 public:
     /**
      * @brief DepictTransform Class constructor
-     * The construction parameters are VertexSource and Transformer attributes,
+     * The construction parameters are VertexSource and TransAffine attributes,
      * which determine the vertex source of the curve.
      * @since 1.0
      * @version 1.0
      */
-    DepictTransform(VertexSource& source, Transformer& tr)
+    DepictTransform(VertexSource& source, TransAffine& tr)
         : source_(&source), trans_(&tr) {}
 
     void Attach(VertexSource& source)
@@ -67,7 +67,7 @@ public:
         return cmd;
     }
 
-    void GetTransformer(Transformer& tr)
+    void GetTransformer(TransAffine& tr)
     {
         trans_ = &tr;
     }
@@ -76,7 +76,7 @@ private:
     DepictTransform(const DepictTransform<VertexSource>&);
     const DepictTransform<VertexSource>& operator=(const DepictTransform<VertexSource>&);
     VertexSource* source_;
-    Transformer* trans_;
+    TransAffine* trans_;
 };
 } // namespace OHOS
 #endif

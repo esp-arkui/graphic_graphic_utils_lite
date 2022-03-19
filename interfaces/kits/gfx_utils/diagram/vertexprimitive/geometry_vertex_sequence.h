@@ -28,88 +28,8 @@
 
 #include "gfx_utils/diagram/common/common_basics.h"
 #include "gfx_utils/diagram/common/common_math.h"
-#include "geometry_plaindata_blockvector.h"
+#include "gfx_utils/vector.h"
 namespace OHOS {
-/**
- * @file geometry_vertex_sequence.h
- *
- * @brief Defines Define the GeometryVertexSequence class.
- *
- * @since 1.0
- * @version 1.0
- */
-template <class T, uint32_t S = BLOCK_SHIFT_SIZE>
-class GeometryVertexSequence : public GeometryPlainDataBlockVector<T, S> {
-public:
-    using BaseType = GeometryPlainDataBlockVector<T, S>;
-    /**
-     * @brief Closed vertex source.
-     *
-     * @param removeFlag Is it closed.
-     * @since 1.0
-     * @version 1.0
-     */
-    void Close(bool removeFlag);
-
-    /**
-     * @brief Add a point.
-     *
-     * @param val vertex.
-     * @since 1.0
-     * @version 1.0
-     */
-    void Add(const T& val);
-
-    /**
-     * @brief Modify the last vertex.
-     *
-     * @param t vertex.
-     * @since 1.0
-     * @version 1.0
-     */
-    void ModifyLast(const T& val);
-};
-
-template <class T, uint32_t S>
-void GeometryVertexSequence<T, S>::Close(bool closed)
-{
-    while (BaseType::GetSize() > 1) {
-        if ((*this)[BaseType::GetSize() - TWO_STEP]((*this)[BaseType::GetSize() - 1])) {
-            break;
-        }
-        T t = (*this)[BaseType::GetSize() - 1];
-        BaseType::RemoveLast();
-        ModifyLast(t);
-    }
-
-    if (closed) {
-        while (BaseType::GetSize() > 1) {
-            if ((*this)[BaseType::GetSize() - 1]((*this)[0])) { // Calculate the distance between two vertices
-                break;
-            }
-            BaseType::RemoveLast();
-        }
-    }
-}
-
-template <class T, uint32_t S>
-void GeometryVertexSequence<T, S>::Add(const T& val)
-{
-    if (BaseType::GetSize() > 1) {
-        if (!(*this)[BaseType::GetSize() - TWO_STEP]((*this)[BaseType::GetSize() - 1])) {
-            BaseType::RemoveLast();
-        }
-    }
-    BaseType::Add(val);
-}
-
-template <class T, uint32_t S>
-void GeometryVertexSequence<T, S>::ModifyLast(const T& val)
-{
-    BaseType::RemoveLast();
-    Add(val);
-}
-
 struct VertexDist {
     float vertexXCoord;
     float vertexYCoord;
@@ -141,6 +61,123 @@ struct VertexDist {
             vertexDistance = 1.0f / VERTEX_DIST_EPSILON;
         }
         return ret;
+    }
+};
+
+struct VertexDistCmd : public VertexDist {
+    uint32_t cmd;
+
+    VertexDistCmd() {}
+    /**
+     * @brief Construct vertexdist.
+     *
+     * @param x_,y_ Vertex coordinates, cmd_ Connection command.
+     * @since 1.0
+     * @version 1.0
+     */
+    VertexDistCmd(float x_, float y_, uint32_t cmd_) : VertexDist(x_, y_), cmd(cmd_) {}
+};
+
+/**
+ * @file geometry_vertex_sequence.h
+ *
+ * @brief Defines Define the GeometryVertexSequence class.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+class GeometryVertexSequence : public Graphic::Vector<VertexDist> {
+public:
+    using BaseType = Graphic::Vector<VertexDist>;
+
+    explicit GeometryVertexSequence(uint32_t size = BLOCK_SHIFT_SIZE) : BaseType(size) {}
+
+    /**
+     * @brief Closed vertex source.
+     *
+     * @param removeFlag Is it closed.
+     * @since 1.0
+     * @version 1.0
+     */
+    void Close(bool closed)
+    {
+        while (BaseType::Size() > 1) {
+            if ((*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
+                break;
+            }
+            VertexDist t = (*this)[BaseType::Size() - 1];
+            BaseType::PopBack();
+            ModifyLast(t);
+        }
+
+        if (closed) {
+            while (BaseType::Size() > 1) {
+                if ((*this)[BaseType::Size() - 1]((*this)[0])) { // Calculate the distance between two vertices
+                    break;
+                }
+                BaseType::PopBack();
+            }
+        }
+    }
+
+    /**
+     * @brief Add a point.
+     *
+     * @param val vertex.
+     * @since 1.0
+     * @version 1.0
+     */
+    void Add(const VertexDist& val)
+    {
+        if (BaseType::Size() > 1) {
+            if (!(*this)[BaseType::Size() - TWO_STEP]((*this)[BaseType::Size() - 1])) {
+                BaseType::PopBack();
+            }
+        }
+        BaseType::PushBack(val);
+    }
+
+    /**
+     * @brief Modify the last vertex.
+     *
+     * @param t vertex.
+     * @since 1.0
+     * @version 1.0
+     */
+    void ModifyLast(const VertexDist& val)
+    {
+        BaseType::Clear();
+        Add(val);
+    }
+
+    /**
+     * @brief Gets the next data block on the current index.
+     * @since 1.0
+     * @version 1.0
+     */
+    const VertexDist& Next(uint32_t index)
+    {
+        return (*this)[(index + 1) % BaseType::size_];
+    }
+
+    /**
+     * @brief Gets the previous data block on the current index.
+     * @since 1.0
+     * @version 1.0
+     */
+    const VertexDist& Prev(uint32_t index)
+    {
+        return (*this)[(index + BaseType::size_ - 1) % BaseType::size_];
+    }
+
+    /**
+     * @brief Gets the data block on the current index.
+     * @since 1.0
+     * @version 1.0
+     */
+    const VertexDist& Curr(uint32_t index)
+    {
+        return (*this)[index];
     }
 };
 } // namespace OHOS

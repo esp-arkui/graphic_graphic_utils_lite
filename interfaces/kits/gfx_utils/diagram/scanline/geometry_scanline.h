@@ -31,6 +31,7 @@
 
 #include "gfx_utils/diagram/vertexprimitive/geometry_plaindata_array.h"
 #include "gfx_utils/graphic_log.h"
+#include "gfx_utils/vector.h"
 namespace OHOS {
 /**
  * @class ScanlineUnPackedContainer
