@@ -26,6 +26,7 @@
 #include "gfx_utils/diagram/common/common_math.h"
 #include "gfx_utils/diagram/vertexprimitive/geometry_vertex_sequence.h"
 #include "gfx_utils/graphic_math.h"
+#include "gfx_utils/vector.h"
 namespace OHOS {
 /**
  * @brief The style of the line end cap.
@@ -52,10 +53,8 @@ enum LineJoin {
     BEVEL_JOIN = 3,
     MITER_JOIN_ROUND = 4
 };
-template <class VertexConsumer>
 class GeometryMathStroke {
 public:
-    using CoordType = typename VertexConsumer::ValueType;
     GeometryMathStroke()
         : strokeWidth_(ALPHA_HALF),
           strokeWidthUsingAbs_(ALPHA_HALF),
@@ -87,9 +86,9 @@ public:
      * @brief Calculate end style.
      * Pay attention to 90 degree rotation at both ends of the corner.
      */
-    void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
+    void CalcCap(Graphic::Vector<PointF>& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
     {
-        vertexConsumer.RemoveAll();
+        vertexConsumer.Clear();
         if (len == 0.0f) {
             len += VERTEX_DIST_EPSILON;
         }
@@ -167,7 +166,7 @@ public:
      * @brief Calculate intersections and corners.
      * Pay attention to 90 degree rotation at both ends of the corner.
      */
-    void CalcJoin(VertexConsumer& vertexConsumer,
+    void CalcJoin(Graphic::Vector<PointF>& vertexConsumer,
                   const VertexDist& vertexDistBegin,
                   const VertexDist& vertexDistMiddle,
                   const VertexDist& vertexDistLast,
@@ -200,8 +199,7 @@ public:
         if (!isEnable) {
             return;
         }
-        vertexConsumer.RemoveAll();
-
+        vertexConsumer.Clear();
         float crossProduct =
             CrossProduct(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, vertexDistMiddle.vertexXCoord,
                          vertexDistMiddle.vertexYCoord, vertexDistLast.vertexXCoord, vertexDistLast.vertexYCoord);
@@ -267,7 +265,7 @@ public:
     /**
      * @brief Calculate miter length
      */
-    void CalcMiter(VertexConsumer& vertexConsumer,
+    void CalcMiter(Graphic::Vector<PointF>& vertexConsumer,
                    const VertexDist& vd0,
                    const VertexDist& vd1,
                    const VertexDist& vd2,
@@ -335,7 +333,7 @@ public:
             }
         }
     }
-    void CalcArc(VertexConsumer& vertexConsumer, float x, float y, float dx1, float dy1, float dx2, float dy2)
+    void CalcArc(Graphic::Vector<PointF>& vertexConsumer, float x, float y, float dx1, float dy1, float dx2, float dy2)
     {
         const float limitScale = 0.125f;
         float angleStart = std::atan2(dy1 * strokeWidthSignal_, dx1 * strokeWidthSignal_);
@@ -429,9 +427,9 @@ public:
     }
 
 private:
-    inline void AddVertex(VertexConsumer& vertexConsumer, float x, float y)
+    inline void AddVertex(Graphic::Vector<PointF>& vertexConsumer, float x, float y)
     {
-        vertexConsumer.Add(CoordType(x, y));
+        vertexConsumer.PushBack(PointF(x, y));
     }
 
     float strokeWidth_;

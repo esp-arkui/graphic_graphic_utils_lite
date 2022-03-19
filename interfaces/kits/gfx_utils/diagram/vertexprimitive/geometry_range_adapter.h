@@ -69,8 +69,8 @@ template <class Array, class Less>
 bool CompareLessThreshold(Array& arr, Less less, int32_t iIndex, int32_t jIndex,
                           int32_t base, int32_t limit, int32_t* top, int32_t* stack)
 {
-    typename Array::ValueType* e1;
-    typename Array::ValueType* e2;
+    auto e1 = &arr[0];
+    auto e2 = &arr[0];
     jIndex = base;
     iIndex = jIndex + 1;
     for (; iIndex < limit; iIndex++) {
@@ -143,14 +143,12 @@ uint32_t BinarySearchPos(const Array& arrData, const Value& val, Less less);
 template <class Array, class Less>
 void QuickSort(Array& arr, Less less)
 {
-    if (arr.GetSize() < 2) {
+    if (arr.Size() < 2) {
         return;
     }
-    typename Array::ValueType* firstElement;
-    typename Array::ValueType* secondElement;
     int32_t stack[80];
     int32_t* top = stack;
-    int32_t limit = arr.GetSize();
+    int32_t limit = arr.Size();
     int32_t baseLimit = 0;
     while (1) {
         int32_t len = limit - baseLimit;
@@ -162,8 +160,8 @@ void QuickSort(Array& arr, Less less)
             SwapElements(arr[baseLimit], arr[pivot]);
             iIndex = baseLimit + 1;
             jIndex = limit - 1;
-            firstElement = &(arr[jIndex]);
-            secondElement = &(arr[iIndex]);
+            auto firstElement = &(arr[jIndex]);
+            auto secondElement = &(arr[iIndex]);
             if (less(*firstElement, *secondElement)) {
                 SwapElements(*firstElement, *secondElement);
             }
@@ -228,12 +226,13 @@ uint32_t BinarySearchPos(const Array& arrData, const Value& val, Less less)
 template <class Array, class Equal>
 uint32_t RemoveDuplicates(Array& arr, Equal equal)
 {
-    if (arr.GetSize() < 2) {
-        return arr.GetSize();
+    const int number = 2;
+    if (arr.Size() < number) {
+        return arr.Size();
     }
     uint32_t jIndex = 1;
-    for (uint32_t iIndex = 1; iIndex < arr.GetSize(); iIndex++) {
-        typename Array::ValueType& element = arr[iIndex];
+    for (uint32_t iIndex = 1; iIndex < arr.Size(); iIndex++) {
+        auto& element = arr[iIndex];
         if (!equal(element, arr[iIndex - 1])) {
             arr[jIndex++] = element;
         }

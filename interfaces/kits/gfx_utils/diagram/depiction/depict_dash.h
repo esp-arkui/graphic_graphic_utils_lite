@@ -27,7 +27,9 @@
 #define GRAPHIC_LITE_DEPICT_DASH_H
 
 #include "depict_adaptor_vertex_generate.h"
+
 #include "gfx_utils/diagram/common/common_basics.h"
+#include "gfx_utils/diagram/depiction/depict_curve.h"
 #include "gfx_utils/diagram/vertexgenerate/vertex_generate_dash.h"
 
 namespace OHOS {
@@ -39,8 +41,36 @@ using GenerateDash = VertexGenerateDash;
  * @since 1.0
  * @version 1.0
  */
-template <class VertexSource, class Markers = EmptyMarkers>
-struct DepictDash : public DepictAdaptorVertexGenerate<VertexSource, GenerateDash, Markers> {
+struct DepictDash : public DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers> {
+#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+    using BaseType = DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers>;
+
+    DepictDash(DepictCurve& vs) : DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers>(vs) {}
+
+    void RemoveAllDashes()
+    {
+        BaseType::GetGenerator().RemoveAllDashes();
+    }
+
+    void AddDash(float dashLen, float gapLen)
+    {
+        BaseType::GetGenerator().AddDash(dashLen, gapLen);
+    }
+
+    void DashStart(float dStart)
+    {
+        BaseType::GetGenerator().DashStart(dStart);
+    }
+
+    void Shorten(float shortValue)
+    {
+        BaseType::GetGenerator().Shorten(shortValue);
+    }
+    float Shorten() const
+    {
+        return BaseType::GetGenerator().Shorten();
+    }
+#endif
 };
 } // namespace OHOS
 #endif

@@ -28,8 +28,10 @@
 
 #ifndef GRAPHIC_LITE_VECTOR_H
 #define GRAPHIC_LITE_VECTOR_H
+#include "gfx_utils/diagram/common/common_basics.h"
+#include "gfx_utils/graphic_log.h"
 #include "gfx_utils/heap_base.h"
-#include <cstdint>
+#include "securec.h"
 
 namespace OHOS {
 namespace Graphic {
@@ -171,6 +173,34 @@ public:
             }
             size_ = value.size_;
         }
+    }
+
+    void Allocate(uint32_t size, uint32_t extraTail = 0)
+    {
+        Capacity(size, extraTail);
+        size_ = size;
+    }
+
+    void Capacity(uint32_t cap, uint32_t extraTail = 0)
+    {
+        size_ = 0;
+        if (cap > capacity_) {
+            Deallocate(array_, capacity_);
+            capacity_ = cap + extraTail;
+            array_ = capacity_ ? GeometryArrayAllocator<T>::Allocate(capacity_) : 0;
+        }
+    }
+
+    void CleanData()
+    {
+        if (memset_s(array_, sizeof(T) * size_, 0, sizeof(T) * size_) != EOK) {
+            GRAPHIC_LOGE("CleanData fail");
+        }
+    }
+
+    void Deallocate(T* ptr, uint32_t)
+    {
+        delete[] ptr;
     }
 
 protected:

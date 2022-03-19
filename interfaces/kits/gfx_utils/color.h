@@ -37,13 +37,12 @@
 
 #include <cmath>
 #include <cstdint>
-
-#include "gfx_utils/diagram/common/common_gamma_lut.h"
+#include "gfx_utils/diagram/common/common_basics.h"
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
 #include "graphic_math.h"
 #if ENABLE_ARM_MATH
-#    include "arm_math.h"
+#include "arm_math.h"
 #endif
 namespace OHOS {
 const float PURPLE_MIN = 380.0f;
@@ -57,16 +56,8 @@ const float RED_MIN = 700.0f;
 const float RED_MAX = 780.0f;
 const float FIXED_VALUE = 0.3f;
 const float COLOR_CONVERT = 255.0f;
-template <class Colorspace>
-struct Rgba8T;
-struct Linear {
-};
 
-struct StandardRgb {
-};
 using OpacityType = uint8_t;
-using Rgba8 = Rgba8T<Linear>;
-using Srgba8 = Rgba8T<StandardRgb>;
 /**
  * @brief Enumerates opacity values.
  */
@@ -131,47 +122,6 @@ using ColorType = Color32;
 #    error "Invalid COLOR_DEPTH, Set it to 16 or 32!"
 #endif
 
-struct OrderRgb {
-    enum Rgb {
-        RED = 0,
-        GREEN = 1,
-        BLUE = 2
-    };
-};
-
-struct OrderBgr {
-    enum Bgr {
-        BLUE = 0,
-        GREEN = 1,
-        RED = 2
-    };
-};
-
-struct OrderRgba {
-    enum Rgba {
-        RED = 0,
-        GREEN = 1,
-        BLUE = 2,
-        ALPHA = 3
-    };
-};
-
-struct OrderArgb {
-    enum Argb {
-        ALPHA = 0,
-        RED = 1,
-        GREEN = 2,
-        BLUE = 3
-    };
-};
-struct OrderAbgr {
-    enum Abgr {
-        ALPHA = 0,
-        BLUE = 1,
-        GREEN = 2,
-        RED = 3
-    };
-};
 struct OrderBgra {
     enum Bgra {
         BLUE = 0,
@@ -191,10 +141,10 @@ struct OrderBgra {
  * @version 1.0
  */
 struct Rgba {
-    float redValue;
-    float greenValue;
-    float blueValue;
-    float alphaValue;
+    float red;
+    float green;
+    float blue;
+    float alpha;
 
     Rgba() {}
 
@@ -206,7 +156,7 @@ struct Rgba {
      * @version 1.0
      */
     Rgba(float red, float green, float blue, float alpha = 1.0f)
-        : redValue(red), greenValue(green), blueValue(blue), alphaValue(alpha) {}
+        : red(red), green(green), blue(blue), alpha(alpha) {}
 
     /**
      * @brief Rgba Constructor.
@@ -216,10 +166,10 @@ struct Rgba {
      * @version 1.0.
      */
     Rgba(const Rgba& color, float alpha)
-        : redValue(color.redValue),
-          greenValue(color.greenValue),
-          blueValue(color.blueValue),
-          alphaValue(alpha) {}
+        : red(color.red),
+          green(color.green),
+          blue(color.blue),
+          alpha(alpha) {}
 
     /**
      * @brief Clear, color transparency set to 0.
@@ -230,10 +180,10 @@ struct Rgba {
      */
     Rgba& Clear()
     {
-        redValue = 0;
-        greenValue = 0;
-        blueValue = 0;
-        alphaValue = 0;
+        red = 0;
+        green = 0;
+        blue = 0;
+        alpha = 0;
         return *this;
     }
 
@@ -246,7 +196,7 @@ struct Rgba {
      */
     Rgba& Transparent()
     {
-        alphaValue = 0;
+        alpha = 0;
         return *this;
     }
 
@@ -258,14 +208,14 @@ struct Rgba {
      * @since 1.0
      * @version 1.0
      */
-    Rgba& Opacity(float alpha)
+    Rgba& Opacity(float alphaValue)
     {
-        if (alpha < 0) {
-            alphaValue = 0;
-        } else if (alpha > 1) {
-            alphaValue = 1;
+        if (alphaValue < 0) {
+            alpha = 0;
+        } else if (alphaValue > 1) {
+            alpha = 1;
         } else {
-            alphaValue = alpha;
+            alpha = alphaValue;
         }
         return *this;
     }
@@ -279,7 +229,7 @@ struct Rgba {
      */
     float Opacity() const
     {
-        return alphaValue;
+        return alpha;
     }
 
     /**
@@ -291,15 +241,15 @@ struct Rgba {
      */
     Rgba& Demultiply()
     {
-        if (alphaValue == 0) {
-            redValue = 0;
-            greenValue = 0;
-            blueValue = 0;
+        if (alpha == 0) {
+            red = 0;
+            green = 0;
+            blue = 0;
         } else {
-            float alpha = 1.0f / alphaValue;
-            redValue *= alpha;
-            greenValue *= alpha;
-            blueValue *= alpha;
+            float alphaValue = 1.0f / alpha;
+            red *= alphaValue;
+            green *= alphaValue;
+            blue *= alphaValue;
         }
         return *this;
     }
@@ -315,10 +265,10 @@ struct Rgba {
     Rgba Gradient(Rgba rgba, float k) const
     {
         Rgba ret;
-        ret.redValue = redValue + (rgba.redValue - redValue) * k;
-        ret.greenValue = greenValue + (rgba.greenValue - greenValue) * k;
-        ret.blueValue = blueValue + (rgba.blueValue - blueValue) * k;
-        ret.alphaValue = alphaValue + (rgba.alphaValue - alphaValue) * k;
+        ret.red = red + (rgba.red - red) * k;
+        ret.green = green + (rgba.green - green) * k;
+        ret.blue = blue + (rgba.blue - blue) * k;
+        ret.alpha = alpha+ (rgba.alpha - alpha) * k;
         return ret;
     }
 #endif
@@ -332,10 +282,10 @@ struct Rgba {
      */
     Rgba& operator+=(const Rgba& rgba)
     {
-        redValue += rgba.redValue;
-        greenValue += rgba.greenValue;
-        blueValue += rgba.blueValue;
-        alphaValue += rgba.alphaValue;
+        red += rgba.red;
+        green += rgba.green;
+        blue += rgba.blue;
+        alpha += rgba.alpha;
         return *this;
     }
 
@@ -349,10 +299,10 @@ struct Rgba {
      */
     Rgba& operator*=(float multiplyValue)
     {
-        redValue *= multiplyValue;
-        greenValue *= multiplyValue;
-        blueValue *= multiplyValue;
-        alphaValue *= multiplyValue;
+        red *= multiplyValue;
+        green *= multiplyValue;
+        blue *= multiplyValue;
+        alpha *= multiplyValue;
         return *this;
     }
 
@@ -503,8 +453,8 @@ inline Rgba Rgba::FromWaveLength(float waveLength, float gamma)
     } else if (waveLength < PURPLE_MIDDLE) {
         ratio = FIXED_VALUE + COEFFICIENT * (waveLength - PURPLE_MIN) / (PURPLE_MIDDLE - PURPLE_MIN);
     }
-    return Rgba(std::pow(rgba.redValue * ratio, gamma), std::pow(rgba.greenValue * ratio, gamma),
-        std::pow(rgba.blueValue * ratio, gamma));
+    return Rgba(std::pow(rgba.red * ratio, gamma), std::pow(rgba.green * ratio, gamma),
+        std::pow(rgba.blue * ratio, gamma));
 }
 
 /**
@@ -516,12 +466,11 @@ inline Rgba Rgba::FromWaveLength(float waveLength, float gamma)
  * @since 1.0
  * @version 1.0
  */
-template <class Colorspace>
 struct Rgba8T {
-    uint8_t redValue;
-    uint8_t greenValue;
-    uint8_t blueValue;
-    uint8_t alphaValue;
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+    uint8_t alpha;
 
     enum BaseScale {
         BASE_SHIFT = 8,
@@ -540,10 +489,10 @@ struct Rgba8T {
      * @version 1.0
      */
     Rgba8T(uint32_t red, uint32_t green, uint32_t blue, uint32_t alpha = BASE_MASK)
-        : redValue(uint8_t(red)),
-        greenValue(uint8_t(green)),
-        blueValue(uint8_t(blue)),
-        alphaValue(uint8_t(alpha)) {}
+        : red(uint8_t(red)),
+        green(uint8_t(green)),
+        blue(uint8_t(blue)),
+        alpha(uint8_t(alpha)) {}
 
     /**
      * @brief Rgba8T Constructor
@@ -565,10 +514,10 @@ struct Rgba8T {
      * @version 1.0
      */
     Rgba8T(const Rgba8T& color, uint32_t alpha)
-        : redValue(color.redValue),
-        greenValue(color.greenValue),
-        blueValue(color.blueValue),
-        alphaValue(uint8_t(alpha)) {}
+        : red(color.red),
+        green(color.green),
+        blue(color.blue),
+        alpha(uint8_t(alpha)) {}
 
     /**
      * @brief Rgba8T Constructor
@@ -578,8 +527,7 @@ struct Rgba8T {
      * @since 1.0
      * @version 1.0
      */
-    template <class T>
-    Rgba8T(const Rgba8T<T>& color)
+    Rgba8T(const Rgba8T& color)
     {
         Convert(*this, color);
     }
@@ -606,28 +554,28 @@ struct Rgba8T {
      * @since 1.0
      * @version 1.0
      */
-    static void Convert(Rgba8T<Linear>& dst, const Rgba& src)
+    static void Convert(Rgba8T& dst, const Rgba& src)
     {
-        dst.redValue = uint8_t(MATH_UROUND(src.redValue * BASE_MASK));
-        dst.greenValue = uint8_t(MATH_UROUND(src.greenValue * BASE_MASK));
-        dst.blueValue = uint8_t(MATH_UROUND(src.blueValue * BASE_MASK));
-        dst.alphaValue = uint8_t(MATH_UROUND(src.alphaValue * BASE_MASK));
+        dst.red = uint8_t(MATH_UROUND(src.red * BASE_MASK));
+        dst.green = uint8_t(MATH_UROUND(src.green * BASE_MASK));
+        dst.blue = uint8_t(MATH_UROUND(src.blue * BASE_MASK));
+        dst.alpha = uint8_t(MATH_UROUND(src.alpha * BASE_MASK));
     }
 
     /**
-     * @brief Assign the color value in rgba8t <sRGB> to RGBA
+     * @brief Assign the color value in RGBA to rgba8t <linear>
      *
-     * @param DST is the reference of the RGBA object, and Src is the constant
-     *  reference of the rgba8t <sRGB> object
+     * @param DST is the reference of rgba8t <linear> object, and Src is the
+     *  constant reference of RGBA object
      * @since 1.0
-     * @version 1.0.
+     * @version 1.0
      */
-    static void Convert(Rgba& dst, const Rgba8T<StandardRgb>& src)
+    static void Convert(Rgba& dst, const Rgba8T& src)
     {
-        dst.redValue = StandardRgbConv<float>::RgbFromSrgb(src.redValue);
-        dst.greenValue = StandardRgbConv<float>::RgbFromSrgb(src.greenValue);
-        dst.blueValue = StandardRgbConv<float>::RgbFromSrgb(src.blueValue);
-        dst.alphaValue = StandardRgbConv<float>::AlphaFromSrgb(src.alphaValue);
+        dst.red = static_cast<float>(src.red) / BASE_MASK;
+        dst.green = static_cast<float>(src.green) / BASE_MASK;
+        dst.blue = static_cast<float>(src.blue) / BASE_MASK;
+        dst.alpha = static_cast<float>(src.alpha) / BASE_MASK;
     }
 
     static inline uint8_t FromFloat(float value)
@@ -642,12 +590,12 @@ struct Rgba8T {
 
     inline bool IsTransparent() const
     {
-        return alphaValue == 0;
+        return alpha == 0;
     }
 
     inline bool IsOpaque() const
     {
-        return alphaValue == BASE_MASK;
+        return alpha == BASE_MASK;
     }
 
     static inline uint8_t Multiply(uint8_t valueA, uint8_t valueB)
@@ -677,18 +625,6 @@ struct Rgba8T {
             return uint8_t((valueA * BASE_MASK + (valueB >> 1)) / valueB);
 #endif
         }
-    }
-
-    template <typename T>
-    static inline T Downshift(T value, uint32_t digit)
-    {
-        return value >> digit;
-    }
-
-    template <typename T>
-    static inline T Downscale(T value)
-    {
-        return value >> BASE_SHIFT;
     }
 
     static inline uint8_t MultCover(uint8_t valueA, uint8_t coverValue)
@@ -725,21 +661,21 @@ struct Rgba8T {
      * @since 1.0
      * @version 1.0
      */
-    Rgba8T& Opacity(float alpha)
+    Rgba8T& Opacity(float alphaValue)
     {
-        if (alpha < 0) {
-            alphaValue = 0;
-        } else if (alpha > 1) {
-            alphaValue = 1;
+        if (alphaValue < 0) {
+            alpha = 0;
+        } else if (alphaValue > 1) {
+            alpha = 1;
         } else {
-            alphaValue = static_cast<uint8_t>(MATH_UROUND(alpha * float(BASE_MASK)));
+            alpha = static_cast<uint8_t>(MATH_UROUND(alphaValue * float(BASE_MASK)));
         }
         return *this;
     }
 
     float Opacity() const
     {
-        return alphaValue / BASE_MASK;
+        return alpha / BASE_MASK;
     }
 #if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
     /**
@@ -754,10 +690,10 @@ struct Rgba8T {
     {
         Rgba8T ret;
         uint32_t increaseK = MATH_UROUND(k * BASE_MASK);
-        ret.redValue = Lerp(redValue, color.redValue, increaseK);
-        ret.greenValue = Lerp(greenValue, color.greenValue, increaseK);
-        ret.blueValue = Lerp(blueValue, color.blueValue, increaseK);
-        ret.alphaValue = Lerp(alphaValue, color.alphaValue, increaseK);
+        ret.red = Lerp(red, color.red, increaseK);
+        ret.green = Lerp(green, color.green, increaseK);
+        ret.blue = Lerp(blue, color.blue, increaseK);
+        ret.alpha = Lerp(alpha, color.alpha, increaseK);
         return ret;
     }
 #endif
