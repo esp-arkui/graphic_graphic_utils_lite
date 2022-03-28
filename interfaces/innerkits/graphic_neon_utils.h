@@ -101,8 +101,8 @@ static void NeonMemcpy(void* dst, int32_t dstSize, const void* src, int32_t srcS
         if (sz == 0) {
             return;
         }
-        dst = (uint8_t*)dst + mod;
-        src = (uint8_t*)src + mod;
+        dst = reinterpret_cast<uint8_t*>(dst) + mod;
+        src = reinterpret_cast<uint8_t*>(src) + mod;
     }
 
     asm volatile(
