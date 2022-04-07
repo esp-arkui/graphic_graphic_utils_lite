@@ -26,6 +26,7 @@ ColorType Color::GetMixColor(ColorType c1, ColorType c2, uint8_t mix)
     ret.green = (static_cast<uint16_t>(c1.green) * mix + (static_cast<uint16_t>(c2.green) * (255 ^ mix))) >> 8;
     // 8: right move 8 bit. 255: 2^8-1
     ret.blue = (static_cast<uint16_t>(c1.blue) * mix + (static_cast<uint16_t>(c2.blue) * (255 ^ mix))) >> 8;
+    
 #if COLOR_DEPTH == 32
     ret.alpha = 0xFF;
 #endif
