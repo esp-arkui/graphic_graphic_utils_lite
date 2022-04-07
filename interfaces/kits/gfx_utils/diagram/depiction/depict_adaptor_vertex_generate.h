@@ -91,9 +91,7 @@ struct EmptyMarkers {
  * @since 1.0
  * @version 1.0
  */
-template <class VertexSource,
-          class Generator,
-          class Markers = EmptyMarkers>
+template <class VertexSource, class Generator, class Markers = EmptyMarkers>
 class DepictAdaptorVertexGenerate {
     /**
      * @brief Sets the state of the vertex adaptation generator
@@ -194,18 +192,18 @@ public:
     void VertexAccumulateWhile(float* x, float* y);
 
 private:
-    DepictAdaptorVertexGenerate(const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
+    DepictAdaptorVertexGenerate(
+        const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
 
-    const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>& operator=
-    (const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
+    const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>& operator=(const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
 
-    VertexSource* msource_;
-    Generator generator_;
-    Markers markers_;
+    VertexSource*   msource_;
+    Generator       generator_;
+    Markers         markers_;
     VertexGenerator status_;
-    uint32_t lastCmd_;
-    float startX_;
-    float startY_;
+    uint32_t        lastCmd_;
+    float           startX_;
+    float           startY_;
 };
 
 /**
@@ -215,10 +213,11 @@ private:
  * @version 1.0
  */
 template <class VertexSource, class Generator, class Markers>
-uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::GenerateVertex(float* x, float* y)
+uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::GenerateVertex(float* x,
+                                                                                       float* y)
 {
     uint32_t cmd = PATH_CMD_STOP;
-    bool done = false;
+    bool     done = false;
     while (!done) {
         switch (status_) {
             case INITIAL:
@@ -236,13 +235,13 @@ uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::Generate
                 generator_.AddVertex(startX_, startY_, PATH_CMD_MOVE_TO);
 
 #else
-                if (typeid(generator_) != typeid(VertexGenerateDash)) {
+                if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {
                     generator_.RemoveAll();
                     generator_.AddVertex(startX_, startY_, PATH_CMD_MOVE_TO);
                 }
 #endif
                 VertexAccumulateWhile(x, y);
-                if (typeid(generator_) != typeid(VertexGenerateDash)) {
+                if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {
                     generator_.Rewind(0);
                 }
                 status_ = GENERATE;
@@ -255,7 +254,8 @@ uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::Generate
                 }
                 done = true;
                 break;
-            default: break;
+            default:
+                break;
         }
     }
     return cmd;
@@ -266,7 +266,8 @@ uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::Generate
  * @version 1.0
  */
 template <class VertexSource, class Generator, class Markers>
-void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumulateWhile(float* x, float* y)
+void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumulateWhile(float* x,
+                                                                                          float* y)
 {
     uint32_t cmd = PATH_CMD_STOP;
     while (1) {
@@ -282,7 +283,7 @@ void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumu
 #if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
             generator_.AddVertex(*x, *y, cmd);
 #else
-            if (typeid(generator_) != typeid(VertexGenerateDash)) {
+            if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {
                 generator_.AddVertex(*x, *y, cmd);
             }
 #endif
@@ -295,7 +296,7 @@ void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumu
 #if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
                 generator_.AddVertex(*x, *y, cmd);
 #else
-                if (typeid(generator_) != typeid(VertexGenerateDash)) {
+                if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {
                     generator_.AddVertex(*x, *y, cmd);
                 }
 
