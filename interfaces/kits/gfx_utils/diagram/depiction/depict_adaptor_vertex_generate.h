@@ -46,32 +46,28 @@ struct EmptyMarkers {
      * @since 1.0
      * @version 1.0
      */
-    void RemoveAll()
-    {}
+    void RemoveAll() {}
 
     /**
      * @brief Add or insert marker symbol elements
      * @since 1.0
      * @version 1.0
      */
-    void AddVertex(float, float, uint32_t)
-    {}
+    void AddVertex(float, float, uint32_t) {}
 
     /**
      * @brief Make relevant preparations before using this structure to build markers symbols
      * @since 1.0
      * @version 1.0
      */
-    void PrepareSrc()
-    {}
+    void PrepareSrc() {}
 
     /**
      * @brief A bunch of operation processing resets the new state
      * @since 1.0
      * @version 1.0
      */
-    void Rewind(uint32_t)
-    {}
+    void Rewind(uint32_t) {}
 
     /**
      * @brief Move vertices or generate new vertices according to different states
@@ -104,8 +100,7 @@ class DepictAdaptorVertexGenerate {
      * @since 1.0
      * @version 1.0
      */
-    enum VertexGenerator
-    {
+    enum VertexGenerator {
         INITIAL,
         ACCUMULATE,
         GENERATE
@@ -119,9 +114,7 @@ public:
      * @version 1.0
      */
     explicit DepictAdaptorVertexGenerate(VertexSource& source)
-        : msource_(&source)
-        , status_(INITIAL)
-    {}
+        : msource_(&source), status_(INITIAL) {}
 
     /**
      * @brief Set vertex source directly
@@ -202,8 +195,7 @@ private:
     DepictAdaptorVertexGenerate(
         const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
 
-    const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&
-        operator=(const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
+    const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>& operator=(const DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>&);
 
     VertexSource*   msource_;
     Generator       generator_;
