@@ -31,6 +31,7 @@ graphic_utils_sources = [
   "$GRAPHIC_UTILS_PATH/frameworks/mem_api.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/pixel_format_utils.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/style.cpp",
+  "$GRAPHIC_UTILS_PATH/frameworks/trans_affine.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/transform.cpp",
   "$GRAPHIC_UTILS_PATH/frameworks/version.cpp",
 ]
