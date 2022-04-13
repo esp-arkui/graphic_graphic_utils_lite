@@ -23,8 +23,6 @@
 #ifndef GRAPHIC_LITE_GEOMETRY_DDA_LINE_H
 #define GRAPHIC_LITE_GEOMETRY_DDA_LINE_H
 
-#include <cstdlib>
-
 #include "gfx_utils/diagram/common/common_basics.h"
 
 namespace OHOS {

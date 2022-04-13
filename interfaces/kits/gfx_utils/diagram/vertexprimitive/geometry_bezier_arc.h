@@ -31,6 +31,15 @@
 namespace OHOS {
 #if GRAPHIC_ENABLE_BEZIER_ARC_FLAG
 const int32_t BEZIER_ARC_VERTEX_NUM = 26; // Number of Bezier Arc Vertex Coordinates.
+/**
+ * @brief Arcs are converted to Bezier curves.
+ *
+ * @since 1.0
+ * @version 1.0
+ */
+void ArcToBezier(float cx, float cy, float rx, float ry,
+                 float startAngle, float sweepAngle,
+                 float* curve);
 
 /**
  * @file geometry_bezier_arc.h

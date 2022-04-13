@@ -124,7 +124,7 @@ void QuadrBezierCurveDividOp::Init(float x1, float y1,
                                    float x2, float y2,
                                    float x3, float y3)
 {
-    points_.RemoveAll();
+    points_.Clear();
     distanceToleranceSquare_ = HALFNUM / approximationScale_;
     distanceToleranceSquare_ *= distanceToleranceSquare_;
     Bezier(x1, y1, x2, y2, x3, y3);
@@ -149,23 +149,23 @@ void QuadrBezierCurveDividOp::Recursive(float x1, float y1,
     float y123 = (y12 + y23) / FLOATNUM;
     float deltaX = x3 - x1;
     float deltaY = y3 - y1;
-    float distance = std::fabs(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
+    float distance = MATH_ABS(((x2 - x3) * deltaY - (y2 - y3) * deltaX));
     float da;
     if (distance > CURVE_COLLINEARITY_EPSILON) {
         if (distance * distance <= distanceToleranceSquare_ * (deltaX * deltaX + deltaY * deltaY)) {
             // If The Curvature Does Not Exceed The Distance Tolerance Value
             if (angleTolerance_ < CURVE_ANGLE_TO_LERANCE_EPSILON) {
-                points_.Add(PointF(x123, y123));
+                points_.PushBack(PointF(x123, y123));
                 return;
             }
 
-            da = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
+            da = MATH_ABS(FastAtan2F(y3 - y2, x3 - x2) - FastAtan2F(y2 - y1, x2 - x1));
             if (da >= PI) {
                 da = TWO_TIMES * PI - da;
             }
 
             if (da < angleTolerance_) {
-                points_.Add(PointF(x123, y123));
+                points_.PushBack(PointF(x123, y123));
                 return;
             }
         }
@@ -189,7 +189,7 @@ void QuadrBezierCurveDividOp::Recursive(float x1, float y1,
             }
         }
         if (distance < distanceToleranceSquare_) {
-            points_.Add(PointF(x2, y2));
+            points_.PushBack(PointF(x2, y2));
             return;
         }
     }
@@ -203,9 +203,9 @@ void QuadrBezierCurveDividOp::Bezier(float x1, float y1,
                                      float x2, float y2,
                                      float x3, float y3)
 {
-    points_.Add(PointF(x1, y1));
+    points_.PushBack(PointF(x1, y1));
     Recursive(x1, y1, x2, y2, x3, y3, 0);
-    points_.Add(PointF(x3, y3));
+    points_.PushBack(PointF(x3, y3));
 }
 
 void CubicBezierCurveIncrement::ApproximationScale(float scale)
@@ -339,7 +339,7 @@ void CubicBezierCurveDividOperate::Init(float x1, float y1,
                                         float x3, float y3,
                                         float x4, float y4)
 {
-    points_.RemoveAll();
+    points_.Clear();
     distanceToleranceSquare_ = HALFNUM / approximationScale_;
     distanceToleranceSquare_ *= distanceToleranceSquare_;
     Bezier(x1, y1, x2, y2, x3, y3, x4, y4);
@@ -375,8 +375,8 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
     /** Try to Approximate the Entire Cubic Curve With a Straight Line */
     float delta41X = x4 - x1;
     float delta41Y = y4 - y1;
-    float delta2 = std::fabs(((x2 - x4) * delta41Y - (y2 - y4) * delta41X));
-    float delta3 = std::fabs(((x3 - x4) * delta41Y - (y3 - y4) * delta41X));
+    float delta2 = MATH_ABS(((x2 - x4) * delta41Y - (y2 - y4) * delta41X));
+    float delta3 = MATH_ABS(((x3 - x4) * delta41Y - (y3 - y4) * delta41X));
     float dxTemp;
     float dyTemp;
     float delta41;
@@ -421,12 +421,12 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
 
             if (delta2 > delta3) {
                 if (delta2 < distanceToleranceSquare_) {
-                    points_.Add(PointF(x2, y2));
+                    points_.PushBack(PointF(x2, y2));
                     isEnabled = false;
                 }
             } else {
                 if (delta3 < distanceToleranceSquare_) {
-                    points_.Add(PointF(x3, y3));
+                    points_.PushBack(PointF(x3, y3));
                     isEnabled = false;
                 }
             }
@@ -435,21 +435,21 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
             /** p1、p2、p4 is Collinear */
             if (delta3 * delta3 <= distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                 if (angleTolerance_ < CURVE_ANGLE_TO_LERANCE_EPSILON) {
-                    points_.Add(PointF(x23, y23));
+                    points_.PushBack(PointF(x23, y23));
                     isEnabled = false;
                 }
                 if (isEnabled) {
-                    dxTemp = std::fabs(std::atan2(y4 - y3, x4 - x3) - std::atan2(y3 - y2, x3 - x2));
+                    dxTemp = MATH_ABS(FastAtan2F(y4 - y3, x4 - x3) - FastAtan2F(y3 - y2, x3 - x2));
                     if (dxTemp >= PI) {
                         dxTemp = FLOATNUM * PI - dxTemp;
                     }
                     if (dxTemp < angleTolerance_) {
-                        points_.Add(PointF(x2, y2));
-                        points_.Add(PointF(x3, y3));
+                        points_.PushBack(PointF(x2, y2));
+                        points_.PushBack(PointF(x3, y3));
                         isEnabled = false;
                     }
                     if (isEnabled && cuspLimit_ != 0.0f && dxTemp > cuspLimit_) {
-                        points_.Add(PointF(x3, y3));
+                        points_.PushBack(PointF(x3, y3));
                         isEnabled = false;
                     }
                 }
@@ -459,21 +459,21 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
             /** p1、p3、p4 is Collinear. */
             if (delta2 * delta2 <= distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                 if (angleTolerance_ < CURVE_ANGLE_TO_LERANCE_EPSILON) {
-                    points_.Add(PointF(x23, y23));
+                    points_.PushBack(PointF(x23, y23));
                     isEnabled = false;
                 }
                 if (isEnabled) {
-                    dxTemp = std::fabs(std::atan2(y3 - y2, x3 - x2) - std::atan2(y2 - y1, x2 - x1));
+                    dxTemp = MATH_ABS(FastAtan2F(y3 - y2, x3 - x2) - FastAtan2F(y2 - y1, x2 - x1));
                     if (dxTemp >= PI) {
                         dxTemp = FLOATNUM * PI - dxTemp;
                     }
                     if (dxTemp < angleTolerance_) {
-                        points_.Add(PointF(x2, y2));
-                        points_.Add(PointF(x3, y3));
+                        points_.PushBack(PointF(x2, y2));
+                        points_.PushBack(PointF(x3, y3));
                         isEnabled = false;
                     }
                     if (isEnabled && cuspLimit_ != 0.0f && dxTemp > cuspLimit_) {
-                        points_.Add(PointF(x2, y2));
+                        points_.PushBack(PointF(x2, y2));
                         isEnabled = false;
                     }
                 }
@@ -483,12 +483,12 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
             if ((delta2 + delta3) * (delta2 + delta3) <=
                     distanceToleranceSquare_ * (delta41X * delta41X + delta41Y * delta41Y)) {
                 if (angleTolerance_ < CURVE_ANGLE_TO_LERANCE_EPSILON) {
-                    points_.Add(PointF(x23, y23));
+                    points_.PushBack(PointF(x23, y23));
                     isEnabled = false;
                 }
-                delta41 = std::atan2(y3 - y2, x3 - x2);
-                dxTemp = std::fabs(delta41 - std::atan2(y2 - y1, x2 - x1));
-                dyTemp = std::fabs(std::atan2(y4 - y3, x4 - x3) - delta41);
+                delta41 = FastAtan2F(y3 - y2, x3 - x2);
+                dxTemp = MATH_ABS(delta41 - FastAtan2F(y2 - y1, x2 - x1));
+                dyTemp = MATH_ABS(FastAtan2F(y4 - y3, x4 - x3) - delta41);
                 if (dxTemp >= PI) {
                     dxTemp = FLOATNUM * PI - dxTemp;
                 }
@@ -497,15 +497,15 @@ void CubicBezierCurveDividOperate::Recursive(float x1, float y1,
                 }
                 if (isEnabled) {
                     if (dxTemp + dyTemp < angleTolerance_) {
-                        points_.Add(PointF(x23, y23));
+                        points_.PushBack(PointF(x23, y23));
                         isEnabled = false;
                     }
                     if (isEnabled && cuspLimit_ != 0.0f && dxTemp > cuspLimit_) {
-                        points_.Add(PointF(x2, y2));
+                        points_.PushBack(PointF(x2, y2));
                         isEnabled = false;
                     }
                     if (isEnabled && cuspLimit_ != 0.0f && dyTemp > cuspLimit_) {
-                        points_.Add(PointF(x3, y3));
+                        points_.PushBack(PointF(x3, y3));
                         isEnabled = false;
                     }
                 }
@@ -524,8 +524,8 @@ void CubicBezierCurveDividOperate::Bezier(float x1, float y1,
                                           float x3, float y3,
                                           float x4, float y4)
 {
-    points_.Add(PointF(x1, y1));
+    points_.PushBack(PointF(x1, y1));
     Recursive(x1, y1, x2, y2, x3, y3, x4, y4, 0);
-    points_.Add(PointF(x4, y4));
+    points_.PushBack(PointF(x4, y4));
 }
 } // namespace OHOS

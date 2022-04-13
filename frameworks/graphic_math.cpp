@@ -56,6 +56,39 @@ float Sin(float angle)
     }
 #endif
 }
+float Fmod(float X, float Y)
+{
+    return X - (int)(X / Y) * Y;
+}
+float Cos(float angle)
+{
+#if ENABLE_CMATH
+    return cos(angle / RADIAN_TO_ANGLE);
+#else
+    Sin(QUARTER_IN_DEGREE - angle);
+#endif
+}
+
+float Acos(float value)
+{
+#if ENABLE_CMATH
+    return acos(value);
+#else
+    float result, l, r;
+    l = 0;
+    r = UI_PI;
+    result = (l + r) / 2;
+    while (MATH_ABS(Sin(QUARTER_IN_DEGREE - result * RADIAN_TO_ANGLE) - value) > UI_FLT_EPSILON) {
+        if (Sin(QUARTER_IN_DEGREE - result * RADIAN_TO_ANGLE) - value > UI_FLT_EPSILON) {
+           l = result;
+        } else {
+           r = result;
+        }
+        result = (l + r) / 2;
+    }
+    return result;
+#endif
+}
 
 /* arctan(x) = x - p3 * x^3 + p5 * x^5 - p7 * x^7 */
 uint16_t FastAtan2(int16_t x, int16_t y)
@@ -88,6 +121,39 @@ uint16_t FastAtan2(int16_t x, int16_t y)
         }
     } else if (x < 0) {
         angle = CIRCLE_IN_DEGREE - angle;
+    }
+
+    return angle;
+}
+
+float FastAtan2F(float y, float x)
+{
+    float absX = MATH_ABS(x);
+    float absY = MATH_ABS(y);
+    if (absY < UI_FLT_EPSILON && absX < UI_FLT_EPSILON){
+        return 0;
+    }
+    float t;
+    float t2;
+    float angle;
+    if (absX <= absY) {
+        t = absX / absY;
+        t2 = t * t;
+        angle = UI_PI / 2 - (t * (1 + t2 * (ATAN2_P3 + t2 * (ATAN2_P5 + t2 * ATAN2_P7))));
+    } else {
+        t = (absY) / absX;
+        t2 = t * t;
+        angle = (t * (1 + t2 * (ATAN2_P3 + t2 * (ATAN2_P5 + t2 * ATAN2_P7))) );
+    }
+
+    if (y < 0) {
+        if (x < 0) {
+            angle = - UI_PI + angle;
+        } else {
+            angle = - angle;
+        }
+    } else if (x < 0) {
+        angle =  UI_PI - angle;
     }
 
     return angle;
