@@ -28,8 +28,10 @@
 
 #ifndef GRAPHIC_LITE_VECTOR_H
 #define GRAPHIC_LITE_VECTOR_H
+#include "gfx_utils/diagram/common/common_basics.h"
+#include "gfx_utils/graphic_log.h"
 #include "gfx_utils/heap_base.h"
-#include <cstdint>
+#include "securec.h"
 
 namespace OHOS {
 namespace Graphic {

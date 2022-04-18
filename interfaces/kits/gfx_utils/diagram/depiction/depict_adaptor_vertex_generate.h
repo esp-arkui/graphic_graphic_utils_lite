@@ -271,7 +271,7 @@ void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumu
                                                                                           float* y)
 {
     uint32_t cmd = PATH_CMD_STOP;
-    while (1) {
+    while (true) {
         cmd = msource_->GenerateVertex(x, y);
         if (IsVertex(cmd)) {
             lastCmd_ = cmd;

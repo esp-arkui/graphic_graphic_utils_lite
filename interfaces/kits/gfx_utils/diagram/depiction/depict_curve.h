@@ -28,10 +28,11 @@
 
 #include "gfx_utils/diagram/common/common_basics.h"
 #include "gfx_utils/diagram/vertexprimitive/geometry_curves.h"
+#include "gfx_utils/diagram/vertexprimitive/geometry_path_storage.h"
 
 namespace OHOS {
 /**
- * @template<VertexSource,QuadraticBezierCurve,CubicBezierCurve> class DepictCurve
+ * @class DepictCurve
  * @brief By PATH_CMD_CURVE3 and PATH_CMD_CURVE4
  * The command calculates the generated curve points and
  * saves the generated points to the curve using the conversion pipe
@@ -39,25 +40,18 @@ namespace OHOS {
  * @since 1.0
  * @version 1.0
  */
-template <class VertexSource,
-          class QuadraticBezierCurve = QuadraticBezierCurve,
-          class CubicBezierCurve = CubicBezierCurve>
 class DepictCurve {
 public:
-    using QuadraticBezierCurveType = QuadraticBezierCurve;
-    using CubicBezierCurveType = CubicBezierCurve;
-    using SelfType = DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>;
-
     /**
      * @brief DepictCurve Class constructor
      * The construction parameter is the vertexsource attribute, which determines the vertex source of the curve.
      * @since 1.0
      * @version 1.0
      */
-    explicit DepictCurve(VertexSource& source)
+    explicit DepictCurve(UICanvasVertices& source)
         : source_(&source), lastX_(0), lastY_(0) {}
 
-    void Attach(VertexSource& source)
+    void Attach(UICanvasVertices& source)
     {
         source_ = &source;
     }
@@ -86,8 +80,8 @@ public:
      * In practical application, we need to convert the world coordinates of points to screen coordinates,
      * so there will always be a certain scaling factor.
      * Curves are usually processed in the world coordinate system and converted to pixel values when estimating.
-     * It usually looks like this: m_curved.approximation_scale(m_transform.scale());
-     * Here, m_transform is a matrix of affine mapping,
+     * It usually looks like this: m_curved.approximation_scale(transform_.scale());
+     * Here, transform_ is a matrix of affine mapping,
      * which contains all transformations,
      * including viewpoint and scaling.
      * @since 1.0
@@ -157,83 +151,14 @@ public:
     uint32_t GenerateVertex(float* x, float* y);
 
 private:
-    DepictCurve(const SelfType&);
-    const SelfType& operator=(const SelfType&);
+    DepictCurve(const DepictCurve&);
+    const DepictCurve& operator=(const DepictCurve&);
 
-    VertexSource* source_;
+    UICanvasVertices* source_;
     float lastX_;
     float lastY_;
-    QuadraticBezierCurveType quadraticBezier_;
-    CubicBezierCurveType cubicBezier_;
+    QuadraticBezierCurve quadraticBezier_;
+    CubicBezierCurve cubicBezier_;
 };
-
-/**
- * Reset the status attribute of a path segment
- * @path_id is a path ID, calculated from 0
- * @since 1.0
- * @version 1.0
- */
-template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
-void DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::Rewind(uint32_t pathId)
-{
-    source_->Rewind(pathId);
-    lastX_ = 0.0;
-    lastY_ = 0.0;
-    quadraticBezier_.Reset();
-    cubicBezier_.Reset();
-}
-
-/**
- * According to PATH_CMD command returns the vertex coordinates generated in each stage
- * @since 1.0
- * @version 1.0
- */
-template <class VertexSource, class QuadraticBezierCurve, class CubicBezierCurve>
-uint32_t DepictCurve<VertexSource, QuadraticBezierCurve, CubicBezierCurve>::GenerateVertex(float* x, float* y)
-{
-    if (!IsStop(quadraticBezier_.GenerateVertex(x, y))) {
-        lastX_ = *x;
-        lastY_ = *y;
-        return PATH_CMD_LINE_TO;
-    }
-
-    if (!IsStop(cubicBezier_.GenerateVertex(x, y))) {
-        lastX_ = *x;
-        lastY_ = *y;
-        return PATH_CMD_LINE_TO;
-    }
-
-    float control2X = 0;
-    float control2Y = 0;
-    float endX = 0;
-    float endY = 0;
-
-    uint32_t cmd = source_->GenerateVertex(x, y);
-    switch (cmd) {
-        case PATH_CMD_CURVE3:
-            source_->GenerateVertex(&endX, &endY);
-
-            quadraticBezier_.Init(lastX_, lastY_, *x, *y, endX, endY);
-
-            quadraticBezier_.GenerateVertex(x, y); // First call returns path_cmd_move_to
-            quadraticBezier_.GenerateVertex(x, y); // This is the first vertex of the curve
-            cmd = PATH_CMD_LINE_TO;
-            break;
-
-        case PATH_CMD_CURVE4:
-            source_->GenerateVertex(&control2X, &control2Y);
-            source_->GenerateVertex(&endX, &endY);
-
-            cubicBezier_.Init(lastX_, lastY_, *x, *y, control2X, control2Y, endX, endY);
-
-            cubicBezier_.GenerateVertex(x, y); // First call returns path_cmd_move_to
-            cubicBezier_.GenerateVertex(x, y); // This is the first vertex of the curve
-            cmd = PATH_CMD_LINE_TO;
-            break;
-    }
-    lastX_ = *x;
-    lastY_ = *y;
-    return cmd;
-}
 } // namespace OHOS
 #endif

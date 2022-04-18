@@ -16,8 +16,6 @@
 #ifndef GRAPHIC_LTE_GEOMERTY_PATH_STORAGE_H
 #define GRAPHIC_LTE_GEOMERTY_PATH_STORAGE_H
 
-#include <cstring>
-
 #include "geometry_bezier_arc.h"
 #include "gfx_utils/diagram/common/common_math.h"
 #include "gfx_utils/diagram/vertexprimitive/geometry_plaindata_array.h"
@@ -315,8 +313,8 @@ public:
             float y0 = 0.0f;
             vertices_.LastVertex(&x0, &y0);
 
-            rx = std::fabs(rx);
-            ry = std::fabs(ry);
+            rx = MATH_ABS(rx);
+            ry = MATH_ABS(ry);
             if (rx < epsilon || ry < epsilon) {
                 LineTo(x, y);
                 return;

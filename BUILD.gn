@@ -47,11 +47,16 @@ lite_library("graphic_utils") {
 
   sources = [
     "frameworks/color.cpp",
+    "frameworks/diagram/depiction/depict_curve.cpp",
+    "frameworks/diagram/rasterizer/rasterizer_cells_antialias.cpp",
+    "frameworks/diagram/rasterizer/rasterizer_scanline_antialias.cpp",
+    "frameworks/diagram/rasterizer/rasterizer_scanline_clip.cpp",
     "frameworks/diagram/vertexgenerate/vertex_generate_dash.cpp",
     "frameworks/diagram/vertexgenerate/vertex_generate_stroke.cpp",
     "frameworks/diagram/vertexprimitive/geometry_arc.cpp",
     "frameworks/diagram/vertexprimitive/geometry_bezier_arc.cpp",
     "frameworks/diagram/vertexprimitive/geometry_curves.cpp",
+    "frameworks/diagram/vertexprimitive/geometry_shorten_path.cpp",
     "frameworks/geometry2d.cpp",
     "frameworks/graphic_math.cpp",
     "frameworks/graphic_performance.cpp",

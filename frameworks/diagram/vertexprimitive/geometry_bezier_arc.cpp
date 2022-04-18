@@ -35,8 +35,8 @@ void ArcToBezier(float cx, float cy, float rx, float ry,
                  float startAngle, float sweepAngle,
                  float* curve)
 {
-    float y0 = std::sin(sweepAngle / FLOATNUM);
-    float x0 = std::cos(sweepAngle / FLOATNUM);
+    float y0 = Sin((sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE);
+    float x0 = Cos((sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE);
     float tx = (1.0f - x0) * BEZIER_ARC_DELTAX / BEZIER_ARC_EQUAL_DIVISION;
     if (y0 == 0) {
         y0 = y0 + VERTEX_DIST_EPSILON;
@@ -53,8 +53,8 @@ void ArcToBezier(float cx, float cy, float rx, float ry,
     px[3] = x0;
     py[3] = y0;
 
-    float cosVal = std::cos(startAngle + sweepAngle / FLOATNUM);
-    float sinVal = std::sin(startAngle + sweepAngle / FLOATNUM);
+    float cosVal = Cos((startAngle + sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE );
+    float sinVal = Sin((startAngle + sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE);
 
     for (uint16_t i = 0; i < BEZIER_ARC_POINTS; i++) {
         curve[i * BEZIER_ARC_SETUP] = cx + rx * (px[i] * cosVal - py[i] * sinVal);
@@ -67,20 +67,20 @@ void BezierArc::Init(float centerX, float centerY,
                      float startAngle,
                      float sweepAngle)
 {
-    startAngle = std::fmod(startAngle, FLOATNUM * PI);
+    startAngle = Fmod(startAngle, FLOATNUM * PI);
     if (sweepAngle <= -FLOATNUM * PI) {
         sweepAngle = -FLOATNUM * PI;
     }
     if (sweepAngle >= FLOATNUM * PI) {
         sweepAngle = FLOATNUM * PI;
     }
-    if (std::fabs(sweepAngle) < 1e-10) {
+    if (MATH_ABS(sweepAngle) < 1e-10) {
         numberVertices_ = BEZIER_ARC_POINTS;
         currentCommand_ = PATH_CMD_LINE_TO;
-        arrayVertices_[0] = centerX + rx * std::cos(startAngle);
-        arrayVertices_[1] = centerY + ry * std::sin(startAngle);
-        arrayVertices_[2] = centerX + rx * std::cos(startAngle + sweepAngle);
-        arrayVertices_[3] = centerY + ry * std::sin(startAngle + sweepAngle);
+        arrayVertices_[0] = centerX + rx * Cos(startAngle * RADIAN_TO_ANGLE);
+        arrayVertices_[1] = centerY + ry * Sin(startAngle * RADIAN_TO_ANGLE);
+        arrayVertices_[2] = centerX + rx * Cos((startAngle + sweepAngle) * RADIAN_TO_ANGLE);
+        arrayVertices_[3] = centerY + ry * Sin((startAngle + sweepAngle) * RADIAN_TO_ANGLE);
         return;
     }
 
@@ -133,8 +133,8 @@ void BezierArcSvg::Init(float x0, float y0,
     isRadiusJoinPath_ = true;
     float delatY2 = (y0 - y2) / FLOATNUM;
     float delatX2 = (x0 - x2) / FLOATNUM;
-    float sinA = std::sin(angle);
-    float cosA = std::cos(angle);
+    float sinA = Sin(angle * RADIAN_TO_ANGLE);
+    float cosA = Cos(angle * RADIAN_TO_ANGLE);
     float y1 = -sinA * delatX2 + cosA * delatY2;
     float x1 = cosA * delatX2 + sinA * delatY2;
     float prx = rx * rx;
@@ -183,7 +183,7 @@ void BezierArcSvg::Init(float x0, float y0,
     if (v < -1.0f) {
         v = -1.0f;
     }
-    float startAngle = sign * std::acos(v);
+    float startAngle = sign * Acos(v);
     n = Sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy));
     p = ux * vx + uy * vy;
     sign = (ux * vy - uy * vx < 0) ? -1.0f : 1.0f;
@@ -197,7 +197,7 @@ void BezierArcSvg::Init(float x0, float y0,
     if (v > 1.0f) {
         v = 1.0f;
     }
-    float sweepAngle = sign * std::acos(v);
+    float sweepAngle = sign * Acos(v);
     if (!sweepFlag && sweepAngle > 0.0f) {
         sweepAngle -= PI * FLOATNUM;
     } else if (sweepFlag && sweepAngle < 0.0f) {

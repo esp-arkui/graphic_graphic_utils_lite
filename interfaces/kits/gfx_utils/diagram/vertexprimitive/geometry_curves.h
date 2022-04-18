@@ -25,7 +25,7 @@
 #ifndef GRAPHIC_LITE_GEOMETRY_CURVES_H
 #define GRAPHIC_LITE_GEOMETRY_CURVES_H
 
-#include "geometry_plaindata_blockvector.h"
+#include "gfx_utils/vector.h"
 namespace OHOS {
 const uint8_t CURVE_POINTS_LENGTH = 8;
 
@@ -111,7 +111,7 @@ public:
 
     void Reset()
     {
-        points_.RemoveAll();
+        points_.Clear();
         count_ = 0;
     }
 
@@ -154,7 +154,7 @@ public:
 
     uint32_t GenerateVertex(float* x, float* y)
     {
-        if (count_ >= points_.GetSize()) {
+        if (count_ >= points_.Size()) {
             return PATH_CMD_STOP;
         }
         const PointF& point = points_[count_++];
@@ -176,7 +176,7 @@ private:
     float distanceToleranceSquare_;
     float angleTolerance_;
     uint32_t count_;
-    GeometryPlainDataBlockVector<PointF> points_;
+    Graphic::Vector<PointF> points_;
 };
 
 struct CubicBezierCurvePoints {
@@ -423,7 +423,7 @@ public:
 
     void Reset()
     {
-        points_.RemoveAll();
+        points_.Clear();
         count_ = 0;
     }
 
@@ -469,7 +469,7 @@ public:
 
     uint32_t GenerateVertex(float* x, float* y)
     {
-        if (count_ >= points_.GetSize()) {
+        if (count_ >= points_.Size()) {
             return PATH_CMD_STOP;
         }
         const PointF& p = points_[count_++];
@@ -495,7 +495,7 @@ private:
     float angleTolerance_;
     float cuspLimit_;
     uint32_t count_;
-    GeometryPlainDataBlockVector<PointF> points_;
+    Graphic::Vector<PointF> points_;
 };
 
 /**

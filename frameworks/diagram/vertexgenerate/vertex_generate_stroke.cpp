@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2021 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,7 +31,7 @@ VertexGenerateStroke::VertexGenerateStroke()
 
 void VertexGenerateStroke::RemoveAll()
 {
-    srcVertices_.RemoveAll();
+    srcVertices_.Clear();
     closed_ = 0;
     status_ = INITIAL;
 }
@@ -56,7 +56,7 @@ void VertexGenerateStroke::Rewind(uint32_t)
         srcVertices_.Close(closed_ != 0);
         ShortenPath(srcVertices_, strokeShorten_, closed_);
         const uint32_t verticeNum = 3;
-        if (srcVertices_.GetSize() < verticeNum) {
+        if (srcVertices_.Size() < verticeNum) {
             closed_ = 0;
         }
     }
@@ -92,7 +92,7 @@ uint32_t VertexGenerateStroke::GenerateVertex(float* x, float* y)
                 VertexLineJoinEnd();
                 break;
             case OUT_VERTICES:
-                if (VertexOutVertices(x, y)) {
+                if (IsVertexOutVertices(x, y)) {
                     return cmd;
                 }
                 break;
@@ -113,7 +113,7 @@ uint32_t VertexGenerateStroke::GenerateVertex(float* x, float* y)
 
 void VertexGenerateStroke::VertexReady(const uint32_t& verticesNum, uint32_t& cmd)
 {
-    if (srcVertices_.GetSize() < verticesNum + uint32_t(closed_ != 0)) {
+    if (srcVertices_.Size() < verticesNum + uint32_t(closed_ != 0)) {
         cmd = PATH_CMD_STOP;
         return;
     }
@@ -145,9 +145,9 @@ void VertexGenerateStroke::VertexLineCapEnd(const uint32_t& verticesNum)
 {
 #if GRAPHIC_ENABLE_LINECAP_FLAG
     stroker_.CalcCap(outVertices_,
-                     srcVertices_[srcVertices_.GetSize() - 1],
-                     srcVertices_[srcVertices_.GetSize() - verticesNum],
-                     srcVertices_[srcVertices_.GetSize() - verticesNum].vertexDistance);
+                     srcVertices_[srcVertices_.Size() - 1],
+                     srcVertices_[srcVertices_.Size() - verticesNum],
+                     srcVertices_[srcVertices_.Size() - verticesNum].vertexDistance);
 #endif
     prevStatus_ = LINEJOIN_END;
     status_ = OUT_VERTICES;
@@ -156,12 +156,12 @@ void VertexGenerateStroke::VertexLineCapEnd(const uint32_t& verticesNum)
 
 void VertexGenerateStroke::VertexLineJoinStart()
 {
-    if (closed_ && srcVertex_ >= srcVertices_.GetSize()) {
+    if (closed_ && srcVertex_ >= srcVertices_.Size()) {
         prevStatus_ = CLOSE_FIRST;
         status_ = CLOCKWISE_ENDPOLY;
         return;
     }
-    if (!closed_ && srcVertex_ >= srcVertices_.GetSize() - 1) {
+    if (!closed_ && srcVertex_ >= srcVertices_.Size() - 1) {
         status_ = LINECAP_END;
         return;
     }
@@ -206,9 +206,9 @@ void VertexGenerateStroke::VertexCloseFirst(uint32_t& cmd)
     cmd = PATH_CMD_MOVE_TO;
 }
 
-bool VertexGenerateStroke::VertexOutVertices(float* x, float* y)
+bool VertexGenerateStroke::IsVertexOutVertices(float* x, float* y)
 {
-    if (outVertex_ >= outVertices_.GetSize()) {
+    if (outVertex_ >= outVertices_.Size()) {
         status_ = prevStatus_;
         return false;
     } else {

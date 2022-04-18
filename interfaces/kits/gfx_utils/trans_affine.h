@@ -179,7 +179,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    bool IsIdentity(float epsilon = affineEpsilon) const;
+    bool IsIdentity() const;
 
     /**
      * @brief zoom
@@ -205,7 +205,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static TransAffine TransAffineScaling(float x,float y)
+    static TransAffine TransAffineScaling(float x, float y)
     {
         return TransAffine(x, 0.0f, 0.0f, y, 0.0f, 0.0f);
     }
