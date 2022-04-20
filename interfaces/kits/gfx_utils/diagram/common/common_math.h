@@ -25,7 +25,6 @@
 #ifndef GRAPHIC_LITE_COMMON_MATH_H
 #define GRAPHIC_LITE_COMMON_MATH_H
 
-#include <cmath>
 
 #include "gfx_utils/diagram/common/common_basics.h"
 
@@ -54,7 +53,7 @@ inline float CalcDistance(float x1, float y1, float x2, float y2)
 {
     float dx = x2 - x1;
     float dy = y2 - y1;
-    return std::sqrt(dx * dx + dy * dy);
+    return Sqrt(dx * dx + dy * dy);
 }
 
 /**
@@ -86,7 +85,7 @@ inline bool CalcIntersection(float aX, float aY, float bX, float bY,
 {
     float num = (aY - cY) * (dX - cX) - (aX - cX) * (dY - cY);
     float den = (bX - aX) * (dY - cY) - (bY - aY) * (dX - cX);
-    if (std::fabs(den) < INTERSECTIONEPSILON) {
+    if (MATH_ABS(den) < INTERSECTIONEPSILON) {
         return false;
     }
     float r = num / den;

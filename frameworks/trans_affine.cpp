@@ -92,18 +92,18 @@ const TransAffine& TransAffine::Reset()
     return *this;
 }
 
-bool TransAffine::IsIdentity(float epsilon) const
+bool TransAffine::IsIdentity() const
 {
-    return IsEqualEps(data_[0], 1.0f, epsilon) &&
-           IsEqualEps(data_[3], 0.0f, epsilon) &&
-           IsEqualEps(data_[1], 0.0f, epsilon) &&
-           IsEqualEps(data_[4], 1.0f, epsilon) &&
-           IsEqualEps(data_[2], 0.0f, epsilon) &&
-           IsEqualEps(data_[5], 0.0f, epsilon);
+    return MATH_FLT_EQUAL(data_[0], 1.0f) &&
+           MATH_FLT_EQUAL(data_[3], 0.0f) &&
+           MATH_FLT_EQUAL(data_[1], 0.0f) &&
+           MATH_FLT_EQUAL(data_[4], 1.0f) &&
+           MATH_FLT_EQUAL(data_[2], 0.0f) &&
+           MATH_FLT_EQUAL(data_[5], 0.0f);
 }
 
 bool TransAffine::IsValid(float epsilon) const
 {
-    return (std::fabs(data_[0]) > epsilon) && (std::fabs(data_[4]) > epsilon);
+    return (MATH_ABS(data_[0]) > epsilon) && (MATH_ABS(data_[4]) > epsilon);
 }
 } // namespace OHOS

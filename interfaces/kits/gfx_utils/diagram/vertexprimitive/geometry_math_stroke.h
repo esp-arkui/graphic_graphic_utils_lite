@@ -26,6 +26,7 @@
 #include "gfx_utils/diagram/common/common_math.h"
 #include "gfx_utils/diagram/vertexprimitive/geometry_vertex_sequence.h"
 #include "gfx_utils/graphic_math.h"
+#include "gfx_utils/vector.h"
 namespace OHOS {
 /**
  * @brief The style of the line end cap.
@@ -52,10 +53,8 @@ enum LineJoin {
     BEVEL_JOIN = 3,
     MITER_JOIN_ROUND = 4
 };
-template <class VertexConsumer>
 class GeometryMathStroke {
 public:
-    using CoordType = typename VertexConsumer::ValueType;
     GeometryMathStroke()
         : strokeWidth_(ALPHA_HALF),
           strokeWidthUsingAbs_(ALPHA_HALF),
@@ -87,9 +86,9 @@ public:
      * @brief Calculate end style.
      * Pay attention to 90 degree rotation at both ends of the corner.
      */
-    void CalcCap(VertexConsumer& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
+    void CalcCap(Graphic::Vector<PointF>& vertexConsumer, const VertexDist& vd0, const VertexDist& vd1, float len)
     {
-        vertexConsumer.RemoveAll();
+        vertexConsumer.Clear();
         if (len == 0.0f) {
             len += VERTEX_DIST_EPSILON;
         }
@@ -115,7 +114,7 @@ public:
             AddVertex(vertexConsumer, vd0.vertexXCoord - dx1 - dx2, vd0.vertexYCoord + dy1 - dy2);
             AddVertex(vertexConsumer, vd0.vertexXCoord + dx1 - dx2, vd0.vertexYCoord - dy1 - dy2);
         } else {
-            float deltaAngle = std::acos(strokeWidthUsingAbs_ /
+            float deltaAngle = Acos(strokeWidthUsingAbs_ /
                                         (strokeWidthUsingAbs_ +RADDALETAELPS / approxScaleRadio_)) * TWO_TIMES;
             float angleStart;
             int32_t nIndex;
@@ -124,19 +123,19 @@ public:
             deltaAngle = PI / (divNumber + 1);
             AddVertex(vertexConsumer, vd0.vertexXCoord - dx1, vd0.vertexYCoord + dy1);
             if (strokeWidthSignal_ > 0) {
-                angleStart = std::atan2(dy1, -dx1);
+                angleStart = FastAtan2F(dy1, -dx1);
                 angleStart += deltaAngle;
                 for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                    AddVertex(vertexConsumer, vd0.vertexXCoord + std::cos(angleStart) * strokeWidth_,
-                              vd0.vertexYCoord + std::sin(angleStart) * strokeWidth_);
+                    AddVertex(vertexConsumer, vd0.vertexXCoord + Cos(angleStart * RADIAN_TO_ANGLE) * strokeWidth_,
+                              vd0.vertexYCoord + Sin(angleStart * RADIAN_TO_ANGLE) * strokeWidth_);
                     angleStart += deltaAngle;
                 }
             } else {
-                angleStart = std::atan2(-dy1, dx1);
+                angleStart = FastAtan2F(-dy1, dx1);
                 angleStart -= deltaAngle;
                 for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                    AddVertex(vertexConsumer, vd0.vertexXCoord + std::cos(angleStart) * strokeWidth_,
-                              vd0.vertexYCoord + std::sin(angleStart) * strokeWidth_);
+                    AddVertex(vertexConsumer, vd0.vertexXCoord + Cos(angleStart * RADIAN_TO_ANGLE) * strokeWidth_,
+                              vd0.vertexYCoord + Sin(angleStart * RADIAN_TO_ANGLE) * strokeWidth_);
                     angleStart -= deltaAngle;
                 }
             }
@@ -167,7 +166,7 @@ public:
      * @brief Calculate intersections and corners.
      * Pay attention to 90 degree rotation at both ends of the corner.
      */
-    void CalcJoin(VertexConsumer& vertexConsumer,
+    void CalcJoin(Graphic::Vector<PointF>& vertexConsumer,
                   const VertexDist& vertexDistBegin,
                   const VertexDist& vertexDistMiddle,
                   const VertexDist& vertexDistLast,
@@ -200,8 +199,7 @@ public:
         if (!isEnable) {
             return;
         }
-        vertexConsumer.RemoveAll();
-
+        vertexConsumer.Clear();
         float crossProduct =
             CrossProduct(vertexDistBegin.vertexXCoord, vertexDistBegin.vertexYCoord, vertexDistMiddle.vertexXCoord,
                          vertexDistMiddle.vertexYCoord, vertexDistLast.vertexXCoord, vertexDistLast.vertexYCoord);
@@ -267,7 +265,7 @@ public:
     /**
      * @brief Calculate miter length
      */
-    void CalcMiter(VertexConsumer& vertexConsumer,
+    void CalcMiter(Graphic::Vector<PointF>& vertexConsumer,
                    const VertexDist& vd0,
                    const VertexDist& vd1,
                    const VertexDist& vd2,
@@ -335,16 +333,16 @@ public:
             }
         }
     }
-    void CalcArc(VertexConsumer& vertexConsumer, float x, float y, float dx1, float dy1, float dx2, float dy2)
+    void CalcArc(Graphic::Vector<PointF>& vertexConsumer, float x, float y, float dx1, float dy1, float dx2, float dy2)
     {
         const float limitScale = 0.125f;
-        float angleStart = std::atan2(dy1 * strokeWidthSignal_, dx1 * strokeWidthSignal_);
-        float angleEnd = std::atan2(dy2 * strokeWidthSignal_, dx2 * strokeWidthSignal_);
+        float angleStart = FastAtan2F(dy1 * strokeWidthSignal_, dx1 * strokeWidthSignal_);
+        float angleEnd = FastAtan2F(dy2 * strokeWidthSignal_, dx2 * strokeWidthSignal_);
         float deltaAngle = angleStart - angleEnd;
         int32_t nIndex;
         int32_t divNumber;
 
-        deltaAngle = std::acos(strokeWidthUsingAbs_ / (strokeWidthUsingAbs_ + limitScale / approxScaleRadio_))
+        deltaAngle = Acos(strokeWidthUsingAbs_ / (strokeWidthUsingAbs_ + limitScale / approxScaleRadio_))
                 * TWO_TIMES;
 
         AddVertex(vertexConsumer, x + dx1, y + dy1);
@@ -356,8 +354,8 @@ public:
             deltaAngle = (angleEnd - angleStart) / (divNumber + 1);
             angleStart += deltaAngle;
             for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth_,
-                          y + std::sin(angleStart) * strokeWidth_);
+                AddVertex(vertexConsumer, x + Cos(angleStart * RADIAN_TO_ANGLE) * strokeWidth_,
+                          y + Sin(angleStart * RADIAN_TO_ANGLE) * strokeWidth_);
                 angleStart += deltaAngle;
             }
         } else {
@@ -368,8 +366,8 @@ public:
             deltaAngle = (angleStart - angleEnd) / (divNumber + 1);
             angleStart -= deltaAngle;
             for (nIndex = 0; nIndex < divNumber; nIndex++) {
-                AddVertex(vertexConsumer, x + std::cos(angleStart) * strokeWidth_,
-                          y + std::sin(angleStart) * strokeWidth_);
+                AddVertex(vertexConsumer, x + Cos(angleStart * RADIAN_TO_ANGLE) * strokeWidth_,
+                          y + Sin(angleStart * RADIAN_TO_ANGLE) * strokeWidth_);
                 angleStart -= deltaAngle;
             }
         }
@@ -429,9 +427,9 @@ public:
     }
 
 private:
-    inline void AddVertex(VertexConsumer& vertexConsumer, float x, float y)
+    inline void AddVertex(Graphic::Vector<PointF>& vertexConsumer, float x, float y)
     {
-        vertexConsumer.Add(CoordType(x, y));
+        vertexConsumer.PushBack(PointF(x, y));
     }
 
     float strokeWidth_;

@@ -25,9 +25,6 @@
 #ifndef GRAPHIC_LTE_GEOMETRY_PLAINDATA_ARRAY_H
 #define GRAPHIC_LTE_GEOMETRY_PLAINDATA_ARRAY_H
 
-#include <cstddef>
-#include <cstring>
-
 #include "gfx_utils/diagram/common/common_basics.h"
 #include "gfx_utils/graphic_log.h"
 #include "gfx_utils/heap_base.h"
