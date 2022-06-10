@@ -63,11 +63,11 @@ public:
 #if GRAPHIC_ENABLE_LINECAP_FLAG
           lineCap_(BUTT_CAP),
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
-          miterLimitMeasure_(DEFAULTMITERLIMIT),
-          lineJoin_(MITER_JOIN),
-#endif
           approxScaleRadio_(1.0f) {}
+#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+          lineJoin_(MITER_JOIN),
+          miterLimitMeasure_(DEFAULTMITERLIMIT),
+#endif
 
 #if GRAPHIC_ENABLE_LINECAP_FLAG
     /**
