@@ -18,7 +18,7 @@
 
 #include "graphic_config.h"
 #if ENABLE_GRAPHIC_LOG
-#if defined(__LITEOS__) || defined(_LITEOS)
+#if defined(__LITEOS__) || defined(_LITEOS) || defined(__linux__)
 #include "log.h"
 #include <cstring>
 #else
@@ -28,7 +28,7 @@
 
 namespace OHOS {
 #if ENABLE_GRAPHIC_LOG
-#ifdef __LITEOS__
+#if (defined __LITEOS__) || (defined __linux__)
 typedef enum {
     LOG_LEVEL_FATAL = 0,
     LOG_LEVEL_ERROR,
