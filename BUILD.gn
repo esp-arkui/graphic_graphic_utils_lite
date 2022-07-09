@@ -42,7 +42,7 @@ lite_library("graphic_utils") {
   }
 
   if (enable_graphic_dualcore == true) {
-    defines += [ "HAL_CPU_NUM = 2" ]
+    defines += [ "HAL_CPU_NUM=2" ]
   }
 
   sources = [
@@ -82,8 +82,6 @@ lite_library("graphic_utils") {
     public_deps =
         [ "//base/hiviewdfx/hilog_lite/frameworks/featured:hilog_shared" ]
   }
-  cflags = [ "-Wall" ]
-  cflags_cc = cflags
 }
 
 config("graphic_utils_public_config") {
