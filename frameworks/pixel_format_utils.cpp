@@ -45,7 +45,7 @@ uint16_t PixelFormatUtils::ARGB8888ToARGB1555(uint32_t color)
     in.full = color;
     ret.alpha = in.alpha ? 1 : 0;
     /*
-     * when 32-bitmap image is tansformed to 16-bitmap
+     * when 32-bitmap image is transformed to 16-bitmap
      * R should shift right 3 bits
      * G should shift right 3 bits
      * B should shift right 3 bits
@@ -63,7 +63,7 @@ uint32_t PixelFormatUtils::ARGB1555ToARGB8888(uint16_t color)
     in.full = color;
     ret.alpha = in.alpha ? 0xFF : 0x0;
     /*
-     * when 16-bitmap image is tansformed to 32-bitmap
+     * when 16-bitmap image is transformed to 32-bitmap
      * R should shift left 3 bits
      * G should shift left 3 bits
      * B should shift left 3 bits
