@@ -88,7 +88,7 @@ static inline uint8x8_t NeonDivInt(uint16x8_t a, uint8x8_t b)
     return vmovn_u16(vcombine_u16(vmovn_u32(vcvtq_u32_f32(low)), vmovn_u32(vcvtq_u32_f32(high))));
 }
 
-static void NeonMemcpy(void* dst, int32_t dstSize, const void* src, int32_t srcSize)
+static inline void NeonMemcpy(void* dst, int32_t dstSize, const void* src, int32_t srcSize)
 {
     int32_t sz = MATH_MIN(dstSize, srcSize);
     // 64-bytes aligned
