@@ -25,7 +25,6 @@ namespace {
     const Point POINT1 = { 5, 4 };
     const Point POINT2 = { 3, 2 };
     const uint16_t MAX_NUM_8BIT = 256;
-    const uint32_t MAX_NUM_16BIT = 32768;
 }
 class MathTest : public testing::Test {
 public:
