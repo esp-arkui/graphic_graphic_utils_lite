@@ -68,7 +68,7 @@ uint32_t Color::ColorTo32(Color16 color, uint8_t alpha)
 {
     Color32 ret;
     /*
-     * when 16-bitmap image is tansformed to 32-bitmap,
+     * when 16-bitmap image is transformed to 32-bitmap,
      * R should shift left 3 bits,
      * G should shift left 2 bits,
      * B should shift left 3 bits,
@@ -83,7 +83,7 @@ uint32_t Color::ColorTo32(Color16 color, uint8_t alpha)
 uint16_t Color::ColorTo16(Color32 color)
 {
     /*
-     * when 32-bitmap image is tansformed to 16-bitmap,
+     * when 32-bitmap image is transformed to 16-bitmap,
      * R should shift right 3 bits,
      * G should shift right 2 bits,
      * B should shift right 3 bits,
