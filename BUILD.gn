@@ -65,7 +65,6 @@ lite_library("graphic_utils") {
     "frameworks/hal_tick.cpp",
     "frameworks/mem_api.cpp",
     "frameworks/pixel_format_utils.cpp",
-    "frameworks/queue.c",
     "frameworks/style.cpp",
     "frameworks/trans_affine.cpp",
     "frameworks/transform.cpp",
@@ -90,6 +89,14 @@ config("graphic_utils_public_config") {
     "interfaces/kits",
     "$product_path/graphic_config",
   ]
+  if (board_toolchain_type == "iccarm") {
+    cflags = [
+      "--diag_suppress",
+      "Pe068,Pa089,Pa093,Pe161,Pe181,Pe223",
+    ]
+    cflags_cc = cflags
+  }
+
   defines += [
     "GRAPHIC_ENABLE_LINECAP_FLAG=1",
     "GRAPHIC_ENABLE_LINEJOIN_FLAG=1",
