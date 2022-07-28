@@ -22,6 +22,7 @@
 #include "cmsis_os2.h"
 #else
 #include <ctime>
+#include <time.h>
 #endif
 
 namespace OHOS {
