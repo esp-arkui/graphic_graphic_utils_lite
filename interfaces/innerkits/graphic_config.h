@@ -407,7 +407,8 @@ namespace OHOS {
 
 /* Default font size. The default value is <b>18</b>. */
 static constexpr uint8_t DEFAULT_VECTOR_FONT_SIZE = 18;
-
+/* Max font search number for UiMultiFontManager. */
+static constexpr uint8_t MAX_FONT_SEARCH_NUM = 26;
 /* Defines the file name of default line break rule. */
 #ifndef DEFAULT_LINE_BREAK_RULE_FILENAME
 #define DEFAULT_LINE_BREAK_RULE_FILENAME   "line_cj.brk"
