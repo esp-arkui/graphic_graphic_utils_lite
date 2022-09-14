@@ -38,7 +38,7 @@ namespace OHOS {
     {
         free(buffer);
     }
-    // __attribute__((weak))
+	
     void* UIRealloc(void* buffer, uint32_t size)
     {
         return realloc(buffer, size);
@@ -66,7 +66,7 @@ namespace OHOS {
     {
         free(buffer);
     }
-    // __attribute__((weak))
+
     __attribute__((weak)) void* UIRealloc(void* buffer, uint32_t size)
     {
         return realloc(buffer, size);
