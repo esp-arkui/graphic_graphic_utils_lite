@@ -14,13 +14,20 @@
  */
 
 #include "gfx_utils/mem_api.h"
+
+#ifndef WIN32
+#define UI_WEAK_SYMBOL __attribute__((weak))
+#else
+#define UI_WEAK_SYMBOL
+#endif
+
 namespace OHOS {
-__attribute__((weak)) void* ImageCacheMalloc(ImageInfo& info)
+UI_WEAK_SYMBOL void* ImageCacheMalloc(ImageInfo& info)
 {
     return malloc(info.dataSize);
 }
 
-__attribute__((weak)) void ImageCacheFree(ImageInfo& info)
+UI_WEAK_SYMBOL void ImageCacheFree(ImageInfo& info)
 {
     uint8_t* buf = const_cast<uint8_t*>(info.data);
     free(buf);
@@ -28,17 +35,17 @@ __attribute__((weak)) void ImageCacheFree(ImageInfo& info)
     return;
 }
 
-__attribute__((weak)) void* UIMalloc(uint32_t size)
+UI_WEAK_SYMBOL void* UIMalloc(uint32_t size)
 {
     return malloc(size);
 }
 
-__attribute__((weak)) void UIFree(void* buffer)
+UI_WEAK_SYMBOL void UIFree(void* buffer)
 {
     free(buffer);
 }
 
-__attribute__((weak)) void* UIRealloc(void* buffer, uint32_t size)
+UI_WEAK_SYMBOL void* UIRealloc(void* buffer, uint32_t size)
 {
     return realloc(buffer, size);
 }
