@@ -37,7 +37,7 @@ public:
         if (spanLen > spans_.GetSize()) {
             spans_.Resize(((spanLen + MAX_COLOR_NUM) >> BYTE_LENGTH) << BYTE_LENGTH);
         }
-        return &spans_[0];
+        return spans_.Data();
     }
 
     inline Rgba8T* GetSpanPtr()
