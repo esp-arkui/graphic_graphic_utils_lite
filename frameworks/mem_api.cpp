@@ -15,7 +15,7 @@
 
 #include "gfx_utils/mem_api.h"
 namespace OHOS {
-__attribute__((weak)) void* ImageCacheMalloc(ImageInfo& info)
+__attribute__((weak)) void* ImageCacheMalloc(const ImageInfo& info)
 {
     return malloc(info.dataSize);
 }
