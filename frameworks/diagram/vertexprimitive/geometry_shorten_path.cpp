@@ -38,7 +38,7 @@ void ShortenPath(GeometryVertexSequence& vtxSeq, float distance, uint32_t closed
         }
         if (vtxSeq.Size() > 1) {
             nSize = vtxSeq.Size() - 1;
-            VertexDist& prev = vtxSeq[nSize - 1];
+            const VertexDist& prev = vtxSeq[nSize - 1];
             VertexDist& last = vtxSeq[nSize];
             vtxSeqDistance = (prev.vertexDistance - distance) / prev.vertexDistance;
             float x = prev.vertexXCoord + (last.vertexXCoord - prev.vertexXCoord) * vtxSeqDistance;
