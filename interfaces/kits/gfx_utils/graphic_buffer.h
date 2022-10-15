@@ -48,7 +48,7 @@ namespace OHOS {
  */
 struct BufferInfo {
     Rect rect;
-    int32_t stride;
+    uint32_t stride;
     void* phyAddr;
     void* virAddr;
     uint16_t width;
