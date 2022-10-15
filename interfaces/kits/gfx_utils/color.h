@@ -144,7 +144,7 @@ struct Rgba {
     float blue;
     float alpha;
 
-    Rgba() {}
+    Rgba() : red(0), green(0), blue(0), alpha(0) {}
 
     /**
      * @brief Rgba Constructor.
