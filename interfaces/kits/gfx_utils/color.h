@@ -39,7 +39,7 @@
 #include "gfx_utils/heap_base.h"
 #include "graphic_config.h"
 #include "graphic_math.h"
-#if ENABLE_ARM_MATH
+#if defined(ENABLE_ARM_MATH) && ENABLE_ARM_MATH
 #include "arm_math.h"
 #endif
 namespace OHOS {
@@ -112,9 +112,9 @@ typedef union {
     uint32_t full;
 } Color32;
 
-#if COLOR_DEPTH == 16
+#if defined(COLOR_DEPTH) && COLOR_DEPTH == 16
 using ColorType = Color16;
-#elif COLOR_DEPTH == 32
+#elif defined(COLOR_DEPTH) && COLOR_DEPTH == 32
 using ColorType = Color32;
 #else
 #    error "Invalid COLOR_DEPTH, Set it to 16 or 32!"
@@ -251,7 +251,7 @@ struct Rgba {
         }
         return *this;
     }
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
     /**
      * @brief Gradual change.
      *
@@ -450,7 +450,7 @@ struct Rgba8T {
         BASE_MSB = 1 << (BASE_SHIFT - 1)
     };
 
-    Rgba8T() {}
+    Rgba8T() : red(0), green(0), blue(0), alpha(0) {}
 
     /**
      * @brief Rgba8T Constructor
@@ -577,7 +577,7 @@ struct Rgba8T {
 
     static inline uint8_t Multiply(uint8_t valueA, uint8_t valueB)
     {
-#if ENABLE_ARM_MATH
+#if defined(ENABLE_ARM_MATH) && ENABLE_ARM_MATH
         uint32_t uint32_t = __SMUAD(valueA, valueB) + BASE_MSB;
 #else
         uint32_t uint32_t = valueA * valueB + BASE_MSB;
@@ -596,7 +596,7 @@ struct Rgba8T {
                 valueB = 1;
             }
 
-#if ENABLE_ARM_MATH
+#if defined(ENABLE_ARM_MATH) && ENABLE_ARM_MATH
             return uint8_t(__UDIV(__SMUAD(valueA, BASE_MASK) + (valueB >> 1), valueB));
 #else
             return uint8_t((valueA * BASE_MASK + (valueB >> 1)) / valueB);
@@ -621,7 +621,7 @@ struct Rgba8T {
 
     static inline uint8_t Lerp(uint8_t valueP, uint8_t valueQ, uint8_t valueA)
     {
-#if ENABLE_ARM_MATH
+#if defined(ENABLE_ARM_MATH) && ENABLE_ARM_MATH
         int32_t t = __SMUAD((valueQ - valueP), valueA) + BASE_MSB - (valueP > valueQ);
 #else
         int32_t t = (valueQ - valueP) * valueA + BASE_MSB - (valueP > valueQ);
@@ -654,7 +654,7 @@ struct Rgba8T {
     {
         return alpha / BASE_MASK;
     }
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
     /**
      * @brief Gradient, calculate the new rgba8t object according to the change coefficient
      *

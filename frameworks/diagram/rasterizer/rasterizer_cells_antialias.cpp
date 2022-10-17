@@ -331,8 +331,9 @@ void RasterizerCellsAntiAlias::LineOperate(int32_t x1, int32_t y1, int32_t x2, i
     RenderHorizonline(ey1, xFrom, POLY_SUBPIXEL_SCALE - first, x2, submaskFlagsY2);
 }
 
-void RasterizerCellsAntiAlias::RenderVerticalLine(int32_t& x1, int32_t& ex1, int64_t& dy, int32_t& first, int32_t& increase, int32_t& xFrom,
-                                                  int32_t& submaskFlagsY1, int32_t& submaskFlagsY2, int32_t& ey1, int32_t& ey2, int32_t& delta)
+void RasterizerCellsAntiAlias::RenderVerticalLine(int32_t& x1, int32_t& ex1, int64_t& dy, int32_t& first,
+                                                  int32_t& increase, int32_t& xFrom, int32_t& submaskFlagsY1,
+                                                  int32_t& submaskFlagsY2, int32_t& ey1, int32_t& ey2, int32_t& delta)
 {
     /**
      * The coordinates of the first 24 bits are extracted from the points in units of 1 / 256 pixels
@@ -370,8 +371,9 @@ void RasterizerCellsAntiAlias::RenderVerticalLine(int32_t& x1, int32_t& ex1, int
     currCell_.area += twoFx * delta;
 }
 
-void RasterizerCellsAntiAlias::RenderObliqueLine(int64_t& dx, int64_t& dy, int32_t& first, int32_t& increase, int32_t& xFrom,
-                                                 int64_t& deltaxMask, int32_t& ey1, int32_t& ey2, int32_t& delta)
+void RasterizerCellsAntiAlias::RenderObliqueLine(int64_t& dx, int64_t& dy, int32_t& first,
+                                                 int32_t& increase, int32_t& xFrom, int64_t& deltaxMask,
+                                                 int32_t& ey1, int32_t& ey2, int32_t& delta)
 {
     int32_t remDyMask, liftDyMask;
     deltaxMask = POLY_SUBPIXEL_SCALE * dx;

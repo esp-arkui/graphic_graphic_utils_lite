@@ -47,7 +47,7 @@ class VertexGenerateStroke {
 public:
     VertexGenerateStroke();
 
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     void SetLineCap(LineCap lc)
     {
         stroker_.SetLineCap(lc);
@@ -57,7 +57,7 @@ public:
         return stroker_.GetLineCap();
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     void SetLineJoin(LineJoin lj)
     {
         stroker_.SetLineJoin(lj);

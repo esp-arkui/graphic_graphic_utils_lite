@@ -34,7 +34,7 @@ const uint8_t SUB_PIXEL_SHIFT = 8;
  * Gradient color interpolator
  */
 struct ColorInterpolator {
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
 public:
 
     ColorInterpolator(const Rgba8T& color1, const Rgba8T& color2, uint32_t distance)

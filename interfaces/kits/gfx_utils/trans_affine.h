@@ -224,7 +224,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    static TransAffine TransAffineTranslation(float x,float y)
+    static TransAffine TransAffineTranslation(float x, float y)
     {
         return TransAffine(1.0f, 0.0f, 0.0f, 1.0f, x, y);
     }

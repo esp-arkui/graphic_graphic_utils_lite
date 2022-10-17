@@ -16,7 +16,7 @@
 #include "gfx_utils/diagram/vertexprimitive/geometry_bezier_arc.h"
 
 namespace OHOS {
-#if GRAPHIC_ENABLE_BEZIER_ARC_FLAG
+#if defined(GRAPHIC_ENABLE_BEZIER_ARC_FLAG) && GRAPHIC_ENABLE_BEZIER_ARC_FLAG
 const uint16_t BEZIER_ARC_SETUP = 2;
 
 const uint16_t BEZIER_ARC_VERTICES_SIZE_STEP = 6;
@@ -53,7 +53,7 @@ void ArcToBezier(float cx, float cy, float rx, float ry,
     px[3] = x0;
     py[3] = y0;
 
-    float cosVal = Cos((startAngle + sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE );
+    float cosVal = Cos((startAngle + sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE);
     float sinVal = Sin((startAngle + sweepAngle / FLOATNUM) * RADIAN_TO_ANGLE);
 
     for (uint16_t i = 0; i < BEZIER_ARC_POINTS; i++) {

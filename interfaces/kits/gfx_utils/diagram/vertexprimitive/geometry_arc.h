@@ -28,7 +28,7 @@ namespace OHOS {
  * @version 1.0
  */
 class GeometryArc : public HeapBase {
-#if GRAPHIC_ENABLE_ARC_FLAG
+#if defined(GRAPHIC_ENABLE_ARC_FLAG) && GRAPHIC_ENABLE_ARC_FLAG
 public:
     GeometryArc() : initialized_(false), pathCommand_(0.0f), centerX_(0.0f),
                     centerY_(0.0f), radiusX_(0.0f), radiusY_(0.0f),

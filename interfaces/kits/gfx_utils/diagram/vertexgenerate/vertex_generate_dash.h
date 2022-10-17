@@ -25,7 +25,7 @@ namespace OHOS {
  * @version 1.0
  */
 class VertexGenerateDash {
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
     enum Status {
         INITIAL,
         READY,

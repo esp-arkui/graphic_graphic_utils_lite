@@ -130,7 +130,7 @@ void VertexGenerateStroke::VertexReady(const uint32_t& verticesNum, uint32_t& cm
 
 void VertexGenerateStroke::VertexLineCapStart()
 {
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     stroker_.CalcCap(outVertices_,
                      srcVertices_[0],
                      srcVertices_[1],
@@ -144,7 +144,7 @@ void VertexGenerateStroke::VertexLineCapStart()
 
 void VertexGenerateStroke::VertexLineCapEnd(const uint32_t& verticesNum)
 {
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     stroker_.CalcCap(outVertices_,
                      srcVertices_[srcVertices_.Size() - 1],
                      srcVertices_[srcVertices_.Size() - verticesNum],
@@ -166,7 +166,7 @@ void VertexGenerateStroke::VertexLineJoinStart()
         status_ = LINECAP_END;
         return;
     }
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     stroker_.CalcJoin(outVertices_,
                       srcVertices_.Prev(srcVertex_),
                       srcVertices_.Curr(srcVertex_),
@@ -188,7 +188,7 @@ void VertexGenerateStroke::VertexLineJoinEnd()
         return;
     }
     --srcVertex_;
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     stroker_.CalcJoin(outVertices_,
                       srcVertices_.Next(srcVertex_),
                       srcVertices_.Curr(srcVertex_),
