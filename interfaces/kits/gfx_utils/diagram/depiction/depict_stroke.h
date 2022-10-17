@@ -44,7 +44,7 @@ struct DepictStroke
         : DepictAdaptorVertexGenerate<VertexSource, VertexGenerateStroke>(vs)
     {
     }
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     /**
      * ineCap Property sets the style of the line end cap.
      * butt Default. Add a straight edge to each end of the line.
@@ -69,7 +69,7 @@ struct DepictStroke
         return BaseType::GetGenerator().GetLineCap();
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     /**
      * lineJoin Property sets the type of corner created. When two lines meet,
      * Mainly including bevel Create a bevel. round Create a fillet.

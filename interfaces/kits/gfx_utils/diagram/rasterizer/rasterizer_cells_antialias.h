@@ -194,11 +194,14 @@ private:
      */
     void RenderHorizonline(int32_t ey, int32_t x1, int32_t submaskFlagsY1, int32_t x2, int32_t submaskFlagsY2);
 
-    void RenderVerticalLine(int32_t& x1, int32_t& ex1, int64_t& dy, int32_t& first, int32_t& increase, int32_t& xFrom,
-                            int32_t& submaskFlagsY1, int32_t& submaskFlagsY2, int32_t& ey1, int32_t& ey2, int32_t& delta);
+    void RenderVerticalLine(int32_t& x1, int32_t& ex1, int64_t& dy, int32_t& first,
+                            int32_t& increase, int32_t& xFrom, int32_t& submaskFlagsY1,
+                            int32_t& submaskFlagsY2, int32_t& ey1, int32_t& ey2, int32_t& delta);
 
-    void RenderObliqueLine(int64_t& dx, int64_t& dy, int32_t& first, int32_t& increase, int32_t& xFrom,
-                           int64_t& deltaxMask, int32_t& ey1, int32_t& ey2, int32_t& delta);
+    void RenderObliqueLine(int64_t& dx, int64_t& dy, int32_t& first,
+                           int32_t& increase, int32_t& xFrom, int64_t& deltaxMask,
+                           int32_t& ey1, int32_t& ey2, int32_t& delta);
+
     /**
      * @brief Allocate array space for cells during rasterization.
      * @since 1.0

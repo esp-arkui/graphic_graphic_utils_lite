@@ -231,7 +231,7 @@ uint32_t DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::Generate
                     return PATH_CMD_STOP;
                 }
                 markers_.AddVertex(startX_, startY_, PATH_CMD_MOVE_TO);
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
                 generator_.RemoveAll();
                 generator_.AddVertex(startX_, startY_, PATH_CMD_MOVE_TO);
 
@@ -281,7 +281,7 @@ void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumu
                 break;
             }
             markers_.AddVertex(*x, *y, PATH_CMD_LINE_TO);
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
             generator_.AddVertex(*x, *y, cmd);
 #else
             if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {
@@ -294,7 +294,7 @@ void DepictAdaptorVertexGenerate<VertexSource, Generator, Markers>::VertexAccumu
                 break;
             }
             if (IsEndPoly(cmd)) {
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
                 generator_.AddVertex(*x, *y, cmd);
 #else
                 if (generator_.GetGenerateFlags() != VertexGenerateFlags::GENERATE_DASH) {

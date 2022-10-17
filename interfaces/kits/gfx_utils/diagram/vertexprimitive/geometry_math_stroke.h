@@ -60,16 +60,16 @@ public:
           strokeWidthUsingAbs_(ALPHA_HALF),
           strokeWidthPercentDivision_(ALPHA_HALF / BUF_SIZE),
           strokeWidthSignal_(1),
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
           lineCap_(BUTT_CAP),
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
           miterLimitMeasure_(DEFAULTMITERLIMIT),
           lineJoin_(MITER_JOIN),
 #endif
           approxScaleRadio_(1.0f) {}
 
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     /**
      * @brief SetLineCap Defines the end style of the line
      */
@@ -144,7 +144,7 @@ public:
     }
 #endif
 
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     /**
      * @brief SetLineJoin Defines the type of corner created when two lines intersect.
      * Pay attention to 90 degree rotation at both ends of the corner.
@@ -438,10 +438,10 @@ private:
     int32_t strokeWidthSignal_;
 
     float approxScaleRadio_;
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     LineCap lineCap_;
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     LineJoin lineJoin_;
     float miterLimitMeasure_;
 #endif

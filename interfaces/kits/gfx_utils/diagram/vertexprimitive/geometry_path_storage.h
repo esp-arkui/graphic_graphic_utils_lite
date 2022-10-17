@@ -316,7 +316,7 @@ public:
             if (CalcDistance(x0, y0, x, y) < epsilon) {
                 return;
             }
-#if GRAPHIC_ENABLE_BEZIER_ARC_FLAG
+#if defined(GRAPHIC_ENABLE_BEZIER_ARC_FLAG) && GRAPHIC_ENABLE_BEZIER_ARC_FLAG
             BezierArcSvg bezierArcSvg(x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y);
             if (bezierArcSvg.RadiiOK()) {
                 JoinPath(bezierArcSvg);
@@ -406,7 +406,7 @@ public:
         }
         return vertices_.GenerateVertex(iterator_++, x, y);
     }
-#if GRAPHIC_ENABLE_BEZIER_ARC_FLAG
+#if defined(GRAPHIC_ENABLE_BEZIER_ARC_FLAG) && GRAPHIC_ENABLE_BEZIER_ARC_FLAG
     /**
      * @brief Connection path.
      * @param vs Vertex source to connect.

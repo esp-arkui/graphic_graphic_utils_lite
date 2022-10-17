@@ -14,12 +14,12 @@
  */
 
 #include "gfx_utils/graphic_math.h"
-#if ENABLE_CMATH
+#if defined(ENABLE_CMATH) && ENABLE_CMATH
 #include <cmath>
 #endif
 
 namespace OHOS {
-#if !ENABLE_CMATH
+#if defined(ENABLE_CMATH) && !ENABLE_CMATH
 static float g_sinValues[] = {
     0.000000, 0.017452, 0.034899, 0.052336, 0.069756, 0.087156, 0.104528, 0.121869, 0.139173, 0.156434, 0.173648,
     0.190809, 0.207912, 0.224951, 0.241922, 0.258819, 0.275637, 0.292372, 0.309017, 0.325568, 0.342020, 0.358368,
@@ -35,7 +35,7 @@ static float g_sinValues[] = {
 
 float Sin(float angle)
 {
-#if ENABLE_CMATH
+#if defined(ENABLE_CMATH) && ENABLE_CMATH
     float radian =  angle / RADIAN_TO_ANGLE;
     return sin(radian);
 #else
@@ -64,7 +64,7 @@ float Fmod(float X, float Y)
 
 float Cos(float angle)
 {
-#if ENABLE_CMATH
+#if defined(ENABLE_CMATH) && ENABLE_CMATH
     return cos(angle / RADIAN_TO_ANGLE);
 #else
     Sin(QUARTER_IN_DEGREE - angle);
@@ -73,7 +73,7 @@ float Cos(float angle)
 
 float Acos(float value)
 {
-#if ENABLE_CMATH
+#if defined(ENABLE_CMATH) && ENABLE_CMATH
     return acos(value);
 #else
     float result, l, r;
@@ -82,9 +82,9 @@ float Acos(float value)
     result = (l + r) / 2;
     while (MATH_ABS(Sin(QUARTER_IN_DEGREE - result * RADIAN_TO_ANGLE) - value) > UI_FLT_EPSILON) {
         if (Sin(QUARTER_IN_DEGREE - result * RADIAN_TO_ANGLE) - value > UI_FLT_EPSILON) {
-           l = result;
+            l = result;
         } else {
-           r = result;
+            r = result;
         }
         result = (l + r) / 2;
     }
@@ -132,7 +132,7 @@ float FastAtan2F(float y, float x)
 {
     float absX = MATH_ABS(x);
     float absY = MATH_ABS(y);
-    if (absY < UI_FLT_EPSILON && absX < UI_FLT_EPSILON){
+    if (absY < UI_FLT_EPSILON && absX < UI_FLT_EPSILON) {
         return 0;
     }
     float t;
@@ -145,14 +145,14 @@ float FastAtan2F(float y, float x)
     } else {
         t = (absY) / absX;
         t2 = t * t;
-        angle = (t * (1 + t2 * (ATAN2_P3 + t2 * (ATAN2_P5 + t2 * ATAN2_P7))) );
+        angle = (t * (1 + t2 * (ATAN2_P3 + t2 * (ATAN2_P5 + t2 * ATAN2_P7))));
     }
 
     if (y < 0) {
         if (x < 0) {
-            angle = - UI_PI + angle;
+            angle = -UI_PI + angle;
         } else {
-            angle = - angle;
+            angle = -angle;
         }
     } else if (x < 0) {
         angle =  UI_PI - angle;

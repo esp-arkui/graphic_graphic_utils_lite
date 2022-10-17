@@ -45,7 +45,7 @@ public:
  * @ColorF Color array
  */
 class FillGradient : public SpanBase {
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
 public:
     FillGradient() {}
     /**

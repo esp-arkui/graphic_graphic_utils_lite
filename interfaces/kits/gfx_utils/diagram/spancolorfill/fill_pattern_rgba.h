@@ -27,7 +27,7 @@
 
 namespace OHOS {
 class FillPatternRgba : public SpanBase {
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
 public:
     FillPatternRgba() {}
 

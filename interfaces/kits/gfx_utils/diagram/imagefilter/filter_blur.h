@@ -22,7 +22,7 @@
 
 namespace OHOS {
 class Filterblur {
-#if GRAPHIC_ENABLE_BLUR_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_BLUR_EFFECT_FLAG) && GRAPHIC_ENABLE_BLUR_EFFECT_FLAG
 
 public:
     Filterblur()
