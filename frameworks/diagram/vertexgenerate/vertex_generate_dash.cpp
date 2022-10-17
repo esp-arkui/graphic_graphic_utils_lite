@@ -18,7 +18,7 @@
 #include "gfx_utils/diagram/vertexprimitive/geometry_shorten_path.h"
 
 namespace OHOS {
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
 VertexGenerateDash::VertexGenerateDash()
     : totalDashLen_(0.0f),
       numDashes_(0),

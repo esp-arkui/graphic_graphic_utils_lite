@@ -15,7 +15,7 @@
 
 #include "gfx_utils/diagram/vertexprimitive/geometry_arc.h"
 namespace OHOS {
-#if GRAPHIC_ENABLE_ARC_FLAG
+#if defined(GRAPHIC_ENABLE_ARC_FLAG) && GRAPHIC_ENABLE_ARC_FLAG
 const int32_t CURVERENUMSTEP = 4;
 GeometryArc::GeometryArc(float centerX, float centerY,
                          float rx, float ry,

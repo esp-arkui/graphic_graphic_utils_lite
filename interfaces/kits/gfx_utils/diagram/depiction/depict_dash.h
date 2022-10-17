@@ -42,7 +42,7 @@ using GenerateDash = VertexGenerateDash;
  * @version 1.0
  */
 struct DepictDash : public DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers> {
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
     using BaseType = DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers>;
 
     DepictDash(DepictCurve& vs) : DepictAdaptorVertexGenerate<DepictCurve, GenerateDash, EmptyMarkers>(vs) {}

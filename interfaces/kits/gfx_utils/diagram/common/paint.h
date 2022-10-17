@@ -45,34 +45,34 @@ public:
           opacity_(OPA_OPAQUE),
           strokeWidth_(DEFAULT_STROKE_WIDTH),
           changeFlag_(false),
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
           lineJoin_(LineJoin::ROUND_JOIN),
 #endif
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
           lineCap_(LineCap::BUTT_CAP),
 #endif
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
           isDashMode_(false),
           dashOffset_(0),
           dashArray_(nullptr),
           ndashes_(0),
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
           miterLimit_(0),
 #endif
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
           linearGradientPoint_({0, 0, 0, 0}),
           radialGradientPoint_({0, 0, 0, 0, 0, 0}),
           stopAndColors_({}),
           gradientflag_(Linear),
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
           patternRepeat_(REPEAT),
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
           image_(nullptr),
 #endif
-#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG) && GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
           shadowBlurRadius_(0),
           shadowOffsetX_(0.0f),
           shadowOffsetY_(0.0f),
@@ -96,7 +96,7 @@ public:
     }
     void InitDash(const Paint& paint)
     {
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
         if (isDashMode_ && ndashes_ > 0) {
             dashArray_ = new float[ndashes_];
             if (dashArray_) {
@@ -142,13 +142,13 @@ public:
         strokeColor_ = paint.strokeColor_;
         strokeWidth_ = paint.strokeWidth_;
         opacity_ = paint.opacity_;
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
         lineCap_ = paint.lineCap_;
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
         lineJoin_ = paint.lineJoin_;
 #endif
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
         isDashMode_ = paint.isDashMode_;
         dashOffset_ = paint.dashOffset_;
         dashArray_ = paint.dashArray_;
@@ -160,19 +160,19 @@ public:
         translationX_ = paint.translationX_;
         translationY_ = paint.translationY_;
         InitDash(paint);
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
         miterLimit_ = paint.miterLimit_;
 #endif
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
         linearGradientPoint_ = paint.linearGradientPoint_;
         radialGradientPoint_ = paint.radialGradientPoint_;
         stopAndColors_ = paint.stopAndColors_;
         gradientflag_ = paint.gradientflag_;
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
         patternRepeat_ = paint.patternRepeat_;
 #endif
-#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG) && GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
         shadowBlurRadius_ = paint.shadowBlurRadius_;
         shadowOffsetX_ = paint.shadowOffsetX_;
         shadowOffsetY_ = paint.shadowOffsetY_;
@@ -442,7 +442,7 @@ public:
     {
         return changeFlag_;
     }
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     /**
      * @brief Sets the cap type.
      * @see GetLineCap
@@ -456,7 +456,7 @@ public:
     }
 #endif
 
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     /**
      * @brief Gets the cap type.
      * @see SetLineCap
@@ -468,7 +468,7 @@ public:
         return lineCap_;
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     /**
      * @brief Sets the style at the path connection of the pen.
      * @see GetLineJoin
@@ -481,7 +481,7 @@ public:
         changeFlag_ = true;
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     /**
      * @brief Sets the spacing limit for sharp corners at path connections.
      * @see GetMiterLimit
@@ -494,13 +494,13 @@ public:
         changeFlag_ = true;
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     float GetMiterLimit() const
     {
         return miterLimit_;
     }
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     /**
      * @brief Gets the style at the path connection of the pen.
      * @see SetLineJoin
@@ -512,7 +512,7 @@ public:
         return lineJoin_;
     }
 #endif
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
     bool IsLineDash() const
     {
         return isDashMode_;
@@ -599,7 +599,7 @@ public:
         }
     }
 #endif
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
     void createLinearGradient(float startx, float starty, float endx, float endy)
     {
         gradientflag_ = Linear;
@@ -650,7 +650,7 @@ public:
         return gradientflag_;
     }
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
     /*
      * Set hatch patterns for elements
      * @param img Represents the pattern of the hatch，text Represents a fill pattern
@@ -673,7 +673,7 @@ public:
     }
 #endif
 
-#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG) && GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
     /**
      * @brief Sets the shadow blur level.
      * @since 1.0
@@ -975,7 +975,7 @@ public:
         return haveComposite_;
     }
 
-#if GRAPHIC_ENABLE_BLUR_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_BLUR_EFFECT_FLAG) && GRAPHIC_ENABLE_BLUR_EFFECT_FLAG
     Filterblur drawBlur;
     Filterblur GetDrawBoxBlur() const
     {
@@ -990,35 +990,35 @@ private:
     uint8_t opacity_;
     uint16_t strokeWidth_;
     bool changeFlag_;
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     LineJoin lineJoin_;
 #endif
 
-#if GRAPHIC_ENABLE_LINECAP_FLAG
+#if defined(GRAPHIC_ENABLE_LINECAP_FLAG) && GRAPHIC_ENABLE_LINECAP_FLAG
     LineCap lineCap_;
 #endif
-#if GRAPHIC_ENABLE_DASH_GENERATE_FLAG
+#if defined(GRAPHIC_ENABLE_DASH_GENERATE_FLAG) && GRAPHIC_ENABLE_DASH_GENERATE_FLAG
     bool isDashMode_;  // Is it a dash mode segment.
     float dashOffset_; // dash Point offset.
     float* dashArray_; // dash Point array.
     uint32_t ndashes_; // Length of dasharray
 #endif
-#if GRAPHIC_ENABLE_LINEJOIN_FLAG
+#if defined(GRAPHIC_ENABLE_LINEJOIN_FLAG) && GRAPHIC_ENABLE_LINEJOIN_FLAG
     float miterLimit_; // Sets the spacing limit for sharp corners at path connections
 #endif
-#if GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_GRADIENT_FILL_FLAG) && GRAPHIC_ENABLE_GRADIENT_FILL_FLAG
     LinearGradientPoint linearGradientPoint_;
     RadialGradientPoint radialGradientPoint_;
     List<StopAndColor> stopAndColors_;
     Gradient gradientflag_;
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
     PatternRepeatMode patternRepeat_;
 #endif
-#if GRAPHIC_ENABLE_PATTERN_FILL_FLAG
+#if defined(GRAPHIC_ENABLE_PATTERN_FILL_FLAG) && GRAPHIC_ENABLE_PATTERN_FILL_FLAG
     const char* image_;
 #endif
-#if GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
+#if defined(GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG) && GRAPHIC_ENABLE_SHADOW_EFFECT_FLAG
     uint16_t shadowBlurRadius_; // Sets the shadow blur radius.
     float shadowOffsetX_;       // Sets the abscissa offset of the shadow.
     float shadowOffsetY_;       // Sets the shadow ordinate offset.
