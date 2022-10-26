@@ -945,16 +945,16 @@ Matrix4<T> Matrix4<T>::Shear(const Vector2<T>& shearX, const Vector2<T>& shearY,
 
 inline int64_t FloatToInt64(float f)
 {
-    if (f > 127.0) { // 127.0: 2^7
+    if (static_cast<double>(f) > 127.0) { // 127.0: 2^7
         return 0x7FFF;
     }
 
-    if (f < -127.0) { // 127.0: 2^7
+    if (static_cast<double>(f) < -127.0) { // 127.0: 2^7
         return -0x7FFF;
     }
 
     // 256.0: 2^8 left move 8 bit. 0.5: round up
-    return static_cast<int64_t>(f * 256.0 + ((f < 0) ? -0.5 : 0.5));
+    return static_cast<int64_t>(static_cast<double>(f) * 256.0 + ((f < 0) ? -0.5 : 0.5));
 }
 
 inline bool FloatEqual(float lhs, float rhs, float precision = 0.00001f)
