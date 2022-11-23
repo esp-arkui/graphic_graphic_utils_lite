@@ -95,6 +95,10 @@ config("graphic_utils_public_config") {
     "interfaces/kits",
     "$product_path/graphic_config",
   ]
+  if (defined(board_toolchain_type) && board_toolchain_type == "iccarm") {
+    include_dirs +=
+        [ "//base/hiviewdfx/hilog_lite/interfaces/native/kits/hilog_lite" ]
+  }
 
   defines += [
     "GRAPHIC_ENABLE_LINECAP_FLAG=1",
