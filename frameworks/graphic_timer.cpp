@@ -244,7 +244,7 @@ bool GraphicTimer::Start()
     }
 
     struct itimerspec its;
-    its.it_value.tv_nsec = periodMs_ % NS_PER_MS;
+    its.it_value.tv_nsec = (periodMs_ % MS_PER_SECOND) * NS_PER_MS;
     its.it_value.tv_sec = periodMs_ / MS_PER_SECOND;
     if (isPeriodic_) {
         its.it_interval.tv_nsec = its.it_value.tv_nsec;
