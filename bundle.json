@@ -5,14 +5,14 @@
   "license": "Apache License 2.0",
   "pubiishAs": "code-segment",
   "segment": {
-    "destPath": "foundation/graphic/utils"
+    "destPath": "foundation/graphic/graphic_utils_lite"
   },
   "dirs": {},
   "scripts": {},
   "component": {
-    "name": "graphic_utils",
+    "name": "graphic_utils_lite",
     "subsystem": "graphic",
-    "syscap": [ "SystemCapability.Graphic.Utils" ],
+    "syscap": [ "SystemCapability.Graphic.UtilsLite" ],
     "feature": [],
     "adapted_system_type": [ "mini","small" ],
     "rom": "",
@@ -27,8 +27,8 @@
     },
     "build": {
       "sub_component": [ 
-        "//foundation/graphic/utils:lite_graphic_utils",
-        "//foundation/graphic/utils/test:lite_graphic_utils_test" ],
+        "//foundation/graphic/graphic_utils_lite:graphic_utils_lite",
+        "//foundation/graphic/graphic_utils_lite/test:graphic_utils_lite_test" ],
       "inner_kits": [],
       "test": []
     }
