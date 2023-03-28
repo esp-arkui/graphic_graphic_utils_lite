@@ -87,18 +87,10 @@ HWTEST_F(MathTest, MathSqrt_001, TestSize.Level0)
 
     EXPECT_EQ(Sqrt(0), 0);
     float ret = Sqrt(testIntegerSquared);
-    if (ret > testInteger - accuracy && ret < testInteger + accuracy) {
-        EXPECT_EQ(0, 0);
-    } else {
-        EXPECT_NE(0, 0);
-    }
+    EXPECT_TRUE(ret > testInteger - accuracy && ret < testInteger + accuracy);
 
     ret = Sqrt(testFloatSquared);
-    if (ret > testFloat - accuracy && ret < testFloat + accuracy) {
-        EXPECT_EQ(0, 0);
-    } else {
-        EXPECT_NE(0, 0);
-    }
+    EXPECT_TRUE(ret > testFloat - accuracy && ret < testFloat + accuracy);
 }
 
 /**
