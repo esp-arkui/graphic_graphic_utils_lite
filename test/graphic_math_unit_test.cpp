@@ -86,10 +86,10 @@ HWTEST_F(MathTest, MathSqrt_001, TestSize.Level0)
 
     EXPECT_EQ(Sqrt(0), 0);
     float ret = Sqrt(testIntegerSquared);
-    EXPECT_TRUE(MATH_FLT_EQUAL(ret,testInteger);
+    EXPECT_TRUE(MATH_FLT_EQUAL(ret,testInteger));
 
     ret = Sqrt(testFloatSquared);
-    EXPECT_TRUE(MATH_FLT_EQUAL(ret,testFloat);
+    EXPECT_TRUE(MATH_FLT_EQUAL(ret,testFloat));
 }
 
 /**
