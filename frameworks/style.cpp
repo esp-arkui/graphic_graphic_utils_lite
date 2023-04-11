@@ -181,9 +181,6 @@ void Style::SetStyle(uint8_t key, int64_t value)
             letterSpace_ = value;
             break;
         case STYLE_LINE_HEIGHT:
-            if (value < 0) {
-                value = 0;
-            }
             lineHeight_ = value;
             break;
         case STYLE_TEXT_OPA:
