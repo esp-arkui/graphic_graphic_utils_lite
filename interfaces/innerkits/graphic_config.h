@@ -440,6 +440,10 @@ static constexpr uint8_t MAX_FONT_SEARCH_NUM = 26;
 #define DEFAULT_MAX_CACHE_ENTRY_NUM                     64
 #endif // DEFAULT_MAX_CACHE_ENTRY_NUM
 
+#ifndef DEFAULT_EDITTEXT_INPUT_PERIOD
+#define DEFAULT_EDITTEXT_INPUT_PERIOD                   300
+#endif // DEFAULT_EDITTEXT_INPUT_PERIOD
+
 /* Defines some configurations and their default values on LiteOS and other system platforms. */
 #ifdef __LITEOS_M__
 
