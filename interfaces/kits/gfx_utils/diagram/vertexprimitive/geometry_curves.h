@@ -48,35 +48,22 @@ public:
 
     void Init(float x1, float y1, float x2, float y2, float x3, float y3);
 
-    void Reset()
-    {
-        numberSteps_ = 0;
-        currentStep_ = -1;
-    }
+    void Reset();
 
     void ApproximationMethod(CurveApproximationMethod) {}
 
-    CurveApproximationMethod ApproximationMethod() const
-    {
-        return CURVEINCREMENT;
-    }
+    CurveApproximationMethod ApproximationMethod() const;
 
     void ApproximationScale(float scale);
     float ApproximationScale() const;
 
     void AngleTolerance(float) {}
 
-    float AngleTolerance() const
-    {
-        return 0.0f;
-    }
+    float AngleTolerance() const;
 
     void CuspLimit(float) {}
 
-    float CuspLimit() const
-    {
-        return 0.0f;
-    }
+    float CuspLimit() const;
 
     void Rewind(uint32_t pathId);
     uint32_t GenerateVertex(float* x, float* y);
@@ -109,59 +96,27 @@ public:
 
     void Init(float x1, float y1, float x2, float y2, float x3, float y3);
 
-    void Reset()
-    {
-        points_.Clear();
-        count_ = 0;
-    }
+    void Reset();
 
     void ApproximationMethod(CurveApproximationMethod) {}
 
-    CurveApproximationMethod ApproximationMethod() const
-    {
-        return CURVEDIVIDOPERATE;
-    }
+    CurveApproximationMethod ApproximationMethod() const;
 
-    void ApproximationScale(float scale)
-    {
-        approximationScale_ = scale;
-    }
-    float ApproximationScale() const
-    {
-        return approximationScale_;
-    }
+    void ApproximationScale(float scale);
 
-    void AngleTolerance(float angle)
-    {
-        angleTolerance_ = angle;
-    }
-    float AngleTolerance() const
-    {
-        return angleTolerance_;
-    }
+    float ApproximationScale() const;
+
+    void AngleTolerance(float angle);
+
+    float AngleTolerance() const;
 
     void CuspLimit(float) {}
 
-    float CuspLimit() const
-    {
-        return 0.0f;
-    }
+    float CuspLimit() const;
 
-    void Rewind(uint32_t)
-    {
-        count_ = 0;
-    }
+    void Rewind(uint32_t);
 
-    uint32_t GenerateVertex(float* x, float* y)
-    {
-        if (count_ >= points_.Size()) {
-            return PATH_CMD_STOP;
-        }
-        const PointF& point = points_[count_++];
-        *x = point.x;
-        *y = point.y;
-        return (count_ == 1) ? PATH_CMD_MOVE_TO : PATH_CMD_LINE_TO;
-    }
+    uint32_t GenerateVertex(float* x, float* y);
 
 private:
     void Bezier(float x1, float y1,
@@ -250,35 +205,22 @@ public:
              curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
     }
 
-    void Reset()
-    {
-        numberSteps_ = 0;
-        currentStep_ = -1;
-    }
+    void Reset();
 
     void ApproximationMethod(CurveApproximationMethod) {}
 
-    CurveApproximationMethod ApproximationMethod() const
-    {
-        return CURVEINCREMENT;
-    }
+    CurveApproximationMethod ApproximationMethod() const;
 
     void ApproximationScale(float scale);
     float ApproximationScale() const;
 
     void AngleTolerance(float) {}
 
-    float AngleTolerance() const
-    {
-        return 0.0f;
-    }
+    float AngleTolerance() const;
 
     void CuspLimit(float) {}
 
-    float CuspLimit() const
-    {
-        return 0.0f;
-    }
+    float CuspLimit() const;
 
     void Rewind(uint32_t pathId);
     uint32_t GenerateVertex(float* x, float* y);
