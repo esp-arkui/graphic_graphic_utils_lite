@@ -116,11 +116,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    Vector2(T x, T y)
-    {
-        x_ = x;
-        y_ = y;
-    }
+    Vector2(T x, T y);
 
     /**
      * @brief A destructor used to delete the <b>Vector2</b> instance.
@@ -137,12 +133,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T Dot(const Vector2<T>& other) const
-    {
-        T sum = x_ * other.x_;
-        sum += y_ * other.y_;
-        return sum;
-    }
+    T Dot(const Vector2<T>& other) const;
 
     /**
      * @brief Calculates the cross product of the two-dimensional vector and another two-dimensional vector.
@@ -151,56 +142,23 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    T Cross(const Vector2<T>& other) const
-    {
-        return x_ * other.y_ - y_ * other.x_;
-    }
+    T Cross(const Vector2<T>& other) const;
 
-    Vector2 operator-() const
-    {
-        return Vector2(-x_, -y_);
-    }
+    Vector2 operator-() const;
 
-    Vector2 operator-(const Vector2<T>& other) const
-    {
-        return Vector2(x_ - other.x_, y_ - other.y_);
-    }
+    Vector2 operator-(const Vector2<T>& other) const;
 
-    Vector2 operator+(const Vector2<T>& other) const
-    {
-        return Vector2(x_ + other.x_, y_ + other.y_);
-    }
+    Vector2 operator+(const Vector2<T>& other) const;
 
-    Vector2 operator*(T scale) const
-    {
-        return Vector2(x_ * scale, y_ * scale);
-    }
+    Vector2 operator*(T scale) const;
 
-    bool operator==(const Vector2& other) const
-    {
-        return (x_ == other.x_) && (y_ == other.y_);
-    }
+    bool operator==(const Vector2& other) const;
 
-    Vector2& operator=(const Vector2& other)
-    {
-        x_ = other.x_;
-        y_ = other.y_;
-        return *this;
-    }
+    Vector2& operator=(const Vector2& other);
 
-    Vector2& operator+=(const Vector2& other)
-    {
-        x_ += other.x_;
-        y_ += other.y_;
-        return *this;
-    }
+    Vector2& operator+=(const Vector2& other);
 
-    Vector2& operator-=(const Vector2& other)
-    {
-        x_ -= other.x_;
-        y_ -= other.y_;
-        return *this;
-    }
+    Vector2& operator-=(const Vector2& other);
 
     T x_;
     T y_;
@@ -239,12 +197,7 @@ public:
      * @since 1.0
      * @version 1.0
      */
-    Vector3(T x, T y, T z)
-    {
-        data_[0] = x;
-        data_[1] = y;
-        data_[2] = z; // 2: index of z
-    }
+    Vector3(T x, T y, T z);
 
     /**
      * @brief A destructor used to delete the <b>Vector3</b> instance.
@@ -253,20 +206,11 @@ public:
      */
     ~Vector3() {}
 
-    T operator[](uint8_t index) const
-    {
-        return data_[index];
-    }
+    T operator[](uint8_t index) const;
 
-    T& operator[](uint8_t index)
-    {
-        return data_[index];
-    }
+    T& operator[](uint8_t index);
 
-    bool operator==(const Vector3& other) const
-    {
-        return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_);
-    }
+    bool operator==(const Vector3& other) const;
 };
 
 /**
@@ -295,13 +239,7 @@ public:
      */
     Vector4() : x_(0), y_(0), z_(0), w_(1) {}
 
-    Vector4(T x, T y, T z, T w)
-    {
-        data_[0] = x;
-        data_[1] = y;
-        data_[2] = z; // 2: index of z
-        data_[3] = w; // 3: index of w
-    }
+    Vector4(T x, T y, T z, T w);
 
     /**
      * @brief A destructor used to delete the <b>Vector4</b> instance.
@@ -310,20 +248,11 @@ public:
      */
     ~Vector4() {}
 
-    T operator[](uint8_t index) const
-    {
-        return data_[index];
-    }
+    T operator[](uint8_t index) const;
 
-    T& operator[](uint8_t index)
-    {
-        return data_[index];
-    }
+    T& operator[](uint8_t index);
 
-    bool operator==(const Vector4& other) const
-    {
-        return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_) && (w_ == other.w_);
-    }
+    bool operator==(const Vector4& other) const;
 };
 
 /**

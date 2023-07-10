@@ -201,4 +201,126 @@ bool IsIdentity(Matrix4<float>& matrix)
     }
     return true;
 }
+
+template<typename T>
+Vector2::Vector2(T x, T y)
+{
+    x_ = x;
+    y_ = y;
+}
+
+template<typename T>
+T Vector2::Dot(const Vector2<T>& other) const
+{
+    T sum = x_ * other.x_;
+    sum += y_ * other.y_;
+    return sum;
+}
+
+template<typename T>
+T Vector2::Cross(const Vector2<T>& other) const
+{
+    return x_ * other.y_ - y_ * other.x_;
+}
+
+template<typename T>
+Vector2 Vector2::operator-() const
+{
+    return Vector2(-x_, -y_);
+}
+
+template<typename T>
+Vector2 Vector2::operator-(const Vector2<T>& other) const
+{
+    return Vector2(x_ - other.x_, y_ - other.y_);
+}
+
+template<typename T>
+Vector2 Vector2::operator+(const Vector2<T>& other) const
+{
+    return Vector2(x_ + other.x_, y_ + other.y_);
+}
+
+template<typename T>
+Vector2 Vector2::operator*(T scale) const
+{
+    return Vector2(x_ * scale, y_ * scale);
+}
+
+bool Vector2::operator==(const Vector2& other) const
+{
+    return (x_ == other.x_) && (y_ == other.y_);
+}
+
+Vector2& Vector2::operator=(const Vector2& other)
+{
+    x_ = other.x_;
+    y_ = other.y_;
+    return *this;
+}
+
+Vector2& Vector2::operator+=(const Vector2& other)
+{
+    x_ += other.x_;
+    y_ += other.y_;
+    return *this;
+}
+
+Vector2& Vector2::operator-=(const Vector2& other)
+{
+    x_ -= other.x_;
+    y_ -= other.y_;
+    return *this;
+}
+
+template<typename T>
+Vector3::Vector3(T x, T y, T z)
+{
+    data_[0] = x;
+    data_[1] = y;
+    data_[2] = z; // 2: index of z
+}
+
+template<typename T>
+T Vector3::operator[](uint8_t index) const
+{
+    return data_[index];
+}
+
+template<typename T>
+T& Vector3::operator[](uint8_t index)
+{
+    return data_[index];
+}
+
+bool Vector3::operator==(const Vector3& other) const
+{
+    return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_);
+}
+
+template<typename T>
+Vector4::Vector4(T x, T y, T z, T w)
+{
+    data_[0] = x;
+    data_[1] = y;
+    data_[2] = z; // 2: index of z
+    data_[3] = w; // 3: index of w
+}
+
+template<typename T>
+T Vector4::operator[](uint8_t index) const
+{
+    return data_[index];
+}
+
+template<typename T>
+T& Vector4::operator[](uint8_t index)
+{
+    return data_[index];
+}
+
+bool Vector4::operator==(const Vector4& other) const
+{
+    return (x_ == other.x_) && (y_ == other.y_) && (z_ == other.z_) && (w_ == other.w_);
+}
 } // namespace OHOS
