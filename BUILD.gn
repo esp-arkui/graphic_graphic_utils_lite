@@ -48,8 +48,15 @@ lite_library("graphic_utils_lite") {
       "--diag_suppress",
       "Pe068,Pa089,Pa093,Pe161,Pe181,Pa205,Pe223",
     ]
-    cflags_cc = cflags
+  } else {
+    cflags = [
+      "-Wall",
+      "-fno-common",
+      "-O2",
+      "-fno-strict-aliasing",
+    ]
   }
+  cflags_cc = cflags
   if (enable_graphic_dualcore == true) {
     defines += [ "HAL_CPU_NUM=2" ]
   }
