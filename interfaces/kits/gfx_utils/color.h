@@ -69,7 +69,7 @@ enum {
 /**
  * @brief Defines the color attribute when the color depth is <b>16</b>.
  */
-typedef union {
+typedef union Color16{
     struct {
         /** Blue */
         uint16_t blue : 5;
@@ -80,7 +80,19 @@ typedef union {
     };
     /** Full RGB data */
     uint16_t full;
-} Color16;
+    bool operator==(const Color16& others) {
+        return blue == others.blue && green == others.green &&
+               red == others.red ;
+    }
+
+    void operator=(const Color16& other)
+    {
+        this->blue = other.blue;
+        this->red = other.red;
+        this->green = other.green;
+        return ;
+    }
+};
 
 /**
  * @brief Defines the color attribute when the color depth is <b>24</b>.
@@ -97,7 +109,7 @@ struct Color24 {
 /**
  * @brief Defines the color attribute when the color depth is <b>32</b>.
  */
-typedef union {
+typedef union Color32{
     struct {
         /** Blue */
         uint8_t blue;
@@ -110,7 +122,20 @@ typedef union {
     };
     /** Full RGB data */
     uint32_t full;
-} Color32;
+    bool operator==(const Color32& others) {
+        return blue == others.blue && green == others.green &&
+               red == others.red && alpha == others.alpha;
+    }
+
+    void operator=(const Color32& other)
+    {
+        this->blue = other.blue;
+        this->red = other.red;
+        this->green = other.green;
+        this->alpha = other.alpha;
+        return ;
+    }
+};
 
 #if defined(COLOR_DEPTH) && COLOR_DEPTH == 16
 using ColorType = Color16;
