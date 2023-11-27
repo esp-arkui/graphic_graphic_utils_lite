@@ -34,6 +34,17 @@ enum CurveApproximationMethod {
     CURVEDIVIDOPERATE
 };
 
+typedef enum {
+    X1_INDEX = 0,
+    Y1_INDEX,
+    X2_INDEX,
+    Y2_INDEX,
+    X3_INDEX,
+    Y3_INDEX,
+    X4_INDEX,
+    Y4_INDEX,
+} CURVE_POINTS_LENGTH;
+
 class QuadBezierCurveIncr {
 public:
     QuadBezierCurveIncr() : numberSteps_(0), currentStep_(0), approximationScale_(1.0f) {}
@@ -146,15 +157,14 @@ struct CubicBezierCurvePoints {
                            float x3, float y3,
                            float x4, float y4)
     {
-        float yFour = y4;
-        cpArray[0] = x1;
-        cpArray[1] = y1;
-        cpArray[2] = x2;
-        cpArray[3] = y2;
-        cpArray[4] = x3;
-        cpArray[5] = y3;
-        cpArray[6] = x4;
-        cpArray[7] = yFour;
+        cpArray[X1_INDEX] = x1;
+        cpArray[Y1_INDEX] = y1;
+        cpArray[X2_INDEX] = x2;
+        cpArray[Y2_INDEX] = y2;
+        cpArray[X3_INDEX] = x3;
+        cpArray[Y3_INDEX] = y3;
+        cpArray[X4_INDEX] = x4;
+        cpArray[Y4_INDEX] = y4;
     }
 
     void Init(float x1, float y1,
@@ -162,15 +172,14 @@ struct CubicBezierCurvePoints {
               float x3, float y3,
               float x4, float y4)
     {
-        float yTwo = y2;
-        cpArray[0] = x1;
-        cpArray[1] = y1;
-        cpArray[2] = x2;
-        cpArray[3] = yTwo;
-        cpArray[4] = x3;
-        cpArray[5] = y3;
-        cpArray[6] = x4;
-        cpArray[7] = y4;
+        cpArray[X1_INDEX] = x1;
+        cpArray[Y1_INDEX] = y1;
+        cpArray[X2_INDEX] = x2;
+        cpArray[Y2_INDEX] = y2;
+        cpArray[X3_INDEX] = x3;
+        cpArray[Y3_INDEX] = y3;
+        cpArray[X4_INDEX] = x4;
+        cpArray[Y4_INDEX] = y4;
     }
 
     float operator[](uint32_t i) const
@@ -264,11 +273,9 @@ inline CubicBezierCurvePoints CatromToBezier(float x1, float y1,
 
 inline CubicBezierCurvePoints CatromToBezier(const CubicBezierCurvePoints& curve4Points)
 {
-    float x2 = curve4Points[2];
-    float x4 = curve4Points[6];
-    return CatromToBezier(curve4Points[0], curve4Points[1], x2,
+    return CatromToBezier(curve4Points[0], curve4Points[1], curve4Points[2],
                           curve4Points[3], curve4Points[4], curve4Points[5],
-                          x4, curve4Points[7]);
+                          curve4Points[6], curve4Points[7]);
 }
 /**
  * @brief bspline Convert Curve to Cubic Bezier Curve
@@ -299,8 +306,7 @@ inline CubicBezierCurvePoints UbsplineToBezier(float x1, float y1,
  */
 inline CubicBezierCurvePoints UbsplineToBezier(const CubicBezierCurvePoints& curve4Points)
 {
-    float y2 = curve4Points[3];
-    return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], y2,
+    return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
                             curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
 }
 /**
