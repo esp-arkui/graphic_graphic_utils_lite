@@ -43,7 +43,7 @@ typedef enum {
     Y3_INDEX,
     X4_INDEX,
     Y4_INDEX
-} CURVE_POINTS_LENGTH;
+} CURVE_POINTS_INDEX;
 
 class QuadBezierCurveIncr {
 public:
