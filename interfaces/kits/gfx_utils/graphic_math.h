@@ -472,12 +472,11 @@ Matrix3<T>::Matrix3()
 template<typename T>
 Matrix3<T>::Matrix3(T m00, T m01, T m02, T m10, T m11, T m12, T m20, T m21, T m22)
 {
-    T mTen = m10;
     data_[0] = m00;
     data_[1] = m01;
     data_[2] = m02;
 
-    data_[3] = mTen;
+    data_[3] = m10;
     data_[4] = m11;
     data_[5] = m12;
 
