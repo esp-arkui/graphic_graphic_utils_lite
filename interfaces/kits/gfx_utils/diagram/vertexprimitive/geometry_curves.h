@@ -146,6 +146,7 @@ struct CubicBezierCurvePoints {
                            float x3, float y3,
                            float x4, float y4)
     {
+        float yFour = y4;
         cpArray[0] = x1;
         cpArray[1] = y1;
         cpArray[2] = x2;
@@ -153,7 +154,7 @@ struct CubicBezierCurvePoints {
         cpArray[4] = x3;
         cpArray[5] = y3;
         cpArray[6] = x4;
-        cpArray[7] = y4;
+        cpArray[7] = yFour;
     }
 
     void Init(float x1, float y1,
@@ -161,10 +162,11 @@ struct CubicBezierCurvePoints {
               float x3, float y3,
               float x4, float y4)
     {
+        float yTwo = y2;
         cpArray[0] = x1;
         cpArray[1] = y1;
         cpArray[2] = x2;
-        cpArray[3] = y2;
+        cpArray[3] = yTwo;
         cpArray[4] = x3;
         cpArray[5] = y3;
         cpArray[6] = x4;
@@ -262,9 +264,11 @@ inline CubicBezierCurvePoints CatromToBezier(float x1, float y1,
 
 inline CubicBezierCurvePoints CatromToBezier(const CubicBezierCurvePoints& curve4Points)
 {
-    return CatromToBezier(curve4Points[0], curve4Points[1], curve4Points[2],
+    float x2 = curve4Points[2];
+    float x4 = curve4Points[6];
+    return CatromToBezier(curve4Points[0], curve4Points[1], x2,
                           curve4Points[3], curve4Points[4], curve4Points[5],
-                          curve4Points[6], curve4Points[7]);
+                          x4, curve4Points[7]);
 }
 /**
  * @brief bspline Convert Curve to Cubic Bezier Curve
@@ -295,7 +299,8 @@ inline CubicBezierCurvePoints UbsplineToBezier(float x1, float y1,
  */
 inline CubicBezierCurvePoints UbsplineToBezier(const CubicBezierCurvePoints& curve4Points)
 {
-    return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], curve4Points[3],
+    float y2 = curve4Points[3];
+    return UbsplineToBezier(curve4Points[0], curve4Points[1], curve4Points[2], y2,
                             curve4Points[4], curve4Points[5], curve4Points[6], curve4Points[7]);
 }
 /**
