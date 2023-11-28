@@ -34,6 +34,17 @@ enum CurveApproximationMethod {
     CURVEDIVIDOPERATE
 };
 
+typedef enum {
+    X1_INDEX = 0,
+    Y1_INDEX,
+    X2_INDEX,
+    Y2_INDEX,
+    X3_INDEX,
+    Y3_INDEX,
+    X4_INDEX,
+    Y4_INDEX
+} CURVE_POINTS_INDEX;
+
 class QuadBezierCurveIncr {
 public:
     QuadBezierCurveIncr() : numberSteps_(0), currentStep_(0), approximationScale_(1.0f) {}
@@ -146,14 +157,14 @@ struct CubicBezierCurvePoints {
                            float x3, float y3,
                            float x4, float y4)
     {
-        cpArray[0] = x1;
-        cpArray[1] = y1;
-        cpArray[2] = x2;
-        cpArray[3] = y2;
-        cpArray[4] = x3;
-        cpArray[5] = y3;
-        cpArray[6] = x4;
-        cpArray[7] = y4;
+        cpArray[X1_INDEX] = x1;
+        cpArray[Y1_INDEX] = y1;
+        cpArray[X2_INDEX] = x2;
+        cpArray[Y2_INDEX] = y2;
+        cpArray[X3_INDEX] = x3;
+        cpArray[Y3_INDEX] = y3;
+        cpArray[X4_INDEX] = x4;
+        cpArray[Y4_INDEX] = y4;
     }
 
     void Init(float x1, float y1,
@@ -161,14 +172,14 @@ struct CubicBezierCurvePoints {
               float x3, float y3,
               float x4, float y4)
     {
-        cpArray[0] = x1;
-        cpArray[1] = y1;
-        cpArray[2] = x2;
-        cpArray[3] = y2;
-        cpArray[4] = x3;
-        cpArray[5] = y3;
-        cpArray[6] = x4;
-        cpArray[7] = y4;
+        cpArray[X1_INDEX] = x1;
+        cpArray[Y1_INDEX] = y1;
+        cpArray[X2_INDEX] = x2;
+        cpArray[Y2_INDEX] = y2;
+        cpArray[X3_INDEX] = x3;
+        cpArray[Y3_INDEX] = y3;
+        cpArray[X4_INDEX] = x4;
+        cpArray[Y4_INDEX] = y4;
     }
 
     float operator[](uint32_t i) const
