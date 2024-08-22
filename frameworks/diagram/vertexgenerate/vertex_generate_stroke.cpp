@@ -74,6 +74,7 @@ uint32_t VertexGenerateStroke::GenerateVertex(float* x, float* y)
             case INITIAL:
                 Rewind(0); // It will be ready immediately after initialization
                 /* fallthru */
+                break;
             case READY:
                 VertexReady(verticesNum, cmd);
                 break;
