@@ -457,7 +457,7 @@ void RasterizerCellsAntiAlias::SortAllCells()
     // Allocate and zero the Y array
     int32_t sortedYSize = maxY_ - minY_ + 1;
     sortedY_ = GeometryArrayAllocator<SortedYLevel>::Allocate(sortedYSize + CELLS_SIZE);
-    if (sortedYSize > INT32_MIN) {
+    if (sortedYSize > INT32_MAX) {
         GRAPHIC_LOGE("sortedYSize size fail");
     }
     if (memset_s(sortedY_, sizeof(SortedYLevel) * sortedYSize, 0, sizeof(SortedYLevel) * sortedYSize) != EOK) {
