@@ -455,11 +455,8 @@ void RasterizerCellsAntiAlias::SortAllCells()
     sortedCells_ = GeometryArrayAllocator<CellBuildAntiAlias*>::Allocate(numCells_ + CELLS_SIZE);
 
     // Allocate and zero the Y array
-    uint32_t sortedYSize = maxY_ - minY_ + 1;
+    int32_t sortedYSize = maxY_ - minY_ + 1;
     sortedY_ = GeometryArrayAllocator<SortedYLevel>::Allocate(sortedYSize + CELLS_SIZE);
-    if (sortedYSize > INT32_MIN) {
-        GRAPHIC_LOGE("sortedYSize size fail");
-    }
     if (memset_s(sortedY_, sizeof(SortedYLevel) * sortedYSize, 0, sizeof(SortedYLevel) * sortedYSize) != EOK) {
         GRAPHIC_LOGE("CleanData fail");
     }
