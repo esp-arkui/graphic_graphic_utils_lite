@@ -29,12 +29,12 @@
 #include "fcntl.h"
 #include "unistd.h"
 #include "sys/types.h"
-#include "sys/mount.h"
+// #include "sys/mount.h"
 #include "sys/stat.h"
 #ifdef __APPLE__
 #include "sys/param.h"
 #else
-#include "sys/statfs.h"
+// #include "sys/statfs.h"
 #endif
 #include "dirent.h"
 #include "stdio.h"

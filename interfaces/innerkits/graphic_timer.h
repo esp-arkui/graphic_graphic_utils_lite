@@ -41,6 +41,8 @@ public:
 
 #ifdef _WIN32
     void* GetNativeTimer()
+#elif defined(ESP_PLATFORM)
+    TimerHandle_t GetNativeTimer()
 #elif defined(__LITEOS_M__)
     osTimerId_t GetNativeTimer()
 #else
@@ -73,6 +75,8 @@ private:
 
 #ifdef _WIN32
     void* timer_ = nullptr;
+#elif defined(ESP_PLATFORM)
+    TimerHandle_t timer_;
 #elif defined(__LITEOS_M__)
     osTimerId_t timer_;
 #else

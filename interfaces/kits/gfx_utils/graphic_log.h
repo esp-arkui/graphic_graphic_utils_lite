@@ -18,7 +18,10 @@
 
 #include "graphic_config.h"
 #if ENABLE_GRAPHIC_LOG
-#if defined(__LITEOS__) || defined(__LITEOS_M__) || defined(__linux__)
+#if defined(ESP_PLATFORM)
+#include "esp_log.h"
+#include "stdio.h"
+#elif defined(__LITEOS__) || defined(__LITEOS_M__) || defined(__linux__)
 #include "log.h"
 #include <cstring>
 #else
@@ -54,6 +57,13 @@ do {                                                                            
 #define GRAPHIC_LOGW(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_WARN, HiviewDFX::HiLog::Warn, fmt, ##args)
 #define GRAPHIC_LOGI(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_INFO, HiviewDFX::HiLog::Info, fmt, ##args)
 #define GRAPHIC_LOGD(fmt, args...) GRAPHIC_DECORATOR_HILOG(LOG_LEVEL_DEBUG, HiviewDFX::HiLog::Debug, fmt, ##args)
+
+#elif defined(ESP_PLATFORM)
+#define GRAPHIC_LOGF(fmt, ...) ESP_LOGE("GRAPHIC", fmt, ##__VA_ARGS__)
+#define GRAPHIC_LOGE(fmt, ...) ESP_LOGE("GRAPHIC", fmt, ##__VA_ARGS__)
+#define GRAPHIC_LOGW(fmt, ...) ESP_LOGW("GRAPHIC", fmt, ##__VA_ARGS__)
+#define GRAPHIC_LOGI(fmt, ...) ESP_LOGI("GRAPHIC", fmt, ##__VA_ARGS__)
+#define GRAPHIC_LOGD(fmt, ...) ESP_LOGI("GRAPHIC", fmt, ##__VA_ARGS__)
 
 #elif defined(__LITEOS_M__)
 #define GRAPHIC_LOGF(fmt, args...) HILOG_FATAL(HILOG_MODULE_UIKIT, fmt, ##args)

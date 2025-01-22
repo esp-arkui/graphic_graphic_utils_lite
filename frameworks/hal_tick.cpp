@@ -19,7 +19,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
+#elif defined __linux__ || defined __LITEOS__ || defined __APPLE__ || defined ESP_PLATFORM
 #include <ctime>
 #else
 #include "los_tick.h"
@@ -36,7 +36,7 @@ uint32_t HALTick::GetTime()
 {
 #ifdef _WIN32
     return GetTickCount();
-#elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
+#elif defined __linux__ || defined __LITEOS__ || defined __APPLE__ || defined ESP_PLATFORM
     struct timespec time;
     clock_gettime(CLOCK_MONOTONIC, &time);
     return time.tv_sec * SEC_TO_MILLISEC + time.tv_nsec / MILLISEC_TO_NANOSEC;

@@ -17,6 +17,8 @@
 #include "gfx_utils/graphic_log.h"
 #ifdef _WIN32
 #include "windows.h"
+#elif defined(ESP_PLATFORM)
+
 #else
 #include <cerrno>
 #include <csignal>
@@ -27,7 +29,10 @@
 namespace {
 #ifdef _WIN32
 constexpr int32_t HUNDRED_NS_PER_MS = 10000;
+#elif defined(ESP_PLATFORM)
+
 #elif defined(__LITEOS_M__)
+// LiteOS Timer Code here
 #else
 constexpr int16_t MS_PER_SECOND = 1000;
 constexpr int32_t NS_PER_MS = 1000000;
@@ -133,7 +138,68 @@ void GraphicTimer::Stop()
         return;
     }
 }
+#elif defined(ESP_PLATFORM)
 
+// FreeRTOS timer callback function
+static void TimerCallback(TimerHandle_t xTimer)
+{
+    GraphicTimer* timer = reinterpret_cast<GraphicTimer*>(pvTimerGetTimerID(xTimer));
+    if (timer != nullptr) {
+        timer->Callback();
+    }
+}
+
+GraphicTimer::GraphicTimer(int32_t periodMs, GraphicTimerCb cb, void* arg, bool isPeriodic)
+    : cb_(cb), arg_(arg), isPeriodic_(isPeriodic)
+{
+    if ((periodMs > MAX_PERIOD_MS) || (periodMs <= 0)) {
+        GRAPHIC_LOGE("Timer create failed, period should be within (0, %d].(period=%d)", MAX_PERIOD_MS, periodMs);
+        return;
+    }
+
+    // FreeRTOS Timer
+    bool TimerType_ = isPeriodic ? pdTRUE : pdFALSE;
+    timer_ = xTimerCreate("GraphicTimer", pdMS_TO_TICKS(periodMs), TimerType_, this, TimerCallback);
+    if (timer_ == nullptr) {
+        GRAPHIC_LOGE("Timer create failed");
+        return;
+    }
+
+    periodMs_ = periodMs;
+}
+
+GraphicTimer::~GraphicTimer()
+{
+    if (timer_ != nullptr) {
+        if (xTimerDelete(timer_, 0) != pdPASS) {
+            GRAPHIC_LOGE("Timer delete failed");
+        }
+    }
+}
+
+bool GraphicTimer::Start()
+{
+    if (timer_ == nullptr) {
+        GRAPHIC_LOGE("Timer start failed, timer should be created first.");
+        return false;
+    }
+
+    if (xTimerStart(timer_, 0) != pdPASS) {
+        GRAPHIC_LOGE("Timer start failed.");
+        return false;
+    }
+    return true;
+}
+
+void GraphicTimer::Stop()
+{
+    if (timer_ == nullptr) {
+        return;
+    }
+    if (xTimerStop(timer_, 0) != pdPASS) {
+        GRAPHIC_LOGE("Timer stop failed.");
+    }
+}
 #elif defined(__LITEOS_M__)
 static void TimerCallback(void* args)
 {

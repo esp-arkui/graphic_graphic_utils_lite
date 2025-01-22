@@ -427,7 +427,7 @@ namespace OHOS {
 #if ENABLE_VECTOR_FONT
 
 #ifndef DEFAULT_VECTOR_FONT_FILENAME
-#define DEFAULT_VECTOR_FONT_FILENAME      "SourceHanSansSC-Regular.otf"
+#define DEFAULT_VECTOR_FONT_FILENAME      "fangzheng.TTF"//"Arial.otf"
 #endif // DEFAULT_VECTOR_FONT_FILENAME
 
 #else // ENABLE_VECTOR_FONT
@@ -451,8 +451,34 @@ static constexpr uint8_t MAX_FONT_SEARCH_NUM = 26;
 #define DEFAULT_MAX_CACHE_ENTRY_NUM                     64
 #endif // DEFAULT_MAX_CACHE_ENTRY_NUM
 
+
+#if defined ESP_PLATFORM
+#include "sdkconfig.h"
+#ifdef CONFIG_IDF_TARGET_ESP32P4
+/* Resolution width of a graphics display screen. The default value is <b>454</b>. */
+#ifndef HORIZONTAL_RESOLUTION
+#define HORIZONTAL_RESOLUTION                           1024
+#endif
+
+/* Resolution height of a graphics display screen. The default value is <b>454</b>. */
+#ifndef VERTICAL_RESOLUTION
+#define VERTICAL_RESOLUTION                             600
+#endif
+
+#elif defined CONFIG_IDF_TARGET_ESP32S3
+
+/* Resolution width of a graphics display screen. The default value is <b>454</b>. */
+#ifndef HORIZONTAL_RESOLUTION
+#define HORIZONTAL_RESOLUTION                           800
+#endif
+
+/* Resolution height of a graphics display screen. The default value is <b>454</b>. */
+#ifndef VERTICAL_RESOLUTION
+#define VERTICAL_RESOLUTION                             480
+#endif
+#endif
 /* Defines some configurations and their default values on LiteOS and other system platforms. */
-#ifdef __LITEOS_M__
+#elif defined __LITEOS_M__
 
 /* Resolution width of a graphics display screen. The default value is <b>454</b>. */
 #ifndef HORIZONTAL_RESOLUTION
@@ -515,6 +541,14 @@ static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = ".\\dump_dom_tree.json
 /* Default file path for font */
 #ifndef VECTOR_FONT_DIR
 #define VECTOR_FONT_DIR                                 "..\\..\\tools\\font\\font_tool\\font_tool\\font\\"
+#endif
+
+#elif defined ESP_PLATFORM
+/* Default file path for DOM tree logs */
+static constexpr const char* DEFAULT_DUMP_DOM_TREE_PATH = "/rootfs/dump_dom_tree.json";
+/* Default file path for font */
+#ifndef VECTOR_FONT_DIR
+#define VECTOR_FONT_DIR                                 "/rootfs/"
 #endif
 
 #elif defined __LITEOS_M__  // QT_COMPILER

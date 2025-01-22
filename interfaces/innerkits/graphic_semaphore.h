@@ -22,6 +22,9 @@
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
 #include <limits.h>
 #include <semaphore.h>
+#elif defined ESP_PLATFORM
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 #else
 #include "los_sem.h"
 #endif // WIN32
@@ -51,6 +54,13 @@ public:
         initFlag_ = (sem_ != nullptr);
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
         initFlag_ = (sem_init(&sem_, 0, init) == 0);
+#elif defined ESP_PLATFORM
+        if (max == 1) {
+            sem_ = xSemaphoreCreateBinary();  // FreeRTOS binary semaphore
+        } else {
+            sem_ = xSemaphoreCreateCounting(max, init);  // FreeRTOS counting semaphore
+        }
+        initFlag_ = (sem_ != NULL);
 #else
         if (max == 1) {
             initFlag_ = (LOS_BinarySemCreate((uint16_t)init, &sem_) == LOS_OK);
@@ -70,6 +80,8 @@ public:
         CloseHandle(sem_);
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
         sem_destroy(&sem_);
+#elif defined ESP_PLATFORM
+        vSemaphoreDelete(sem_); // FreeRTOS function to delete semaphore
 #else
         LOS_SemDelete(sem_);
 #endif // WIN32
@@ -85,6 +97,8 @@ public:
         return ReleaseSemaphore(sem_, 1, NULL);
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
         return (sem_post(&sem_) == 0);
+#elif defined ESP_PLATFORM
+        return (xSemaphoreGive(sem_) == pdTRUE); // FreeRTOS give semaphore
 #else
         return (LOS_SemPost(sem_) == LOS_OK);
 #endif // WIN32
@@ -100,6 +114,8 @@ public:
         return (WaitForSingleObject(sem_, INFINITE) == WAIT_OBJECT_0);
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
         return (sem_wait(&sem_) == 0);
+#elif defined ESP_PLATFORM
+        return (xSemaphoreTake(sem_, portMAX_DELAY) == pdTRUE); // FreeRTOS take semaphore
 #else
         return (LOS_SemPend(sem_, LOS_WAIT_FOREVER) == LOS_OK);
 #endif // WIN32
@@ -111,6 +127,8 @@ private:
     HANDLE sem_;
 #elif defined __linux__ || defined __LITEOS__ || defined __APPLE__
     sem_t sem_;
+#elif defined ESP_PLATFORM
+    SemaphoreHandle_t sem_;  // FreeRTOS semaphore handle
 #else
     uint32_t sem_;
 #endif // WIN32
